@@ -1,0 +1,959 @@
+﻿@model NSCSC.Shared.Models.CRM.Customers.StoreDetailModels
+@using NSCSC.Shared
+@{
+    Html.EnableUnobtrusiveJavaScript(true);
+    var _ID = Model.ID;
+    var ProductType = Model.ProductApplyStore.ProductType;
+}
+<style type="text/css">
+    .upload-i-wrapper {
+        border: 5px none;
+        cursor: pointer;
+        display: block;
+        overflow: hidden;
+        position: absolute;
+        right: 70px;
+        width: 30px;
+        bottom: 10px;
+    }
+
+        .upload-i-wrapper i {
+            font-size: 25px;
+            color: #9d9c9c;
+        }
+
+        .upload-i-wrapper input[type=file] {
+            left: 0;
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            cursor: pointer;
+        }
+
+    table#select-store {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+    }
+
+    #select-store th {
+        background-color: #d7d7d7;
+        padding-bottom: 11px;
+        padding-top: 11px;
+        font-size: 16px;
+    }
+
+    #select-store td, #select-store th {
+        padding: 8px;
+        height: 50px;
+        font-weight: lighter;
+    }
+
+    #select-store tr:nth-child(2n) {
+        background-color: #f2f2f2;
+    }
+
+    #select-store tr {
+        border-bottom: 1px solid #ddd;
+        cursor: pointer;
+    }
+
+    .modal-header {
+        padding: 15px;
+        border-bottom: 1px solid #e5e5e5;
+        background-color: #bdbdbd;
+        text-align: center;
+    }
+</style>
+<input type="hidden" value="@ViewBag.IsBack" id="IsBack" />
+<div role="main" class="right_col">
+    <div class="se-pre-con" style="display: none;"></div>
+    <div class="">
+        <div class="page-title">
+            <div class="title_left" style="padding: 10px 0px;">
+                @Html.Partial("~/Views/Shared/_breadcrumb.cshtml",
+            new Dictionary<string, string> { { "A", "CRM" }, { "B", "Customers" }, { "C", "Edit - Add New Store" } })
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_title">
+                    <div class="row text-right">
+                        <ul class="header-buttons pull-right list-inline">
+                            <li>
+                                <a href="javascript:void(0)" onclick="ShowView('@Url.Action("SelectStore", "CRMCustomers", new { CustomerID = Model.CustomerID, MerchantID = Model.MerchantID })')" class="btn btn-danger" id="btn-delete">
+                                    <i class="fa fa-times"></i>
+                                    &nbsp;Cancel
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" class="btn btn-success" onclick="SubmitForm('.form-store')">
+                                    <i class="fa fa-save"></i>
+                                    &nbsp;Save
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+
+                    @using (@Html.BeginForm("CreateStoreInfo", "CRMCustomers", FormMethod.Post, new
+                    {
+                        @class = "form-horizontal form-store",
+                        @enctype = "multipart/form-data"
+                    }))
+                    {
+                        @Html.HiddenFor(model => model.ImageURL, new { @id = "hidImageURL" })
+                        @Html.HiddenFor(model => model.tempAssetID, new { @id = "hidtempAssetID" })
+                        @Html.HiddenFor(model => model.ID, new { @id = "hidID" })
+                        @Html.HiddenFor(model => model.CustomerID, new { @id = "hidCustomerID" })
+                        @Html.HiddenFor(model => model.MerchantID, new { @id = "hidMerchantID" })
+                        @Html.HiddenFor(model => model.ParenIdPackage)
+                        @Html.HiddenFor(model => model.Type)
+                        @Html.HiddenFor(model => model.tempName, new { @id = "hidName" })
+                        @Html.HiddenFor(model => model.tempCountry, new { @id = "hidCountry" })
+                        @Html.HiddenFor(model => model.tempEmail, new { @id = "hidEmail" })
+                        @Html.HiddenFor(model => model.tempCity, new { @id = "hidCity" })
+                        @Html.HiddenFor(model => model.tempPhone, new { @id = "hidPhone" })
+                        @Html.HiddenFor(model => model.tempZipCode, new { @id = "hidZipCode" })
+                        @Html.HiddenFor(model => model.Industry, new { @id = "hidIndustry" })
+                        @Html.HiddenFor(model => model.tempStreet, new { @id = "hidStreet" })
+                        @Html.HiddenFor(model => model.tempGSTRegNo, new { @id = "hidGSTRegNo" })
+                        @Html.HiddenFor(model => model.tempTimeZone, new { @id = "hidTimeZone" })
+                        if (Model.ProductApplyStore != null)
+                        {
+                            @Html.HiddenFor(model => model.ProductApplyStore.AssetID);
+                            @Html.HiddenFor(model => model.ProductApplyStore.CustomerID);
+                            @Html.HiddenFor(model => model.ProductApplyStore.ExpiredTime);
+                            @Html.HiddenFor(model => model.ProductApplyStore.IsActive);
+                            @Html.HiddenFor(model => model.ProductApplyStore.MerchantID);
+                            @Html.HiddenFor(model => model.ProductApplyStore.ParentID);
+                            @Html.HiddenFor(model => model.ProductApplyStore.Period);
+                            @Html.HiddenFor(model => model.ProductApplyStore.PeriodType);
+                            @Html.HiddenFor(model => model.ProductApplyStore.ProductID);
+                            @Html.HiddenFor(model => model.ProductApplyStore.ProductImageURL);
+                            @Html.HiddenFor(model => model.ProductApplyStore.ProductName);
+                            @Html.HiddenFor(model => model.ProductApplyStore.ProductType);
+                            @Html.HiddenFor(model => model.ProductApplyStore.RemainingLocation);
+                            @Html.HiddenFor(model => model.ProductApplyStore.sExpiredTime);
+                            @Html.HiddenFor(model => model.ProductApplyStore.sPeriod);
+                            @Html.HiddenFor(model => model.ProductApplyStore.sRemainingLocation);
+                            @Html.HiddenFor(model => model.ProductApplyStore.Type);
+                            if (Model.ProductApplyStore.ListProduct != null && Model.ProductApplyStore.ListProduct.Any())
+                            {
+                                for (int i = 0; i < Model.ProductApplyStore.ListProduct.Count; i++)
+                                {
+                                    @Html.HiddenFor(model => model.ProductApplyStore.ListProduct[i].ProductName);
+                                    @Html.HiddenFor(model => model.ProductApplyStore.ListProduct[i].ProductID);
+                                    @Html.HiddenFor(model => model.ProductApplyStore.ListProduct[i].AssetID);
+                                    @Html.HiddenFor(model => model.ProductApplyStore.ListProduct[i].CustomerID);
+                                    @Html.HiddenFor(model => model.ProductApplyStore.ListProduct[i].MerchantID);
+                                    @Html.HiddenFor(model => model.ProductApplyStore.ListProduct[i].ProductType);
+                                }
+                            }
+                        }
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-offset-1 col-md-10 col-sm-10 col-xs-12">
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <div class="col-md-12 col-xs-12 col-sm-12">
+                                            <span class="fontBold">Applied On&nbsp;&nbsp;</span>
+                                            @Html.DropDownListFor(model => model.AssetID,
+                                                     new SelectList(Model.ListItemProduct.OrderBy(s => s.Text), "Value", "Text", Model.AssetID), null,
+                                                     new
+                                                     {
+                                                         @class = "form-control select",
+                                                         @id = "AppliedOnDdl",
+                                                         @style = "width : 80%;",
+                                                     })
+                                        </div>
+                                        <br /><br /><br />
+                                        @*<div class="col-md-12 col-sm-12 col-xs-12">
+                                            @{
+                                                string _countProduct = "0 Product";
+                                                if (Model.ListProductApply != null && Model.ListProductApply.Count > 0)
+                                                {
+                                                    int _Count = Model.ListProductApply.Where(x => x.IsApply).ToList().Count;
+                                                    _countProduct = _Count == 1 ? "1 Product" : _Count + " Product(s)";
+                                                }
+
+                                            }
+                                            Applied On:
+                                            <a href="javascript:void(0)" data-toggle="modal" data-target="#modal-choose-items" class="btn btn-xs btn-success">
+                                                <span id="Product">@_countProduct</span>
+                                            </a>
+                                        </div>*@
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 col-xs-12" style="line-height:30px;">
+                                        <label>
+                                            @Html.RadioButtonFor(model => model.IsNew, "true", new
+                                            {
+                                                @checked = "checked",
+                                                @class = "flat",
+                                                @name = "radCreateStore",
+                                                @id = "radCreateStore"
+                                            })
+                                        </label>  Create New Store&nbsp;&nbsp;
+                                        <label>
+                                            @Html.RadioButtonFor(model => model.IsNew, "false", new
+                                            {
+                                                @class = "flat",
+                                                @name = "radExistingStore",
+                                                @id = "radExistingStore"
+                                            })
+                                        </label>
+                                        Choose from Existing Store
+
+
+                                    </div>
+
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-12 fontUppercase">
+                                    <a href="javascript:void(0);" class="btn btn-info" id="btn-select-store" data-toggle="modal" onclick="GetListStoreSelect()" data-target="#bs-modal-select-store">
+                                        Select
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row form-horizontal form-label-left">
+                            <div class="form-group">
+                                <div class="col-md-offset-1 col-md-3 col-sm-3 col-xs-12">
+                                    <div class="form-group text-center">
+                                        <div class="col-md-10 col-sm-10 col-xs-12">
+                                            @if (!string.IsNullOrEmpty(Model.ImageURL))
+                                            {
+                                                <img id="upload-preview-create-store" src="@Model.ImageURL" height="200" width="200" class="" />
+                                            }
+                                            else
+                                            {
+                                                <img id="upload-preview-create-store" class=""
+                                                     src="/images/store.jpg"
+                                                     height="200" width="200" />
+                                            }
+                                            <div class="upload-i-wrapper">
+                                                @Html.TextBoxFor(model => model.PictureUpload, new
+                                                {
+                                                    @id = "PictureUploadStore",
+                                                    @type = "file",
+                                                    @onchange = "PreviewImage(this,\"upload-preview-create-store\")",
+                                                    @accept = "*.jpg"
+                                                })
+                                                <i class="fa fa-camera"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-10 col-sm-10 col-xs-12" style="margin: 5px 5px;">
+                                            @Html.ValidationMessageFor(model => model.PictureUpload, null, new { @class = "label label-danger" })
+                                        </div>
+                                        <div class="col-md-10 col-sm-10 col-xs-12" style="margin: 5px 5px;">
+                                            @Html.CheckBoxFor(model => model.IsActive, new { @class = "flat", @id = "chkActive" }) Active
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <div class="form-group">
+                                        @*Store Name*@
+                                        <div class="col-md-6 col-sm-12 col-xs-12">
+                                            <div class="row">
+                                                <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Store Name(*)</label>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                                    @Html.TextBoxFor(model => model.Name, new
+                                                    {
+                                                        @class = "form-control",
+                                                        @placeholder = "Store Name",
+                                                        @autocomplete = "off",
+                                                        @id = "txtStoreStoreName"
+                                                    })
+                                                    @Html.ValidationMessageFor(model => model.Name, null, new { @class = "label label-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @*Country*@
+                                        <div class="col-md-6 col-sm-12 col-xs-12">
+                                            <div class="row">
+                                                <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Country</label>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                                    @Html.DropDownListFor(model => model.Country,
+                                                             new SelectList(ViewBag.ListCountry, "Name", "Name", Model.Country), "",
+                                                             new
+                                                             {
+                                                                 @class = "form-control",
+                                                                 @id = "txtStoreCountry",
+                                                                 @style = "width:100%;",
+                                                                 @tabindex = "-1",
+                                                             })
+                                                    @Html.ValidationMessageFor(model => model.Country, null, new { @class = "label label-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @*Email*@
+                                        <div class="col-md-6 col-sm-12 col-xs-12">
+                                            <div class="row">
+                                                <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Email(*)</label>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                                    @Html.TextBoxFor(model => model.Email, new
+                                                    {
+                                                        @class = "form-control",
+                                                        @placeholder = "Email",
+                                                        @autocomplete = "off",
+                                                        @id = "txtStoreEmail"
+                                                    })
+                                                    @Html.ValidationMessageFor(model => model.Email, null, new { @class = "label label-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @*City*@
+                                        <div class="col-md-6 col-sm-12 col-xs-12">
+                                            <div class="row">
+                                                <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">City</label>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                                    @Html.TextBoxFor(model => model.City, new
+                                                    {
+                                                        @class = "form-control",
+                                                        @placeholder = "City",
+                                                        @autocomplete = "off",
+                                                        @id = "txtStoreCity"
+                                                    })
+                                                    @Html.ValidationMessageFor(model => model.City, null, new { @class = "label label-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @*Phone*@
+                                        <div class="col-md-6 col-sm-12 col-xs-12">
+                                            <div class="row">
+                                                <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Phone(*)</label>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                                    @Html.TextBoxFor(model => model.Phone, new
+                                                    {
+                                                        @class = "form-control",
+                                                        @placeholder = "0123456789",
+                                                        @autocomplete = "off",
+                                                        @id = "txtStorePhone"
+                                                    })
+                                                    @Html.ValidationMessageFor(model => model.Phone, null, new { @class = "label label-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @*Zip Code*@
+                                        <div class="col-md-6 col-sm-12 col-xs-12">
+                                            <div class="row">
+                                                <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Zip Code</label>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                                    @Html.TextBoxFor(model => model.ZipCode, new
+                                                    {
+                                                        @class = "form-control",
+                                                        @placeholder = "Zip Code",
+                                                        @autocomplete = "off",
+                                                        @id = "txtStoreZipCode"
+                                                    })
+                                                    @Html.ValidationMessageFor(model => model.ZipCode, null, new { @class = "label label-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @*Industry*@
+                                        <div class="col-md-6 col-sm-12 col-xs-12">
+                                            <div class="row">
+                                                <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Industry(*)</label>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                                    @Html.DropDownListFor(model => model.Industry,
+                                                                  new SelectList(Model.ListIndustry, "Value", "Text", Model.Industry), null,
+                                                                  new
+                                                                  {
+                                                                      @class = "form-control select2_multiple",
+                                                                      @id = "txtStoreIndustry",
+                                                                      @style = "width:100%;",
+
+
+                                                                  })
+                                                    @Html.ValidationMessageFor(model => model.Industry, null, new { @class = "label label-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @*Street*@
+                                        <div class="col-md-6 col-sm-12 col-xs-12">
+                                            <div class="row">
+                                                <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Street</label>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                                    @Html.TextBoxFor(model => model.Street, new
+                                                    {
+                                                        @class = "form-control",
+                                                        @placeholder = "Street",
+                                                        @autocomplete = "off",
+                                                        @id = "txtStoreStreet"
+                                                    })
+                                                    @Html.ValidationMessageFor(model => model.Street, null, new { @class = "label label-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @*Tax Code*@
+                                        <div class="col-md-6 col-sm-12 col-xs-12">
+                                            <div class="row">
+                                                <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Tax Code</label>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                                    @Html.TextBoxFor(model => model.GSTRegNo, new
+                                                    {
+                                                        @class = "form-control",
+                                                        @placeholder = "Tax Code",
+                                                        @autocomplete = "off",
+                                                        @id = "txtStoreTaxCode"
+                                                    })
+                                                    @Html.ValidationMessageFor(model => model.GSTRegNo, null, new { @class = "label label-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @*Time Zone*@
+                                        <div class="col-md-6 col-sm-12 col-xs-12">
+                                            <div class="row">
+                                                <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Time Zone</label>
+                                            </div>
+                                            <div class="row">
+                                                <div id="TimeZones" class="col-md-12 col-sm-12 col-xs-12">
+                                                    @Html.DropDownListFor(model => model.TimeZone, new SelectList(ViewBag.TimeZones), new
+                                                    {
+                                                        @class = "form-control",
+                                                        @placeholder = "Timezone",
+                                                        @autocomplete = "off",
+                                                        @id = "txtStoreTimeZone"
+                                                    })
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="bs-modal-select-store" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div id="StoreSelect" class="modal-content">
+
+                                </div>
+                            </div>
+                        </div>
+                        @*<div id="modal-choose-items" class="modal fade modalfunctionInfo" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header" style="padding:20px 15px;background-color: #f9f9f9">
+                                        <button type="button" id="closeFunction" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title" id="myModalLabel2" style="text-align: center; font-weight:bolder">Applied Products</h4>
+                                    </div>
+                                    <div class="modal-body scroll">
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12 col-xs-12">                                         
+                                                <table id="datatable-responsive-list-item-products" class="table table-striped table-bordered dt-responsive dataTable-custom">
+                                                    <caption style="margin-top:-35px; cursor:pointer;max-width:40%;" class="checkall">
+                                                         <input type="checkbox" id="CheckAll" class="lineHeight" checked /><span> Check All</span>
+                                                    </caption>
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-center col1">Select</th>
+                                                            <th class="text-center col2">Product</th>
+                                                            <th class="text-center col3">Activated Date</th>
+                                                            <th class="text-center col3">Expried Date</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="ProductAssign">
+                                                        @if (Model.ListProductApply != null && Model.ListProductApply.Count > 0)
+                                                        {
+                                                            @Html.Partial("_ItemStoreAssignToProduct", Model)
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>*@
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (Model.ListTypePackage != null && Model.ListTypePackage.Count > 0)
+{
+    foreach (var item in Model.ListTypePackage)
+    {
+        <input type="hidden" id="@item.Value" value="@item.Text" />
+    }
+}
+<script src="@Url.Content("~/build/js/customInput.js")"></script>
+<script type="text/javascript">
+    @if (ProductType == (int)Commons.EProductType.Package && Model.ListItemProduct.Count > 1)
+    {
+    <text>
+            $("#AppliedOnDdl").removeAttr('disabled ');
+    </text>
+
+    } else {
+    <text>
+            $("#AppliedOnDdl").prop('disabled', 'disabled');;
+    </text>
+    }
+    var Istrue = "";
+    var IsdisabledIndustry = true;
+    if ('@ViewBag.IsReturn' == 'IsReturn')
+        IsdisabledIndustry = false;
+    if ('@Model.ListTypePackage' != null && '@Model.ListTypePackage.Count' > 0) {
+        var idPackage = $('#AppliedOnDdl').val();
+        var type = $('#' + idPackage).val();
+    } else
+        var type = null;
+    $('#AppliedOnDdl').change(function () {
+        idPackage = $('#AppliedOnDdl').val();
+        type = $('#' + idPackage).val();
+        changeIndustry(type);
+        $("#hidtempAssetID").val($("#AppliedOnDdl").val());
+    });
+    function changeIndustry(type) {
+        if (type == '@Commons.EType.NuDisplay.ToString("d")' || type == '@Commons.EType.NuKiosk.ToString("d")' || type == '@Commons.EType.NuPOS.ToString("d")') {
+            $('#txtStoreIndustry').val('@Commons.EStoreType.FnB.ToString("d")').trigger("change");
+            $('#hidIndustry').val('@Commons.EStoreType.FnB.ToString("d")');
+            $("#txtStoreIndustry").prop("disabled", true);
+            Istrue = "1";
+        } else if (type == '@Commons.EType.POZZ.ToString("d")' || type == '@Commons.EType.POZZ_Display.ToString("d")' || type == '@Commons.EType.POZZ_Kiosk.ToString("d")') {
+            $('#txtStoreIndustry').val("@Commons.EStoreType.Beauty.ToString("d")").trigger("change");
+            $('#hidIndustry').val('@Commons.EStoreType.Beauty.ToString("d")');
+            $("#txtStoreIndustry").prop("disabled", true);
+            Istrue = "1";
+        } else {
+            if ('@ViewBag.IsReturn' == 'IsReturn')
+                $('#txtStoreIndustry').val('@Model.Industry').trigger("change");
+            else
+                $('#txtStoreIndustry').val('@Commons.EStoreType.FnB.ToString("d")').trigger("change");
+            if ($('#radCreateStore').is(":checked"))
+                $("#txtStoreIndustry").prop("disabled", false);
+            else {
+                if ('@ViewBag.IsReturn' == 'IsReturn')
+                    $("#txtStoreIndustry").prop("disabled", false);
+                else
+                    $("#txtStoreIndustry").prop("disabled", true);
+            }
+            Istrue = "0";
+        }
+        type = null;
+        $("#txtStoreStoreName").val("");
+    $('#txtStoreCountry').val('@Model.Country').trigger("change");
+    $("#txtStoreEmail").val("");
+    $("#txtStoreCity").val("");
+    $("#txtStorePhone").val("");
+    $("#txtStoreZipCode").val("");
+    $("#txtStoreStreet").val("");
+    $("#txtStoreTaxCode").val("");
+    $('#upload-preview-create-store').attr('src', _url);
+    }
+    $('#txtStoreIndustry').change(function () {
+        var _Intrudy = $('#txtStoreIndustry').val();
+        $('#hidIndustry').val(_Intrudy);
+
+    });
+    //========= For table list products assign
+    var _settingsOptionTableProductsAssign = {
+        "columnDefs": [
+            { "orderable": false, "targets": [0] }
+        ],
+        "order": [
+            [1, 'asc']
+        ],
+        "bInfo": false,
+        "paging": false,
+        "autoWidth": false,
+        "drawCallback": function () {
+            var divHeight = $('#datatable-responsive-list-item-products tbody').prop('scrollHeight');
+            if (divHeight == 0) {
+                var previousCss = $("#modal-choose-items").attr("style");
+                $("#modal-choose-items").css({
+                    position: 'absolute',
+                    visibility: 'hidden',
+                    display: 'block'
+                });
+                divHeight = $('#datatable-responsive-list-item-products tbody').prop('scrollHeight');
+                $("#modal-choose-items").attr("style", previousCss ? previousCss : "");
+            }
+            if (divHeight > 500) {
+                $("#datatable-responsive-list-item-products thead tr").css('width', 'calc( 100% - 16px )');
+            } else {
+                $("#datatable-responsive-list-item-products thead tr").css('width', '100%');
+            }
+        },
+    };
+    $(document).ready(function () {
+        if (type != null)
+            changeIndustry(type);
+            $('#hidIndustry').val($('#txtStoreIndustry').val());
+        init_ICheck();
+        init_ICheckSelectStore();
+        $("#AppliedOnDdl").select2({
+            placeholder: "Please choose applied"
+        });
+
+        $("#txtStoreIndustry").select2({
+            placeholder: "Please choose industry"
+        });
+        $("#txtStoreCountry").select2({
+            placeholder: "Please choose Country"
+        });
+
+        if ($('[id=radCreateStore]').is(":checked"))
+        {
+            $('[id=btn-select-store]').addClass('hidden');
+        } else {
+            $('[id=btn-select-store]').removeClass('hidden');
+        }
+        $("#txtStoreTimeZone").select2({
+            placeholder: "Time Zone"
+        });
+        //====\
+        var isChange = '@Model.IsNew';
+        isChange = isChange.toLowerCase();
+        if (isChange == 'true') {
+            isChange = false;
+        } else {
+            isChange = true;
+        }
+        $("#btn-select-store").prop("disabled", !isChange);
+        ChangeElementCreateStore(isChange);
+        $("#hidtempAssetID").val($("#AppliedOnDdl").val());
+        if ($('#IsBack').val() == '') {
+            var _storeType = $("#txtStoreIndustry").val();
+            var _AssetID = $("#AppliedOnDdl").val();
+            var _CustomerID = "@Model.CustomerID";
+            //GetListProductAssignToStore(_storeType, _AssetID, _CustomerID);
+        }
+        //==========
+        $('#datatable-responsive-list-item-products').DataTable($.extend(true, {}, _settingsOptionTableProductsAssign));
+    });
+    var _url = "/images/store.jpg";
+    $("#txtStoreCountry").change(function () {
+            GetTimeZones();
+        });
+        function GetTimeZones() {
+             var _Country = $('#txtStoreCountry').val();
+            $.ajax({
+                    type: "GET",
+                    url: "@Url.Action("GetTimeZones", "CRMCustomers")",
+                    traditional: true,
+                    data: { _Country: _Country },
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "html",
+                    success: function (data) {
+                        $('#TimeZones').html(data);
+                        if ($('#radExistingStore').is(':checked')) {
+                            $("#txtStoreTimeZone").prop("disabled", true);
+                            $("#txtStoreTimeZone").val(_timezone).trigger("change");
+                        }
+                    },
+                    beforeSend: function () {
+                        $('.se-pre-con').show();
+                    },
+                    complete: function () {
+                        $('.se-pre-con').hide();
+                    },
+            });
+        }
+
+        function init_ICheck() {
+            if ($("input.flat")[0]) {
+                $(document).ready(function () {
+                    $('input.flat').iCheck({
+                        checkboxClass: 'icheckbox_flat-green',
+                        radioClass: 'iradio_flat-green'
+                    });
+                });
+            }
+        };
+        function init_ICheckSelectStore() {
+            if ($("input.flatSlectStore")[0]) {
+                $(document).ready(function () {
+                    $('input.flatSlectStore').iCheck({
+                        checkboxClass: 'icheckbox_flat-green',
+                        radioClass: 'iradio_flat-green'
+                    });
+                });
+            }
+        };
+ 
+        function ChangeElementCreateStore(isChange) {
+            if ($('#IsBack').val() == '') {
+                $("#txtStoreStoreName").val("");
+                //$("#txtStoreCountry").val("");
+                $('#txtStoreCountry').val('@Model.Country').trigger("change");
+                $("#txtStoreEmail").val("");
+                $("#txtStoreCity").val("");
+                $("#txtStorePhone").val("");
+                $("#txtStoreZipCode").val("");
+                $("#txtStoreStreet").val("");
+                $("#txtStoreTaxCode").val("");
+                $('#upload-preview-create-store').attr('src', _url);
+                //$("#txtStoreTimeZone").val("");
+            }
+            if (isChange) {
+                //$("#txtStoreIndustry").val("");
+                //Reset value
+                $(".icheckbox_flat-green").addClass("disabled checked");
+                $("#chkActive").addClass("disabled checked");
+             
+            } else {
+                $("#txtStoreStoreName").focus()
+                $(".icheckbox_flat-green").removeClass("disabled");
+            }
+            //====Disabled
+            $("#PictureUploadStore").prop("disabled", isChange);
+            $("#txtStoreStoreName").prop("disabled", isChange);
+            $("#txtStoreCountry").prop("disabled", isChange);
+            $("#txtStoreEmail").prop("disabled", isChange);
+            $("#txtStoreCity").prop("disabled", isChange);
+            $("#txtStorePhone").prop("disabled", isChange);
+            $("#txtStoreZipCode").prop("disabled", isChange);   
+            $("#chkActive").prop("disabled", isChange);   
+            @if (Model.Type.ToString("d") == Commons.EType.POinS_Link_App.ToString("d"))
+           //  @if (ViewBag.IsDisabledIndustry != null)
+             {
+                    <text>
+                     $("#txtStoreIndustry").prop("disabled", isChange);
+                 </text>
+
+             } else {
+                 if (Model.ListTypePackage != null && Model.ListTypePackage.Count > 0)
+                 {
+                       <text>
+                         $("#txtStoreIndustry").prop("disabled", IsdisabledIndustry);
+                 </text>
+
+                 }
+                 else {
+                    <text>
+                         $("#txtStoreIndustry").prop("disabled", true);
+                     </text>
+                 }
+
+             }
+            //$("#txtStoreIndustry").prop("disabled", isChange);
+            $("#txtStoreStreet").prop("disabled", isChange);
+            $("#txtStoreTaxCode").prop("disabled", isChange);
+            $("#txtStoreTimeZone").prop("disabled", isChange);
+        }
+
+        $("#radCreateStore").on("ifChanged", function () {
+            var isChange = false;
+            if ($(this).is(':checked')) {//Create
+                isChange = false;
+                $('[id=btn-select-store]').addClass('hidden');
+                _timezone = "";
+                if (Istrue != "1")
+                    IsdisabledIndustry = false;
+                else
+                    IsdisabledIndustry = true;
+            }
+            else { //Existing
+                isChange = true;
+                $('#IsBack').val('');
+                IsdisabledIndustry = true;
+            }
+            $("#btn-select-store").prop("disabled", !isChange);
+            ChangeElementCreateStore(isChange);
+        });
+        $('.checkall').click(function (event) {
+            if (event.target.type != 'checkbox') {
+                $('#CheckAll').trigger('click');
+            }
+        });
+        $('[id=radExistingStore]').on("ifChanged", function () {
+            if ($(this).is(":checked")) {
+                $('[id=btn-select-store]').removeClass('hidden');
+            }
+        });
+
+        $('#select-store tr').click(function (event) {
+            var row = $(this);
+            var _radio = row.find('input[type="radio"]');
+            _radio.prop('checked', true);
+            //========
+            $('input.flatSlectStore').iCheck({
+                radioClass: 'iradio_flat-green'
+            });
+        });
+
+        $(".form-store").submit(function (e) {
+            var isSubmit = $(this).valid();
+            var ExistingStore = $('#radExistingStore').prop('checked');
+            if (ExistingStore) {
+                var storeName = $("#txtStoreStoreName").val();
+                if (storeName == '') {
+                    alert('Please choose store information');
+                    isSubmit = false;
+                }
+            }
+            if (isSubmit) {
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: "POST",
+                    data: new FormData(this),
+                    processData: false,
+                    contentType: false,
+                    success: function (content) {
+                        $(".detail-view").html(content);
+                        $(".detail-view").show();
+                        $(".gridview").css("display", "none");
+                        $('#myTab a[href="#tab_content2"]').tab('show');
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                    },
+                    beforeSend: function () {
+                        $('.se-pre-con').show();
+                    },
+                    complete: function () {
+                        $('.se-pre-con').hide();
+                    },
+                });
+            }
+            e.preventDefault();
+        });
+
+        var _timezone = "@ViewBag.TimeZone";
+        function SelectStoreInfo(_modal) {
+            var _storeId = $(_modal).find("input[name='SlectStore']:checked").val();
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("GetDetailStoreToJSon", "CRMCustomers")",
+                traditional: true,
+                data: { StoreId: _storeId },
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (data) {
+                    $(_modal).modal('hide');
+                    data = JSON.parse(data);
+                    if (data.ImageURL == 'http://apivn.nupos.com.sg/ns.csc/Images/')
+                        data.ImageURL = _url;
+                    $("#txtStoreStoreName").val(data.Name);
+                    //$("#txtStoreCountry").val(data.Country);
+                    $('#txtStoreCountry').val(data.Country).trigger("change");
+                    $("#txtStoreEmail").val(data.Email);
+                    $("#txtStoreCity").val(data.City);
+                    $("#txtStorePhone").val(data.Phone);
+                    $("#txtStoreZipCode").val(data.ZipCode);
+                    $("#txtStoreStreet").val(data.Street);
+                    $("#txtStoreTaxCode").val(data.GSTRegNo);
+                    $('#txtStoreIndustry').val(data.StoreType).trigger("change");
+                    _timezone = data.TimeZone;
+                    $("#upload-preview-create-store").attr("src", data.ImageURL);
+                    //$("#hidtempAssetID").val($("#AppliedOnDdl").val());
+                    $("#hidName").val(data.Name);
+                    $("#hidCountry").val(data.Country);
+                    $("#hidEmail").val(data.Email);
+                    $("#hidCity").val(data.City);
+                    $("#hidPhone").val(data.Phone);
+                    $("#hidZipCode").val(data.ZipCode);
+                    $("#hidStoreType").val(data.StoreType);
+                    $("#hidStreet").val(data.Street);
+                    $("#hidGSTRegNo").val(data.GSTRegNo);
+                    $("#hidTimeZone").val(data.TimeZone);
+                    $(".icheckbox_flat-green").addClass("checked");
+                    //======
+                    $("#hidImageURL").val(data.ImageURL);
+                    $("#hidID").val(data.ID);
+                },
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+            });
+        };
+        $("#txtStoreIndustry").change(function () {
+            var _storeType = $("#txtStoreIndustry").val();
+            var _AssetID = $("#AppliedOnDdl").val();
+            var _CustomerID = "@Model.CustomerID";
+            //GetListProductAssignToStore(_storeType, _AssetID, _CustomerID);
+        });
+        function GetListStoreSelect() {
+            var _type = 0;
+            if ('@Model.ProductType' == '@Commons.EProductType.Package.ToString("d")') {
+                _type = $('#' + idPackage).val();
+            } else {
+                 _type = '@Model.Type';
+            }
+            var _CustomerID = "@Model.CustomerID";
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("GetListStoreSelect", "CRMCustomers")",
+                traditional: true,
+                data: {
+                    Type: _type,
+                    CustomerID: _CustomerID
+                },
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (data) {
+                    $("#StoreSelect").html(data);
+                },
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+            });
+        }
+        function GetListProductAssignToStore(StoreType, AssetID, CustomerID) {
+             $.ajax({
+                    type: "GET",
+                    url: "@Url.Action("GetListProductAssignToStore", "CRMCustomers")",
+                    traditional: true,
+                    data: {
+                        Storetype: StoreType,
+                        AssetID: AssetID,
+                        CustomerID: CustomerID
+                    },
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "html",
+                    success: function (data) {
+                        $("#datatable-responsive-list-item-products").DataTable().destroy();
+                        $("#ProductAssign").html(data);
+                        $('#datatable-responsive-list-item-products').DataTable($.extend(true, {}, _settingsOptionTableProductsAssign));
+                    },
+                    beforeSend: function () {
+                        $('.se-pre-con').show();
+                    },
+                    complete: function () {
+                        $('.se-pre-con').hide();
+                    },
+            });
+        }
+</script>

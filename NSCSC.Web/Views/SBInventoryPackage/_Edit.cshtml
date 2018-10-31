@@ -1,0 +1,137 @@
+﻿@model NSCSC.Shared.Models.SandBox.Inventory.Product.ProductDetailModels
+@{
+    ViewBag.Title = "Package - Edit";
+}
+<div role="main" class="right_col">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left" style="padding: 10px 0px;">
+                @Html.Partial("~/Views/Shared/_breadcrumb.cshtml",
+                new Dictionary<string, string> { { "A", "Sand Box" }, { "B", "Inventory" }, { "C", "Package - Edit" } })
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12 x_panel">
+                    <div class="x_content">
+                        <div class="row text-right">
+                            <ul class="header-buttons pull-right list-inline">
+                                <li>
+                                    <a href="javascript:void(0)" class="btn btn-danger" id="btn-delete" onclick="CloseDetail(); return false;">
+                                        <i class="fa fa-times"></i>
+                                        &nbsp;Cancel
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" class="btn btn-success" id="btn-edit-save" onclick="SubmitForm('#form-edit')">
+                                        <i class="fa fa-save"></i>
+                                        &nbsp;Save
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="box-body" style="display: block;">
+                            @using (@Html.BeginForm("Edit", "SBInventoryPackage", FormMethod.Post, new { @id = "form-edit", @class = "form-horizontal" }))
+                            {
+                                @Html.Partial("_Form", Model)
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //$(function () {
+
+    //    $('.datepicker').daterangepicker({
+    //        singleDatePicker: true,
+    //        calender_style: "picker_2",
+    //        showDropdowns: true,
+    //    });
+
+    //    try {
+    //        $.validator.addMethod('date',
+              
+    //            function (value, element) {
+    //                debugger;
+    //                if (this.optional(element)) {
+    //                    return true;
+    //                }
+    //                var ok = true;
+    //                try {
+    //                    ok = moment(value, "dd/mm/yyyy", true).isValid();
+    //                } catch (err) {
+    //                    ok = false;
+    //                }
+    //                return ok;
+    //            });
+    //    } catch (e) { }
+    //});
+
+    $("#form-edit").submit(function (e) {
+        $(".daterangepicker.dropdown-menu.picker_2.single.opensright.show-calendar").hide();
+        disableButton('#btn-edit-save', true);
+
+        $('#ltrErrorPrice').html('');
+        $('#ltrErrorPriceExtend').html('');
+
+        var isSubmit = true;
+        var count = $(".ng-Price:visible").length;
+        if (count == 0) {
+            $('#ltrErrorPrice').html("Price least at one item for package");
+            isSubmit = false;
+        } else {
+            /*var isStatus = CheckStatusActiveForProduct('.ng-Price:visible', '');
+            if (!isStatus) {
+                isSubmit = false;
+                $('#ltrErrorPrice').html("Please active least at one item price for addition");
+            }
+            else {*/
+                //Extend
+                //var IsExtend = $('#chkIsExtend').prop('checked');
+                //if (IsExtend) {
+                //    count = $(".ng-PriceExtend:visible").length;
+                //    if (count == 0) {
+                //        $('#ltrErrorPriceExtend').html("Price least at one item for package");
+                //        isSubmit = false;
+                //    } /*else {
+                //        var isStatus = CheckStatusActiveForProduct('.ng-PriceExtend:visible', 'Extend');
+                //        if (!isStatus) {
+                //            isSubmit = false;
+                //            $('#ltrErrorPriceExtend').html("Please active least at one item price extend for addition");
+                //        }
+                //    }*/
+                //}
+            /*}*/
+        }
+        if (isSubmit) {
+            $('.se-pre-con').show();
+            //Update value for CKEDITOR
+            for (instance in CKEDITOR.instances) {
+                CKEDITOR.instances[instance].updateElement();
+            }
+            $.ajax({
+                url: $(this).attr('action'),
+                type: "post",
+                data: new FormData(this),
+                processData: false,
+                contentType: false,
+                success: function () {
+                    $('.se-pre-con').hide();
+                    CloseDetail();
+                    Search();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $('.se-pre-con').hide();
+                    $(".detail-view").html(jqXHR.responseText);
+                }
+            });
+        }
+        e.preventDefault();
+    });
+
+
+</script>

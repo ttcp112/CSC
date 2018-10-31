@@ -1,0 +1,277 @@
+﻿@model NSCSC.Shared.Models.ClientSite.MyStoreAndBusiness.MyStoreAndBusinessViewModels
+@using NSCSC.Shared
+@{
+    Html.EnableUnobtrusiveJavaScript(true);
+    var _ID = Model.MerchantInfo.ID;
+}
+@Html.HiddenFor(model => model.MerchantInfo.ID)
+@if (!string.IsNullOrEmpty(_ID))
+{
+    @Html.HiddenFor(model => model.MerchantInfo.ImageURL)
+    @Html.HiddenFor(model => model.MerchantInfo.CloudWebHQ)
+}
+
+<div class="row" style="height:30px;">
+    <span class="fontUppercase fontBold" style="font-size:18px;">Merchant Information</span>
+    <ul class="header-buttons pull-right list-inline">
+        <li>
+            <a href="javascript:void(0);" class="btn btn-success" id="btn-update-merchant" onclick="ChangeElementMerchant(false)">
+                <i class="fa fa-pencil"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+<div class="row form-horizontal form-label-left">
+    <div class="form-group">
+        <div class="col-md-offset-1 col-md-3 col-sm-3 col-xs-12">
+            <div class="form-group text-center">
+                <div class="col-md-10 col-sm-10 col-xs-12">
+                    <img id="upload-preview" src="@Model.MerchantInfo.ImageURL" height="200" width="200" class="" />
+                    <div class="upload-i-wrapper">
+                        @Html.TextBoxFor(model => model.MerchantInfo.PictureUpload, new
+                   {
+                       @id = "PictureUpload",
+                       @type = "file",
+                       @onchange = "PreviewImage(this,\"upload-preview\")",
+                       @accept = "*.jpg"
+                   })
+                        <i class="fa fa-camera"></i>
+                    </div>
+                </div>
+                <div class="col-md-10 col-sm-10 col-xs-12" style="margin: 5px 5px;">
+                    @Html.ValidationMessageFor(model => model.MerchantInfo.PictureUpload, null, new { @class = "label label-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8 col-sm-8 col-xs-12">
+            <div class="form-group">
+                @*Merchant Name*@
+                <div class="col-md-6 col-sm-12 col-xs-12">
+                    <div class="row">
+                        <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Merchant Name(*)</label>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            @Html.TextBoxFor(model => model.MerchantInfo.Name, new
+                       {
+                           @class = "form-control",
+                           @placeholder = "Merchant Name",
+                           @autocomplete = "off",
+                           @id = "txtMerchantName"
+                       })
+                            @Html.ValidationMessageFor(model => model.MerchantInfo.Name, null, new { @class = "label label-danger" })
+                        </div>
+                    </div>
+                </div>
+                @*Cloud Web HQ*@
+                <div class="col-md-6 col-sm-12 col-xs-12">
+                    <div class="row">
+                        <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Cloud Web HQ</label>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            @Html.TextBoxFor(model => model.MerchantInfo.CloudWebHQ, new
+                       {
+                           @class = "form-control",
+                           @placeholder = "Cloud Web HQ",
+                           @autocomplete = "off",
+                           @id = "txtCloudWebHQ",
+                           @disabled = "disabled"
+                       })
+                            @Html.ValidationMessageFor(model => model.MerchantInfo.CloudWebHQ, null, new { @class = "label label-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @*Email*@
+                <div class="col-md-6 col-sm-12 col-xs-12">
+                    <div class="row">
+                        <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Email(*)</label>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            @Html.TextBoxFor(model => model.MerchantInfo.Email, new
+                       {
+                           @class = "form-control",
+                           @placeholder = "Email",
+                           @autocomplete = "off",
+                           @id = "txtEmail"
+                       })
+                            @Html.ValidationMessageFor(model => model.MerchantInfo.Email, null, new { @class = "label label-danger" })
+                        </div>
+                    </div>
+                </div>
+                @*Phone Number*@
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="row">
+                        <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Phone Number</label>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            @Html.TextBoxFor(model => model.MerchantInfo.Phone, new
+                       {
+                           @class = "form-control",
+                           @placeholder = "Phone",
+                           @autocomplete = "off",
+                           @id = "txtPhone"
+                       })
+                            @Html.ValidationMessageFor(model => model.MerchantInfo.Phone, null, new { @class = "label label-danger" })
+                        </div>
+                    </div>
+                </div>
+                @*Tax Code*@
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="row">
+                        <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Tax Code</label>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            @Html.TextBoxFor(model => model.MerchantInfo.GSTRegNo, new
+                       {
+                           @class = "form-control",
+                           @placeholder = "Tax Code",
+                           @autocomplete = "off",
+                           @id = "txtTaxCode"
+                       })
+                            @Html.ValidationMessageFor(model => model.MerchantInfo.GSTRegNo, null, new { @class = "label label-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*Headquater*@
+    <div class="form-group">
+        <label for="" class="col-md-offset-1 col-md-1 col-sm-12 col-xs-12">Headquater</label>
+        <div class="col-md-10 col-sm-12 col-xs-12 topDotBorder">
+        </div>
+    </div>
+
+    <div class="form-group">
+        @*Street*@
+        <label for="" class="col-md-offset-1 col-md-1 col-sm-1 col-xs-12 lineHeight fontLighter">Street</label>
+        <div class="col-md-5 col-sm-5 col-xs-12">
+            @Html.TextBoxFor(model => model.MerchantInfo.Street, new
+       {
+           @class = "form-control",
+           @placeholder = "Street",
+           @autocomplete = "off",
+           @id = "txtStreet"
+       })
+            @Html.ValidationMessageFor(model => model.MerchantInfo.Street, null, new { @class = "label label-danger" })
+        </div>
+        @*City*@
+        <label for="" class="col-md-1 col-sm-1 col-xs-12 lineHeight fontLighter">City</label>
+        <div class="col-md-4 col-sm-4 col-xs-12">
+            @Html.TextBoxFor(model => model.MerchantInfo.City, new
+       {
+           @class = "form-control",
+           @placeholder = "City",
+           @autocomplete = "off",
+           @id = "txtCity"
+       })
+            @Html.ValidationMessageFor(model => model.MerchantInfo.City, null, new { @class = "label label-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @*Country*@
+        <label for="" class="col-md-offset-1 col-md-1 col-sm-1 col-xs-12 lineHeight fontLighter">Country</label>
+        <div class="col-md-5 col-sm-5 col-xs-12">
+            @Html.DropDownListFor(model => model.MerchantInfo.Country,
+                new SelectList(Model.MerchantInfo.ListCounTry, "Name", "Name", Model.MerchantInfo.Country), "",
+                 new
+                 {
+                     @class = "form-control select2_multiple",
+                     @id = "CountryDdl",
+                     @style = "width:100%;",
+                     @tabindex = "-1"
+                 })
+            @Html.ValidationMessageFor(model => model.MerchantInfo.Country, null, new { @class = "label label-danger" })
+        </div>
+        @*ZIP Code*@
+        <label for="" class="col-md-1 col-sm-1 col-xs-12 lineHeight fontLighter">Zip Code</label>
+        <div class="col-md-4 col-sm-4 col-xs-12">
+            @Html.TextBoxFor(model => model.MerchantInfo.ZipCode, new
+       {
+           @class = "form-control",
+           @placeholder = "ZIP Code",
+           @autocomplete = "off",
+           @id = "txtZipCode"
+       })
+            @Html.ValidationMessageFor(model => model.MerchantInfo.ZipCode, null, new { @class = "label label-danger" })
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+            <button type="button" class="btn btn-info fontUppercase" id="btnUpdate" onclick="SubmitForm('#form-merchant')">Update</button>
+            <button type="button" class="btn btn-danger fontUppercase" id="btnCancel" onclick="ChangeElementMerchant(true)">Cancel</button>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function (e) {
+        $("#CountryDdl").select2({
+            placeholder: "Please choose the Country"
+        });
+        ChangeElementMerchant(true);
+    });
+
+    /*Function*/
+    function ChangeElementMerchant(isChange) {
+        $("#PictureUpload").prop("disabled", isChange);
+        $("#txtMerchantName").prop("disabled", isChange);
+        $("#txtEmail").prop("disabled", isChange);
+        $("#txtPhone").prop("disabled", isChange);
+        $("#txtTaxCode").prop("disabled", isChange);
+        $("#txtStreet").prop("disabled", isChange);
+        $("#txtCity").prop("disabled", isChange);
+        $("#CountryDdl").prop("disabled", isChange);
+        $("#txtZipCode").prop("disabled", isChange);
+        if (!isChange) {
+            $("#btnUpdate").show();
+            $("#btnCancel").show();
+            $("#btn-update-merchant").hide();
+        } else {
+            $("#btnUpdate").hide();
+            $("#btnCancel").hide();
+            $("#btn-update-merchant").show();
+        }
+    }
+
+    $("#form-merchant").submit(function (e) {
+        var isSubmit = $(this).valid();
+        if (isSubmit) {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: "POST",
+                data: new FormData(this),
+                processData: false,
+                contentType: false,
+                success: function () {
+                    ChangeElementMerchant(true);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $("#tabMerchant").html(jqXHR.responseText);
+                },
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+            });
+        }
+        e.preventDefault();
+    });
+
+</script>
+

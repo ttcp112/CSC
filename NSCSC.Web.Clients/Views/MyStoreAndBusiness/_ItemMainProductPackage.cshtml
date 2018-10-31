@@ -1,0 +1,91 @@
+﻿@{
+    Layout = null;
+}
+@{ 
+    var tabProductAndPackage = Model.TabProductAndPackage;
+}
+@model NSCSC.Shared.Models.ClientSite.MyStoreAndBusiness.MyStoreAndBusinessViewModels
+<div class="menuProductAndPackages">
+    <ul>
+        @*<li>
+            <a href="javascript:void(0)" onclick="LoadPartialView('MATERIALS',this)" class="active clsMaterials" id="defaultActive">MATERIALS</a>
+        </li>*@
+        <li>
+            <a href="javascript:void(0)" onclick="LoadPartialView('ONGOING',this)" class="clsOnGoing">ON GOING</a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" onclick="LoadPartialView('EXPIRED',this)" class="clsExpired">EXPIRED</a>
+        </li>
+    </ul>
+</div>
+<div class="contentProductAndPackages">
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+            @if(tabProductAndPackage == 1)
+            {
+                <text>
+
+                    $('.clsMaterials').click();
+                </text>
+            }
+
+            @if(tabProductAndPackage == 2)
+            {
+                <text>
+                    $('.clsOnGoing').click();
+                </text>
+            }
+            @if(tabProductAndPackage == 3)
+            {
+                <text>
+                    $('.clsExpired').click();
+                </text>
+            }
+                    $('.clsOnGoing').click();
+    })
+
+    function LoadPartialView(mAction,that) {
+        var url = "";
+        $('.menuProductAndPackages a').removeClass('active');
+        $(that).addClass('active');
+        if (mAction === "MATERIALS")
+        {
+            url = '@Url.Action("MATERIALS", "MyStoreAndBusiness")';
+        } else if (mAction === "ONGOING")
+        {
+            url = '@Url.Action("ONGOING", "MyStoreAndBusiness")';
+        } else {
+            url = '@Url.Action("EXPIRED", "MyStoreAndBusiness")';
+        }
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            traditional: true,
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            //data: JSON.stringify(SpendingRuleDTO),
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                var isLogin = BackToLoginWhenSessionEnd(data);
+                if (isLogin) {
+                    window.location = "/Login/Index";
+                }
+                else {
+                    $('.contentProductAndPackages').html(data);
+                }
+                //$('.contentProductAndPackages').html(data);
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            },
+            error: function () {
+                $('.se-pre-con').hide();
+            }
+      });
+    }
+</script>

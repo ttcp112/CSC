@@ -1,0 +1,53 @@
+﻿@using NSCSC.Shared
+@model NSCSC.Shared.Models.SandBox.Inventory.Product.ProductPriceModels
+
+<tr class="ng-Price" id="tr_add_price_@Model.OffSet" data-value="@Model.OffSet"
+    style="@string.Format("display:{0}", Model.Status != (int)Commons.EStatus.Deleted ? "table-row" : "none");">
+    <td class="">
+        @if (Model.PeriodType != (int)Commons.EPeriodType.OneTime)
+        {
+            <span id="lblperiod_@Model.OffSet">@Model.Period</span>
+        }
+        else if(Model.PeriodType == (int)Commons.EPeriodType.OneTime)
+        {
+            <span hidden id="lblperiod_@Model.OffSet">@Model.Period</span>
+        }
+        <span id="lblnameperiodtype_@Model.OffSet">@Model.NamePeriodType</span>
+    </td>
+    <td class="text-center">@Html.Raw(ViewBag.CurrencySymbol)<span id="lblprice_@Model.OffSet">@Model.Price.ToString("#,0.00")</span></td>
+    @*<td class="text-center">
+        <span id="lblstatus_@Model.OffSet">@(string.Format("{0}", Model.IsActive ? "Active" : "Inactive"))</span>
+    </td>*@
+    <td class="text-center">
+
+        @*<a href="javascript:void(0)" class="btn btn-@(string.Format("{0}", Model.IsActive ? "danger" : "success")) btn-xs view details"
+           onclick="changeStatus(this, @Model.OffSet)" style="width: 70px;">@(string.Format("{0}", Model.IsActive ? "Inactive" : "Active"))</a>*@
+
+        <!--set value for modal pass attribute [data] -->
+        <a href="javascript:void(0)" class="btn btn-info btn-xs edit details" data-toggle="modal" id="edit_@Model.OffSet"
+           data-target="#modal-add-price"
+
+           data-period="@Model.Period"
+           data-periodtype="@Model.PeriodType"
+           data-nameperiodtype="@Model.NamePeriodType"
+           data-price="@Model.Price"
+           data-offset="@Model.OffSet"
+           data-isselected="@Model.IsActive"
+           
+           >
+            <i class="fa fa-pencil"></i>
+        </a>
+        <a href="javascript:void(0)" class="btn btn-danger btn-xs delete details" onclick="DeletePrice('@Model.OffSet'); return false;">
+            <i class="fa fa-trash-o"></i>
+        </a>
+
+        @Html.Hidden(string.Format("ListPrice[{0}].ID", Model.OffSet), Model.ID)
+        @Html.Hidden(string.Format("ListPrice[{0}].OffSet", Model.OffSet), Model.OffSet)
+        @Html.Hidden(string.Format("ListPrice[{0}].PeriodType", Model.OffSet), Model.PeriodType, new { @id = "hidPeriodType_" + Model.OffSet })
+        @Html.Hidden(string.Format("ListPrice[{0}].Period", Model.OffSet), Model.Period, new { @id = "hidPeriod_" + Model.OffSet })
+        @Html.Hidden(string.Format("ListPrice[{0}].Price", Model.OffSet), Model.Price, new { @id = "hidPrice_" + Model.OffSet })
+        @Html.Hidden(string.Format("ListPrice[{0}].Status", Model.OffSet), Model.Status, new { @class = "PriceStatus" })
+        @Html.Hidden(string.Format("ListPrice[{0}].NamePeriodType", Model.OffSet), Model.NamePeriodType, new { @id = "hidnameperiodtype_" + Model.OffSet })
+        @Html.Hidden(string.Format("ListPrice[{0}].IsActive", Model.OffSet), Model.IsActive, new { @class = "PriceSelect", @id = "hidIsSelected_" + Model.OffSet })
+    </td>
+</tr>

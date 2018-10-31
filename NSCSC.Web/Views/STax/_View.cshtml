@@ -1,0 +1,110 @@
+﻿@using NSCSC.Shared
+@model NSCSC.Shared.Models.Settings.Tax.TaxModels
+<div role="main" class="right_col">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left" style="padding: 10px 0px;">
+                @Html.Partial("~/Views/Shared/_breadcrumb.cshtml",
+                new Dictionary<string, string> { { "A", "Settings" }, { "B", "Taxes" }, { "C", "View Detail" } })
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12 x_panel">
+                    <div class="x_content">
+                        <div class="row text-right">
+                            <ul class="header-buttons pull-right list-inline">
+                                <li><a href="javascript:void(0)" onclick="CloseDetail(); return false;" class="btn btn-danger" id="btn-delete"><i class="fa fa-times"></i>&nbsp;Close</a></li>
+                            </ul>
+                        </div>
+                        <div class="row form-horizontal form-label-left">
+                            <div class="row form-horizontal form-label-left" style="margin-bottom:15px;">
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Name</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @Model.TaxName
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Active</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @if (Model.IsActive == true)
+                                        {
+                                            @Html.Raw("Yes")
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw("No")
+                                        }
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Type</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @if (Model.TaxType == (byte)Commons.ETaxType.Inclusive)
+                                        {
+                                            @Commons.TypeTaxInclusive
+                                        }
+                                        @if (Model.TaxType == (byte)Commons.ETaxType.AddOn)
+                                        {
+                                            @Commons.TypeTaxAddOn
+                                        }
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Percent</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @Model.TaxPercent %
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Applicable Items</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @if (Model.ListProduct != null || Model.ListProduct.Count > 0)
+                                        {
+                                           
+                                            <table class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action" cellspacing="0" style="width:80%;">
+                                                <thead style="background-color:#34495e; color:#fff;">
+                                                    <tr>
+                                                        <th style="text-align:center;">Items</th>
+                                                        <th style="text-align:center;">Type</th>
+                                                    </tr>
+                                                </thead>
+
+
+                                                <tbody>
+                                                    @for (int i = 0; i < @Model.ListProduct.Count; i++)
+                                                    {
+
+                                                        <tr>
+                                                            <td>@Model.ListProduct[i].Name</td>
+                                                            @if (Model.ListProduct[i].ProductType == (byte)Commons.EProductType.Package)
+                                                            {
+                                                            <td style="text-align:center">@Commons.EProductType.Package</td>
+                                                            }
+                                                            else if(Model.ListProduct[i].ProductType == (byte)Commons.EProductType.Addition)
+                                                            {
+                                                                <td style="text-align:center">@Commons.EProductType.Addition</td>
+                                                            }
+                                                            else if (Model.ListProduct[i].ProductType == (byte)Commons.EProductType.Product)
+                                                            {
+                                                                <td style="text-align:center">@Commons.EProductType.Product</td>
+                                                            }
+                                                        </tr>
+
+                                                    }
+                                                </tbody>
+
+                                            </table>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

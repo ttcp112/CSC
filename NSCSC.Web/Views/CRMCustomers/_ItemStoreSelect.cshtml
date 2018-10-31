@@ -1,0 +1,159 @@
+﻿@model NSCSC.Shared.Models.CRM.Customers.StoreDetailModels
+@{
+    Layout = null;
+}
+<style>
+    table#select-store {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+    }
+
+    #select-store th {
+        background-color: #d7d7d7;
+        padding-bottom: 11px;
+        padding-top: 11px;
+        font-size: 16px;
+    }
+
+    #select-store td, #select-store th {
+        padding: 8px;
+        height: 50px;
+        font-weight: lighter;
+    }
+
+    #select-store tr:nth-child(2n) {
+        background-color: #f2f2f2;
+    }
+
+    #select-store tr {
+        border-bottom: 1px solid #ddd;
+        cursor: pointer;
+    }
+
+</style>
+@if (Model.ListStore != null && Model.ListStore.Count > 0)
+{
+    var i = 0;
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel2">Select Store</h4>
+    </div>
+    <div class="modal-body" style="padding:0px;">
+        <table id="select-store">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Store Name</th>
+                    <th>Address</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="StoreSelect">
+
+                @foreach (var itemStore in Model.ListStore)
+                {
+                    <tr class="enumStore_@i">
+                        <td>
+                            @Html.Hidden(string.Format("ListStore[{0}].ID", i), Model.ListStore[i].ID)
+                            @Html.Hidden(string.Format("ListStore[{0}].Name", i), Model.ListStore[i].Name)
+                            @Html.Hidden(string.Format("ListStore[{0}].Address", i), Model.ListStore[i].Address)
+                            @Html.Hidden(string.Format("ListStore[{0}].StoreStatusName", i), Model.ListStore[i].StoreStatusName)
+                            @Html.Hidden(string.Format("ListStore[{0}].StoreType", i), Model.ListStore[i].StoreType)
+                            <input type="radio" class="flatSlectStore" name="SlectStore" checked value="@itemStore.ID" />
+                        </td>
+                        <td>@itemStore.Name</td>
+                        <td>@itemStore.Address</td>
+                        <td>@itemStore.StoreStatusName</td>
+                    </tr>
+                    i++;
+                }
+
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer" style="border:none;">
+        <button type="button" class="btn btn-primary fontUppercase" onclick="SelectStoreInfo('#bs-modal-select-store')">Select</button>
+    </div>
+}
+else
+{
+    <div class="modal-header">
+        <h4 class="modal-title fontUppercase" id="myModalLabel2">Notification</h4>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <span>Currently you don't have any existing store to select. Please create new store.</span>
+        </div>
+    </div>
+    <div class="modal-footer" style="border:none;">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    </div>
+}
+<script>
+    $(document).ready(function () {
+        if ($('[id=radCreateStore]').is(":checked")) {
+            $('[id=btn-select-store]').addClass('hidden');
+        } else {
+            $('[id=btn-select-store]').removeClass('hidden');
+        };
+        init_ICheck();
+        init_ICheckSelectStore();
+    });
+    $("#radCreateStore").on("ifChanged", function () {
+        var isChange = false;
+        if ($(this).is(':checked')) {//Create
+            isChange = false;
+            $('[id=btn-select-store]').addClass('hidden');
+            _timezone = "";
+            if (Istrue != "1")
+                IsdisabledIndustry = false;
+            else
+                IsdisabledIndustry = true;
+        }
+        else { //Existing
+            isChange = true;
+            $('#IsBack').val('');
+            IsdisabledIndustry = true;
+        }
+        $("#btn-select-store").prop("disabled", !isChange);
+        ChangeElementCreateStore(isChange);
+    });
+    $('#select-store tr').click(function (event) {
+        var row = $(this);
+        var _radio = row.find('input[type="radio"]');
+        _radio.prop('checked', true);
+        //========
+        $('input.flatSlectStore').iCheck({
+            radioClass: 'iradio_flat-green'
+        });
+    });
+    $('[id=radExistingStore]').on("ifChanged", function () {
+        if ($(this).is(":checked")) {
+            $('[id=btn-select-store]').removeClass('hidden');
+        }
+    });
+    function init_ICheck() {
+        if ($("input.flat")[0]) {
+            $(document).ready(function () {
+                $('input.flat').iCheck({
+                    checkboxClass: 'icheckbox_flat-green',
+                    radioClass: 'iradio_flat-green'
+
+                });
+            });
+        }
+    };
+    function init_ICheckSelectStore() {
+        if ($("input.flatSlectStore")[0]) {
+            $(document).ready(function () {
+                $('input.flatSlectStore').iCheck({
+                    checkboxClass: 'icheckbox_flat-green',
+                    radioClass: 'iradio_flat-green'
+                });
+            });
+        }
+    };
+</script>

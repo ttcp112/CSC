@@ -1,0 +1,946 @@
+﻿@using NSCSC.Shared
+@model NSCSC.Shared.Models.SandBox.Inventory.Discount.DiscountDetailModels
+@{
+    Html.EnableUnobtrusiveJavaScript(true);
+    var _ID = Model.ID;
+    Layout = null;
+}
+
+@Html.HiddenFor(model => model.ID)
+@*@Html.Hidden('status', Commons.EStatus.Deleted)*@
+@if (!string.IsNullOrEmpty(_ID))
+{
+    @Html.HiddenFor(model => model.ValueType)
+    @Html.HiddenFor(model => model.Value)
+    @Html.HiddenFor(model => model.PeriodType)
+    @Html.HiddenFor(model => model.PeriodTime)
+    @Html.Hidden("PeriodDate", Model.PeriodDate.ToString(Commons.FormatDate))
+    @Html.HiddenFor(model => model.IsTotalOrder)
+
+    if (Model.ListDiscountCategory != null && Model.ListDiscountCategory.Any())
+    {
+        for (int i = 0; i < Model.ListDiscountCategory.Count; i++)
+        {
+            var item = Model.ListDiscountCategory[i];
+            @Html.Hidden(string.Format("ListDiscountCategory[{0}].OffSet", item.OffSet), item.OffSet, new { @class = "OffSet" })
+            @Html.Hidden(string.Format("ListDiscountCategory[{0}].CategoryID", item.OffSet), item.CategoryID, new { @class = "CategoryID" })
+            @Html.Hidden(string.Format("ListDiscountCategory[{0}].CategoryName", item.OffSet), item.CategoryName, new { @class = "CategoryName" })
+            @Html.Hidden(string.Format("ListDiscountCategory[{0}].Type", item.OffSet), item.Type, new { @class = "Type" })
+            @Html.Hidden(string.Format("ListDiscountCategory[{0}].Status", item.OffSet), item.Status, new { @class = "CateStatus" })
+        }
+    }
+}
+<div class="row form-horizontal form-label-left" style="margin-bottom:15px;">
+    @*Discount Name*@
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Discount Name</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @placeholder = "Discount Name", @autocomplete = "off" })
+            @Html.ValidationMessageFor(model => model.Name, null, new { @class = "label label-danger", @id="DiscountNameValidation" })
+        </div>
+    </div>
+
+    @*Discount Code*@
+    @*<div class="form-group">
+            <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Discount Code</label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                @Html.TextBoxFor(model => model.Code, new { @class = "form-control", @placeholder = "Discount Code", @autocomplete = "off" })
+                @Html.ValidationMessageFor(model => model.Code, null, new { @class = "label" })
+            </div>
+        </div>*@
+    @* Active*@
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 fontLighter">Active</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <label>@Html.CheckBoxFor(model => model.IsActive, new { @class = "js-switch-chk" })</label>
+        </div>
+    </div>
+
+    @*Can not edit this group*@
+    <div id="noneEdit">
+        @*Value Type*@
+        <div class="form-group">
+            <label for="" class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Type</label>
+            <div class="col-md-3 col-sm-3 col-xs-12">
+                @Html.DropDownListFor(model => model.ValueType,
+            new SelectList(Model.ListValueType, "Value", "Text", Model.ValueType), null,
+                new
+                {
+                    @class = "form-control select2_multiple",
+                    @id = "valueTypeDdl",
+                    @style = "width:100%;",
+                })
+            </div>
+            <div class="col-md-2 col-sm-3 col-xs-12">
+                @Html.TextBoxFor(model => model.Value,
+                new
+                {
+                    @class = "form-control keyNumber",
+                    @autocomplete = "off",
+                    @data_type = "float",
+                })
+                @Html.ValidationMessage("ValueDiscount", new { @id = "lblValue", @class = "label label-danger" })
+                @*@Html.ValidationMessageFor(model => model.Value, null, new { @class = "label" , @id= "lblValue" })*@
+            </div>
+        </div>
+
+        @*Discount Period*@
+        <div class="form-group">
+            <label for="" class="col-md-offset-1 col-md-2 col-sm-12 col-xs-12 bottomBorder">Discount Period</label>
+        </div>
+
+        <div class="form-group">
+            <label for="" class="control-label col-md-3 col-sm-6 col-xs-12 lineHeight fontLighter">Discount code will be expired on</label>
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                @Html.DropDownListFor(model => model.PeriodType,
+            new SelectList(Model.ListDiscountPeriodType, "Value", "Text", Model.PeriodType), null,
+                new
+                {
+                    @class = "form-control select2_multiple",
+                    @id = "DiscountPeriodTypeDdl",
+                    @style = "width:100%;"
+                })
+            </div>
+            <div class="col-md-1 col-sm-3 col-xs-12" style="min-width:118px;">
+                @Html.TextBoxFor(model => model.PeriodTime, new { @class = "form-control keyNumber", @Value = Model.PeriodTime <= 0 ? 1: Model.PeriodTime, @min = "1", @autocomplete = "off", @id= "txtPeriodTime"})
+                @*@Html.ValidationMessageFor(model => model.PeriodTime, null, new { @class = "label", @id = "lblPeriodTime" })*@
+                @Html.ValidationMessageFor(model => model.PeriodTime, null, new { @id = "lblPeriodTime", @class = "label label-danger" })
+
+                @Html.TextBox("PeriodDate", Model.PeriodDate.ToString(Commons.FormatDate), new { @class = "form-control datepicker", @id = "txtPeriodDate" })
+                @Html.ValidationMessageFor(model => model.PeriodDate, null, new { @class = "label" })
+            </div>
+        </div>
+
+        @*Apply Form - Apply To*@
+        @*<div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Apply From</label>
+        <div class="col-md-2 col-sm-2 col-xs-12">
+            @Html.TextBox("ApplyFrom", Model.ApplyFrom.ToString(Commons.FormatDate), new { @class = "form-control datepicker" })
+            @Html.ValidationMessageFor(model => model.ApplyFrom, null, new { @class = "label" })
+        </div>
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Apply To</label>
+        <div class="col-md-2 col-sm-2 col-xs-12">
+            @Html.TextBox("ApplyTo", Model.ApplyTo.ToString(Commons.FormatDate), new { @class = "form-control datepicker" })
+            @Html.ValidationMessageFor(model => model.ApplyTo, null, new { @class = "label" })
+        </div>
+    </div>*@
+
+        @*Apply Type*@
+        <div class="form-group">
+            <label for="" class="col-md-offset-1 col-md-2 col-sm-12 col-xs-12 bottomBorder">Apply Type</label>
+        </div>
+
+        <div class="form-group">
+            @*Total Order*@
+            <div class="col-md-offset-1 col-md-2 col-sm-2 col-xs-12">
+                <label class="radio-inline">
+                    @Html.RadioButtonFor(model => model.IsTotalOrder, "true", new { @checked = "checked", @class = "flat", @id = "radTotalOrder" }) @Commons.DiscountApplyTypeTotal.ToString()
+                </label>
+            </div>
+            @*Specific Items*@
+            <div class="col-md-2 col-sm-6 col-xs-12">
+                <label class="radio-inline">
+                    @Html.RadioButtonFor(model => model.IsTotalOrder, "false", new { @class = "flat", @id = "radSpecificItems" }) @Commons.DiscountApplyTypeItem.ToString()
+                    @*@Html.ValidationMessage("IsTotalOrder", new { @class = "label" })*@
+                    @Html.ValidationMessage("IsTotalOrderType", new { @id = "lblIsTotalOrder", @class = "label label-danger" })
+                </label>
+            </div>
+        </div>
+        <div id="AddItems">
+            @*Add New*@
+            <div class="form-group" style="border-bottom:0px;">
+                <div for="" class="col-md-offset-1 col-md-1 col-sm-12 col-xs-12">
+                    <a id="btn-add-more-tab" href="javascript:void(0)" class="btn btn-primary btn-sm" style="font-size:15px;"
+                        onclick="ShowModalAddCategories('.bs-example-modal-lg-categories', '#list-item-client-category');"
+                        @*data-toggle="modal" data-backdrop="static" data-target=".bs-example-modal-lg-categories"*@>
+                        <i class="fa fa-plus-square" style="font-size:14px;"></i>
+                        <span>Add New</span>
+                    </a>
+                </div>
+            </div>
+
+            @*ListItem*@
+            <div class="form-group">
+                <div class="col-md-offset-1 col-md-7 col-sm-12 col-xs-12">
+                    <table id="datatable-responsive-list-item" class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action tableBodyScroll"
+                            cellspacing="0" style="width:100%;">
+                        <thead style="background-color:#34495e; color:#fff;">
+                            <tr>
+                                <th class="text-center">Item</th>
+                                <th class="text-center">Type</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="list-item-cate">
+                            @Html.Partial("_ListDisCate", Model)
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="form-group" style="padding:20px 0;">
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.ID))
+    {
+        @*Discount Codes*@
+        <div class="form-group">
+            <label for="" class="col-md-offset-1 col-md-2 col-sm-12 col-xs-12 bottomBorder">Discount Codes</label>
+        </div>
+
+        <div class="form-group">
+            <div for="" class="col-md-offset-1 col-md-7 col-sm-12 col-xs-12 text-right">
+                <a id="btn-generate-codes" href="javascript:void(0)" class="btn btn-primary btn-sm" style="font-size:14px;" data-toggle="modal" data-backdrop="static"
+                   data-target=".bs-example-modal-sm-generate-discount-codes">
+                    <i class="fa fa-plus-square" style="font-size:14px;"></i>
+                    <span>Generate Codes</span>
+                </a>
+                <a id="btn-block-unblock" href="javascript:void(0)" class="btn btn-danger btn-sm" style="font-size:14px;"
+                   onclick="BlockOrUnBlock();">
+                    <i class="fa fa-lock"></i>
+                    <span>Block</span>/
+                    <i class="fa fa-unlock"></i>
+                    <span>Unblock</span>
+                </a>
+                @*<a id="btn-print" href="javascript:void(0)" class="btn btn-info btn-sm" style="font-size:14px;">
+                    <i class="fa fa-print"></i>
+                    <span>Print</span>
+                </a>*@
+            </div>
+        </div>
+
+        @*Tabs*@
+        <div class="form-group">
+            <div class="col-md-offset-1 col-md-7 col-sm-12 col-xs-12">
+                <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                    <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                        <li role="presentation" class="active">
+                            <a href="#tab_content1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Active</a>
+                        </li>
+                        <li role="presentation" class="">
+                            <a href="#tab_content4" role="tab" id="expired-tab" data-toggle="tab" aria-expanded="false">Expired</a>
+                        </li>
+                        <li role="presentation" class="">
+                            <a href="#tab_content2" role="tab" id="used-tab" data-toggle="tab" aria-expanded="false">Used</a>
+                        </li>
+                        <li role="presentation" class="">
+                            <a href="#tab_content3" role="tab" id="blocked-tab" data-toggle="tab" aria-expanded="false">Blocked</a>
+                        </li>
+                    </ul>
+                    <div id="myTabContent" class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <table id="datatable-responsive-list-item-active"
+                                       class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action tableBodyScroll customTable"
+                                       cellspacing="0" style="width:100%;">
+                                    <thead style="background-color:#34495e; color:#fff;">
+                                        <tr>
+                                            <th class="text-center"><input type="checkbox" class="" id="chkAllCodes_Active" onclick="CheckOrUncheckHaveValue(this, '.chkDisCode_Active')" /></th>
+                                            <th class="text-center">Code</th>
+                                            <th class="text-center">Expiry Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="list-item-code-active" >
+                                        @*@Html.Partial("_ListCode", Model)*@
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="tab_content4" aria-labelledby="expired-tab">
+                            <p>
+                                <table id="datatable-responsive-list-item-expired"
+                                       class="table table-striped table-bordered dt-responsive nowrap table table-striped tableBodyScroll customTable"
+                                       cellspacing="0" style="width:100%;">
+                                    <thead style="background-color:#34495e; color:#fff;">
+                                        <tr>
+                                            <th class="text-center"><input type="checkbox" class="" id="chkAllCodes_Expired" onclick="CheckOrUncheckHaveValue(this, '.chkDisCode_Expired')" /></th>
+                                            <th class="text-center">Code</th>
+                                            <th class="text-center">Expiry Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="list-item-code-expired">
+                                        @*@Html.Partial("_ListCode", Model)*@
+                                    </tbody>
+                                </table>
+                            </p>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="used-tab">
+                            <p>
+                                <table id="datatable-responsive-list-item-used"
+                                       class="table table-striped table-bordered dt-responsive nowrap table table-striped tableBodyScroll customTable"
+                                       cellspacing="0" style="width:100%;">
+                                    <thead style="background-color:#34495e; color:#fff;">
+                                        <tr>
+                                            <th class="text-center"><input type="checkbox" class="" id="chkAllCodes_Used" onclick="CheckOrUncheckHaveValue(this, '.chkDisCode_Used')" /></th>
+                                            <th class="text-center">Code</th>
+                                            <th class="text-center">Expiry Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="list-item-code-used">
+                                        @*@Html.Partial("_ListCode", Model)*@
+                                    </tbody>
+                                </table>
+                            </p>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="blocked-tab">
+                            <p>
+                                <table id="datatable-responsive-list-item-blocked"
+                                       class="table table-striped table-bordered dt-responsive nowrap table table-striped tableBodyScroll customTable"
+                                       cellspacing="0" style="width:100%;">
+                                    <thead style="background-color:#34495e; color:#fff;">
+                                        <tr>
+                                            <th class="text-center">
+                                                <input type="checkbox" class="" id="chkAllCodes_Block"
+                                                       onclick="CheckOrUncheckHaveValue(this, '.chkDisCode_Block')" />
+                                            </th>
+                                            <th class="text-center">Code</th>
+                                            <th class="text-center">Expiry Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="list-item-code-blocked">
+                                        @*@Html.Partial("_ListCode", Model)*@
+                                    </tbody>
+                                </table>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="form-group" style="padding:20px 0;">
+    </div>
+
+    @*Description*@
+    @*<div class="form-group" style="padding-top:30px;">
+            <label class="control-label col-md-2 col-sm-2 col-xs-12 fontLighter">Description: </label>
+            <div class="col-md-6 col-sm-7 col-xs-12">
+                @Html.TextAreaFor(model => model.Description, new { @class = "form-control ckeditor", placeholder = "Description" })
+                @Html.ValidationMessageFor(model => model.Description, null, new { @class = "label" })
+            </div>
+        </div>*@
+
+</div>
+
+<div class="modal fade bs-example-modal-lg-categories" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Select Items</h4>
+            </div>
+            <div class="modal-body">
+                @*Packages*@
+                <div class="form-group" style="margin-bottom:0;">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <label>@Html.CheckBoxFor(model => model.IsAllPackage, new { @class = "", @id = "chkAllPackage" }) Packages</label>
+                    </div>
+                </div>
+                @*Additions*@
+                <div class="form-group" style="margin-bottom:0;">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <label>@Html.CheckBoxFor(model => model.IsAllAddition, new { @class = "", @id = "chkAllAddition" }) Additions</label>
+                    </div>
+                </div>
+                @*Categories*@
+                @*<div class="form-group" style="margin-bottom:0;">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <label>@Html.CheckBoxFor(model => model.IsAllCategory, new { @class = "" }) Categories</label>
+                    </div>
+                </div>*@
+                <div class="product_price" style="margin:15px 0 0; border:none; padding:10px 0 0; border-top:2px dashed #E0E0E0;">
+                    @*Categories*@
+                    <div class="form-group" style="margin-bottom:0;">
+                        <div class="col-md-12 col-sm-12 col-xs-12" style="padding-left:0;">
+                            <label>Categories</label>
+                        </div>
+                    </div>
+                    @*Button Select All / Deselect All*@
+                    <div class="form-group" style="margin-bottom:0px;">
+                        <div class="col-md-12 col-sm-12 col-xs-12" style="padding-left:0px;">
+                            <button type="button" class="btn btn-info btn-sm" onclick="SelectOrDeselect(true, '.chkCate')" @*onclick="SelectOrDeselect02('all')"*@>Select All</button>
+                            <button type="button" class="btn btn-danger btn-sm" onclick="SelectOrDeselect(false, '.chkCate')" @*onclick="SelectOrDeselect02('none')"*@>Deselect All</button>
+                        </div>
+                    </div>
+                    @*List item categories*@
+                    <div class="form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12" style="padding:0;">
+                            <table id="datatable-responsive-list-item-popup" class="table center-content tableBodyScroll"
+                                   cellspacing="0" style="width:100%;">
+                                <thead style="background-color:#34495e; color:#fff;">
+                                    <tr>
+                                        <th class="text-center">Selection</th>
+                                        <th class="text-center">Category</th>
+                                        <th class="text-center">Type</th>
+                                        <th class="text-center">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="list-item-client-category">
+                                    @Html.Partial("_ListCategoy", Model)
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="AddCategories(this,'.bs-example-modal-lg-categories', '#list-item-cate');">Add</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Modal Generate Discount Codes*@
+<div class="modal fade bs-example-modal-sm-generate-discount-codes" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel2">Generate Discount Codes</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="number-of-codes" class="col-md-8 col-sm-8 col-xs-12 lineHeight">Number of codes</label>
+                    <div class="col-md-4 col-sm-4 col-xs-12">
+                        <input type="number" class="form-control" id="txt-number-of-codes" value="1" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="GenerateCodes('.bs-example-modal-sm-generate-discount-codes');">OK</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<style>
+    #datatable-responsive-list-item-popup_filter {
+        width: 100%;
+    }
+    #datatable-responsive-list-item tbody td {
+        word-break: break-word;
+        vertical-align: top;
+        white-space: inherit;
+    }
+    .customTable th:first-child,
+    .customTable td:first-child {
+        width: 10%;
+    }
+    .customTable th:nth-child(2),
+    .customTable td:nth-child(2) {
+        width: 40%;
+    }
+    #datatable-responsive-list-item-popup th:first-child,
+    #datatable-responsive-list-item-popup td:first-child {
+        width: 15%;
+    }
+</style>
+
+<script src="@Url.Content("~/build/js/customInput.js")"></script>
+<script type="text/javascript">
+
+    //var _tableCateDiscount = null;
+    var _settingsOptionTableCateDiscount = {
+        "columnDefs": [
+               { "orderable": false, "targets": 2 },
+               { "width": "32.8%", "targets": [0, 1] },
+               //{ "width": "40%", "targets": [2] },
+        ],
+        "order": [[0, 'asc']],
+        "autoWidth": false, /*Feature control DataTables' smart column width handling.*/
+        //"displayLength": 25,
+        //"pagingType": "full_numbers",
+        "searching": true,         // txtSearch in filter
+        //"lengthChange": true,      // Dropdownlist Page
+        "bInfo": false ,             // text [showing...
+        //"scrollY": "400px",
+        //"scrollCollapse": true,
+        "paging": false
+    };
+
+
+    //var _tableItemPopup = null;
+    var _settingsOptionTableItemPopup = {
+        "columnDefs": [
+                { "orderable": false, "targets": [0,3] },
+                //{ "width": "8%", "targets": [0, 3] },
+        ],
+        "order": [[1, 'asc']],
+        "autoWidth": false, /*Feature control DataTables' smart column width handling.*/
+        //"displayLength": 25,
+        "searching": true,         // txtSearch in filter
+        //"lengthChange": false,      // Dropdownlist Page
+        "bInfo": false,              // text [showing...
+        "paging": false,           //
+        //"scrollY": 400,
+        //"scrollCollapse": false,
+    };
+
+   
+
+    //var _tableItemCodeActive = null;
+    //var _tableItemCodeExpired = null;
+    //var _tableItemCodeUsed = null;
+    //var _tableItemCodeBlocked = null;
+    //var _settingsOptionTableListItemCode = {
+    //    "columnDefs": [
+    //            { "targets": [0], "orderable": false },
+    //            { "width": "5%", "targets": [0, 2] },
+    //    ],
+    //    "order": [],
+    //    "autoWidth": false, /*Feature control DataTables' smart column width handling.*/
+    //    "displayLength": 25,
+    //    "pagingType": "full_numbers",
+    //    "searching": false,         // txtSearch in filter
+    //    "lengthChange": false,      // Dropdownlist Page
+    //    "bInfo": false              // text [showing...
+    //    //"paging": false           //
+    //};
+
+    //=============
+    $(document).ready(function (e) {
+
+        //setting
+        $('#datatable-responsive-list-item').DataTable($.extend(true, {}, _settingsOptionTableCateDiscount));
+        $('#datatable-responsive-list-item-popup').DataTable($.extend(true, {}, _settingsOptionTableItemPopup));
+
+        $("#valueTypeDdl").select2({
+            placeholder: "Please choose value type"
+        });
+        $("#DiscountPeriodTypeDdl").select2({
+            placeholder: "Please choose period type"
+        });
+
+        /****** key number ***/
+        KeyNumberCheck();
+      
+        //$('#datatable-responsive-list-item-popup').DataTable({
+        //    "columnDefs": [
+        //        { "orderable": false, "targets": [0, 2,3] },
+        //        { "width": "3%", "targets": [0] }
+        //    ],
+        //    "autoWidth": false,
+        //    "order": [[1, 'asc']],
+        //    "scrollY": 400,
+        //    "paging": false,
+        //    "pagingType": "full_numbers",
+        //    "searching": false, 
+        //});
+
+        //_tableCateDiscount = 
+        //_tableItemPopup = $('#datatable-responsive-list-item-popup').DataTable($.extend(true, {}, _settingsOptionTableItemPopup));
+
+        //_tableItemCodeActive = $('#datatable-responsive-list-item-active').DataTable($.extend(true, {}, _settingsOptionTableListItemCode));
+        //_tableItemCodeExpired = $('#datatable-responsive-list-item-expired').DataTable($.extend(true, {}, _settingsOptionTableListItemCode));
+        //_tableItemCodeUsed = $('#datatable-responsive-list-item-used').DataTable($.extend(true, {}, _settingsOptionTableListItemCode));
+        //_tableItemCodeBlocked = $('#datatable-responsive-list-item-blocked').DataTable($.extend(true, {}, _settingsOptionTableListItemCode));
+
+        //=============
+        checkPeriodType(@Model.PeriodType);
+
+        @if (!string.IsNullOrEmpty(Model.ID))
+        {
+            @:GetListDiscountCodes('@Model.ID');
+        }
+
+        //=============
+        // Disable btn Add Items
+        checkDisableBtnAddItems();
+        $('input[name=IsTotalOrder]').on('ifChecked', function () {
+            //debugger;
+            checkDisableBtnAddItems()
+        });
+
+        //=============
+        // Disable some input when edit
+        checkDisableInputNoneEdit();
+
+    });
+
+    function checkDisableBtnAddItems() {
+        //debugger;
+        if ($('input[name=IsTotalOrder]:Checked').val() == "true") {
+            $('#AddItems').hide();
+        } else {
+            $('#AddItems').show();
+        }
+    }
+
+    function checkDisableInputNoneEdit() {
+        if ($('input[name=ID]').val() != "") {
+            $("#noneEdit *").prop("disabled", true);
+            $("#noneEdit input[type='search']").removeAttr('disabled');
+            $("#noneEdit #btn-add-more-tab").attr("disabled", "disabled");
+            $("#noneEdit #btn-add-more-tab").css('pointer-events', 'none');
+            $('#datatable-responsive-list-item').DataTable().rows({ search: 'applied' }).every(function () {
+                var rowNode = this.node();
+                $(rowNode).find('a.btn').attr("disabled", "disabled");
+                $(rowNode).find('a.btn').css('pointer-events', 'none');
+            });
+        }
+    }
+
+    /*Function*/
+    $("#DiscountPeriodTypeDdl").change(function () {
+        var value = this.value;
+        checkPeriodType(value);
+    });
+
+    function checkPeriodType(value) {
+        $('#txtPeriodTime').hide();
+        $('#txtPeriodDate').hide();
+        if (value == '@Commons.EDiscountPeriodType.Time.ToString("d")')
+            $('#txtPeriodTime').show();
+        else if (value == '@Commons.EDiscountPeriodType.Day.ToString("d")')
+            $('#txtPeriodDate').show();
+    }
+
+    function ShowModalAddCategories(_modal, elemnetFillData) {
+        $(_modal).modal({
+            show: true,
+            backdrop: 'static'
+        });
+        LoadCategories(_modal, elemnetFillData)
+    }
+
+    function LoadCategories(_modal, elemnetFillData) {
+
+        $.ajax({
+            url: CreateAbsoluteUrl("LoadCategories"),
+            type: 'GET',
+            data: {},
+            dataType: 'html',
+            traditional: true,
+            beforeSend: function () {
+                $('.se-pre-con').show();
+                $(elemnetFillData).html('');
+            },
+            error: function (e) {
+            },
+            success: function (data) {
+                $('#chkAllPackage').prop("checked", false);
+                $('#chkAllAddition').prop("checked", false);
+                //$(elemnetFillData).html(data);
+
+                // get the html table rows then
+                $('#datatable-responsive-list-item-popup').DataTable().destroy();
+                //$(elemnetFillData).empty().promise().done(function () {
+                $(elemnetFillData).html(data);
+                $('#datatable-responsive-list-item-popup').DataTable($.extend(true, {}, _settingsOptionTableItemPopup));
+                //    _tableItemPopup = $("#datatable-responsive-list-item-popup").DataTable($.extend(true, {}, _settingsOptionTableItemPopup));
+                //});
+                var statusDeleted = '@Commons.EStatus.Deleted.ToString("d")';
+                // Get list category selected in table #datatable-responsive-list-item
+                var ListIDCateSelected = [];
+              
+                $('#datatable-responsive-list-item').DataTable().rows({ search: 'applied' }).every(function () {
+                    var rowNode = this.node();
+                    if (parseInt($(rowNode).find('td.dataCate input.CateStatus').val()) != parseInt(statusDeleted)) {
+                        var id = $(rowNode).data('id');
+                        if(id == "" ){
+                            // Checkbox All Package
+                            var itmType = $(rowNode).find('td.dataCate input.Type').val();
+                            if (itmType == "Packages") {
+                                $('#chkAllPackage').prop("checked", true);
+                            } else if (itmType == "Additions") {
+                                $('#chkAllAddition').prop("checked", true);
+                            }
+                        } else {
+                            ListIDCateSelected.push(id);
+                        }
+                        
+                    }
+
+                    
+
+                });
+
+                $('.ItemCate').each(function (index, value) {
+                    var idCate = $(this).data('id');
+                    var _this = $(this);
+                    //======
+                    if (jQuery.inArray(idCate, ListIDCateSelected) != -1) {
+                        // the element is not in the array
+                        _this.find('input[type="checkbox"]').prop('checked', true);
+                    };
+
+                    //$('#datatable-responsive-list-item').DataTable().rows({ search: 'applied' }).every(function () {
+                    //    var rowNode = this.node();
+                    //    if (parseInt($(rowNode).find('td.dataCate input.CateStatus').val()) != parseInt(statusDeleted)) {
+                    //        var id = $(rowNode).data('id');
+                    //        if (idCate == id) {
+                    //            _this.find('input[type="checkbox"]').prop('checked', true);
+                    //        }
+                    //    }
+                    //});
+
+                    //$('.mediate-cate:visible').each(function (index, value) {
+                    ////$('.mediate-cate').each(function (index, value) {
+                    //    var id = $(this).data('id');
+                    //    if (idCate == id) {
+                    //        //_this.addClass('hide');
+                    //        _this.find('input[type="checkbox"]').prop('checked', true);
+                    //    }
+                    //});
+
+                });
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            }
+        });
+    }
+
+    function AddCategories(btn, _modal, elemnetFillData) {
+        var data = [];
+        $.each($('.ItemCate'), function () {
+            var isSelect = $(this).find('input[type="checkbox"]').prop('checked');
+            var id = $(this).data('id');
+            var name = $(this).data('name');
+            var status = $(this).data('status');
+            var type = $(this).data('type');
+            if (isSelect) {
+                var ItemDisCate = {
+                    Id: id,
+                    Name: name,
+                    Status: status,
+                    IsSelect: isSelect,
+                    Type: type
+                };
+                data.push(ItemDisCate);
+            }
+        });
+
+        var POSTDisCate = {
+            IsAllPackage: $('#chkAllPackage').prop('checked'),
+            IsAllAddition: $('#chkAllAddition').prop('checked'),
+            ListItem: data
+        }
+        $.ajax({
+            type: "POST",
+            url: CreateAbsoluteUrl("AddCategories"),
+            traditional: true,
+            data: JSON.stringify(POSTDisCate),
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            beforeSend: function () {
+                $('.se-pre-con').show();
+                //$(elemnetFillData).html('');
+            },
+            error: function (e) {
+
+            },
+            success: function (data) {
+                $(_modal).modal('hide');
+                //$(elemnetFillData).html(data);
+
+                // get the html table rows then
+                $("#datatable-responsive-list-item").DataTable().destroy();
+                //$(elemnetFillData).empty().promise().done(function () {
+                //$(elemnetFillData).html(data);
+
+                $("#datatable-responsive-list-item tbody").html(data);
+                $("#datatable-responsive-list-item").DataTable($.extend(true, {}, _settingsOptionTableCateDiscount));
+
+                //    _tableCateDiscount = $("#datatable-responsive-list-item").DataTable($.extend(true, {}, _settingsOptionTableCateDiscount));
+                //});
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            }
+        });
+    }
+
+    function DeleteCategory(e, _type) {
+        var tr = $(e).parents('tr:first');
+        $(tr).find('input.CateStatus').val(9);
+        $(tr).css('display', 'none');
+        if (_type == 'Additions') {
+            $('#chkAllAddition').prop('checked', false);
+        }
+        if (_type == 'Packages') {
+            $('#chkAllPackage').prop('checked', false);
+        }
+    }
+
+    /*Generate Codes*/
+    function GenerateCodes(_modal) {
+        var NumberCode = $('#txt-number-of-codes').val();
+        if (NumberCode == '' || NumberCode == '0') {
+            return false;
+        }
+        $.ajax({
+            url: CreateAbsoluteUrl("GenerateCodes"),
+            type: 'GET',
+            data: {
+                ID: '@Model.ID',
+                NumberCode: NumberCode
+            },
+            dataType: 'html',
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            error: function (e) {
+            },
+            success: function (data) {
+                $(_modal).modal('hide');
+                GetListDiscountCodes('@Model.ID');
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            }
+        });
+    }
+
+    /*BlockOrUnBlock*/
+    var _listCodeID = [];
+    function BlockOrUnBlock() {
+        if (_listCodeID.length == 0) {
+            return false;
+        }
+        $.ajax({
+            url: CreateAbsoluteUrl("BlockOrUnBlock"),
+            type: 'POST',
+            data: {
+                ID: '@Model.ID',
+                ListCodeID: _listCodeID
+            },
+            dataType: 'html',
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            error: function (e) {
+            },
+            success: function (data) {
+                _listCodeID = [];
+                GetListDiscountCodes('@Model.ID');
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            }
+        });
+    }
+
+    function GetListDiscountCodes(_ID) {
+        //clear check-all
+        $('#chkAllCodes_Active').prop('checked', false);
+        $('#chkAllCodes_Expired').prop('checked', false);
+        $('#chkAllCodes_Used').prop('checked', false);
+        $('#chkAllCodes_Block').prop('checked', false);
+
+        var listItemCode = [1, 2, 3, 4];
+        $.each($(listItemCode), function (index, value) {
+            $.ajax({
+                url: CreateAbsoluteUrl("GetListDiscountCodes"),
+                type: 'GET',
+                async: false,
+                data: {
+                    ID: _ID,
+                    State: value
+                },
+                dataType: 'html',
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                error: function (e) {
+                },
+                success: function (data) {
+                    // get the html table rows then
+                    if (value == '@Commons.EDiscountCodeState.Active.ToString("d")') {
+                        //_tableItemCodeActive.destroy();
+                        //$('#list-item-code-active').empty().promise().done(function () {
+                            $('#list-item-code-active').html(data);
+                        //    _tableItemCodeActive = $("#datatable-responsive-list-item-active").DataTable($.extend(true, {}, _settingsOptionTableListItemCode));
+                        //});
+                    }
+                    else if (value == '@Commons.EDiscountCodeState.Expired.ToString("d")') {
+                        //_tableItemCodeExpired.destroy();
+                        //$('#list-item-code-expired').empty().promise().done(function () {
+                            $('#list-item-code-expired').html(data);
+                        //    _tableItemCodeExpired = $("#datatable-responsive-list-item-expired").DataTable($.extend(true, {}, _settingsOptionTableListItemCode));
+                        //});
+                    }
+                    else if (value == '@Commons.EDiscountCodeState.Used.ToString("d")') {
+                        //_tableItemCodeUsed.destroy();
+                        //$('#list-item-code-used').empty().promise().done(function () {
+                            $('#list-item-code-used').html(data);
+                        //    _tableItemCodeUsed = $("#datatable-responsive-list-item-used").DataTable($.extend(true, {}, _settingsOptionTableListItemCode));
+                        //});
+                    }
+                    else if (value == '@Commons.EDiscountCodeState.Block.ToString("d")') {
+                        //_tableItemCodeBlocked.destroy();
+                        //$('#list-item-code-blocked').empty().promise().done(function () {
+                            $('#list-item-code-blocked').html(data);
+                        //    _tableItemCodeBlocked = $("#datatable-responsive-list-item-blocked").DataTable($.extend(true, {}, _settingsOptionTableListItemCode));
+                        //});
+                    }
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                }
+            });
+        });
+    }
+
+    function ChkItemCode(e, _id, classObjectInput) {
+        var isCheck = $(e).prop('checked');
+        if (isCheck) {
+            _listCodeID.push(_id);
+        }
+        else {
+            _listCodeID.splice($.inArray(_id, _listCodeID), 1);
+        }
+        //===========
+        var countAll = $(classObjectInput).length;
+        var countChkAll = $(classObjectInput + ':checked').length;
+        if (classObjectInput ==".chkDisCode_Active") {
+            $('#chkAllCodes_Active').prop('checked', countAll == countChkAll);
+        }
+        if (classObjectInput == ".chkDisCode_Expired") {
+            $('#chkAllCodes_Expired').prop('checked', countAll == countChkAll);
+        }
+        if (classObjectInput == ".chkDisCode_Used") {
+            $('#chkAllCodes_Used').prop('checked', countAll == countChkAll);
+        }
+        if (classObjectInput == ".chkDisCode_Block") {
+            $('#chkAllCodes_Block').prop('checked', countAll == countChkAll);
+        }
+       
+    }
+
+    function CheckOrUncheckHaveValue(e, classObjectInput) {
+        var isCheck = $(e).prop('checked');
+        $(classObjectInput).prop('checked', isCheck);
+        _listCodeID = [];
+        if (isCheck) {
+            $.each($(classObjectInput), function () {
+                var id = $(this).data('id');
+                _listCodeID.push(id);
+            });
+        }
+    }
+
+    function SelectOrDeselect02(checkState) {
+        countCheckedCate(checkState);
+    }
+
+    function countCheckedCate(checkState) {
+        if (checkState === 'all') {
+            $(".chkCate").iCheck('check').addClass('selected');
+        }
+        if (checkState === 'none') {
+            $(".chkCate").iCheck('uncheck').removeClass('selected');
+        }
+    }
+</script>

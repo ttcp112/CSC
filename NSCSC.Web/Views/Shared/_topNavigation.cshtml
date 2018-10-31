@@ -1,0 +1,123 @@
+﻿@using NSCSC.Shared.Utilities
+
+<div class="top_nav">
+    <div class="nav_menu">
+        <nav>
+            <div class="nav toggle">
+                <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+
+                <li class="">
+                    <a href="javascript:;" class="user-profile-top dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        @*<img src="@Url.Content("~/Assets/images/picture.jpg")" alt="" />*@
+                        @{
+                            var user = Session["User"] as NSCSC.Shared.Models.UserSession;
+                            if (user != null)
+                            {
+                                if (user.ImageUrl == null)
+                                {
+                                    <img src="@Url.Content("~/Assets/images/avatarDefault.jpg")" alt="" />
+                                }
+                                else
+                                {
+                                    <img src="@user.ImageUrl" alt="" />
+                                }
+                                @Html.Raw(user.UserName)
+                            }
+
+                        }
+                        <span class="fa fa-angle-down"></span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-usermenu pull-right">
+                        @*<li><a href="@Url.Action("Index","Profile", new { area = "" })"> Profile</a></li>*@
+                        <li>
+                            <a href="@Url.Action("ChangePassword", "Profile", new { area = "" })">
+                               Change Password
+                            </a>
+                        </li>
+                        <li><a href="@Url.Action("Logout", "Home", new { area = "" })"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+                    </ul>
+                </li>
+               
+            </ul>
+        </nav>
+    </div>
+</div>
+@*<div role="main" class="right_col">*@
+    <!-- Modal Add Ingredient-->
+    <div class="modal fade" id="modalMerchantQRCode" tabindex="-1" role="dialog" aria-labelledby="modalDishLabel" data-backdrop="static">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title" id="ltrTitle" style="color:#34495e; font-weight:bold;">Merchant QR code</h4>
+                </div>
+                <div class="modal-body scroll" style="padding:0;height:265px;">
+                    @*<div id="tbl-add-ingredient" class="form-group-sm">
+                        </div>
+                        <input type="hidden" id="hidId" />*@
+                    @{
+                        if (user != null)
+                        {
+                            <img style="display: block;   margin-left: auto;   margin-right: auto;" src="https://chart.apis.google.com/chart?cht=qr&amp;chs=200x200&amp;chl=@user.OrganizationId">
+                            <div style="width:200px; margin-left:auto; margin-right:auto;">
+                                <div style="float:left; display:inline;">
+                                    @Html.DropDownListFor(model => user.QRCodeSizeId,
+                                          new SelectList(CommonHelper.GetListQRCodeSize, "Value", "Text", user.QRCodeSizeId),
+                                 new
+                                 {
+                                     @class = "form-control select2_single",
+                                     @id = "qrcodeDdlView",
+                                     @style = "width:123px;margin-left:25px;",
+                                     @placeholder = ""
+                                 })
+                                </div>
+                                <div style="float:right; display:inline; cursor:pointer; margin-right:20px;">
+                                    @*<i class="fa fa-download" style="font-size:25px;" onclick="location.href='@Url.Action("SaveQRCodeImage", "Login",new {filename= user.OrganizationId, sizeValue = user.QRCodeSizeId })'"></i>*@
+                                    <i class="fa fa-download" style="font-size:25px;" onclick="DownQRCodeImage('@user.OrganizationId');"></i>
+                                </div>
+
+                                @*<button id="btn-save-dish" type="button" class="btn btn-beauty bg-fnb" onclick="AddIngredient()">Save</button>*@
+                            </div>
+                        }
+                        else
+                        {
+
+                        }
+
+                    }
+                </div>
+                @*<div class="modal-footer" style="text-align:center;">
+                        <div class="col-md-12">
+                            <h5><span class="label label-danger" id="ltrMsg"></span></h5>
+                        </div>
+                    </div>*@
+            </div>
+        </div>
+    </div>
+@*</div>*@
+
+<script type="text/javascript">
+    function ShowModal() {
+        var modal = $("#modalMerchantQRCode");
+        //var contentWidth = ($("html").width() - $(".main-sidebar").width()) / 2;
+        //var marginLeft = (contentWidth - 450) + $(".main-sidebar").width();
+        $(modal).modal({
+            keyboard: false,
+            show: true,
+            backdrop: false
+        });
+    }
+
+    function DownQRCodeImage(fileName) {
+        var sizeChoose = $('#qrcodeDdlView').val();
+        //alert(sizeChoose);
+        var para = fileName + '|' + sizeChoose;
+        var url = '@Url.Action("SaveQRCodeImage", "Login", new { filename = "__param1__" })';
+        var urlTmp = url.replace('__param1__', para);
+        location.href = urlTmp;
+    }
+</script>

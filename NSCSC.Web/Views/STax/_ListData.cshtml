@@ -1,0 +1,131 @@
+﻿@using NSCSC.Shared
+@model NSCSC.Shared.Models.Settings.Tax.TaxViewModels
+<div class="table-responsive">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>Taxes</h2>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action" cellspacing="0" style="width:100%;">
+                <thead style="background-color:#34495e; color:#fff;">
+                    <tr>
+                        <th style="text-align:center;"> Tax Name</th>                     
+                        <th style="text-align:center;"> Type </th>
+                        <th style="text-align:center;"> Rate </th>
+                        <th style="text-align:center;"> Status </th>
+                        <th style="text-align:center;"> Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @if (@Model.ListTax != null)
+                    {
+                        for (int i = 0; i < Model.ListTax.Count; i++)
+                        {
+                            string styleRow = "row-evenItem";
+                            if (i % 2 == 0)
+                            {
+                                styleRow = "row-oddItem";
+                            }
+                            var item = Model.ListTax[i];
+                            <tr class="@styleRow">
+                                <td style="color:#34495e; font-weight:bold;"> &nbsp;&nbsp;@item.TaxName</td>                             
+                                <td style="text-align:center;">
+                                    @if(@item.TaxType == (byte)Commons.ETaxType.AddOn)
+                                    {
+                                        @Commons.TypeTaxAddOn
+                                    }
+                                    else
+                                    {
+                                      @Commons.TypeTaxInclusive
+                                    }
+                                </td>
+                                <td style="text-align:center;">@item.TaxPercent %</td>
+                                <td style="text-align:center;">
+                                    @if (item.IsActive == true)
+                                    {
+                                        <span class="label label-success">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="label label-danger">Inactive</span>
+                                    }
+                                </td>
+                                <td>
+                                    <a href="javascript:void(0)"
+                                       onclick="ShowView('@Url.Action("View", "STax", new { id = item.Id })')"
+                                       class="btn btn-primary btn-xs view details"><i class="fa fa-eye"></i>&nbsp;View</a>
+                                    
+                                    @{
+                                        <a href="javascript:void(0)"
+                                           onclick="ShowView('@Url.Action("Edit", "STax", new {  id = item.Id })')"
+                                           class="btn btn-info btn-xs edit details action-class"><i class="fa fa-edit"></i>&nbsp;Edit</a>
+
+                                        if (!item.IsActive)
+                                        {
+                                            <a href="javascript:void(0)"
+                                               onclick="ShowModalDelete('.modal-delete', '@item.Id')"
+                                               class="btn btn-danger btn-xs delete details action-class"><i class="fa fa-trash-o"></i>&nbsp;Delete</a>
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@Html.Partial("~/Views/Shared/_popupDelete.cshtml",
+                        new Dictionary<string, string> { { "A", "Taxes" }, { "B", "This tax already has transaction. Cannot delete this one" } })
+
+<script type="text/javascript">
+    function ShowView(url) {
+        ShowViewOrEdit(url);
+        return false;
+    }
+
+    $(document).ready(function () {
+        $('#datatable-responsive').DataTable({
+            "columnDefs": [
+                { "orderable": false, "targets": 4 },
+                { "width": "8%", "targets": [1,2, 3, 4] },
+            ],
+            "order": [
+                [1, 'asc'],
+                [0, 'asc']
+            ],
+            "displayLength": 50,
+            "drawCallback": function (settings) {
+                var api = this.api();
+                var rows = api.rows({ page: 'current' }).nodes();
+                var last = null;
+                //Column Group
+                api.column(1, { page: 'current' }).data().each(function (group, i) {
+                    if (last !== group) {
+                        $(rows).eq(i).before(
+                            '<tr class="group"><td colspan="5"><strong style="color:#d9534f;">' + (group === '' ? '|' : group) + '</strong></td></tr>'
+                        );
+                        last = group;
+                    }
+                });
+            }
+        });
+
+        /* check permission */
+        @{
+            var userSession = Session["User"] as NSCSC.Shared.Models.UserSession;
+            if (userSession != null)
+            {
+                var tmpAction = userSession.ListPermission.Where(o => o.Code == (int)@NSCSC.Shared.Commons.EModuleCode.Set_Tax).Select(o => o.IsAction).FirstOrDefault();
+                if (tmpAction == false)
+                {
+                     <text>$('.action-class').hide();</text>
+                }
+            }
+        }
+    });
+
+</script>

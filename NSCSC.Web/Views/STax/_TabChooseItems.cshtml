@@ -1,0 +1,100 @@
+﻿@model NSCSC.Shared.Models.Settings.Tax.TaxModels
+@using NSCSC.Shared
+
+@if (Model.LstProduct != null && Model.LstProduct.Count > 0)
+{
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr style="background-color:#34495e; color:#fff;">
+                @*<th style="width:1%;"><input type="checkbox" id="chkAllEarn_@Model.offset" onchange="ToogleCheckAllItem(this, '#list-data-@Model.offset')" /></th>*@
+                <th style="width:1%;"><input type="checkbox" id="chkAllRule_@Model.offset" onchange="CheckAllItem(this, '#list-data')" /></th>
+                <th>Item Name</th>
+            </tr>
+        </thead>
+        @*<tbody id="list-data-@Model.offset">*@
+        <tbody id="list-data">
+            @for (int i = 0; i < Model.LstProduct.Count; i++)
+            {
+                @*<tr data-id="@Model.LstProduct[i].ID" style="cursor:pointer;" class="SpecificItems">*@
+                <tr data-id="@Model.LstProduct[i].ID" style="cursor:pointer;" class="SpecificItems">
+                    <td>
+                        @*@Html.CheckBoxFor(model => model.LstProduct[i].Ischeck*@
+                        @Html.CheckBoxFor(model => model.LstProduct[i].Ischeck, new { @class = "chldItemOngroup", @onClick = "TickCheckBoxForChild(this, " + Model.offset + ")" })
+                        @Html.HiddenFor(model => model.LstProduct[i].ID, new { @id = "hidID" })
+                        @Html.HiddenFor(model => model.LstProduct[i].Code, new { @id = "hidCode" })
+                        @Html.HiddenFor(model => model.LstProduct[i].Name, new { @id = "hidName" })
+                        @Html.HiddenFor(model => model.LstProduct[i].ProductType, new { @id = "hidItemType" })
+                    </td>
+                    @*<td onclick="TickCheckBoxTd(this, '#list-data-@Model.offset',@Model.offset)"> @Model.LstProduct[i].Name</td>*@
+                    <td>@Model.LstProduct[i].Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+<script>
+
+    var countchild = 0;
+    var countAll = 0;
+    function CheckAllItem(e, containElementSelector) {
+        checkAll = $(e).prop("checked");
+        $(containElementSelector).find("tr:visible").find("input[type='checkbox']").prop("checked", checkAll);
+        if ($(e).prop('id') != 'select-all') {
+            ToggleBtnDelete();
+        }
+    }
+    $('.SpecificItems').click(function (event) {
+    if (event.target.type != 'checkbox') {             
+        $('.chldItemOngroup',this).trigger('click');
+    }
+    });
+    function TickCheckBoxFor(td, offset) {
+        countchild = parseFloat(countchild) + 1;
+        var tr = $(td).parents('tr:first');
+        $(tr).find('input[type=checkbox]').prop('checked', !$(tr).find('input[type=checkbox]').prop('checked'))
+        $('.chldItemOngroup').find('input[type=checkbox]').prop('checked');
+
+        countAll = $('#list-data').find("tr:visible").length;
+        countchild = $('#list-data').find("tr:visible").find("input[type='checkbox']:checked").length;
+        if (countchild === countAll) {
+            $('#chkAllRule_' + offset + '').prop('checked', true);
+        } else {
+            $('#chkAllRule_' + offset + '').prop('checked', false);
+        }
+    }
+
+    function TickCheckBoxForChild(td, offset) {
+        var tr = $(td).parents('tr:first');
+        $(tr).find('input[type=checkbox]').prop('checked', !$(tr).find('input[type=checkbox]').prop('checked'))
+        TickCheckBoxFor(td, offset);
+    }
+
+
+    //function ToogleCheckAllItem(e, containElementSelector) {
+    //    checkAll = $(e).prop("checked");
+    //    $(containElementSelector).find("tr:visible").find("input[type='checkbox']").prop("checked", checkAll);
+    //    if ($(e).prop('id') != 'select-all') {
+    //        ToggleBtnDelete();
+    //    }
+    //}
+
+    //function TickCheckBoxTd(td, containElementSelector, OffSet) {
+    //    var tr = $(td).parents('tr:first');
+    //    $(tr).find('input[type=checkbox]').prop('checked', !$(tr).find('input[type=checkbox]').prop('checked'));
+
+    //    var _trCount = $(containElementSelector).find("tr:visible").length;
+    //    var lengthCheck = $(containElementSelector).find("tr:visible").find("input[type='checkbox']:checked").length;
+    //    if (_trCount === lengthCheck) {
+    //        $('#chkAllEarn_' + OffSet + '').prop('checked', true);
+    //    } else {
+    //        $('#chkAllEarn_' + OffSet + '').prop('checked', false);
+    //    }
+    //}
+
+
+
+</script>
+

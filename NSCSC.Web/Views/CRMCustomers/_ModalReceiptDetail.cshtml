@@ -1,0 +1,677 @@
+﻿@{
+    Layout = null;
+}
+@model  NSCSC.Shared.Models.ClientSite.MyProfile.OrderDetailModels
+@using NSCSC.Shared
+<style>
+    .itemShowOnHistory {
+        color: #CC1018;
+        font-size: 16px;
+        font-weight: bold;
+        /*margin-left:16px;*/
+    }
+
+    .itemShowOnHistoryType {
+        color: black;
+    }
+    .subtotal {
+        font-size: 13px;
+        display: block;
+    }
+    .subtotal-title {
+        width: 140px;
+    }
+</style>
+<div class="form-group">
+    <div class=" col-md-6 col-sm-6 col-xs-12 text-left">
+        <div class="form-group">
+            <label class="control-label"><b class="modal-title" style="font-size:20px">@Model.ReceiptNo</b></label>
+        </div>
+        <div class="form-group">
+            <label class="control-label">Paid Time: @Model.PaidTime.ToString(Commons.FormatDateTime)</label>
+        </div>
+        <div class="form-group">
+            <label for="Paid-by" class="control-label">
+                Paid by:
+                @foreach (var item in Model.PaidByMethod)
+            {
+                    @Html.Raw(item.Name)<br />
+                }
+            </label>
+        </div>
+    </div>
+
+    <div class=" col-md-6 col-sm-6 col-xs-12 text-right"> 
+       
+        <span class="subtotal">
+            <label class="subtotal-title">SubTotal:</label> @Model.CurrencySymbol@Model.SubTotal.ToString("N2")
+        </span>
+        <span class="subtotal">
+            <label class="subtotal-title">Discount:</label> @Model.CurrencySymbol@Model.TotalDiscount.ToString("N2") 
+        </span>
+        <span class="subtotal">
+            <label class="subtotal-title">Promotion:</label> @Model.CurrencySymbol@Model.TotalPromotion.ToString("N2")
+        </span>
+        <span class="subtotal">
+            <label class="subtotal-title">Tax(@ViewBag.TaxInfo):</label> @Model.CurrencySymbol@Model.Tax.ToString("N2") 
+        </span>
+        <span style="border-top: 1px solid #9a9999;padding-top: 5px;">
+            <b class="modal-title" style="font-size:20px">Total:</b><b style="color:#cc0000; font-size:20px"> @Model.CurrencySymbol@Model.Total.ToString("N2")</b>
+        </span>
+</div>
+    @*<div class="col-md-4 col-sm-12 col-xs-12 pull-right">
+            <button class="btn btn-sm btn-danger editOrder"><i class="fa fa-times" onclick="showOrHideRefund(false)"></i>&nbsp;Cancel</button>
+            <button class="btn btn-sm btn-success editOrder"><i class="fa fa-pie-chart" onclick="showOrHideRefund(false)"></i>&nbsp;Confirm</button>
+            <a href="javascript:void(0)" class="btn btn-sm btn-success" data-toggle="modal" data-backdrop="static" data-target="#modelRefundConfirmation">
+                <i class="fa fa-pie-chart"></i>&nbsp;Confirm
+            </a>
+            <button class="btn btn-sm btn-primary" id="btnRefund" onclick="showOrHideRefund(true)"><i class="fa fa-reply"></i>&nbsp;Refund</button>
+        </div>*@
+</div>
+
+
+@*<div class="form-group">
+    <label class="control-label col-md-1 col-sm-6 col-xs-12">Note:</label>
+    <div class="col-md-5 col-sm-12 col-xs-12 noteReceipt">
+        On receipt detail screen, have Refund button. Click on Refund button will allow user to select items in the receipt to make refund.
+            List of selected item, additions. Items and additions will be displayed separately although the additions may be contained in the item
+        @Html.Raw(Model.Description)
+    </div>
+</div>*@
+
+<div class="form-group">
+    <label for="" class="col-md-2 col-sm-12 col-xs-12" style="font-size:17px;">Item list</label>
+    <div class="col-md-10 col-sm-12 col-xs-12 topDotBorder">
+    </div>
+</div>
+
+<div class="box-body form-group" style="text-align:center; padding-bottom:30px;">
+    <table class="tbCustomer">
+        <thead>
+            <tr>
+                <td colspan="2">Item</td>
+                <td>Period</td>
+                <td>Quantity</td>
+                <td>Discount</td>
+                <td>Price</td>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.ListItems != null && Model.ListItems.Any())
+            {
+                var _num = 0;
+                foreach (var item in Model.ListItems)
+                {
+                    @Html.Hidden(string.Format("Item[{0}].OffSet", _num), item.OffSet)
+
+                    if (item.ProductType == (int)Commons.EProductType.Product)
+                    {
+                        <tr class="paddingTop30 RefurnComfin" data-productId="@item.ProductID">
+                            @if (item.IsShowCheckRefurn)
+                            {
+                                
+                                <td style="width:50px;padding-right:10px;">
+                                    @if (item.IsRefund)
+                                    {
+                                        <label class="label label-success">Refunded</label>
+                                    }
+                                    else
+                                    {
+                                        <input type="checkbox" id="ckbox-product-@item.ProductID" class="flat product-ckbox" @*checked="checked"*@ />
+                                        <input type="hidden" id="txtName_@item.ProductID" value="@item.ProductName" />
+                                        <input type="hidden" id="txtProductType_@item.ProductID" value="@item.ProductType" />
+                                        <input type="hidden" id="txtAdditionType_@item.ProductID" value="@item.AdditionType" />
+                                        <input type="hidden" id="txtPeriodType_@item.ProductID" value="@item.PeriodType" />
+                                        <input type="hidden" id="txtPeriod_@item.ProductID" value="@item.Period" />
+                                        <input type="hidden" id="txtQuantity_@item.ProductID" value="@item.Quantity" />
+                                        <input type="hidden" id="txtDiscount_@item.ProductID" value="@item.DiscountValue" />
+                                        <input type="hidden" id="txtPrice_@item.ProductID" value="@item.Price" />
+                                        <input type="hidden" id="txtCurrencySymbol_@item.ProductID" value="@Model.CurrencySymbol" />
+                                        <input type="hidden" id="txtOrderDetailId_@item.ProductID" value="@item.ID" />
+                                        <input type="hidden" id="txtOrderId_@item.ProductID" value="@Model.ID" />
+                                    }      
+
+                                </td>
+                               
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+                            <td class="text-left"><span class="itemShowOnHistory">@item.ProductName</span></td>
+                            <td class="text-left">@item.PeriodName@*@Html.Action("GetPeriodName", new { Period = item.Period, PeriodType = item.PeriodType})*@</td>
+                            <td>@item.Quantity</td>
+                            <td class="text-right">@Model.CurrencySymbol@item.DiscountAmount.ToString("N2")</td>
+                            <td class="text-right">@Model.CurrencySymbol@item.Price.ToString("N2")</td>
+                        </tr>
+                        if (item.ListComposite != null && item.ListComposite.Any())
+                        {
+                            <tr>
+                                <td></td>
+                                <td class="text-left font-bold colorCush2 paddingLeftCustomer">Composite</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            foreach (var itemComposite in item.ListComposite)
+                            {
+                                <tr>
+                                    <td></td>
+                                    <td class="text-left font-bold paddingLeftCustomer">@itemComposite.ProductName</td>
+                                    <td></td>
+                                    <td>@itemComposite.Quantity</td>
+                                    <td></td>
+                                    <td class="text-right"></td>
+                                </tr>
+                            }
+                        }
+
+                        // List Additions(optional)    
+                        if (item.ListItem != null && item.ListItem.Any())
+                        {
+                            <tr>
+                                <td></td>
+                                <td class="text-left font-bold colorCush2 paddingLeftCustomer">Additions</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            foreach (var itemAddition in item.ListItem)
+                            {
+                                <tr class="RefurnComfin" data-productId="@itemAddition.ProductID">
+                                    <td style="width:50px;padding-right:10px;">
+                                        @if (itemAddition.IsRefund)
+                                        {
+                                            <label class="label label-success">Refunded</label>
+                                        }
+                                        else
+                                        {
+                                            <input type="checkbox" class="flat ckbox-child-@item.ProductID"/>
+                                            <input type="hidden" id="txtName_@itemAddition.ProductID" value="@itemAddition.ProductName" />
+                                            <input type="hidden" id="txtProductType_@itemAddition.ProductID" value="@itemAddition.ProductType" />
+                                            <input type="hidden" id="txtAdditionType_@itemAddition.ProductID" value="@itemAddition.AdditionType" />
+                                            <input type="hidden" id="txtPeriodType_@itemAddition.ProductID" value="@itemAddition.PeriodType" />
+                                            <input type="hidden" id="txtPeriod_@itemAddition.ProductID" value="@itemAddition.Period" />
+                                            <input type="hidden" id="txtQuantity_@itemAddition.ProductID" value="@itemAddition.Quantity" />
+                                            <input type="hidden" id="txtDiscount_@itemAddition.ProductID" value="@itemAddition.DiscountValue" />
+                                            <input type="hidden" id="txtPrice_@itemAddition.ProductID" value="@itemAddition.Price" />
+                                            <input type="hidden" id="txtCurrencySymbol_@itemAddition.ProductID" value="@Model.CurrencySymbol" />
+                                            <input type="hidden" id="txtOrderDetailId_@itemAddition.ProductID" value="@itemAddition.ID" />
+                                            <input type="hidden" id="txtOrderId_@itemAddition.ProductID" value="@Model.ID" />
+                                        }
+                                        
+                                    </td>
+                                    <td class="text-left font-bold paddingLeftCustomer">@itemAddition.ProductName</td>
+                                    <td class="text-left">@itemAddition.PeriodName@*@Html.Action("GetPeriodName", new { Period = itemAddition.Period, PeriodType = itemAddition.PeriodType })*@</td>
+                                    <td>@itemAddition.Quantity</td>
+                                    <td class="text-right">@Model.CurrencySymbol@itemAddition.DiscountAmount.ToString("N2")</td>
+                                    <td class="text-right">@Model.CurrencySymbol@itemAddition.Price.ToString("N2")</td>
+                                </tr>
+                            }
+                        }
+                    }//end if(item.ProductType == (int)Commons.EProductType.Product)
+                    else if (item.ProductType == (int)Commons.EProductType.Package)
+                    {
+                        <tr class="paddingTop30 RefurnComfin" data-productId="@item.ProductID">
+                            @if (item.IsShowCheckRefurn)
+                            {
+                                <td style="width:50px;padding-right:10px;">
+                                    @if (item.IsRefund)
+                                    {
+                                        <label class="label label-success">Refunded</label>
+                                    }
+                                    else
+                                    {
+                                        <input type="checkbox" id="ckbox-product-@item.ProductID" class="flat product-ckbox" @*checked="checked"*@ />
+                                        <input type="hidden" id="txtName_@item.ProductID" value="@item.ProductName" />
+                                        <input type="hidden" id="txtProductType_@item.ProductID" value="@item.ProductType" />
+                                        <input type="hidden" id="txtAdditionType_@item.ProductID" value="@item.AdditionType" />
+                                        <input type="hidden" id="txtPeriodType_@item.ProductID" value="@item.PeriodType" />
+                                        <input type="hidden" id="txtPeriod_@item.ProductID" value="@item.Period" />
+                                        <input type="hidden" id="txtQuantity_@item.ProductID" value="@item.Quantity" />
+                                        <input type="hidden" id="txtDiscount_@item.ProductID" value="@item.DiscountValue" />
+                                        <input type="hidden" id="txtPrice_@item.ProductID" value="@item.Price" />
+                                        <input type="hidden" id="txtCurrencySymbol_@item.ProductID" value="@Model.CurrencySymbol" />
+                                        <input type="hidden" id="txtOrderDetailId_@item.ProductID" value="@item.ID" />
+                                        <input type="hidden" id="txtOrderId_@item.ProductID" value="@Model.ID" />
+                                    }
+
+                                </td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+                           @* <td><input type="checkbox" class="flat" checked="checked" /></td>*@
+                            <td class="text-left"><span class="itemShowOnHistory">@item.ProductName</span></td>
+                            <td class="text-left">@item.PeriodName@*@Html.Action("GetPeriodName", new { Period = item.Period, PeriodType = item.PeriodType })*@</td>
+                            <td>@item.Quantity</td>
+                            <td class="text-right">@Model.CurrencySymbol@item.DiscountAmount.ToString("N2")</td>
+                            <td class="text-right">@Model.CurrencySymbol@item.Price.ToString("N2")</td>
+                        </tr>
+
+                        if (item.ListComposite != null && item.ListComposite.Any())
+                        {
+                            //List Products in Package
+                            var lstProductsComposite = item.ListComposite.Where(w => w.ProductType == (int)Commons.EProductType.Product).ToList();
+                            if (lstProductsComposite != null && lstProductsComposite.Any())
+                            {
+                                foreach (var itemProduct in lstProductsComposite)
+                                {
+                                    <tr>
+                                        <td></td>
+                                        <td class="text-left font-bold colorCush3">@itemProduct.ProductName</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                }
+                            }
+
+                            // List Additions in Package
+                            var lstAdditionsComposite = item.ListComposite.Where(w => w.ProductType == (int)Commons.EProductType.Addition).ToList();
+                            if (lstAdditionsComposite != null && lstAdditionsComposite.Any())
+                            {
+                                <tr>
+                                    <td></td>
+                                    <td class="text-left font-bold colorCush2 paddingLeftCustomer">Composite</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                foreach (var composite in lstAdditionsComposite)
+                                {
+                                    <tr>
+                                        <td></td>
+                                        <td class="text-left font-bold paddingLeftCustomer">@composite.ProductName</td>
+                                        <td></td>
+                                        <td>@composite.Quantity</td>
+                                        <td></td>
+                                        <td class="text-right"></td>
+                                    </tr>
+                                }
+                            }
+                        }
+
+                        // List Additions(optional)
+                        if (item.ListItem != null && item.ListItem.Any())
+                        {
+                            <tr>
+                                <td></td>
+                                <td class="text-left font-bold colorCush2 paddingLeftCustomer">Additions</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            foreach (var addition in item.ListItem)
+                            {
+                                <tr class="RefurnComfin" data-productId="@addition.ProductID">
+                                    <td style="width:50px;padding-right:10px;">
+                                        @if (addition.IsRefund)
+                                        {
+                                            <label class="label label-success">Refunded</label>
+                                        }
+                                        else
+                                        {
+                                            <input type="checkbox" class="flat ckbox-child-@item.ProductID" />
+                                            <input type="hidden" id="txtName_@addition.ProductID" value="@addition.ProductName" />
+                                            <input type="hidden" id="txtProductType_@addition.ProductID" value="@addition.ProductType" />
+                                            <input type="hidden" id="txtAdditionType_@addition.ProductID" value="@addition.AdditionType" />
+                                            <input type="hidden" id="txtPeriodType_@addition.ProductID" value="@addition.PeriodType" />
+                                            <input type="hidden" id="txtPeriod_@addition.ProductID" value="@addition.Period" />
+                                            <input type="hidden" id="txtQuantity_@addition.ProductID" value="@addition.Quantity" />
+                                            <input type="hidden" id="txtDiscount_@addition.ProductID" value="@addition.DiscountValue" />
+                                            <input type="hidden" id="txtPrice_@addition.ProductID" value="@addition.Price" />
+                                            <input type="hidden" id="txtCurrencySymbol_@addition.ProductID" value="@Model.CurrencySymbol" />
+                                            <input type="hidden" id="txtOrderDetailId_@addition.ProductID" value="@addition.ID" />
+                                            <input type="hidden" id="txtOrderId_@addition.ProductID" value="@Model.ID" />
+                                        }
+
+                                    </td>
+                                    <td class="text-left font-bold paddingLeftCustomer">@addition.ProductName</td>
+                                    <td class="text-left">@addition.PeriodName@*@Html.Action("GetPeriodName", new { Period = addition.Period, PeriodType = addition.PeriodType })*@</td>
+                                    <td>@addition.Quantity</td>
+                                    <td class="text-right">@Model.CurrencySymbol@addition.DiscountAmount.ToString("N2")</td>
+                                    <td class="text-right">@Model.CurrencySymbol@addition.Price.ToString("N2")</td>
+                                </tr>
+                            }
+                        }
+                    }//end (item.ProductType == (int)Commons.EProductType.Package)
+                    else if (item.ProductType == (int)Commons.EProductType.Addition)
+                    {
+                        <tr class="paddingTop30 RefurnComfin" data-productId="@item.ProductID">
+                            <td style="width:50px;padding-right:10px;">
+
+                                @if (item.IsRefund)
+                                {
+                                    <label class="label label-success">Refunded</label>
+                                }
+                                else
+                                {
+                                    <input type="checkbox" class="flat addition-ckbox" />
+                                    <input type="hidden" id="txtName_@item.ProductID" value="@item.ProductName" />
+                                    <input type="hidden" id="txtProductType_@item.ProductID" value="@item.ProductType" />
+                                    <input type="hidden" id="txtAdditionType_@item.ProductID" value="@item.AdditionType" />
+                                    <input type="hidden" id="txtPeriodType_@item.ProductID" value="@item.PeriodType" />
+                                    <input type="hidden" id="txtPeriod_@item.ProductID" value="@item.Period" />
+                                    <input type="hidden" id="txtQuantity_@item.ProductID" value="@item.Quantity" />
+                                    <input type="hidden" id="txtDiscount_@item.ProductID" value="@item.DiscountValue" />
+                                    <input type="hidden" id="txtPrice_@item.ProductID" value="@item.Price" />
+                                    <input type="hidden" id="txtCurrencySymbol_@item.ProductID" value="@Model.CurrencySymbol" />
+                                    <input type="hidden" id="txtOrderDetailId_@item.ProductID" value="@item.ID" />
+                                    <input type="hidden" id="txtOrderId_@item.ProductID" value="@Model.ID" />
+                                }
+                            </td>
+                            <td class="text-left"><span class="itemShowOnHistory">@item.ProductName</span></td>
+                            <td class="text-left">@item.PeriodName@*@Html.Action("GetPeriodName", new { Period = item.Period, PeriodType = item.PeriodType })*@</td>
+                            <td>@item.Quantity</td>
+                            <td class="text-right">@Model.CurrencySymbol@item.DiscountAmount.ToString("N2")</td>
+                            <td class="text-right">@Model.CurrencySymbol@item.Price.ToString("N2")</td>
+                        </tr>
+                    }
+                }
+
+                _num++;
+            }
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+
+    @if(Model.IsShowButtonRefund)
+    {
+        <text>$('[id=btnRefund]').addClass('hidden')</text>
+    }
+    else
+    {
+         <text>$('[id=btnRefund]').removeClass('hidden')</text>
+    }
+
+    $(document).ready(function () {
+        if ($("input.flat")[0]) {
+            $(document).ready(function () {
+                $('input.flat').iCheck({
+                    checkboxClass: 'icheckbox_flat-green clsRefurn',
+                    radioClass:'iradio_flat-green'
+                })
+            })
+        }
+    })
+
+    function checkProductChecked(ckbox, ckboxClass, curIsChecked){
+        // It is a Product/Package
+        if(ckboxClass === "product-ckbox"){
+            var Id = $(ckbox).attr("id").replace("ckbox-product-", "");
+            if(curIsChecked){
+                $(".ckbox-child-" + Id).iCheck('uncheck');
+            } else {
+                $(".ckbox-child-" + Id).iCheck('check');
+            }
+        } else {
+            if(curIsChecked){
+                var Id = $(ckbox).attr("class").replace("flat ckbox-child-", "");
+                if($("#ckbox-product-" + Id).is(':checked')){
+                    $("#ckbox-product-" + Id).iCheck('uncheck');
+                }
+            }
+        }
+    }
+
+    $("input[type='checkbox']").on('ifClicked', function (event) {
+        var ckboxClass = $(this).attr("class").replace("flat ", "");
+        if(ckboxClass !== "addition-ckbox"){
+            checkProductChecked(this, ckboxClass, event.target.checked);
+        }
+    })
+
+    $("input[type='checkbox']").on('ifChanged', function (event) {
+        if (event.target.checked)
+        {
+            $('.clsComfirn').removeClass('disabled');
+        } else {
+            var flag = true;
+            $('.tbCustomer .clsRefurn').each(function () {
+                var chckValue = $(this).iCheck('update')[0].checked;
+                if (chckValue) {
+                    flag = false;
+                    return (false);
+                } else {
+                    flag = true;
+                }
+            });
+            if (flag)
+            {
+                $('.clsComfirn').addClass('disabled');
+            } else {
+                $('.clsComfirn').removeClass('disabled');
+            }
+        }
+    })
+
+    function RefurnConfirm() {
+        var _table = $('.tbCustomer tbody tr');
+        var ListReceipt = [];
+        _table.each(function (index) {
+            var _IsCheckClass = $(this).find('.clsRefurn').hasClass("clsRefurn");//.iCheck('update')[0].checked;
+            var _IsCheck = false;
+            if (_IsCheckClass) {
+                _IsCheck = $(this).find('.clsRefurn').iCheck('update')[0].checked;
+            }
+            if (_IsCheck) {
+                var ProductId = $(this).attr('data-productId');
+                var objReceipt = {
+                    ProductName: $(this).find('[id=txtName_' + ProductId + ']').val(),
+                    ProductType: $(this).find('[id=txtProductType_' + ProductId + ']').val(),
+                    AdditionType: $(this).find('[id=txtAdditionType_' + ProductId + ']').val(),
+                    PeriodType: $(this).find('[id=txtPeriodType_' + ProductId + ']').val(),
+                    Period: $(this).find('[id=txtPeriod_' + ProductId + ']').val(),
+                    Quantity: $(this).find('[id=txtQuantity_' + ProductId + ']').val(),
+                    DiscountValue: $(this).find('[id=txtDiscount_' + ProductId + ']').val(),
+                    Price: $(this).find('[id=txtPrice_' + ProductId + ']').val(),
+                    CurrencySymbol: $(this).find('[id=txtCurrencySymbol_' + ProductId + ']').val(),
+                    OrderId: $(this).find('[id=txtOrderId_' + ProductId + ']').val(),
+                    OrderDetailId: $(this).find('[id=txtOrderDetailId_' + ProductId + ']').val()
+                };
+                ListReceipt.push(objReceipt);
+            }
+
+        });
+        if (ListReceipt.length > 0)
+        {
+            $.ajax({
+                url: CreateAbsoluteUrl('ListItemReceipt'),
+                type: "POST",
+                data: { Items: ListReceipt},
+                dataType: 'html',
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+                success: function (data) {
+                    $('[id=modelRefundConfirmation]').modal('show');
+                    $('[id=tbl-listDetail-Refund-Confirm]').html(data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $('.se-pre-con').hide();
+                }
+            });
+        }
+    }
+
+    //function ChangeValueInput(OrderDetailId, CurrencySymbol) {
+    //    $("#errorRefundAmount_" + OrderDetailId).hide();
+    //    var currentQuantity = $("#txtQuantity_" + OrderDetailId).val();
+    //    var currentPrice = $("#txtPrice_" + OrderDetailId).val();
+    //    var maxRefundAmount = parseFloat(currentQuantity) * parseFloat(currentPrice);
+    //    var refundAmount = $(".txtRefundAmount_" + OrderDetailId).val().replace(CurrencySymbol, "").replace(',', "");
+    //    if(refundAmount === "" || refundAmount === " "){
+    //        refundAmount = 0;
+    //    }
+    //    refundAmount = parseFloat(refundAmount);
+
+    //    if(maxRefundAmount < refundAmount){
+    //        $("#errorRefundAmount_" + OrderDetailId).html("Refund Amount must less or equal than " + format_number(maxRefundAmount, CurrencySymbol));
+    //        $("#errorRefundAmount_" + OrderDetailId).show();
+    //    } else {
+    //        // Reset format Refund Amount
+    //        $(".txtRefundAmount_" + OrderDetailId).val("");
+    //        $(".txtRefundAmount_" + OrderDetailId).val(format_number(refundAmount, CurrencySymbol));
+
+    //        var TotalRefund = 0;
+    //        $('.tbody-item-refund-confim tr').each(function () {
+    //            //var isClass = $(this).find('.clsRefundAmount').hasClass('clsRefundAmount');
+    //            var values = $(this).find('.clsRefundAmount').val().replace(CurrencySymbol, "").replace(',', "");
+    //            if (values === "")
+    //                values = 0;
+    //            values = parseFloat(values);
+    //            TotalRefund += values;
+    //        });
+    //        $('[id=idTotalRefund]').text(format_number(TotalRefund, CurrencySymbol));
+    //    }
+
+    //    checkDisableBtnSubmitRefund()
+        
+    //}
+
+    //function format_number(n, currency) {
+    //    return currency + " " + n.toFixed(2).replace(/./g, function (c, i, a) {
+    //        return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
+    //    });
+    //}
+
+    function ChangeValueInput(OrderDetailId) {
+        $("#errorRefundAmount_" + OrderDetailId).hide();
+        var currentQuantity = $("#txtQuantity_" + OrderDetailId).val();
+        var currentPrice = $("#txtPrice_" + OrderDetailId).val();
+        var maxRefundAmount = parseFloat(currentQuantity) * parseFloat(currentPrice);
+        var refundAmount = $.trim($(".txtRefundAmount_" + OrderDetailId).val().replace(/[,\r\t\n\' ']+/g, ''));;
+        if(refundAmount === ""){
+            refundAmount = 0;
+            $(".txtRefundAmount_" + OrderDetailId).val(refundAmount);
+        }
+        refundAmount = parseFloat(refundAmount);
+
+        if(maxRefundAmount < refundAmount){
+            $("#errorRefundAmount_" + OrderDetailId).html("Refund Amount must less or equal than " + format_number(maxRefundAmount));
+            $("#errorRefundAmount_" + OrderDetailId).show();
+        } else {
+            var TotalRefund = 0;
+            $('.tbody-item-refund-confim tr').each(function () {
+                var values = $.trim($(this).find('.clsRefundAmount').val().replace(/[,\r\t\n\' ']+/g, ''));
+                if (values === ""){
+                    values = 0;
+                    $(this).find('.clsRefundAmount').val(values);
+                }
+                values = parseFloat(values);
+                TotalRefund += values;
+            });
+            $('[id=idTotalRefund]').text(format_number(TotalRefund));
+        }
+        checkDisableBtnSubmitRefund();
+    }
+
+    function format_number(n) {
+        return n.toFixed(2).replace(/./g, function (c, i, a) {
+            return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
+        });
+    }
+
+    // Reset format of Refund Amount
+    function formatRefundAmount(Input){
+        var refundAmount = $.trim($(Input).val().replace(/[,\r\t\n\' ']+/g, ''));;
+        if(refundAmount !== ""){
+            refundAmount = parseFloat(refundAmount);
+        }
+        $(Input).val(format_number(refundAmount));
+    }
+
+    function checkDisableBtnSubmitRefund(){
+        var error = false;
+        $(".errorRefundAmount").each(function() {
+            if ($(this).is(":visible")) {
+                error = true;
+                return false;
+            }
+        });
+        if(error){
+            $("#modelRefundConfirmation #btn-done").addClass('disabled');
+        } else{
+            $("#modelRefundConfirmation #btn-done").removeClass('disabled');
+        }
+    }
+
+    function DoneRefund()
+    {
+        var RefundDetail = [];
+        var OrderId = 0;
+        var Currency;
+        $('.tbody-item-refund-confim tr').each(function () {
+            var _OrderDetail = $(this).attr('data-id');
+            OrderId = $(this).find('[id=txtOrderId_' + _OrderDetail + ']').val();
+            Currency = $(this).find('[id=txtCurrencySymbol_' + _OrderDetail + ']').val();
+            var RefundAmount = $(this).find('.txtRefundAmount_' + _OrderDetail + '').val().replace(Currency, "").replace(',', "");
+           // alert(RefundAmount);
+            var obj = {
+                OrderDetailID: _OrderDetail,
+                Amount: RefundAmount === "" ? parseFloat(0.00) : RefundAmount
+            };
+            RefundDetail.push(obj);
+        });
+        var DoneRefund = {
+            OrderID: OrderId,
+            TotalAmount: $('[id=idTotalRefund]').text().replace(Currency, "").replace(',', ""),
+            Description: $('[id=txtRefundReason]').val(),
+            ListDetail: RefundDetail
+        };
+        //console.log(DoneRefund);
+
+        $.ajax({
+            url: CreateAbsoluteUrl('DoneRefund'),
+            type: "POST",
+            data: { data: DoneRefund },
+            dataType: 'html',
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            },
+            success: function (data) {
+                $('[id=modelRefundConfirmation]').modal('toggle');
+                $(".receiptdetail").html(data);
+                showOrHideRefund(false);
+                /* Check enable or disable button confirn */
+                var flag = true;
+                $('.tbCustomer .clsRefurn').each(function () {
+                    var chckValue = $(this).iCheck('update')[0].checked;
+                    if (chckValue) {
+                        flag = false;
+                        return (false);
+                    } else {
+                        flag = true;
+                    }
+                });
+                if (flag) {
+                    $('.clsComfirn').addClass('disabled');
+                } else {
+                    $('.clsComfirn').removeClass('disabled');
+                }
+                /* End */
+                $('.clsRefurn').addClass('hidden');
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $('.se-pre-con').hide();
+                $('[id=clsErrorRefundConfirm]').text(jqXHR.statusText);
+                //$('[id=modelRefundConfirmation]').modal('toggle');
+            }
+        });
+    }
+</script>

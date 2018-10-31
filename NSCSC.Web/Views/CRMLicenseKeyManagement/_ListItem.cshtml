@@ -1,0 +1,54 @@
+﻿@model NSCSC.Shared.Models.CRM.LicenseKeyManagement.LicenseItemDTO
+@using NSCSC.Shared
+@{string styleRow = "row-evenModel"; }
+@{if (Model.Offset % 2 == 0)
+    {
+        styleRow = "row-oddModel";
+    }
+}
+
+<tr class="@styleRow" style="">
+    <td>
+        @Html.Hidden(string.Format("ListItem[{0}].ID", Model.Offset), Model.ID)
+        @Html.Hidden(string.Format("ListItem[{0}].ItemName", Model.Offset), Model.ItemName)
+        @Html.Hidden(string.Format("ListItem[{0}].ActiveTime", Model.Offset), Model.ActiveTime)
+        @Html.Hidden(string.Format("ListItem[{0}].AdditionType", Model.Offset), Model.AdditionType)
+        @*@Html.Hidden(string.Format("ListItem[{0}].Update", Model.Offset), Model.Update, new { @id = "UpdateIsActive-" + Model.ID })*@ 
+        @Html.CheckBox(string.Format("ListItem[{0}].IsActive",
+                                            Model.Offset), Model.IsActive,
+                                            new { @id = "UpdateIsActive-" + Model.ID, @style ="Display: none; " })
+        @*@Html.DisplayFor(x => x.ItemName)*@
+        @if (Model.AdditionType == (byte)Commons.EAdditionType.Account)
+        {
+            @Html.Action("MarkEmailView", new { Email = Model.ItemName })
+        }
+        else
+        {
+            @Html.DisplayFor(x => x.ItemName)
+        }
+    </td>
+    <td style="text-align: center;">
+        @*@Html.DisplayFor(x => x.ActiveTime)*@
+        @if (Model.ActiveTime.HasValue)
+        {
+            @Model.ActiveTime.Value.ToString(Commons.FormatDateTime)
+        }
+    </td>
+    <td id="IsActive-@Model.ID" style="text-align: center;">
+        @Html.Label(string.Format("ListItem[{0}].StatusName", Model.Offset), Model.StatusName, new { @style = "font-weight:normal;", @id = "Active-" + Model.ID, @*@class = string.Format(Model.IsActive ? "label label-success" : "label label-danger")*@ })
+    </td>
+    <td style="width: 7% !important; padding-bottom: 0px !important; text-align: center; ">
+        @{if (Model.IsActive)
+            {
+                <a href="javascript:void(0)" onclick="ChaneStatus('@Model.ID', 'false')" id="Action-false-@Model.ID" class="btn btn-danger btn-xs">Inactive</a>
+                <a href="javascript:void(0)" onclick="ChaneStatus('@Model.ID', 'true')" id="Action-true-@Model.ID" class="btn btn-primary btn-xs" style="display: none; ">Active</a>
+            }
+            else
+            {
+                <a href="javascript:void(0)" onclick="ChaneStatus('@Model.ID', 'true')" id="Action-true-@Model.ID" class="btn btn-primary btn-xs">Active</a>
+                <a href="javascript:void(0)" onclick="ChaneStatus('@Model.ID', 'false')" id="Action-false-@Model.ID" class="btn btn-danger btn-xs" style="display: none; ">Inactive</a>
+            }
+        }
+    </td>
+</tr>
+

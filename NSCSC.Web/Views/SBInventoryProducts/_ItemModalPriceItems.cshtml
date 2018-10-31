@@ -1,0 +1,324 @@
+﻿
+@model NSCSC.Shared.Models.SandBox.Inventory.Product.ProductDetailModels
+@using NSCSC.Shared
+@if (Model != null && Model.ListPrice != null && Model.ListPrice.Count > 0)
+{
+    for (int i = 0; i < Model.ListPrice.Count; i++)
+    {
+        <tr data-id="@Model.ListPrice[i].ID" id="trProduct_@Model.ListPrice[i].ID" class="trPriceItem">
+            <td>
+                @{
+                    string strPeriod = "None";
+                    if (Model.ListPrice[i].PeriodType == (int)Commons.EPeriodType.Month)
+                    {
+                        strPeriod = Commons.PeriodTypeMonth;
+                    }
+                    else if (Model.ListPrice[i].PeriodType == (int)Commons.EPeriodType.Day)
+                    {
+                        strPeriod = Commons.PeriodTypeDay;
+                    }
+                    else if (Model.ListPrice[i].PeriodType == (int)Commons.EPeriodType.OneTime)
+                    {
+                        strPeriod = Commons.PeriodTypeOneTime;
+                    }
+                    else if (Model.ListPrice[i].PeriodType == (int)Commons.EPeriodType.Year)
+                    {
+                        strPeriod = Commons.PeriodTypeYear;
+                    }
+
+                }
+                @if (@Model.ListPrice[i].PeriodType != (int)Commons.EPeriodType.OneTime)
+                {
+                    <span>@Model.ListPrice[i].Period</span>
+                } 
+                <span>
+                    @strPeriod@if (Model.ListPrice[i].Period > 1) { @Html.Raw('s')}
+                </span>
+
+                @Html.Hidden(string.Format("ListPrice[{0}].ID", i), Model.ListPrice[i].ID, new { @id = "hidPriceItemId" })
+                @Html.Hidden(string.Format("ListPrice[{0}].Period", i), Model.ListPrice[i].Period, new { @id = "hidPriceItemPeriod" })
+                @Html.Hidden(string.Format("ListPrice[{0}].PeriodType", i), Model.ListPrice[i].PeriodType, new { @id = "hidPriceItemPeriodType" })
+                @Html.Hidden(string.Format("ListPrice[{0}].Price", i), Model.ListPrice[i].Price, new { @id = "hidPriceItemPrice" })
+                @Html.Hidden(string.Format("ListPrice[{0}].IsActive", i), Model.ListPrice[i].IsActive, new { @id = "hidPriceItemIsActive" })
+                @Html.Hidden(string.Format("ListPrice[{0}].IsExtend", i), Model.ListPrice[i].IsExtend, new { @id = "hidPriceItemIsExtend" })
+                @Html.Hidden(string.Format("ListPrice[{0}].IsNew", i), Model.ListPrice[i].IsNew, new { @id = "hidPriceItemIsNew" })
+            </td>
+            <td>
+                @Html.Raw(ViewBag.CurrencySymbol + Model.ListPrice[i].Price.ToString("#,0.00"))
+            </td>
+            <td>
+                <a href="javascript:void(0)" onclick="GetDetailPriceItem('@Model.ListPrice[i].ID')"
+                   class="btn btn-info btn-xs edit details"><i class="fa fa-edit"></i></a>
+                <a href="javascript:void(0)"
+                   onclick="DeletePriceItem('@Model.ListPrice[i].ID')" )"
+                   class="btn btn-danger btn-xs delete details"><i class="fa fa-trash-o"></i></a>
+            </td>
+        </tr>
+
+                        }
+                    }
+
+<script type="text/javascript">
+    function SetActiveUnActive(Id, IsActive) {
+
+        var _ListPrice = [];
+        var model = {};
+        $.each($('.trPriceItem'), function () {
+            var _tableRow = $(this);
+            if ($(_tableRow).css('display') !== 'none') {
+                var _price = {
+                    ID: $(_tableRow).find("#hidPriceItemId").val(),
+                    Price: $(_tableRow).find("#hidPriceItemPrice").val(),
+                    Period: $(_tableRow).find("#hidPriceItemPeriod").val(),
+                    PeriodType: $(_tableRow).find("#hidPriceItemPeriodType").val(),
+                    IsExtend: $(_tableRow).find("#hidPriceItemIsExtend").val(),
+                    IsActive: $(_tableRow).find("#hidPriceItemIsActive").val()
+                };
+                _ListPrice.push(_price);
+            }
+        })
+        model.ListPrice = _ListPrice;
+         $.ajax({
+            url: '@Url.Action("SetActiveUnActivePriceItem", "SBInventoryProducts")',
+            type: 'post',
+            data: { Id: Id, model: model, IsActive: IsActive },
+            dataType: 'html',
+            beforeSend: function () {
+                $(".se-pre-con").show();
+            },
+            success: function (data) {
+                tablePriceItem.destroy();
+                $("[id=tbodyPriceItem]").html("").html(data);
+                tablePriceItem = $('#tbPriceItem').DataTable($.extend(true, {}, settingsPriceItem));
+            },
+            complete: function () {
+                var _RowCount = $('[id=tbPriceItem] tbody tr').length;
+                if (_RowCount == 0) {
+                    var _str = '<tr class="odd"><td valign="top" colspan="4" class="dataTables_empty">No data available in table</td></tr>';
+                    $("[id=tbodyPriceItem]").html(_str);
+                }
+                setTimeout(function () {
+                    $(".se-pre-con").hide();
+                }, 300);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $(".se-pre-con").hide();
+            },
+        });
+    }
+
+    function CheckExitsPeriod(PriceItem, ListPriceItem, _idValidate) {
+        var IsExist = true;
+        if (ListPriceItem.length == 0 && PriceItem.length == 0)
+        {
+            $(_idValidate).html('');
+        }
+        $.each(ListPriceItem,function (index, item) {
+            if (parseInt(item.Period) == parseInt(PriceItem.Period) &&
+                parseInt(item.PeriodType) == parseInt(PriceItem.PeriodType)
+                && PriceItem.ID !== item.ID
+            ) {
+                $(_idValidate).html('This period is already existed');
+                IsExist = false;
+            }
+        });
+        return IsExist;
+    }
+
+    function changePeriodType(ddlPeriodType, Period, _idValidate) {
+        var _PeriodType = $(ddlPeriodType).val();
+        
+        if (parseInt(_PeriodType) == @Convert.ToInt16(Commons.EPeriodType.OneTime))
+        {
+            $(Period).attr('readonly', true);
+            $(Period).val('1');
+            $(_idValidate).html('');
+        } else {
+            $(Period).attr('readonly', false);
+        }
+    }
+
+    function SavePriceItem() {
+        var _Period = $("[id=Period]").val();
+        var _PeriodType = $("[id=ddlPeriodType]").val();
+        var _BuyingPrice = $("[id=BuyingPrice]").val();
+        var _ID = $('[id=modalPriceItems]').find('[id=IDPriceItem]').val();
+        if (_Period.length == 0 || parseInt(_Period) == 0)
+        {
+            $('[id=ltrValidatePeriod]').html('Please enter a value greater than or equal to 1.');
+            return (false);
+        } else {
+            $('[id=ltrValidatePeriod]').html('');
+        }
+
+        if (_BuyingPrice.length == 0)
+        {
+            $('[id=ltrValidateBuyingPrice]').html('Please enter a value greater than or equal to 0.');
+            return (false);
+        } else {
+            $('[id=ltrValidateBuyingPrice]').html('');
+        }
+        var ProductPrice = {
+            Price: _BuyingPrice,
+            Period: _Period,
+            PeriodType: _PeriodType,
+            ID: _ID
+        };
+        var _ListPrice = [];
+        //var model = {};
+
+        $.each($('.trPriceItem'), function () {
+            var _tableRow = $(this);
+            if ($(_tableRow).css('display') !== 'none') {
+                var _price = {
+                    ID: $(_tableRow).find("#hidPriceItemId").val(),
+                    Price: $(_tableRow).find("#hidPriceItemPrice").val(),
+                    Period: $(_tableRow).find("#hidPriceItemPeriod").val(),
+                    PeriodType: $(_tableRow).find("#hidPriceItemPeriodType").val(),
+                    IsExtend: $(_tableRow).find("#hidPriceItemIsExtend").val(),
+                    IsActive: $(_tableRow).find("#hidPriceItemIsActive").val(),
+                    IsNew: $(_tableRow).find("#hidPriceItemIsNew").val()
+                };
+                _ListPrice.push(_price);
+            }
+        });
+
+        var _IsExits = CheckExitsPeriod(ProductPrice, _ListPrice, "#ltrValidatePeriod");
+        if (_IsExits)
+        {
+             $.ajax({
+            url: '@Url.Action("AddEditPriceItem", "SBInventoryProducts")',
+            type: 'post',
+            data: { ProductPrice: ProductPrice, ProductDetailModels: _ListPrice },
+            dataType: 'html',
+            beforeSend: function () {
+                $(".se-pre-con").show();
+            },
+            success: function (data) {
+                tablePriceItem.destroy();
+                $("[id=tbodyPriceItem]").html("").html(data);
+                tablePriceItem = $('#tbPriceItem').DataTable($.extend(true, {}, settingsPriceItem));
+                CloseModal('#modalPriceItems');
+            },
+            complete: function () {
+                setTimeout(function () {
+                    $(".se-pre-con").hide();
+                },300)
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $(".se-pre-con").hide();
+            },
+            });
+        }
+    }
+
+    function DeletePriceItem(Id) {
+        var count = $('.trPriceItem').length;
+        if (count == 1) {
+            $('#ltrErrorPrice').html("Unable to delete it. The price list must have at least one item");
+            return false;
+        }
+        var _ListPrice = [];
+        var model = {};
+        $.each($('.trPriceItem'), function () {
+            var _tableRow = $(this);
+            if ($(_tableRow).css('display') !== 'none') {
+                var _price = {
+                    ID: $(_tableRow).find("#hidPriceItemId").val(),
+                    Price: $(_tableRow).find("#hidPriceItemPrice").val(),
+                    Period: $(_tableRow).find("#hidPriceItemPeriod").val(),
+                    PeriodType: $(_tableRow).find("#hidPriceItemPeriodType").val(),
+                    IsExtend: $(_tableRow).find("#hidPriceItemIsExtend").val(),
+                    IsActive: $(_tableRow).find("#hidPriceItemIsActive").val(),
+                    IsNew: $(_tableRow).find("#hidPriceItemIsNew").val()
+                };
+                _ListPrice.push(_price);
+            }
+        })
+        model.ListPrice = _ListPrice;
+         $.ajax({
+            url: '@Url.Action("DeletePriceItem", "SBInventoryProducts")',
+            type: 'post',
+            data: { Id: Id, model: model },
+            dataType: 'html',
+            beforeSend: function () {
+                $(".se-pre-con").show();
+            },
+            success: function (data) {
+                tablePriceItem.destroy();
+                $("[id=tbodyPriceItem]").html("").html(data);
+                tablePriceItem = $('#tbPriceItem').DataTable($.extend(true, {}, settingsPriceItem));
+            },
+            complete: function () {
+                var _RowCount = $('[id=tbPriceItem] tbody tr').length;
+                if (_RowCount == 0) {
+                    var _str = '<tr class="odd"><td valign="top" colspan="4" class="dataTables_empty">No data available in table</td></tr>';
+                    $("[id=tbodyPriceItem]").html(_str);
+                }
+                setTimeout(function () {
+                    $(".se-pre-con").hide();
+                }, 300)
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $(".se-pre-con").hide();
+            },
+        });
+    }
+
+    function GetDetailPriceItem(Id)
+    {
+        var _ListPrice = [];
+        var model = {};
+        $.each($('.trPriceItem'), function () {
+            var _tableRow = $(this);
+            if ($(_tableRow).css('display') !== 'none') {
+                var _price = {
+                    ID: $(_tableRow).find("#hidPriceItemId").val(),
+                    Price: $(_tableRow).find("#hidPriceItemPrice").val(),
+                    Period: $(_tableRow).find("#hidPriceItemPeriod").val(),
+                    PeriodType: $(_tableRow).find("#hidPriceItemPeriodType").val(),
+                    IsExtend: $(_tableRow).find("#hidPriceItemIsExtend").val(),
+                    IsActive: $(_tableRow).find("#hidPriceItemIsActive").val(),
+                    IsNew: $(_tableRow).find("#hidPriceItemIsNew").val()
+                };
+                _ListPrice.push(_price);
+            }
+        })
+        model.ListPrice = _ListPrice;
+         $.ajax({
+            url: '@Url.Action("GetDetailPriceItem", "SBInventoryProducts")',
+            type: 'post',
+            data: { Id: Id, model: model },
+            dataType: 'json',
+            beforeSend: function () {
+                $(".se-pre-con").show();
+            },
+            success: function (data) {
+                $('#modalPriceItems').modal('show');
+                $('[id=modalPriceItems]').find("[id=Period]").val(data.Period);
+                $('[id=modalPriceItems]').find("[id=ddlPeriodType]").val(data.PeriodType).trigger('change');
+                $('[id=modalPriceItems]').find("[id=BuyingPrice]").val(data.Price);
+                $('[id=modalPriceItems]').find('[id=IDPriceItem]').val(data.ID);
+            },
+            complete: function () {
+                setTimeout(function () {
+                    $(".se-pre-con").hide();
+                }, 300)
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $(".se-pre-con").hide();
+            },
+        });
+    }
+
+    function CloseModal(_idModal)
+    {
+        $('[id=ltrValidateBuyingPrice]').html('');
+        $('[id=ltrValidatePeriod]').html('');
+        $('[id=ltrValidateExtendBuyingPrice]').html('');
+        $('[id=ltrValidateExtendPeriod]').html('');
+        $(_idModal).find("input").val('0');
+        $(_idModal).modal('hide');
+
+    }
+</script>

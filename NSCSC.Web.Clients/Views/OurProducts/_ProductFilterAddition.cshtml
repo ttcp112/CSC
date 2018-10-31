@@ -1,0 +1,221 @@
+﻿@model List<NSCSC.Shared.Models.OurProducts.Product.BuyingAdditionViewModels>
+@using NSCSC.Shared
+@if (Model != null && Model.Count > 0)
+{
+    foreach (var item in Model)
+    {
+        <div class="form-group itemAddition">
+            <div class="col-md-12 col-sm-12 col-xs-12 fontUppercase header" onclick="ToggleItem('@item.Name', this)" style="cursor:pointer;">
+                <i class="fa fa-angle-down"></i> &nbsp;&nbsp;<span class="fontBold">@item.Name</span>
+            </div>
+            <div class="col-md-12 col-sm-12 col-xs-12 content" id="divListItem-@item.Name">
+                <table class="table-addition-item">
+                    <thead>
+                        <tr>
+                            <td class="text-center">
+                                <div class="thOne"></div>
+                            </td>
+                            <td class="text-center" style="width:25%;">Quantity</td>
+                            <td class="text-center" style="width:25%;">In</td>
+                            <td class="text-center" style="width:25%;">Price</td>
+                            <td style="width:1%;"></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (item.ListItem != null && item.ListItem.Count > 0)
+                        {
+                            foreach (var itemChild in item.ListItem)
+                            {
+                                <tr>
+                                    <td class="text-center">
+                                        <span class="fontBold" id="lblAdditionName">@itemChild.Name</span><br />
+                                        <small>@Html.Raw(itemChild.Description)</small>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="input-group">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-secondary subtract buttonDisabled" type="button"
+                                                        onclick="AddOrSubtract('sub', '#txt_@item.Name@itemChild.Index', this)">
+                                                    -
+                                                </button>
+                                            </span>
+                                            <input type="text" class="form-control text-center inputChange" placeholder="1" value="1" min="1"
+                                                   id="txt_@item.Name@itemChild.Index">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-secondary add" type="button"
+                                                        onclick="AddOrSubtract('add', '#txt_@item.Name@itemChild.Index', this)">
+                                                    +
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="javascript:void(0);" class="btn btn-default"
+                                           id="btn-period-time-@itemChild.Index"
+                                           @if (!itemChild.IsDisplayWeb) { @: disabled="disabled"
+                                                                                                                                 } else { @: data-toggle="modal"
+                                                                                                                                      @: data-target="#bs-modal-pricing-list-@item.Name-@itemChild.Index"
+                                                                                                                                 }
+                                           style="width:200px;">
+                                            <span id="lblPeriodTime">@itemChild.PeriodTime</span> &nbsp;&nbsp; <i class="fa fa-angle-down"></i>
+                                        </a>
+                                        <!--modal Pricing List-->
+                                        <div class="modal fade" id="bs-modal-pricing-list-@item.Name-@itemChild.Index" tabindex="-1" role="dialog"
+                                             aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header" style="background-color:#f2f2f2;">
+                                                        <button type="button" class="close" data-dismiss="modal">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                        <h4 class="modal-title fontUppercase text-left">@itemChild.Name | <span style="color:darkred;">Pricing List</span></h4>
+                                                    </div>
+                                                    <div class="modal-body" style="padding:0px;">
+                                                        <table id="tbl-pricing-list_@item.Name-@itemChild.Index" class="table-format-client text-left">
+                                                            <thead>
+                                                                <tr>
+                                                                    <td class="" style="width:70%;"><span class="fontBold fontUppercase">period</span></td>
+                                                                    <td class="text-right fontBold"><span class="fontBold fontUppercase">price</span></td>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @if (itemChild.ListPrice != null && itemChild.ListPrice.Count > 0)
+                                                                {
+                                                                    foreach (var itemPrice in itemChild.ListPrice.OrderBy(x => x.PeriodType).ThenBy(x => x.Period).ThenBy(x => x.Price).ToList())
+                                                                    {
+                                                                        <tr data-name="@itemPrice.NamePeriodType"
+                                                                            data-price="@itemPrice.Price.ToString("N2")"
+                                                                            data-period="@itemPrice.Period"
+                                                                            data-periodtype="@itemPrice.PeriodType">
+                                                                            <td>
+                                                                                <input type="radio" class="flat" value="@itemPrice.Price"
+                                                                                       name="itemPeriodTime_@item.Name-@itemChild.Index"
+                                                                                       @string.Format("{0}", itemPrice.IsActive ? "checked" : "") />
+                                                                                &nbsp;@itemPrice.NamePeriodType
+                                                                            </td>
+                                                                            <td class="text-right">@itemChild.CurrencySymbol @itemPrice.Price.ToString("n2")</td>
+                                                                        </tr>
+                                                                    }
+                                                                }
+                                                            </tbody>
+                                                        </table>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--end modal Pricing List -->
+                                    </td>
+                                    <td class="text-center">@itemChild.CurrencySymbol<span id="lblAdditionPrice">@itemChild.Price.ToString("N2")</span></td>
+                                    <td class="text-center">
+                                        <button class="btn plus" id="btn_@item.Name@itemChild.Index" type="button" onclick="AddItemAddition(this, '@item.Name', '@itemChild.Index')">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+
+                                        @*set value*@
+                                        <input type="hidden" id="hidAdditionType" value="@item.ID" />
+                                        <input type="hidden" id="hidAdditionName" value="@item.Name" />
+
+                                        <input type="hidden" id="hidItemName" value="@itemChild.Name" />
+                                        <input type="hidden" id="hidAdditionType" value="@itemChild.AdditionType" />
+                                        <input type="hidden" id="hidAdditionID" value="@itemChild.ID" />
+
+                                        <input type="hidden" id="hidAdditionPeriod" value="@itemChild.Period" />
+                                        <input type="hidden" id="hidAdditionPeriodType" value="@itemChild.PeriodType" />
+                                        <input type="hidden" id="hidAdditionPrice" value="@itemChild.Price" />
+
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}
+
+<script type="text/javascript">
+    $(document).ready(function (e) {
+        init_ICheck();
+
+        $(".inputChange").keydown(function (event) {
+            var _this = this;
+            // Allow only backspace and delete
+            if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9) {
+                // let it happen, don't do anything
+            }
+            else {
+                // Ensure that it is a number and stop the keypress
+                if ((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105)) {
+                    event.preventDefault();
+                } else {
+                    setTimeout(function () {
+                        var _value = $(_this).val();
+                        if (_value == 0) {
+                            $(_this).val(1)
+                        }
+                    }, 1);
+                }
+            }
+        });
+    });
+
+    function init_ICheck() {
+        if ($("input.flat")[0]) {
+            $(document).ready(function () {
+                $('input.flat').iCheck({
+                    checkboxClass: 'icheckbox_flat-blue',
+                    radioClass: 'iradio_flat-blue'
+                });
+            });
+        }
+    };
+
+    //Function
+    @if (Model != null && Model.Count > 0)
+    {
+        foreach (var item in Model)
+        {
+            if (item.ListItem != null && item.ListItem.Count > 0)
+            {
+                foreach (var itemChild in item.ListItem)
+                {
+                    <text>
+                    $('#tbl-pricing-list_@item.Name-@itemChild.Index tr').click(function (event) {
+                        var row = $(this);
+                        var _radio = row.find('input[type="radio"]');
+                        _radio.prop('checked', true);
+
+                        var rowpParents = $(row).parents('tr:first');
+                        $(rowpParents).find('span#lblPeriodTime').html(row.data('name'));
+                        $(rowpParents).find('span#lblAdditionPrice').html(row.data('price'));
+                        $(rowpParents).find('input#hidAdditionPeriod').val(row.data('period'));
+                        $(rowpParents).find('input#hidAdditionPeriodType').val(row.data('periodtype'));
+                        $(rowpParents).find('input#hidAdditionPrice').val(row.data('price'));
+                        //========
+                        $('input[name="itemPeriodTime_@item.Name-@itemChild.Index"]').iCheck({
+                            radioClass: 'iradio_flat-blue'
+                        });
+                        $('#bs-modal-pricing-list-@item.Name-@itemChild.Index').modal('hide');
+                    });
+                    </text>
+                }
+            }
+        }
+    }
+
+    function ToggleItem(_name, _this) {
+        $('#divListItem-' + _name).slideToggle(function () {
+            var finalState = $(this).is(':hidden') ?   'hidden' : 'visible';
+            if (finalState === 'hidden') {
+                $(_this).find('.fa').removeClass('fa-angle-down');
+                $(_this).find('.fa').addClass('fa-angle-up');
+            } else {
+                $(_this).find('.fa').removeClass('fa-angle-up');
+                $(_this).find('.fa').addClass('fa-angle-down');
+            }
+        });
+    }
+
+</script>

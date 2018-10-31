@@ -1,0 +1,346 @@
+﻿@model NSCSC.Shared.Models.SandBox.Inventory.Discount.DiscountDetailModels
+@using NSCSC.Shared
+
+<div role="main" class="right_col">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left" style="padding: 10px 0px;">
+                @Html.Partial("~/Views/Shared/_breadcrumb.cshtml",
+                new Dictionary<string, string> { { "A", "Sand Box" }, { "B", "Inventory" }, { "C", "Discount - View Detail" } })
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12 x_panel">
+                    <div class="x_content">
+                        <div class="row text-right">
+                            <ul class="header-buttons pull-right list-inline">
+                                <li><a href="javascript:void(0)" onclick="CloseDetail(); return false;" class="btn btn-danger" id="btn-delete"><i class="fa fa-times"></i>&nbsp;Close</a></li>
+                            </ul>
+                        </div>
+                        <div class="row form-horizontal form-label-left">
+                            <div class="row form-horizontal form-label-left" style="margin-bottom:15px;">
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Discount Name</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @Model.Name
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Active</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @string.Format("{0}", Model.IsActive ? "Yes" : "No")
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="" class="control-label col-md-2 col-sm-2 col-xs-12  ">Value</label>
+                                    <div class="col-md-3 col-sm-3 col-xs-12">
+                                        @if (Model.ValueType == (byte)Commons.EValueType.Percent)
+                                        {
+                                            @Html.Raw(Model.Value.ToString() + "%")
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw(ViewBag.CurrencySymbol + Model.Value.ToString("#,0.00"))
+                                        }
+                                    </div>
+                                </div>
+
+                                @*Discount Period*@
+                                <div class="form-group">
+                                    <label for="" class="col-md-offset-1 col-md-2 col-sm-12 col-xs-12 bottomBorder">Discount Period</label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="" class="control-label col-md-3 col-sm-6 col-xs-12">Discount code will be expired on</label>
+                                    <div class="col-md-2 col-sm-3 col-xs-12">
+                                        @if (Model.PeriodType == (byte)Commons.EDiscountPeriodType.Never)
+                                        {
+                                            @Commons.DiscountPeriodTypeNever.ToString()
+                                        }
+                                        else if (Model.PeriodType == (byte)Commons.EDiscountPeriodType.Time)
+                                        {
+                                            @Commons.DiscountPeriodTypeTime.ToString()
+                                        }
+                                        else if (Model.PeriodType == (byte)Commons.EDiscountPeriodType.Day)
+                                        {
+                                            @Commons.DiscountPeriodTypeDay.ToString()
+                                        }
+                                    </div>
+                                    <div class="col-md-1 col-sm-3 col-xs-12">
+                                        @if (Model.PeriodType == (byte)Commons.EDiscountPeriodType.Time)
+                                        {
+                                            @Model.PeriodTime
+                                        }
+                                        else if (Model.PeriodType == (byte)Commons.EDiscountPeriodType.Day)
+                                        {
+                                            @Model.PeriodDate.ToString(Commons.FormatDate)
+                                        }
+                                    </div>
+                                </div>
+
+                                @*<div class="form-group">
+                                        <label class="control-label col-md-2 col-sm-2 col-xs-12  ">Apply From</label>
+                                        <div class="control-label col-md-2 col-sm-2 col-xs-12">
+                                            @Model.ApplyFrom.ToString(Commons.FormatDate)
+                                        </div>
+                                        <label class="control-label col-md-2 col-sm-2 col-xs-12  ">Apply To</label>
+                                        <div class="col-md-2 col-sm-2 col-xs-12">
+                                            @Model.ApplyTo.ToString(Commons.FormatDate)
+                                        </div>
+                                    </div>*@
+
+                                @*Apply Type*@
+                                <div class="form-group">
+                                    <label for="" class="col-md-offset-1 col-md-2 col-sm-12 col-xs-12 bottomBorder">Apply Type</label>
+                                    <div class="col-md-2 col-sm-2 col-xs-12">
+                                        @if (Model.ApplyType == (byte)Commons.EValueType.Percent)
+                                        {
+                                            @Commons.DiscountApplyTypeTotal.ToString()
+                                        }
+                                        else
+                                        {
+                                            @Commons.DiscountApplyTypeItem.ToString()
+                                        }
+                                    </div>
+                                </div>
+
+                                @if (Model.ListDiscountCategory != null && Model.ListDiscountCategory.Count > 0)
+                                {
+                                    <div class="form-group">
+                                        <div class="col-md-offset-1 col-md-7 col-sm-12 col-xs-12">
+                                            <table id="list-cate" class="table table-bordered table-striped" style="width:100%;">
+                                                <thead style="background-color:#34495e; color:#fff;">
+                                                    <tr>
+                                                        <th class="text-center">Item</th>
+                                                        <th class="text-center" style="width:15%;">Type</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in Model.ListDiscountCategory)
+                                                    {
+                                                        <tr class="">
+                                                            <td>@item.CategoryName</td>
+                                                            <td class="text-center">@item.Type</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                }
+
+                                @if (Model.ListDiscountCode != null && Model.ListDiscountCode.Count > 0)
+                                {
+                                    @*<div class="form-group">
+                                        <label for="" class="col-md-offset-1 col-md-2 col-sm-12 col-xs-12 bottomBorder">Discount Codes</label>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-offset-1 col-md-7 col-sm-12 col-xs-12">
+                                            <table id="list-code" class="table table-bordered table-striped" style="width:100%;">
+                                                <thead style="background-color:#34495e; color:#fff;">
+                                                    <tr>
+                                                        <th class="text-center">Code</th>
+                                                        <th class="text-center" style="width:15%;">Expiry Date</th>
+                                                        <th class="text-center" style="width:15%;">Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in Model.ListDiscountCode)
+                                                    {
+                                                        <tr class="">
+                                                            <td>@item.Code</td>
+                                                            <td class="text-center" >
+                                                                @if (Model.PeriodType == (byte)Commons.EDiscountPeriodType.Never)
+                                                                {
+                                                                    @Html.Raw(Commons.DiscountPeriodTypeNever)
+                                                                }
+                                                                else
+                                                                {
+                                                                    @Html.Raw(item.ExpiredDate.ToString(Commons.FormatDate))
+                                                                }
+                                                            </td>
+                                                            <td class="text-center">@item.Type</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>*@
+                                    @*Tabs*@
+                                    <div class="form-group">
+                                        <div class="col-md-offset-1 col-md-7 col-sm-12 col-xs-12">
+                                            <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                                                <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                                                    <li role="presentation" class="active">
+                                                        <a href="#tab_content1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Active</a>
+                                                    </li>
+                                                    <li role="presentation" class="">
+                                                        <a href="#tab_content4" role="tab" id="expired-tab" data-toggle="tab" aria-expanded="false">Expired</a>
+                                                    </li>
+                                                    <li role="presentation" class="">
+                                                        <a href="#tab_content2" role="tab" id="used-tab" data-toggle="tab" aria-expanded="false">Used</a>
+                                                    </li>
+                                                    <li role="presentation" class="">
+                                                        <a href="#tab_content3" role="tab" id="blocked-tab" data-toggle="tab" aria-expanded="false">Blocked</a>
+                                                    </li>
+                                                </ul>
+                                                <div id="myTabContent" class="tab-content">
+                                                    <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
+                                                        <div class="col-md-12 col-sm-12 col-xs-12">
+                                                            <table id="datatable-responsive-list-item-active"
+                                                                   class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action tableBodyScroll customTable"
+                                                                   cellspacing="0" style="width:100%;">
+                                                                <thead style="background-color:#34495e; color:#fff;">
+                                                                    <tr>                                                                       
+                                                                        <th class="text-center">Code</th>
+                                                                        <th class="text-center">Expiry Date</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="list-item-code-active">                                                                    
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <div role="tabpanel" class="tab-pane fade" id="tab_content4" aria-labelledby="expired-tab">
+                                                        <p>
+                                                            <table id="datatable-responsive-list-item-expired"
+                                                                   class="table table-striped table-bordered dt-responsive nowrap table table-striped tableBodyScroll customTable"
+                                                                   cellspacing="0" style="width:100%;">
+                                                                <thead style="background-color:#34495e; color:#fff;">
+                                                                    <tr>                                                                        
+                                                                        <th class="text-center">Code</th>
+                                                                        <th class="text-center">Expiry Date</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="list-item-code-expired">                                                                 
+                                                                </tbody>
+                                                            </table>
+                                                        </p>
+                                                    </div>
+                                                    <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="used-tab">
+                                                        <p>
+                                                            <table id="datatable-responsive-list-item-used"
+                                                                   class="table table-striped table-bordered dt-responsive nowrap table table-striped tableBodyScroll customTable"
+                                                                   cellspacing="0" style="width:100%;">
+                                                                <thead style="background-color:#34495e; color:#fff;">
+                                                                    <tr>                                                                        
+                                                                        <th class="text-center">Code</th>
+                                                                        <th class="text-center">Expiry Date</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="list-item-code-used">                                                                
+                                                                </tbody>
+                                                            </table>
+                                                        </p>
+                                                    </div>
+                                                    <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="blocked-tab">
+                                                        <p>
+                                                            <table id="datatable-responsive-list-item-blocked"
+                                                                   class="table table-striped table-bordered dt-responsive nowrap table table-striped tableBodyScroll customTable"
+                                                                   cellspacing="0" style="width:100%;">
+                                                                <thead style="background-color:#34495e; color:#fff;">
+                                                                    <tr>                                                                        
+                                                                        <th class="text-center">Code</th>
+                                                                        <th class="text-center">Expiry Date</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="list-item-code-blocked">                                                                   
+                                                                </tbody>
+                                                            </table>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
+                                @*<div class="form-group">
+                                        <label class="control-label col-md-2 col-sm-2 col-xs-12">Description</label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            @Html.Raw(Model.Description)
+                                        </div>
+                                    </div>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#list-cate').DataTable({
+            "order": [
+                [0, 'asc'],
+            ],          
+            "displayLength": 25,
+            "searching": true,                 
+            "bInfo": false,              
+            "paging": true,          
+        });
+        $('#list-code').DataTable({
+            "order": [
+                [0, 'asc'],
+            ],            
+            "displayLength": 25,
+            "searching": true,        
+            
+            "bInfo": false,            
+            "paging": true,          
+        });
+        @if (!string.IsNullOrEmpty(Model.ID))
+        {
+            @:GetListDiscountCodes('@Model.ID');
+        }
+    });
+    function GetListDiscountCodes(_ID) {       
+
+        var listItemCode = [1, 2, 3, 4];
+        $.each($(listItemCode), function (index, value) {
+            $.ajax({
+                url: CreateAbsoluteUrl("GetListDiscountCodes"),
+                type: 'GET',
+                async: false,
+                data: {
+                    ID: _ID,
+                    State: value
+                },
+                dataType: 'html',
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                error: function (e) {
+                },
+                success: function (data) {                  
+                    if (value == '@Commons.EDiscountCodeState.Active.ToString("d")') {
+                       
+                        $('#list-item-code-active').html(data);
+                        $('#list-item-code-active').find("tr td:has(input)").remove('#chek');
+                    }
+                    else if (value == '@Commons.EDiscountCodeState.Expired.ToString("d")') {
+                       
+                        $('#list-item-code-expired').html(data);    
+                        $('#list-item-code-expired').find("tr td:has(input)").remove('#chek');
+                    }
+                    else if (value == '@Commons.EDiscountCodeState.Used.ToString("d")') {
+                       
+                        $('#list-item-code-used').html(data); 
+                        $('#list-item-code-used').find("tr td:has(input)").remove('#chek');
+                    }
+                    else if (value == '@Commons.EDiscountCodeState.Block.ToString("d")') {
+                       
+                        $('#list-item-code-blocked').html(data);
+                        $('#list-item-code-blocked').find("tr td:has(input)").remove('#chek');
+                    }
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                }
+            });
+        });
+    }
+</script>

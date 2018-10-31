@@ -1,0 +1,262 @@
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\Microsoft.CodeAnalysis.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\Microsoft.DiaSymReader.Native.amd64.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\System.IO.Compression.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\VBCSCompiler.exe
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\ApplicationInsights.config
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\NSCSC.Web.Clients.dll.config
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\NSCSC.Web.Clients.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\NSCSC.Web.Clients.pdb
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\csc.exe
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\csc.exe.config
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\csc.rsp
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\csi.exe
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\csi.exe.config
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\csi.rsp
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\Microsoft.CodeAnalysis.Scripting.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\Microsoft.CSharp.Core.targets
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\Microsoft.DiaSymReader.Native.x86.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\Microsoft.VisualBasic.Core.targets
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\Microsoft.Win32.Primitives.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\System.AppContext.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\System.Collections.Immutable.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\System.Console.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\System.Diagnostics.FileVersionInfo.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\System.Diagnostics.Process.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\System.Diagnostics.StackTrace.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\System.IO.FileSystem.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\System.IO.FileSystem.DriveInfo.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\System.IO.FileSystem.Primitives.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\System.IO.Pipes.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\System.Reflection.Metadata.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\System.Security.AccessControl.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\System.Security.Claims.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\System.Security.Cryptography.Algorithms.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\System.Security.Cryptography.Encoding.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\System.Security.Cryptography.Primitives.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\System.Security.Cryptography.X509Certificates.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\System.Security.Principal.Windows.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\System.Text.Encoding.CodePages.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\System.Threading.Thread.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\System.ValueTuple.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\System.Xml.ReaderWriter.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\System.Xml.XmlDocument.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\System.Xml.XPath.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\System.Xml.XPath.XDocument.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\vbc.exe
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\vbc.exe.config
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\vbc.rsp
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\roslyn\VBCSCompiler.exe.config
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\Antlr3.Runtime.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\log4net.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\Microsoft.AI.Agent.Intercept.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\Microsoft.AI.DependencyCollector.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\Microsoft.AI.PerfCounterCollector.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\Microsoft.AI.ServerTelemetryChannel.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\Microsoft.AI.Web.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\Microsoft.AI.WindowsServer.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\Microsoft.ApplicationInsights.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\Microsoft.AspNet.TelemetryCorrelation.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\Microsoft.Web.Infrastructure.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\Newtonsoft.Json.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\NSCSC.Data.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\NSCSC.Payments.Alipay.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\NSCSC.Payments.Paypal.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\NSCSC.Payments.WeChatPay.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\NSCSC.Shared.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\NSLog.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\System.Diagnostics.DiagnosticSource.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\System.Net.Http.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\System.Security.Cryptography.Algorithms.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\System.Security.Cryptography.Encoding.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\System.Security.Cryptography.Primitives.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\System.Security.Cryptography.X509Certificates.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\System.Web.Helpers.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\System.Web.Mvc.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\System.Web.Optimization.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\System.Web.Razor.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\System.Web.WebPages.Deployment.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\System.Web.WebPages.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\System.Web.WebPages.Razor.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\WebGrease.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\PayPal.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\RestSharp.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\DotNetZip.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\Microsoft.Exchange.WebServices.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\ClosedXML.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\System.ValueTuple.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\DocumentFormat.OpenXml.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\ExcelNumberFormat.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\NSCSC.Data.pdb
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\NSCSC.Data.dll.config
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\NSCSC.Payments.Alipay.pdb
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\NSCSC.Payments.Paypal.pdb
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\NSCSC.Payments.Paypal.dll.config
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\NSCSC.Payments.WeChatPay.pdb
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\NSCSC.Shared.pdb
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\NSCSC.Shared.dll.config
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\Antlr3.Runtime.pdb
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\log4net.xml
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\Microsoft.AI.DependencyCollector.xml
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\Microsoft.AI.Web.xml
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\Microsoft.AI.WindowsServer.xml
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\Microsoft.AspNet.TelemetryCorrelation.xml
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\Newtonsoft.Json.xml
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\System.Diagnostics.DiagnosticSource.xml
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\System.Web.Helpers.xml
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\System.Web.Mvc.xml
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\System.Web.Razor.xml
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\System.Web.WebPages.xml
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\System.Web.WebPages.Deployment.xml
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\System.Web.WebPages.Razor.xml
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\System.Web.Optimization.xml
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\PayPal.xml
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\DotNetZip.xml
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\Microsoft.Exchange.WebServices.pdb
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\Microsoft.Exchange.WebServices.xml
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\ClosedXML.pdb
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\ClosedXML.xml
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\System.ValueTuple.xml
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\DocumentFormat.OpenXml.xml
+D:\NuWeb.NCSC\NSCSC.Web.Clients\bin\ExcelNumberFormat.xml
+D:\NuWeb.NCSC\NSCSC.Web.Clients\obj\Debug\NSCSC.Web.Clients.csprojAssemblyReference.cache
+D:\NuWeb.NCSC\NSCSC.Web.Clients\obj\Debug\NSCSC.Web.Clients.csproj.CoreCompileInputs.cache
+D:\NuWeb.NCSC\NSCSC.Web.Clients\obj\Debug\NSCSC.Web.Clients.csproj.CopyComplete
+D:\NuWeb.NCSC\NSCSC.Web.Clients\obj\Debug\NSCSC.Web.Clients.dll
+D:\NuWeb.NCSC\NSCSC.Web.Clients\obj\Debug\NSCSC.Web.Clients.pdb
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\Microsoft.CodeAnalysis.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\Microsoft.DiaSymReader.Native.amd64.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\System.IO.Compression.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\VBCSCompiler.exe
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\ApplicationInsights.config
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\NSCSC.Web.Clients.dll.config
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\NSCSC.Web.Clients.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\NSCSC.Web.Clients.pdb
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\csc.exe
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\csc.exe.config
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\csc.rsp
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\csi.exe
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\csi.exe.config
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\csi.rsp
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\Microsoft.CodeAnalysis.Scripting.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\Microsoft.CSharp.Core.targets
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\Microsoft.DiaSymReader.Native.x86.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\Microsoft.VisualBasic.Core.targets
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\Microsoft.Win32.Primitives.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\System.AppContext.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\System.Console.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\System.Diagnostics.FileVersionInfo.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\System.Diagnostics.Process.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\System.Diagnostics.StackTrace.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\System.IO.FileSystem.DriveInfo.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\System.IO.FileSystem.Primitives.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\System.IO.Pipes.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\System.Reflection.Metadata.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\System.Security.AccessControl.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\System.Security.Claims.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\System.Security.Cryptography.Algorithms.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\System.Security.Cryptography.Encoding.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\System.Security.Cryptography.Primitives.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\System.Security.Cryptography.X509Certificates.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\System.Security.Principal.Windows.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\System.Text.Encoding.CodePages.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\System.Threading.Thread.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\System.ValueTuple.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\System.Xml.ReaderWriter.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\System.Xml.XmlDocument.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\System.Xml.XPath.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\System.Xml.XPath.XDocument.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\vbc.exe
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\vbc.exe.config
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\vbc.rsp
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\VBCSCompiler.exe.config
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\Antlr3.Runtime.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\log4net.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\Microsoft.AI.Agent.Intercept.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\Microsoft.AI.DependencyCollector.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\Microsoft.AI.PerfCounterCollector.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\Microsoft.AI.ServerTelemetryChannel.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\Microsoft.AI.Web.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\Microsoft.AI.WindowsServer.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\Microsoft.ApplicationInsights.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\Microsoft.AspNet.TelemetryCorrelation.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\Microsoft.Web.Infrastructure.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\Newtonsoft.Json.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\NSCSC.Data.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\NSCSC.Payments.Alipay.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\NSCSC.Payments.Paypal.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\NSCSC.Payments.WeChatPay.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\NSCSC.Shared.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\NSLog.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\System.Diagnostics.DiagnosticSource.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\System.Net.Http.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\System.Security.Cryptography.Algorithms.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\System.Security.Cryptography.Encoding.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\System.Security.Cryptography.Primitives.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\System.Security.Cryptography.X509Certificates.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\System.Web.Helpers.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\System.Web.Mvc.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\System.Web.Optimization.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\System.Web.Razor.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\System.Web.WebPages.Deployment.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\System.Web.WebPages.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\System.Web.WebPages.Razor.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\WebGrease.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\PayPal.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\RestSharp.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\DotNetZip.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\Microsoft.Exchange.WebServices.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\ClosedXML.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\System.ValueTuple.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\DocumentFormat.OpenXml.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\ExcelNumberFormat.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\NSCSC.Data.pdb
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\NSCSC.Data.dll.config
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\NSCSC.Payments.Alipay.pdb
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\NSCSC.Payments.Paypal.pdb
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\NSCSC.Payments.Paypal.dll.config
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\NSCSC.Payments.WeChatPay.pdb
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\NSCSC.Shared.pdb
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\NSCSC.Shared.dll.config
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\Antlr3.Runtime.pdb
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\log4net.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\Microsoft.AI.DependencyCollector.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\Microsoft.AI.Web.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\Microsoft.AI.WindowsServer.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\Microsoft.AspNet.TelemetryCorrelation.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\Newtonsoft.Json.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\System.Diagnostics.DiagnosticSource.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\System.Web.Helpers.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\System.Web.Mvc.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\System.Web.Razor.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\System.Web.WebPages.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\System.Web.WebPages.Deployment.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\System.Web.WebPages.Razor.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\System.Web.Optimization.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\PayPal.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\DotNetZip.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\Microsoft.Exchange.WebServices.pdb
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\Microsoft.Exchange.WebServices.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\ClosedXML.pdb
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\ClosedXML.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\System.ValueTuple.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\DocumentFormat.OpenXml.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\ExcelNumberFormat.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\obj\Debug\NSCSC.Web.Clients.csprojAssemblyReference.cache
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\obj\Debug\NSCSC.Web.Clients.csproj.CoreCompileInputs.cache
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\obj\Debug\NSCSC.Web.Clients.csproj.CopyComplete
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\obj\Debug\NSCSC.Web.Clients.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\obj\Debug\NSCSC.Web.Clients.pdb
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\System.Collections.Immutable.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Web.Clients\bin\roslyn\System.IO.FileSystem.dll

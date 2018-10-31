@@ -1,0 +1,560 @@
+﻿@using Newtonsoft.Json;
+@{
+    var _cus = Session["UserClientSite"] as NSCSC.Shared.Models.UserSession;
+}
+<style>
+    .breadcrum {
+        float: none !important;
+    }
+
+    .title_left {
+        background-color: #FFF !important;
+    }
+
+    .itemProductTitel {
+        background-color: #dae0e8;
+        height: 60px;
+        line-height: 60px;
+        font-size: 17px;
+        font-weight: 600;
+    }
+
+    .divListProduct {
+        border: 1px solid #f3f3f3;
+        /*box-shadow: 5px 5px 8px 5px #f3f3f3;*/
+        height: auto;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .divcontentinterested {
+        border: 1px solid #f3f3f3;
+        box-shadow: 5px 5px 8px 5px #f3f3f3;
+        height: auto;
+        display: inline-block;
+        width: 100%;
+        padding-top: 7%;
+        padding-bottom: 7%;
+        margin-top: 5%;
+    }
+
+    #divInfoCheckout {
+        border: 1px solid #f3f3f3;
+        box-shadow: 0 4px 8px 0 #f3f3f3;
+        height: auto;
+        display: inline-block;
+        width: 100%;
+    }
+
+        #divInfoCheckout label {
+            font-weight: normal;
+        }
+
+    .body-content {
+        background-color: #FFF;
+    }
+
+    #divCoupon {
+        border: 1px solid #f3f3f3;
+        box-shadow: 0 4px 8px 0 #f3f3f3;
+        height: auto;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .itemproduct {
+        box-shadow: 5px 5px 8px 0px #f3f3f3;
+        height: auto;
+        display: inline-block;
+        width: 100%;
+        padding-bottom: 7%;
+    }
+
+    .modal-header {
+        text-align: left !important;
+        background-color: #FFF;
+    }
+
+    .divListProductInterested {
+        margin-top: 10%;
+    }
+
+    .bx-wrapper .bx-next {
+        right: 9px !important;
+    }
+
+    .bx-wrapper .bx-prev {
+        left: -7px !important;
+    }
+    /*custom select2*/
+    .select2-container--default .select2-selection--single, .select2-container--default .select2-selection--multiple {
+        background-color: #FFF;
+    }
+
+    .itemAddition {
+        box-shadow: 5px 5px 30px 0px #f3f3f3;
+        height: auto;
+        display: inline-block;
+        margin-left: 5%;
+        margin-right: 0px;
+        width: 90%;
+        margin-bottom: 7%;
+        padding-left: 2.5%;
+        padding-right: 2.5%;
+        margin-top: -7%;
+    }
+
+    /*custom css icheck*/
+    .icheckbox_flat-green, .iradio_flat-green {
+        border-radius: 0;
+    }
+
+    .divListProduct .select2-container--default .select2-selection--single {
+        border-radius: 7px !important;
+    }
+
+    #BuyAdditionModal .modal-body .select2-container--default .select2-selection--single {
+        border-radius: 7px !important;
+    }
+
+    .bx-loading {
+        display: none;
+    }
+
+    .lbl-temp-period {
+        display: none;
+    }
+
+    .col-temp-lbl-addition {
+        display: none;
+    }
+
+    .col-temp-button-addition {
+        display: none;
+    }
+
+    .col-md-2--span-period {
+        display: none;
+    }
+
+    .col-md-2--span-price {
+        display: none;
+    }
+
+    .div--coupon--mobile {
+        display: none !important
+    }
+</style>
+<link href="@Url.Content("~/Content/cart.css")" rel="stylesheet" />
+<script>
+    var _Products = JSON.parse('@Html.Raw(Json.Encode(ViewBag.ListProducts))');
+    var _Orders = '@Html.Raw(Json.Encode(ViewBag.OrderDetail))';
+</script>
+<script src="@Url.Content("~/vendors/jquery.bxslider/jquery.bxslider.js")"></script>
+<div class="main-cart" ng-controller="CartCtrl">
+    <div class="se-pre-con" style="display: none;"></div>
+    <div class="title_left">
+        <div class="container">
+            <h3>
+                <small class="breadcrum">
+                    <a href="@Url.Action("Index", "Home")">Home</a>
+                    <i>/</i>
+                    <a href="@Url.Action("Cart", "YourCart")" style="color:#1a64d3">Your Cart</a>
+                </small>
+            </h3>
+            <div class="clearfix"></div>
+
+        </div>
+    </div>
+    <div class="body-content-cart">
+        <h3 style="color:#2b3038">
+            YOUR CART
+        </h3>
+        <div id="divListProductCart">
+            <div class="form-group">
+                <div class="col-md-9 colListItem">
+                    <div class="divListProduct">
+                        <div class="form-group itemProductTitel">
+                            <div class="col-md-7">
+                                Description
+                            </div>
+                            <div class="col-md-2 text-center">Period</div>
+                            <div class="col-md-2 text-center">Price</div>
+                        </div>
+
+                        <!--item 1-->
+                        <div class="clsitem" ng-repeat="itemOrder in ListOrders">
+                            <div class="row itemproduct" style="margin-bottom:7%;margin-right:0;margin-left:0;">
+                                <div class="col-md-7">
+                                    <div class="row">
+                                        <div class="col-md-4 col-sm-4 col-xs-12 itemImages">
+                                            <a href="">
+                                                <img ng-src="{{itemOrder.ImageURL}}" width="150" height="110" />
+                                            </a>
+                                        </div>
+                                        <div class="col-md-8 col-sm-8 col-xs-12" style="padding-left:7%">
+                                            <div class="row" style="margin-top:15px">
+                                                <label class="fontBold title fontUppercase">
+                                                    <a href="javascript:void(0)" class="lblProductName" ng-bind="itemOrder.ProductName"></a> &nbsp; &nbsp; <i class="fa fa-info" style="cursor:pointer;color:#FFF;background-color:#397fe6;height:20px;width:20px;border-radius:100%;text-align:center;line-height:18px;" ng-click="fnInfoAdvanced(itemOrder);"></i>
+                                                </label>
+                                            </div>
+                                            <div class="row">
+                                                <label class="title fontUppercase lblPrice" style="font-weight:500" ng-bind="itemOrder.Price |currency :CurrencySymbol: 0">
+                                                </label>
+                                            </div>
+                                            <div class="row">
+                                                <label class="fontBold title" style="color:#6c6c6c">
+                                                    Period: <span style="font-weight:normal" ng-bind="itemOrder.PeriodTime"></span>
+                                                </label>
+                                            </div>
+                                            <div class="row">
+                                                <label class="title" style="color:#6c6c6c">
+                                                    Product key can be applied on {{itemOrder.AmountOfUnit}} user device(s)
+                                                </label>
+                                            </div>
+                                            <div class="row">
+                                                <label class="title" style="color:#6c6c6c">
+                                                    License key can be used to activate {{itemOrder.NumOfAccount}} user account(s)
+                                                </label>
+                                            </div>
+                                            <div class="row row-web">
+                                                <label class="col-md-6 col-sm-6 col-xs-12" style="margin-top:10px;color:#588872;margin-left:-5%;">
+                                                    <i class="fa fa-circle"></i> Additional
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <button type="button" class="btn btn-info" style="font-weight:600;border-radius:20px;" ng-click="AddOrEditAddition(itemOrder.CusID,itemOrder.ProductID,OrderInfo.ID);"><i class="glyphicon glyphicon-plus"></i> Add/Edit</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--Period-->
+                                <div class="col-md-2 col-md-2-period">
+                                    <span class="col-md-2--span-period">Period</span>
+                                    <select select2="" class="form-control select2_multiple" style="width : 100%;" ng-model="itemOrder.sPeriodType" ng-change="UpdatePeriodItem(itemOrder,OrderInfo.ID);">
+                                        <option value="{{option.Value}}" ng-repeat="option in itemOrder.ListPeriodType">{{option.Text}}</option>
+                                    </select>
+                                </div>
+
+                                <!--Price-->
+                                <div class="col-md-2 text-center col-md-2-price">
+                                    <span class="col-md-2--span-price">Price</span>
+                                    <label class="title fontUppercase" style="font-weight:500" ng-bind="itemOrder.TotalPrice |currency :CurrencySymbol: 0">
+                                    </label>
+                                </div>
+
+                                <!--action remove-->
+                                <div class="col-md-1 col-sm-1 col-xs-12 col-1-remove">
+                                    <span class="col-md-6 col-sm-6 col-xs-12 col-temp-lbl-addition" style="margin-top:10px;color:#588872">
+                                        <i class="fa fa-circle"></i> Additional
+                                    </span>
+                                    <button type="button" class="btn btn-info col-temp-button-addition" style="font-weight:600;border-radius:20px;" ng-click="AddOrEditAddition(itemOrder.CusID,itemOrder.ProductID,OrderInfo.ID);"><i class="glyphicon glyphicon-plus"></i> Add/Edit</button>
+                                    <a href="javascript:void(0)" ng-click="RemoveItemOrder(itemOrder,OrderInfo.ID)" class="tag-remove"><i class="fa fa-trash" style="font-size:25px;color:#cacaca"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <!--item 2-->
+                    </div>
+
+                    <!--You may be also interested-->
+                    <div class="divListProductInterested">
+                        <div class="form-group">
+                            <label class="col-md-12 col-sm-12 col-xs-12 fontBold title fontUppercase" style="font-size:20px;">You may be also interested</label>
+                        </div>
+
+                        <!--Silder product interested-->
+                        <div class="divcontentinterested" ng-if="ListProductInterested != null && ListProductInterested.length > 0">
+                            <div class="form-group silder">
+                                <div class="col-md-6 col-sm-6 col-xs-12 itemProductInterested" ng-repeat="item in ListProductInterested">
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6 col-xs-12 itemImagesSiler">
+                                            <a href="">
+                                                <img ng-src="{{item.ImageURL}}" width="150" height="110" />
+                                            </a>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <label class="fontBold title fontUppercase">
+                                                <a href="javascript:void(0)" ng-bind="item.Name" class="lblItemNameSlider"></a> &nbsp; &nbsp; <i class="fa fa-info" style="cursor:pointer;color:#FFF;background-color:#397fe6;height:20px;width:20px;border-radius:100%;text-align:center;line-height:18px;" ng-click="fnInfoAdvanced(item);"></i>
+                                            </label><br />
+                                            <label class="title fontUppercase lblItemPriceSlider" style="font-weight:500" ng-bind="item.Price |currency :CurrencySymbol: 0">
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="fontBold title lblPeriod" style="color:#6c6c6c;margin-left:8%;margin-top:8%;">
+                                            Period: <span style="font-weight:normal" ng-bind="item.PeriodTime"></span>
+                                        </label>
+                                    </div>
+                                    <div class="row">
+                                        <label class="title lblAmountOfUnitSilder" style="color:#6c6c6c;margin-left:8%">
+                                            Product key can be applied on {{item.AmountOfUnit}} user device(s)
+                                        </label>
+                                    </div>
+                                    <div class="row">
+                                        <label class="title lblNumberOfAccount" style="color:#6c6c6c;margin-left:8%">
+                                            License key can be used to activate {{item.NumberOfAccount}} user account(s)
+                                        </label>
+                                    </div>
+                                    <div class="row row-button-add-to-cart" style="margin-left:5%;margin-top:10px;">
+                                        <button type="button" class="btn btn-info" style="font-weight:600;border-radius:20px;" ng-click="AddToCart(item,OrderInfo.ID)"><i class="fa fa-cart-plus"></i> Add to Cart</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-3 col-xs-12 col-md-3--coupon">
+                    <div id="divCoupon" class="div--coupon--mobile">
+                        <div class="form-group" style="padding-top:20px;">
+                            <label class="col-md-12 col-sm-12 col-xs-12">Coupon</label>
+                        </div>
+
+                        <div class="form-group" style="padding-top:20px;">
+                            <div class="input-group div-input-group-coupon" style="width:88%;margin:auto;">
+                                <input type="text" class="form-control" placeholder="Coupon code" autocomplete="off" ng-model="DiscountCode" />
+                                <span class="input-group-addon" style="cursor:pointer;background-color:#0cd5a6;color:#FFF;font-weight:600" ng-click="CouponCode(OrderInfo.ID,OrderInfo.CustomerID);">Apply</span>
+                            </div>
+                            <label class="label label-danger label-pre-wrap" style="margin-left:7%" ng-show="IsShow" ng-init="IsShow=false" ng-bind="Message"></label>
+                            @* <button ng-click="CouponCode();">ABC</button>*@
+                        </div>
+                    </div>
+
+                    <div id="divInfoCheckout">
+                        <!--Subtotal-->
+                        <div class="form-group" style="padding-top:20px;">
+                            <label class="col-md-7 col-sm-7 col-xs-12 col-md-7--subtotal">Subtotal</label>
+                            <label class="col-md-5 col-sm-5 col-xs-12 text-right col-md-5--subtotal" ng-bind="OrderInfo.SubTotal |currency :CurrencySymbol: 0"></label>
+                        </div>
+                        <!--Discount-->
+                        <div class="form-group" style="padding-top:20px;">
+                            <label class="col-md-7 col-sm-7 col-xs-12 col-md-7--discount">Discount</label>
+                            <label class="col-md-5 col-sm-5 col-xs-12 text-right col-md-5--discount" ng-if="OrderInfo.DiscountType == 1" ng-bind="OrderInfo.TotalDiscount |currency :CurrencySymbol: 0"></label>
+                            <label class="col-md-5 col-sm-5 col-xs-12 text-right col-md-5--discount" ng-if="OrderInfo.DiscountType == 0" ng-bind="OrderInfo.TotalDiscount +'%'"></label>
+                        </div>
+                        <!--Promotion-->
+                        <div class="form-group" style="padding-top:20px;">
+                            <label class="col-md-7 col-sm-7 col-xs-12 col-md-7--promotion">Promotion</label>
+                            <label class="col-md-5 col-sm-5 col-xs-12 text-right col-md-5--promotion" ng-bind="OrderInfo.TotalPromotion |currency :CurrencySymbol: 0"></label>
+                        </div>
+                        <!--Tax-->
+                        <div class="form-group" style="padding-top:20px;padding-bottom:20px;">
+                            <label class="col-md-7 col-sm-7 col-xs-12 col-md-7--tax">Tax <span ng-bind="OrderInfo.sTaxName"></span></label>
+                            <label class="col-md-5 col-sm-5 col-xs-12 text-right col-md-7--tax" ng-bind="OrderInfo.Tax |currency :CurrencySymbol"></label>
+                        </div>
+                        <div class="form-group">
+                            <hr style="width:85%" />
+                        </div>
+                        <!--Total-->
+                        <div class="form-group" style="padding-bottom:30px;color:#3a7ad9;">
+                            <label class="col-md-7 col-sm-7 col-xs-12 col-md-7--total" style="font-weight:bold">Total</label>
+                            <label class="col-md-5 col-sm-5 col-xs-12 text-right col-md-5--total" style="font-weight:bold" ng-bind="OrderInfo.Total |currency :CurrencySymbol: 0"></label>
+                        </div>
+                    </div>
+
+                    <div id="divButtonCheckout">
+                        <div class="form-group">
+                            @if (_cus.IsReseller)
+                            {
+                                <button type="button" class="btn btn-success" style="width:100%;background-color:#0cd5a6;border-radius:0;font-weight:600"  ng-click="YourCartDoneForReseller(OrderInfo.ID,OrderInfo.CustomerID, OrderInfo.HasMerchant);">DONE</button>
+                            }
+                            else
+                            {
+                            <!-- Customer-->
+                                <button type="button" class="btn btn-success" style="width:100%;background-color:#0cd5a6;border-radius:0;font-weight:600" ng-click="CheckOut(OrderInfo.Total,OrderInfo.ID,OrderInfo.CustomerID);">CHECKOUT</button>
+                            }
+
+                        </div>
+
+                    </div>
+
+                    <div id="divCoupon" class="div--coupon--web">
+                        <div class="form-group" style="padding-top:20px;">
+                            <label class="col-md-12 col-sm-12 col-xs-12">Coupon</label>
+                        </div>
+
+                        <div class="form-group" style="padding-top:20px;">
+                            <div class="input-group" style="width:88%;margin:auto;">
+                                <input type="text" class="form-control" placeholder="Coupon code" autocomplete="off" ng-model="DiscountCode" />
+                                <span class="input-group-addon" style="cursor:pointer;background-color:#0cd5a6;color:#FFF;font-weight:600" ng-click="CouponCode(OrderInfo.ID,OrderInfo.CustomerID);">Apply</span>
+                            </div>
+                            <label class="label label-danger label-pre-wrap" style="margin-left:7%" ng-show="IsShow" ng-init="IsShow=false" ng-bind="Message"></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" style="margin-top:20%;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div class="form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <label class="fontBold title fontUppercase" style="font-size:20px;">Advanced information</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <label style="color:#0cd5a6;font-size:17px;font-weight:500;">Product key can be applied on 2 device(s)</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body" style="display:inline-block;width:100%;margin:auto">
+                    <div class="form-group">
+                        <label class="col-md-12 col-sm-12 col-xs-12">License key of the product can be used to activate 2 user account(s)</label>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr style="background-color:#dae0e8">
+                                        <th>List of functions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in ListFunction">
+                                        <td ng-if="item.FunctionName !=undefined" ng-bind="item.FunctionName"></td>
+                                        <td ng-if="item.Name !=undefined" ng-bind="item.Name"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Modal Buy addition-->
+    <div class="modal fade" id="BuyAdditionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" style="margin-top:20%;">
+                <div class="modal-header">
+                    <div class="form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <label class="fontBold title fontUppercase" style="font-size:20px;">BUY ADDITION</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <label style="font-size:15px;font-weight:500;">Please select the desired items in below list</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <label style="font-size:15px;font-weight:500;">Filter by Type of Additions</label>
+                            <select select2="" ng-model="additiontype" ng-init="additiontype='0'" class="form-control select2_multiple" id="filterAddition" style="width:30% !important" onchange="FilterAddition();">
+                                <option value="0" selected="selected">All</option>
+                                <option ng-repeat="addition in Additions" ng-bind="addition.Text" value="{{addition.Value}}"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body" style="display:inline-block;width:100%;margin:auto">
+                    <div class="form-group divHeaderAddition" style="padding-bottom:7%;margin-top:5%;">
+                        <div class="col-md-7 col-sm-3 col-xs-12">
+
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-12 text-center">
+                            <label class="fontBold title">Period</label>
+                        </div>
+                        <div class="col-md-2 col-sm-2 col-xs-12 text-center">
+                            <label class="fontBold title">Price</label>
+                        </div>
+                    </div>
+
+                    <!--Location-->
+                    <div class="form-group" style="padding-bottom:1%;" ng-if="ListAdditionType != null" ng-repeat="addition in ListAdditionType">
+                        <div class="col-md-12 col-sm-12 col-xs-12 col-lbl-additionType">
+                            <label class="fontBold" style="font-size:20px;" ng-bind="addition.sAdditionType"></label>
+                        </div>
+                        <div class="row" style="padding-top:8%; margin-left:0px !important;" ng-if="addition.ListProductChild != null" ng-repeat="additionChl in addition.ListProductChild">
+                            <div class="col-md-1 col-sm-1 col-xs-12 cols-1-addition">
+                                <input icheck type="checkbox" ng-model="additionChl.Selected" />
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-12 cols-6-addition">
+                                <label class="lbl-col-6-addition" ng-bind="additionChl.Name"> </label>
+                            </div>
+                            <div class="col-md-3 col-sm-3 col-xs-12 col-select-price-addition">
+                                <span class="lbl-temp-period fontBold">Period</span>
+                                <select select2="" class="form-control select2_multiple" style="width : 100%;" ng-model="additionChl.sPeriodType">
+                                    <option ng-repeat="optionChl in additionChl.ListPrice" ng-bind="optionChl.NamePeriodType" value="{{optionChl.PeriodType}}"></option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 col-sm-2 col-xs-12 text-center col-lbl-price-addition">
+                                <label class="title fontUppercase" style="font-weight:500" ng-bind="additionChl.Price |currency :CurrencySymbol: 0">
+                                </label>
+                            </div>
+                        </div>
+
+                        <!--border top-->
+                        <div class="form-group" style="border-top:3px solid #f1f2f4;margin-top:7%;"></div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" ng-click="AddToCartAddition();">ADD TO CARD</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $(window).resize(function () {
+            var windowsize = $(window).width();
+            if (windowsize >= 320 && windowsize <= 568) {
+                var slider = $('.silder').bxSlider({
+                    minSlides: 1,
+                    maxSlides: 1,
+                    slideWidth: 5000,
+                    pager: false,
+                });
+            }
+            else {
+                var slider = $('.silder').bxSlider({
+                    minSlides: 2,
+                    maxSlides: 4,
+                    slideWidth: 5000,
+                    pager: false,
+                });
+            }
+        });
+
+        var windowsize = $(window).width();
+        if (windowsize >= 320 && windowsize <= 568) {
+            var slider = $('.silder').bxSlider({
+                minSlides: 1,
+                maxSlides: 1,
+                slideWidth: 5000,
+                pager: false,
+            });
+        }
+        else {
+            var slider = $('.silder').bxSlider({
+                minSlides: 2,
+                maxSlides: 4,
+                slideWidth: 5000,
+                pager: false,
+            });
+        }
+
+        //$(".Period").select2({
+        //    placeholder: "Please choose period",
+        //});
+
+        //$('input.icheck').iCheck({
+        //    checkboxClass: 'icheckbox_flat-green',
+        //    radioClass: 'iradio_flat-green'
+        //});
+    })
+</script>

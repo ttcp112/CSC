@@ -1,0 +1,65 @@
+﻿@{
+    Layout = null;
+}
+@model NSCSC.Shared.Models.SandBox.Inventory.Product.ProductDetailModels
+@using NSCSC.Shared
+@if(Model != null && Model.ListProducts != null && Model.ListProducts.Count > 0)
+{
+    foreach (var item in Model.ListProducts)
+    {
+        <tr data-id="@item.ID" class="trCompositeServices">
+            <td>
+               <input type="checkbox" id="IsSelect" checked="@item.IsSelect" />
+            </td>
+            <td>
+                @Html.Hidden(string.Format("{0}", item.ID), item.ID, new { @id = "hidCompositeHardwareId" })
+                @Html.Hidden(string.Format("{0}", item.Name), item.Name, new { @id = "hidCompositeHardwareName" })
+                @Html.Hidden(string.Format("{0}", item.AdditionType), item.AdditionType, new { @id= "hidCompositeHardwareType" })
+                @Html.Hidden(string.Format("{0}", item.ProductType), item.ProductType, new { @id = "hidCompositeHardwareProductType" })
+                @Html.Hidden(string.Format("{0}", item.CategoryName != null ? item.CategoryName : ""), string.Format("{0}",item.CategoryName != null ? item.CategoryName : ""), new { @id = "hidCompositeHardwareCategoryName" })
+                @item.Name
+            </td>
+            <td>
+                <div class="input-group">
+                    <span class="input-group-btn"><button class="btn btn-danger" type="button" onclick="ExceptData('#Quantity_@item.ID')"><i class="fa fa-minus"></i></button></span>
+                    <input type="text" class="form-control text-center keyNumber" id="Quantity_@item.ID" placeholder="Quantity" value="@item.Quantity"/>
+                    <span class="input-group-btn"> <button class="btn btn-info" type="button" onclick="PushData('#Quantity_@item.ID')"><i class="fa fa-plus"></i></button> </span>
+                </div>
+                <br />
+                <span id="ltrValidateQuantity" class="label label-danger" style="white-space: initial;"></span>
+                @*@Html.ValidationMessageFor(model => model.IncludeStore, null, new { @class = "label label-danger" })*@
+            </td>
+            <td>
+                <div class="input-group">
+                    <span class="input-group-btn"><button class="btn btn-danger" type="button" onclick="ExceptData('#Sequence_@item.ID')"><i class="fa fa-minus"></i></button></span>
+                    <input type="text" class="form-control keyNumber text-center" id="Sequence_@item.ID" placeholder="Sequence" value="@item.Sequence" />
+                    <span class="input-group-btn"> <button class="btn btn-info" type="button" onclick="PushData('#Sequence_@item.ID')"><i class="fa fa-plus"></i></button> </span>
+                </div>
+                <br />
+                <span id="ltrValidateSequence" class="label label-danger"></span>
+                @*@Html.ValidationMessageFor(model => model.IncludeStore, null, new { @class = "label label-danger" })*@
+            </td>
+        </tr>
+    }
+}
+
+<script type="text/javascript">
+    //keymoney
+    $(".keyMoney").keypress(function (e) {
+        if (window.event) {
+            if (window.event.keyCode != 46 && window.event.keyCode > 31
+                && (window.event.keyCode < 48 || window.event.keyCode > 57)) {
+                return (false);//chrome and IE
+            }
+        } else {
+            if (e.which != 46 && e.which > 31
+                && (e.which < 48 || e.which > 57)) {
+                return (false);//firefox
+            }
+        }
+    });
+
+    /****** key number ***/
+    KeyNumberCheck();
+
+</script>

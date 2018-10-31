@@ -1,0 +1,187 @@
+﻿<div class="row">    
+    <label class="title-head">
+        PERSONAL & MERCHANT INFORMATION  
+    </label>
+</div>
+
+<div class="row box-my-profile">
+    <div class="form" id="mainForm">
+        <form class="row" name="persInf" id="persInf">
+            <div ng-if="hasError" class="has-error row">
+                <span>{{error}}</span>
+            </div>
+            <div class="row titles">
+                <label class="font-bold">Contact Person</label>
+            </div>
+            <fieldset>
+                <div class="inputForm">
+                    <div class="row">
+                        @*-- Name--*@
+                        <div class="col col-xs-12 col-sm-5">
+                            <div class="form-group">
+                                <div><label>NAME <em class="note note-error" ng-show="persInf.name.$error.required">(Required)</em></label></div>
+                                <label class="" ng-class="{'state-error': persInf.name.$error.required}">
+                                    <input required ng-model="data.CustomerDetail.Name" name="name" id="name" placeholder="User's Name" class="form-control" type="text" style="font-family: Arial;">
+                                </label>
+                            </div>
+                        </div>
+                        @*-- Email--*@
+                        <div class="col col-xs-12 col-sm-5">
+                            <div class="form-group">
+                                <div>
+                                    <label>
+                                        EMAIL <em class="note note-error" ng-show="(persInf.email.$error.required)">(Required)</em>
+                                        <em class="note note-error" ng-show="(persInf.email.$error.email)">(Invalid email address)</em>
+                                    </label>
+                                </div>
+                                <label class="input">
+                                    <input required ng-model="data.CustomerDetail.Email" name="email" class="form-control" type="email" placeholder="acb@gmail.com">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        @*-- PHONE--*@
+                        <div class="col col-xs-12  col-sm-5">
+                            <div class="form-group">
+                                <div>
+                                    <label>
+                                        PHONE <em class="note note-error" ng-show="(persInf.phone.$error.required)">(Required)</em>
+                                        <em class="note note-error" ng-show="(persInf.phone.$error.pattern)">(Invalid phone)</em>
+                                    </label>
+                                </div>
+                                <label class="input" ng-class="{'state-error': persInf.phone.$error.required}">
+                                    <input required ng-model="data.CustomerDetail.Phone" name="phone" id="phone" placeholder="0123456789" class="form-control" type="text" pattern="[0-9]+.{6,20}" maxlength="20">
+                                </label>
+                            </div>
+                        </div>
+                        @*-- password--*@
+                        <div class="col col-xs-12  col-sm-5">
+                            <div class="form-group">
+                                <div>
+                                    <label>
+                                        PASSWORD<em class="note note-error" ng-show="(persInf.password.$error.required)">(Required)</em>
+                                        <em class="note note-error" ng-show="(persInf.password.$error.pattern)">(Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters)</em>
+                                    </label>
+                                </div>
+                                <label class="input" ng-class="{'state-error': persInf.password.$error.required}">
+                                    <input required ng-model="data.CustomerDetail.Password" name="password" class="form-control" type="password" placeholder="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" autocomplete='new-password'>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class=" row titles">
+                    <label class="line"></label>
+                </div>
+                <div class="row titles">
+                    <label class="font-bold">Merchant Information</label>
+                </div>
+                <div class="inputForm">
+                    <div class="row">
+                        @*--  MERCHANT NAME--*@
+                        <div class="col col-xs-12  col-sm-5">
+                            <div class="form-group">
+                                <div><label> MERCHANT NAME <em class="note note-error" ng-show="(persInf.merchantName.$error.required)">(Required)</em></label></div>
+                                <label class="input" ng-class="{'state-error': persInf.merchantName.$error.required}">
+                                    <input required ng-model="data.Merchant.Name" name="merchantName" id="merchantName" placeholder="Merchant's Name" class="form-control" type="text">
+                                </label>
+                            </div>
+                        </div>
+                        @*-- EMAIL--*@
+                        <div class="col col-xs-12  col-sm-5">
+                            <div class="form-group">
+                                <div>
+                                    <label>
+                                        EMAIL
+                                        <em class="note note-error" ng-show="(persInf.merchantEmail.$error.required)">(Required)</em>
+                                        <em class="note note-error" ng-show="(persInf.merchantEmail.$error.email)">(Invalid email address)</em>
+                                    </label>
+                                </div>
+                                <label class="input" ng-class="{'state-error': persInf.merchantEmail.$error.required}">
+                                    <input required ng-model="data.Merchant.Email" name="merchantEmail" class="form-control" type="email" placeholder="abc@gmail.com">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        @*-- PHONE--*@
+                        <div class="col col-xs-12  col-sm-5">
+                            <div class="form-group">
+                                <div>
+                                    <label>
+                                        PHONE<em class="note note-error" ng-show="(persInf.merchantPhone.$error.required)">(Required)</em>
+                                        <em class="note note-error" ng-show="(persInf.merchantPhone.$error.pattern)">(Invalid phone)</em>
+                                    </label>
+                                </div>
+                                <label class="input" ng-class="{'state-error': persInf.merchantPhone.$error.required}">
+                                    <input required ng-model="data.Merchant.Phone" name="merchantPhone" id="merchantPhone" placeholder="0123456789" class="form-control" pattern="[0-9]+.{6,20}" type="text" maxlength="20">
+                                </label>
+                            </div>
+                        </div>
+                        @*-- TAX NO--*@
+                        <div class="col col-xs-12 col-sm-5">
+                            <div class="form-group">
+                                <div><label>TAX NO. </label> </div>
+                                <label class="input">
+                                    <input ng-model="data.Merchant.GSTRegNo" name="taxNo" class="form-control" type="text" placeholder="">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        @*-- ADDRESS--*@
+                        <div class="col col-xs-12 col-sm-5">
+                            <div class="form-group fr-address">
+                                <div><label>ADDRESS</label></div>
+                                <label class="input">
+                                    <input ng-model="data.Merchant.Street" name="merchantaddress" id="merchantaddress" placeholder="Street" class="form-control" type="text">
+                                </label>
+                            </div>
+                        </div>
+                        @*-- city--*@
+                        <div class="col col-xs-12 col-sm-5">
+                            <div class="form-group">
+                                <div><label></label></div>
+                                <label class="input">
+                                    <input ng-model="data.Merchant.City" name="merchantCity" class="form-control" type="text" placeholder="City">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        @*-- Country--*@
+                        <div class="col col-xs-12 col-sm-5">
+                            <div class="form-group">
+                                <label class="input">
+                                    <input ng-model="data.Merchant.Country" name="merchantCountry" id="merchantCountry" placeholder="Country" class="form-control" type="text">
+                                </label>
+                            </div>
+                        </div>
+                        @*-- ZipCode--*@
+                        <div class="col col-xs-12 col-sm-5">
+                            <div class="form-group">
+                                <label class="input">
+                                    <input ng-model="data.Merchant.ZipCode" name="merchantZipCode" class="form-control" type="text" placeholder="Zip Code">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-xs-12 col-sm-5"></div>
+                    <div class="col col-sm-5 btn-inputInfo">
+                        <ul class="list-inline">
+                            <li><button type="button" class="btn btn-success" id="btn-actives" ng-click="event.next()">NEXT</button></li>                           
+                            @*<li><button type="button" class="btn btn-success" id="btn-actives" ng-click="persInf.$valid && event.next()">NEXT</button></li>*@
+                            <li><button type="button" class="btn btn-default" id="btn-delete" ng-click="event.cancel()"> &nbsp;CANCEL </button></li>
+                        </ul>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+

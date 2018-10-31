@@ -1,0 +1,27 @@
+﻿@model NSCSC.Shared.Models.SandBox.Inventory.Product.ProductDetailModels
+
+@if (Model != null && Model.ListCategory != null && Model.ListCategory.Count > 0)
+{
+    for (int i = 0; i < Model.ListCategory.Count; i++)
+    {
+        var item = Model.ListCategory[i];
+        <tr data-id="@item.CategoryID" class="mediate-cate cate_@item.OffSet">
+            <td>
+                @item.CategoryName
+            </td>
+            <td class="text-center">
+                @string.Format("{0}", item.IsActive ? "Active" : "Inactive")
+                @Html.Hidden(string.Format("ListCategory[{0}].OffSet", item.OffSet), item.OffSet)
+                @Html.Hidden(string.Format("ListCategory[{0}].CategoryID", item.OffSet), item.CategoryID)
+                @Html.Hidden(string.Format("ListCategory[{0}].CategoryName", item.OffSet), item.CategoryName)
+                @Html.Hidden(string.Format("ListCategory[{0}].IsActive", item.OffSet), item.IsActive)
+                @Html.Hidden(string.Format("ListCategory[{0}].Status", item.OffSet), item.Status, new { @class = "CateStatus" })
+            </td>
+            <td class="text-center">
+                <button class="btn btn-danger btn-xs delete details dltitemcate" onclick="DeleteCategory(this); return false;"><i class="fa fa-trash-o"></i></button>
+            </td>
+        </tr>
+    }
+}
+<script>
+</script>

@@ -1,0 +1,156 @@
+﻿
+@model NSCSC.Shared.Models.ManagementTool.ListofProductFeatures.ProductFeatureViewModels
+<div class="table-responsive">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>Product Features</h2>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action" cellspacing="0" style="width:100%;">
+                <thead style="background-color:#34495e; color:#fff;">
+                    <tr>
+                        <th style="text-align:center;"> Features Name</th>
+                        <th style="text-align:center;"> Category </th>
+                        <th style="text-align:center;"> Sequence </th>
+                        <th style="text-align:center;"> Status </th>
+                        <th style="text-align:center;"> Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @if (Model.ListofProductFeatures != null || Model.ListofProductFeatures.Count > 0)
+                    {
+                        for (int i = 0; i < Model.ListofProductFeatures.Count; i++)
+                        {
+                            string styleRow = "row-evenItem";
+                            if (i % 2 == 0)
+                            {
+                                styleRow = "row-oddItem";
+                            }
+                            var item = Model.ListofProductFeatures[i];
+                            <tr class="@styleRow">
+                                <td style="color:#34495e; font-weight:bold;"> &nbsp;&nbsp;+&nbsp;@item.Name</td>
+                                <td style="text-align:center;">@item.CategoryName</td>
+                                <td style="text-align:center;">@item.Sequence</td>
+                                <td style="text-align:center;">
+                                    @if (item.IsActive == true)
+                                    {
+                                        <span class="label label-success">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="label label-danger">InActive</span>
+                                    }
+                                </td>
+                                <td style="text-align:center">
+                                    @if (item.IsActive == true)
+                                    {
+                                        <a href="javascript:void(0)"
+                                           onclick = "EnableActive('@Url.Action("ProductFeatureAction", "MTListofProductFeatures", new {  id = item.ID })')"
+                                           class="btn btn-success btn-xs view details">InActive</a>
+                                    }
+                                    else
+                                    {
+                                    <a href="javascript:void(0)"
+                                       onclick ="EnableActive('@Url.Action("ProductFeatureAction", "MTListofProductFeatures", new {  id = item.ID })')"
+                                       class="btn btn-danger btn-xs view details">Active</a>
+                                    }
+
+                                    <a href="javascript:void(0)"
+                                       onclick="ShowView('@Url.Action("Edit", "MTListofProductFeatures", new {  id = item.ID })')"
+                                       class="btn btn-info btn-xs edit details"><i class="fa fa-edit"></i>&nbsp;Edit</a>
+                                    <a href="javascript:void(0)"
+                                        onclick="ShowModalDelete('.modal-delete', '@item.ID')"
+                                       class="btn btn-danger btn-xs delete details"><i class="fa fa-trash-o"></i>&nbsp;Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@Html.Partial("~/Views/Shared/_popupDelete.cshtml",
+                        new Dictionary<string, string> { { "A", "List of Product Features" }, { "B", "This List of Product Features already has transaction. Cannot delete this one." } })
+
+<script type="text/javascript">
+    function ShowView(url) {
+        ShowViewOrEdit(url);
+        return false;
+    }
+
+    function EnableActive(id) {
+
+            $.ajax({
+                url: id,
+                type: 'POST',
+               
+                success: function () {
+                    $(".se-pre-con").hide();
+                    Search();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(errorThrown);
+                    $(".se-pre-con").hide();
+                },
+            });
+        };
+
+    $(document).ready(function () {
+        var handleDataTableButtons = function () {
+            if ($("#datatable-buttons").length) {
+                $("#datatable-buttons").DataTable({
+                    dom: "Bfrtip",
+                    responsive: true
+                });
+            }
+        };
+
+        TableManageButtons = function () {
+            "use strict";
+            return {
+                init: function () {
+                    handleDataTableButtons();
+                }
+            };
+        }();
+
+        $('#datatable').dataTable();
+        $('#datatable-keytable').DataTable({
+            keys: true
+        });
+
+        var table = $('#datatable-responsive').DataTable({
+            "columnDefs": [
+                { "orderable": false, "targets": [4] },
+                { "width": "2%", "targets": [2,3, 4] },
+
+            ],
+            "order": [[0, 'asc']],
+            "displayLength": 25,
+            "drawCallback": function (settings) {
+                var api = this.api();
+                var rows = api.rows({ page: 'current' }).nodes();
+                var last = null;
+                //Column Group
+                api.column(1, { page: 'current' }).data().each(function (group, i) {
+                    if (last !== group) {
+                        $(rows).eq(i).before(
+                            '<tr class="group"><td colspan="6"><strong style="color:#d9534f;">' + group + '</strong></td></tr>'
+                        );
+                        last = group;
+                    }
+                });
+            }
+        });
+
+        var table = $('#datatable-fixed-header').DataTable({
+            fixedHeader: true
+        });
+
+        TableManageButtons.init();
+    });
+
+</script>

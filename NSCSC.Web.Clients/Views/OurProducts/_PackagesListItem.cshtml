@@ -1,0 +1,71 @@
+﻿@model NSCSC.Shared.Models.OurProducts.Package.PackageViewModels
+@using NSCSC.Shared.Helpers
+@using NSCSC.Shared
+<!--List Product-->
+@foreach (var item in Model.ListProducts.OrderBy(o => o.Sequence).ThenBy(oo => oo.Name).ToList())
+{
+    <div class="itemProduct">
+        <div class="form-group infoProduct" style="margin-left:0; margin-right:0;position:relative;">
+            <div class="col-md-12 col-sm-12 col-xs-12 content">
+                <div class="row">
+                    <label class="fontBold title fontUppercase"><a href="@Url.ActionEncoded("ProductPackageDetail", "OurProducts", new { Id = item.ID })"> @item.Name</a></label>
+                </div>
+                <div class="row">
+                    <label class="fontLighter">
+                        <span class="fontBold">Price: </span>
+                        <span class="fontBold" style="font-size:25px;">@item.CurrencySymbol@item.Price.ToString("N2")</span>
+                    </label>
+                </div>
+                <div class="row" style="word-wrap:break-word">
+                    @if (item.Description != null)
+                    {<label class="fontLighter"><span class="fontBold">Description:</span></label>}
+                    @Html.Raw(item.Description)
+                </div>
+            </div>
+            <i class="fa fa-info-circle text-primary" style="cursor:pointer;font-size:20px;position:absolute;right:0;" data-toggle="modal" data-target="#modalProductsInPackage_@item.ID"></i>
+            <div class="col-md-2 col-sm-2 col-xs-12">
+                <div class="form-group text-center imageProduct">
+                    <a href="@Url.ActionEncoded("ProductPackageDetail", "OurProducts", new { Id = item.ID })">
+                        <img id="upload-preview" class="" src="@item.ImageURL" height="110" width="150" />
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-10 col-sm-10 col-xs-12">
+                <div style="padding-left:15px;">
+                    @*Product*@
+                    <div class="row">
+                        @if (item.ListProductOnPackage.Count > 0)
+                        {
+                            <label class="fontLighter"><i class="fa fa-circle" aria-hidden="true" style="font-size:8px; position:relative; bottom:2px;"></i> <span class="fontBold">Product:</span></label>
+                        }
+                        <div style="padding-left:10px;">
+                            @foreach (var itemProduct in item.ListProductOnPackage)
+                            {
+                                @itemProduct.ProductName
+                                <br />
+                            }
+                        </div>
+                    </div>
+                    @*Composite*@
+                    <div class="row">
+                        @if (item.ListComposite.Count > 0)
+                        {
+                            <label class="fontLighter"><i class="fa fa-circle" aria-hidden="true" style="font-size:8px; position:relative; bottom:2px;"></i><span class="fontBold"> Composite:</span></label>
+                        }
+                        <div style="padding-left:10px;">
+                            @foreach (var itemAddition in item.ListComposite)
+                            {
+                                @itemAddition.ProductName
+                                <br />
+                            }
+                        </div>
+                    </div>
+                    <div class="row text-right">
+                        <a href="@Url.ActionEncoded("ProductPackageDetail", "OurProducts", new { Id = item.ID })" class="btn btn-primary fontUppercase">Select</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.Partial("_ModalProductsInPackage", item)
+}

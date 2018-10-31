@@ -1,0 +1,324 @@
+﻿@using NSCSC.Shared;
+@model NSCSC.Shared.Models.PromotionModels
+<div role="main" class="right_col">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left" style="padding: 10px 0px;">
+                @Html.Partial("~/Views/Shared/_breadcrumb.cshtml",
+                new Dictionary<string, string> { { "A", "Sandbox" }, { "B", "Inventory" }, { "C", "Promotions - View Detail" } })
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12 x_panel">
+                    <div class="x_content">
+                        <div class="row text-right">
+                            <ul class="header-buttons pull-right list-inline">
+                                <li><a href="javascript:void(0)" onclick="CloseDetail(); return false;" class="btn btn-danger" id="btn-delete"><i class="fa fa-times"></i>&nbsp; Close </a></li>
+                            </ul>
+                        </div>
+                        <div class="row form-horizontal form-label-left">
+                            <div class="row form-horizontal form-label-left" style="margin-bottom:15px;">
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12"> </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <img id="upload-preview" src="@Model.ImageURL" height="100" width="100" class="img-circle" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Name</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @Model.Name
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Promotion Code</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @Model.PromotionCode
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Priority</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @Model.Priority
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Active</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @string.Format("{0}", Model.IsActive ? "Yes" : "No")
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Sequence</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @Model.Sequence
+                                     @* @string.Format("{0}", Model.IsUnlimited ? "Unlimited" : Model.MaximumAmount)*@
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Maximum Amount</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                         @string.Format("{0}", Model.IsUnlimited ? "Unlimited" : Model.MaximumAmount.ToString())
+                                    </div>
+                                </div>
+
+                                @*<div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Maximum Amount</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @string.Format("{0}", Model.IsUnlimited ? "Yes" : "No")
+                                    </div>
+                                </div>*@
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Description</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @Html.Raw(Model.Description)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label">Promotion Period</label>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12" style="font-weight:lighter;">Apply From</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @Model.ApplyFrom.ToString(Commons.FormatDate)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12" style="font-weight:lighter;">Apply To</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @Model.ApplyTo.ToString(Commons.FormatDate)
+                                    </div>
+                                </div>
+
+
+                                @*Spending*@
+                                @if (Model.ListSpendRule != null)
+                                {
+                                    if (Model.ListSpendRule.Count != 0)
+                                    {
+                                        <div class="form-group">
+                                            <label class="control-label col-md-2 col-sm-2 col-xs-12">Spending</label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <div>
+                                                    <ul class="nav nav-tabs" role="tablist">
+                                                        @for (int i = 0; i < Model.ListSpendRule.Count; i++)
+                                                        {
+                                                            string mConditionSpend = "";
+                                                            if (Model.ListSpendRule[i].Condition == null)
+                                                            {
+                                                                mConditionSpend = "-";
+                                                            }else if(Model.ListSpendRule[i].Condition == (int)Commons.EOperatorType.And)
+                                                            {
+                                                                mConditionSpend = "AND";
+                                                            }else if(Model.ListSpendRule[i].Condition == (int)Commons.EOperatorType.Or)
+                                                            {
+                                                                mConditionSpend = "OR";
+                                                            }
+                                                            <li role="presentation" class='@string.Format("{0}", i == 0 ? "active" : "")'>
+                                                                <a href="@string.Format("#{0}", @Model.ListSpendRule[i].ID)" 
+                                                                   aria-controls="@Model.ListSpendRule[i].ID" role="tab" data-toggle="tab">@mConditionSpend</a>
+                                                            </li>
+                                                        }
+                                                    </ul>
+                                                    <div class="tab-content" style="margin-top:5px">
+                                                        @for (int i = 0; i < Model.ListSpendRule.Count; i++)
+                                                        {
+                                                            <div role="tabpanel" class='@string.Format("tab-pane fade {0}", i == 0 ? "in active" : "")' id="@Model.ListSpendRule[i].ID">
+
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Spend Type: </label>
+                                                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                                                        @if (Model.ListSpendRule[i].SpendType == (byte)Commons.ESpendType.BuyItem)
+                                                                        {
+                                                                            @Html.Raw(Commons.SpendTypeBuyItem);
+                                                                        }
+                                                                        else if (Model.ListSpendRule[i].SpendType == (byte)Commons.ESpendType.SpendMoney)
+                                                                        {
+                                                                            @Html.Raw(Commons.SpendTypeSpendMoney);
+                                                                        }
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Qty/Amount: </label>
+                                                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                                                        @Html.DisplayFor(model => Model.ListSpendRule[i].Amount)
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Item: </label>
+                                                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                                                        @if (Model.ListSpendRule[i].SpendOnType == (byte)Commons.ESpendOnType.AnyItem)
+                                                                        {
+                                                                            @Html.Raw(Commons.SpendOnTypeAnyItem);
+                                                                            }
+                                                                            else if (Model.ListSpendRule[i].SpendOnType == (byte)Commons.ESpendOnType.SpecificItem)
+                                                                            {
+                                                                                @Html.Raw(Commons.SpendOnTypeSpecificItem);
+                                                                            }
+                                                                    </div>
+                                                                </div>
+                                                                @if (!Model.ListSpendRule[i].ItemDetail.Equals(""))
+                                                                {
+                                                                    <div class="form-group">
+                                                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Item Detail: </label>
+                                                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                                                            @Html.DisplayFor(model => Model.ListSpendRule[i].ItemDetail)
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                               @if (Model.ListSpendRule[i].ListProduct != null && Model.ListSpendRule[i].ListProduct.Count>0)
+                                                               {
+                                                                    <div class="form-group">
+                                                                        <table class="table">
+                                                                            <thead style="background-color:#73879c; color:#fff;">
+                                                                                <tr>
+                                                                                    <th style="width:25%;">Item Code</th>
+                                                                                    <th>Item Name</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                @foreach (var dish in Model.ListSpendRule[i].ListProduct)
+                                                                                {
+                                                                                    <tr>
+                                                                                        <td>@dish.Code</td>
+                                                                                        <td>@dish.Name</td>
+                                                                                    </tr>
+                                                                                }
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                               }
+
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                
+                                @*Earning*@
+                                @if (Model.ListEarnRule != null)
+                                {
+                                    if (Model.ListEarnRule.Count != 0)
+                                    {
+                                        <div class="form-group">
+                                            <label class="control-label col-md-2 col-sm-2 col-xs-12">Earning </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <div>
+                                                    <ul class="nav nav-tabs" role="tablist">
+                                                        @for (int i = 0; i < Model.ListEarnRule.Count; i++)
+                                                        {
+                                                            string mCondition = "";
+                                                            if (Model.ListEarnRule[i].Condition == null)
+                                                            {
+                                                                mCondition = "-";
+                                                            }else if(Model.ListEarnRule[i].Condition == (int)Commons.EOperatorType.And)
+                                                            {
+                                                                mCondition = "AND";
+                                                            }else if(Model.ListEarnRule[i].Condition == (int)Commons.EOperatorType.Or)
+                                                            {
+                                                                mCondition = "OR";
+                                                            }
+                                                            <li role="presentation" class='@string.Format("{0}", i == 0 ? "active" : "")'>
+                                                                <a href="@string.Format("#{0}", @Model.ListEarnRule[i].ID)"
+                                                                   aria-controls="@Model.ListEarnRule[i].ID" role="tab" data-toggle="tab">@mCondition</a>
+                                                            </li>
+                                                        }
+                                                    </ul>
+                                                    <div class="tab-content" style="margin-top:5px">
+                                                        @for (int i = 0; i < Model.ListEarnRule.Count; i++)
+                                                        {
+                                                            <div role="tabpanel" class='@string.Format("tab-pane fade {0}", i == 0 ? "in active" : "")' id="@Model.ListEarnRule[i].ID">
+
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Earn Type: </label>
+                                                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                                                        @if (Model.ListEarnRule[i].DiscountType == (byte)Commons.EValueType.Percent)
+                                                                        {
+                                                                            @Html.Raw(Commons.DiscountPercent);
+                                                                        }
+                                                                        else if (Model.ListEarnRule[i].DiscountType == (byte)Commons.EValueType.Currency)
+                                                                        {
+                                                                            @Html.Raw(Commons.DiscountValue);
+                                                                        }
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Percent/Value: </label>
+                                                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                                                        @Html.DisplayFor(model => Model.ListEarnRule[i].DiscountValue)
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Item: </label>
+                                                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                                                        @if (Model.ListEarnRule[i].EarnType == (byte)Commons.EEarnType.SpentItem)
+                                                                        {
+                                                                            @Html.Raw(Commons.EarnTypeSpentItem);
+                                                                        }
+                                                                        else if (Model.ListEarnRule[i].EarnType == (byte)Commons.EEarnType.SpecificItem)
+                                                                        {
+                                                                            @Html.Raw(Commons.EarnTypeSpecificItem);
+                                                                        }
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Qty: </label>
+                                                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                                                        @Html.DisplayFor(model => Model.ListEarnRule[i].Quantity)
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Item Detail: </label>
+                                                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                                                        @Html.DisplayFor(model => Model.ListEarnRule[i].ItemDetail)
+                                                                    </div>
+                                                                </div>
+
+                                                                @if (Model.ListEarnRule[i].ListProduct != null && Model.ListEarnRule[i].ListProduct.Count > 0)
+                                                                {
+                                                                    <div class="form-group">
+                                                                        <table class="table">
+                                                                            <thead style="background-color:#73879c; color:#fff;">
+                                                                                <tr>
+                                                                                    <th style="width:25%;">Item Code</th>
+                                                                                    <th>Item Name</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                @foreach (var dish in Model.ListEarnRule[i].ListProduct)
+                                                                                {
+                                                                                    <tr>
+                                                                                        <td>@dish.Code</td>
+                                                                                        <td>@dish.Name</td>
+                                                                                    </tr>
+                                                                                }
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                }
+
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

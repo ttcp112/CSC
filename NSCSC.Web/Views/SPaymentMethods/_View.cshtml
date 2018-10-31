@@ -1,0 +1,108 @@
+﻿@using NSCSC.Shared;
+@model NSCSC.Shared.Models.Settings.PaymentMethods.PaymentMethodModels
+<div role="main" class="right_col">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left" style="padding: 10px 0px;">
+                @Html.Partial("~/Views/Shared/_breadcrumb.cshtml",
+                new Dictionary<string, string> { { "A", "Settings" }, { "B", "Payment Methods" }, { "C", "Payment Methods - View Detail" } })
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12 x_panel">
+                    <div class="x_content">
+                        <div class="row text-right">
+                            <ul class="header-buttons pull-right list-inline">
+                                <li><a href="javascript:void(0)" onclick="CloseDetail(); return false;" class="btn btn-danger" id="btn-delete"><i class="fa fa-times"></i>&nbsp; Close </a></li>
+                            </ul>
+                        </div>
+                        <div class="row form-horizontal form-label-left">
+                            <div class="row form-horizontal form-label-left" style="margin-bottom:15px;">
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Payment Method Name</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @Model.Name
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Image</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @if (string.IsNullOrEmpty(Model.ImageURL))
+                                        {
+                                            <img id="upload-preview" src="@Commons.Image100_50" height="50" width="100" />
+                                        }
+                                        else
+                                        {
+                                            <img id="upload-preview" src="@Model.ImageURL" height="50" width="100" />
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @string.Format("{0}", Model.IsActive ? "Yes" : "No")
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Integration Code</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @Model.IntegrationCode
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Card for Payment Method</label>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-md-offset-1 col-md-12 col-sm-12 col-xs-12" id="list-function-item">
+                                        @if (Model.ListChild != null && Model.ListChild.Count > 0)
+                                        {
+                                            <div class="form-group">
+                                                <div class="col-md-8 col-sm-12 col-xs-12">
+                                                    <table class="table table-bordered table-striped" style="width:100%;">
+                                                        <thead style="background-color:#34495e; color:#fff;">
+                                                            <tr>
+                                                                <th class="text-center">Name</th>
+                                                                <th>Image</th>
+                                                                <th class="text-center">Integration Code</th>
+                                                                <th class="text-center" style="width:15%;">Active</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var item in Model.ListChild)
+                                                            {
+                                                                <tr class="">
+                                                                    <td>@item.Name</td>
+                                                                    <td>
+                                                                        @if (string.IsNullOrEmpty(item.ImageURL))
+                                                                        {
+                                                                            <img id="upload-preview" src="@Commons.Image100_50" height="50" width="100" />
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <img id="upload-preview" src="@item.ImageURL" height="50" width="100" />
+                                                                        }
+                                                                    </td>
+                                                                    <td>@item.IntegrationCode</td>
+                                                                    <td class="text-center">@string.Format("{0}", item.IsActive ? "Yes" : "No")</td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

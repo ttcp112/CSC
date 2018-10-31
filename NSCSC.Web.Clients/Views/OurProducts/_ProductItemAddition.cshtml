@@ -1,0 +1,48 @@
+﻿@model NSCSC.Shared.Models.ClientSite.OurProDucts.OurProDuctsModel
+@using NSCSC.Shared
+
+<tr class="ng-addition-price" id="tr_add_price_@Model.Index" data-value="@Model.Index"
+    style="@string.Format("display:{0}", Model.Status != (int)Commons.EStatus.Deleted ? "table-row" : "none");">
+    <td>@Model.AdditionTypeName</td>
+    <td>@Model.Name</td>
+    <td class="text-center">@Model.Quantity</td>
+    <td>
+        @{if (Model.AdditionType == (byte)Commons.EAdditionType.Hardware || Model.AdditionType == (byte)Commons.EAdditionType.Service || Model.AdditionType == (byte)Commons.EAdditionType.Function)
+            {
+                @Html.Raw("");
+            }
+            else
+            {
+                @Model.Code
+            }
+        }
+    @*@Model.Code*@
+    </td>
+    <td>@Model.PeriodTime</td>
+    <td class="text-right" data-price="@Model.Price">@Model.CurrencySymbol@Model.Price.ToString("n2")</td>
+    <td class="text-right" data-totalprice="@Model.TotalPrice">@Model.CurrencySymbol@Model.TotalPrice.ToString("n2")</td>
+    <td class="text-center">
+        <a href="javascript:void(0)" class="" onclick="DeleteAddition('@Model.Index'); return false;">
+            <i class="fa fa-trash" style="color:red; font-size:22px;"></i>
+        </a>
+
+        @*for Product*@
+        @Html.Hidden(string.Format("ProductDetail.ListProductChild[{0}].Description", Model.Index), Model.Description) @*temp for ProductID*@
+        @Html.Hidden(string.Format("ProductDetail.ListProductChild[{0}].Code", Model.Index), Model.Code)
+
+        @*for Addition*@
+        @Html.Hidden(string.Format("ProductDetail.ListProductChild[{0}].ID", Model.Index), Model.ID)
+        @Html.Hidden(string.Format("ProductDetail.ListProductChild[{0}].Index", Model.Index), Model.Index)
+        @Html.Hidden(string.Format("ProductDetail.ListProductChild[{0}].AdditionType", Model.Index), Model.AdditionType)
+        @Html.Hidden(string.Format("ProductDetail.ListProductChild[{0}].AdditionTypeName", Model.Index), Model.AdditionTypeName)
+        @Html.Hidden(string.Format("ProductDetail.ListProductChild[{0}].Name", Model.Index), Model.Name)
+        @Html.Hidden(string.Format("ProductDetail.ListProductChild[{0}].PeriodType", Model.Index), Model.PeriodType, new { @id = "hidPeriodType_" + Model.Index })
+        @Html.Hidden(string.Format("ProductDetail.ListProductChild[{0}].Period", Model.Index), Model.Period, new { @id = "hidPeriod_" + Model.Index })
+        @Html.Hidden(string.Format("ProductDetail.ListProductChild[{0}].Price", Model.Index), Model.Price, new { @id = "hidPrice_" + Model.Index })
+        @Html.Hidden(string.Format("ProductDetail.ListProductChild[{0}].Quantity", Model.Index), Model.Quantity, new { @id = "hidQuantity_" + Model.Index })
+        @Html.Hidden(string.Format("ProductDetail.ListProductChild[{0}].Status", Model.Index), Model.Status, new { @class = "PriceStatus" })
+        @Html.Hidden(string.Format("ProductDetail.ListProductChild[{0}].IsDelete", Model.Index), Model.IsDelete, new { @id = "hidIsDelete", @value = "false" })
+        @Html.Hidden(string.Format("ProductDetail.ListProductChild[{0}].PeriodTime", Model.Index), Model.PeriodTime, new { @id = "hidPeriodTime_" + Model.Index })
+        @Html.Hidden(string.Format("ProductDetail.ListProductChild[{0}].IsActive", Model.Index), Model.IsActive, new { @class = "", @id = "hidIsSelected_" + Model.Index })
+    </td>
+</tr>

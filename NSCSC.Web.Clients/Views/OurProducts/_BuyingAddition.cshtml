@@ -1,0 +1,318 @@
+﻿@model NSCSC.Shared.Models.OurProducts.Product.ProductDetailViewModels
+@{
+    var productName = "";
+    if(!string.IsNullOrEmpty(Model.ProductDetail.Name))
+    {
+        productName = Model.ProductDetail.Name;
+    }
+    ViewBag.Title = "Buying Additions for " + productName;
+}
+
+<div class="title_left">
+    @*@Html.Partial("~/Views/Shared/_breadcrumb.cshtml",
+    new Dictionary<string, string> { { "A", "BUYING ADDITIONS" }, { "B", "HOME/OUR PRODUCTS/" + Model.ProductDetail.Name.ToUpper() + "/PRODUCT LIST" }, { "C", "BUYING ADDITIONS" } })*@
+    <div class="container">
+        @*<div class="col-sm-12 col-xs-12 col-md-12" style="margin-top:-25px;float:right">*@
+            <h3>
+                BUYING ADDITIONS
+                <small class="breadcrum">
+                    <a href="@Url.Action("Index", "Home")">home</a>
+                    @if (Model != null)
+                    {
+                        <i class='fa fa-caret-right'></i>
+                    <a href="@Url.Action("Index", "OurProducts", new { ProductType = "Products", CategoryID = Model.ProductDetail.CategoryId })">@Model.Name.ToLower()</a>
+                    <i class='fa fa-caret-right'></i>
+                    <a href="@Url.Action("Products", "OurProducts", new { CategoryID = Model.ProductDetail.CategoryId })">products list</a>
+                    <i class='fa fa-caret-right'></i>
+                    <a href="@Url.Action("ProductDetail", "OurProducts", new { id = Model.ProductDetail.ID })">@productName.ToLower()</a>
+                    <i class='fa fa-caret-right'></i>
+                    <span>buying addition</span>
+                    }
+                </small>
+            </h3>
+        @*</div>*@
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+@using (@Html.BeginForm("AddAdditionForProduct", "OurProducts", FormMethod.Post, new
+{
+    @class = "",
+    @id = "form-buying-addition",
+    @enctype = "multipart/form-data"
+}))
+{
+    @Html.HiddenFor(model => model.ProductDetail.ID)
+    @Html.HiddenFor(model => model.ProductDetail.Name)
+
+    <div class="row form-horizontal form-label-left listItemYourCart">
+        <div class="form-group">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <table id="datatable-responsive-list-buying-addition"
+                       class="table table-striped dt-responsive nowrap table table-striped jambo_table bulk_action"
+                       cellspacing="0" style="width:100%;">
+                    <thead style="background-color:#f9f9f9;">
+                        <tr>
+                            <th class="text-center">Type</th>
+                            <th class="text-center">Item Name</th>
+                            <th class="text-center">Quantity</th>
+                            <th class="text-center">Applied On</th>
+                            <th class="text-center">Period</th>
+                            <th class="text-center">Price</th>
+                            <th class="text-center">Total</th>
+                            <th class="text-center">Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.ProductDetail.ListProductChild != null && Model.ProductDetail.ListProductChild.Count > 0)
+                        {
+                            foreach (var itemAddition in Model.ProductDetail.ListProductChild)
+                            {
+                                @Html.Partial("_ProductItemAddition", itemAddition)
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="form-group itemProduct">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="row infoProduct" style="padding-bottom:10px;">
+                    <div class="col-md-10 col-sm-10 col-xs-10 text-right fontBold">
+                        Total Addition Price:
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-xs-2 text-right fontBold" style="font-size:20px; color:darkred;">
+                        @Model.ProductDetail.CurrencySymbol<span id="lblTotalAdditionPrice">@Model.ProductDetail.AdditionPrice.ToString("n2")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group itemProduct pading-top-bottom">
+            <div class="row infoProduct" style="padding-bottom:10px;">
+                <div class="col-md-12 col-sm-12 col-xs-12 pading-top-bottom" style="font-size:15px;">
+                    <div class="col-md-12 col-sm-12 col-xs-2">
+                        Please select the desired items in below list
+                    </div>
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="col-md-12 col-sm-12 col-xs-12 text-left" style="padding-left:0px;">
+                        Filter by Type of Additions
+                        &nbsp;&nbsp;
+                        @Html.DropDownListFor(model => model.ProductDetail.Period,
+                         new SelectList(@ViewBag.ListAdditionType, "Value", "Text", Model.ProductDetail.Period), null,
+                         new
+                         {
+                             @class = "form-control",
+                             @id = "TypeAdditionDdl",
+                             @style = "width:150px;",
+                         })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*List Item*@
+        <div id="listItemAddition"></div>
+
+        @*Cancel | Done*@
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12 text-right">
+                <a class="btn btn-default fontUppercase" style="width:180px;" href="javascript:void(0)" onclick="ActionCancel();">cancel</a>
+                <a class="btn btn-primary fontUppercase" style="width:180px;" onclick="SubmitForm('#form-buying-addition')">Done</a>
+            </div>
+            <div class="col-md-12 col-sm-12 col-xs-12 text-right">
+                <small class="label label-danger" id="lblMsg"></small>
+            </div>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+
+    var displayLength = 200;
+    var _tableAddition = null;
+    var _settingsOptionTableAddition = {
+        "columnDefs": [
+               { "orderable": false, "targets": [7] },
+               //{ "width": "10%", "targets": [] },
+               { "width": "12%", "targets": [0, 1, 2, 3, 4, 5, 6] },
+               { "width": "8%", "targets": [7] },
+        ],
+        "order": [
+            [0, 'asc'],
+            [1, 'asc']
+        ],
+        "autoWidth": false,
+        "displayLength": displayLength,
+        "bInfo": false,
+        "searching": false,
+        "lengthChange": false,
+        "paging": false,
+
+        //"drawCallback": function () {
+        //    var api = this.api();
+        //    $('#lblTotalAdditionPrice').html(api.column(5, { page: 'current' }).data().sum().toFixed(2));
+        //    //$(api.table().footer()).html(
+        //    //  api.column(5, { page: 'current' }).data().sum()
+        //    //);
+        //},
+    };
+
+    $(document).ready(function (e) {
+
+        $("#TypeAdditionDdl").select2({
+            placeholder: "Please choose Addition type"
+        });
+
+        _tableAddition = $('#datatable-responsive-list-buying-addition').DataTable($.extend(true, {}, _settingsOptionTableAddition));
+        //alert(_tableAddition.column(5).data().sum());
+
+        GetListAdditionForProduct('0', '#listItemAddition');
+
+        CalTotalAddition();
+    });
+
+    $("#TypeAdditionDdl").change(function () {
+        var additionType = this.value;
+        GetListAdditionForProduct(additionType, '#listItemAddition');
+    });
+
+    function GetListAdditionForProduct(additionType, elemnetFillData) {
+        $.ajax({
+            url: CreateAbsoluteUrl("GetListAdditionForProduct"),
+            type: 'GET',
+            data: { AdditionType: additionType },
+            dataType: 'html',
+            traditional: true,
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            error: function (e) {
+            },
+            success: function (data) {
+                $(elemnetFillData).html(data);
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            }
+        });
+    }
+
+    /*Add Item Addition*/
+    function AddItemAddition(btn, _type, _additionIndex) {
+        //Get tr first
+        var row = $(btn).parents('tr:first');
+        var ID = $(row).find('input#hidAdditionID').val();
+        var AdditionTypeName = $(row).find('input#hidAdditionName').val();
+        var ItemName = $(row).find('input#hidItemName').val();
+        var Quantity = $(row).find('input#txt_' + _type + _additionIndex + '').val();
+        var Period = $(row).find('input#hidAdditionPeriod').val();
+        var PeriodType = $(row).find('input#hidAdditionPeriodType').val();
+        //var Price = parseFloat($(row).find('span#lblAdditionPrice').html());
+        var Price = parseFloat($(row).find('input#hidAdditionPrice').val());
+        var AdditionType = $(row).find('input#hidAdditionType').val();
+        if (Quantity == 0) {
+            $(row).find('.inputChange').focus();
+            //alert('Please enter quantity for addition.');
+            return false;
+        }
+        /*==============*/
+        var _index = $('.ng-addition-price').length;
+        var OurProDuctsModel = {
+            Index: _index,
+            ID: ID,
+            AdditionTypeName: AdditionTypeName,
+            AdditionType: AdditionType,
+            Name: ItemName,
+            Quantity: Quantity,
+            Period: Period,
+            PeriodType: PeriodType,
+            Price: Price,
+            //======
+            Code: '@Model.ProductDetail.Name',
+            Description: '@Model.ProductDetail.ID'
+        }
+        $.ajax({
+            type: "POST",
+            url: CreateAbsoluteUrl("AddItemAddition"),
+            traditional: true,
+            data: JSON.stringify(OurProDuctsModel),
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            error: function (jqXHR, textStatus, errorThrown) {
+
+            },
+            beforeSend: function () {
+                //$('.se-pre-con').show();
+            },
+            complete: function () {
+                //$('.se-pre-con').hide();
+            },
+            success: function (data) {
+                _tableAddition.row.add($(data)).draw();
+                CalTotalAddition();
+                //alert(_tableAddition.column(5).data().sum());
+            }
+        });
+    }
+
+    function DeleteAddition(OffSet) {
+        var tr = $('#tr_add_price_' + OffSet);
+        $(tr).find('input.PriceStatus').val(9);
+        $(tr).find('input#hidIsDelete').val(true);
+        $(tr).hide();
+
+        CalTotalAddition()
+    }
+
+    function CalTotalAddition() {
+        var _AdditionPrice = 0;
+        $.each($('.ng-addition-price:visible'), function () {
+            var OffSet = $(this).data('value');
+            var _Price = $('#hidPrice_' + OffSet).val();
+            var _Quantity = $('#hidQuantity_' + OffSet).val();
+            var total = _Price * _Quantity;
+            _AdditionPrice += total;
+        });
+        $('#lblTotalAdditionPrice').html(NumberFormatCurrency(_AdditionPrice, 2));
+    }
+
+    function ActionCancel() {
+        //var referrer = document.referrer;
+        //alert(referrer);
+        @*//@Url.Action("ProductDetail", new { id = Model.ProductDetail.ID })*@
+        history.back();
+    }
+
+    $("#form-buying-addition").submit(function (e) {
+        var isSubmit = $(this).valid();
+        if (isSubmit) {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: "POST",
+                data: new FormData(this),
+                processData: false,
+                contentType: false,
+                dataType: "html",
+                success: function (data) {
+                    data = JSON.parse(data);
+                    if (data.Action == "addnew") 
+                        window.location.assign(CreateAbsoluteUrl('ProductDetail/' + '@Model.ProductDetail.ID'));
+                    else 
+                        window.location.assign('@Url.Action("Index", "YourCart")');
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $('#lblMsg').html(jqXHR.statusText);
+                },
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+            });
+        }
+        e.preventDefault();
+    });
+</script>

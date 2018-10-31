@@ -1,0 +1,601 @@
+﻿@{
+    Layout = null;
+}
+@model NSCSC.Shared.Models.ClientSite.MyStoreAndBusiness.ProductPackageUserModels
+    @{ 
+        var _Count = Model.AssignStore == null ? 0 : (Model.AssignStore.ListAssignStore == null ? 0 : Model.AssignStore.ListAssignStore.Count);
+    }
+@using NSCSC.Shared.Helpers
+@using NSCSC.Shared
+<style type="text/css">
+    .mainproductdetail {
+        margin-top: 15px;
+        border-top-style: solid;
+        border-color: silver;
+        border-width: 0.3px;
+    }
+
+    .back {
+        margin-top: 10px;
+    }
+
+        .back a {
+            text-decoration: none;
+            font-size: 17px;
+            color: #000000;
+        }
+
+    .title {
+        text-align: center;
+        text-transform: uppercase;
+        color: red;
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .clsImage {
+        /*height: 250px;
+        line-height: 250px;*/
+        text-align: center;
+        /*border-style: ridge;
+        border-width: 0.3px;
+        border-color: #808080;*/
+        margin-bottom: 10px;
+    }
+
+    .clsContent {
+        /*height: 250px;
+        line-height: 250px;
+        border-style: ridge;
+        border-width: 0.3px;
+        border-color: #808080;*/
+        margin-bottom: 10px;
+        padding-left: 10px;
+    }
+
+        .clsContent h3 {
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+    .devicesmanagement {
+        margin-top: 15px;
+    }
+
+    h4 {
+        font-size: 14px;
+    }
+    .cols-1 {
+        width: 13%;
+    }
+
+    .cols-2 {
+        width: 18%;
+    }
+
+    .cols-3 {
+        width: 20%;
+    }
+
+    .cols-4 {
+        width: 9%;
+    }
+</style>
+<div class="mainproductdetail">
+    <div class="title_top">
+        <div class="back">
+            <a href="javascript:void(0);" class="btn btn-info" id="btn-back-store-info" onclick="Back(@Model.TabId)" style="background-color: #5cb85c;color:#FFF">
+                <i class="fa fa-mail-reply"></i>&nbsp;Back
+            </a>
+            @*<a href="javascript:void(0)" title="Back" onclick="Back(@Model.TabId)"><i class="fa fa-chevron-left" style="margin-right:10px;"></i>Back</a>*@
+        </div>
+
+        <div class="title">
+            Product Detail
+        </div>
+    </div>
+    <div class="contentproductdetail">
+        <div class="row">
+            <div class="col-md-3 col-sm-3 col-xs-12">
+                <div class="clsImage" style="width:100%">
+                    <a href="javascript:void(0)">
+                        @if (!string.IsNullOrEmpty(Model.Image))
+                        {
+                            <img src="@Model.Image" alt="..." width="100" height="100" />
+                        }
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+                <div class="clsContent">
+                    @{
+                        string PeriodName = "None";
+                        switch (Model.PeriodType)
+                        {
+                            case (int)Commons.EPeriodType.Day:
+                                PeriodName = "Day";
+                                break;
+                            case (int)Commons.EPeriodType.Month:
+                                PeriodName = "Month";
+                                break;
+                            case (int)Commons.EPeriodType.Year:
+                                PeriodName = "Year";
+                                break;
+                            case (int)Commons.EPeriodType.OneTime:
+                                PeriodName = "One Time";
+                                break;
+                        }
+                        if (Model.Period > 1 && Model.PeriodType != (int)Commons.EPeriodType.OneTime)
+                        {
+                            PeriodName += "s";
+                        }
+                    }
+                    @if (Model.PeriodType != (int)Commons.EPeriodType.OneTime)
+                    {
+                        <h3>@Model.ItemName - @Model.Period @PeriodName</h3>
+                    }
+                    else
+                    {
+                        <h3>@Model.ItemName - @PeriodName</h3>
+                    }
+                    @*<h4 style="font-size:15px;">
+                            Expired Date:
+                            <span style="color:#e54609;">
+                                @if (Model.IsActive)
+                                    {
+                                        string.Format("{0}", Model.ExpiryDate.HasValue ? Model.ExpiryDate.Value.ToString(Commons.FormatDateTime) : "");
+                                    }
+                                    else
+                                    {
+                                        @: Not yet activated
+                                    }
+
+
+
+                            </span>
+                        </h4>*@
+                    @if (!Model.ActiveTime.HasValue)
+                    {
+                        <span style="color:red">
+                            Not yet activated.
+                        </span>
+                    }
+                    else
+                    {
+                        <h4>
+                            Expired on
+                            <span style="color:red">
+                                @Html.Raw(string.Format("<span style='color:#e54609'>{0}</span>", Model.ExpiryDate.HasValue ? Model.ExpiryDate.Value.Date == Commons.MaxDate.Date? "Nerver" : Model.ExpiryDate.Value.ToString(Commons.FormatDateTime) : ""))
+                            </span>
+                        </h4>
+                    }
+                    <h4>
+                        @*Number of units*@
+                        @if (Model.IsUnlimitedUnit)
+                        {
+                            @: Product key can be applied on unlimited devices
+                        }
+                        else
+                        {
+                            @Html.Raw("Product key can be applied on " + Model.NumberOfUnit + " user device(s).")
+                        }
+                    </h4>
+                    <h4>
+                        @*Number of account*@
+                        @if (Model.IsUnlimitedAccount)
+                        {
+                            @: License key of the product can be used to activate unlimited user account(s).
+                        }
+                        else
+                        {
+                            @Html.Raw("License key of the product can be used to activate " + Model.NumberOfAccount + " user account(s).")
+                        }
+                    </h4>
+
+                    <h4>
+                        @if (Model.ListFunction != null && Model.ListFunction.Any())
+                        {
+                            @: Functions:
+                            if (Model.IsAllFunction)
+                            {
+                                @: All functions included
+                            }
+                            else
+                            {
+                                string lstFunctionName = "";
+                                foreach (var itemFunction in Model.ListFunction)
+                                {
+                                    if (string.IsNullOrEmpty(lstFunctionName))
+                                    {
+                                        lstFunctionName = itemFunction.FunctionName;
+                                    }
+                                    else
+                                    {
+                                        lstFunctionName = lstFunctionName + ", " + itemFunction.FunctionName;
+                                    }
+                                }
+                                @lstFunctionName
+                            }
+                        }
+                    </h4>
+
+                    @if (Model.ListComposite != null && Model.ListComposite.Any())
+                    {
+                        <div class="divComposite" style="float:left;width:50%">
+                            <h4 style="color:#333">
+                                <span class="fontBold">
+                                    Composite
+                                </span>
+                            </h4>
+                            @foreach (var itemComposite in Model.ListComposite)
+                            {
+                                <h5>@itemComposite.Quantity x @itemComposite.ItemName</h5>
+                            }
+                        </div>
+                    }
+
+                    @if (Model.ListAddition != null && Model.ListAddition.Any())
+                    {
+                        <div class="divAddition" style="width:50%;float:left">
+                            <h4 style="color:#333">
+                                <span class="fontBold">
+                                    Addition
+                                </span>
+                            </h4>
+                            @foreach (var itemAddition in Model.ListAddition)
+                            {
+                                <h5>@itemAddition.Quantity x @itemAddition.ItemName</h5>
+                            }
+                        </div>
+                    }
+                    @{
+                        string numStoreApply = "";
+                        numStoreApply = Model.ListStoreApply.Count == 0 ? "0 Store" : Model.ListStoreApply.Count.ToString() + (Model.ListStoreApply.Count > 1 ? " Store(s)" : " Store   ");
+                        <div class="divStore" style="width:50%;float:left">
+
+                            Applied Stores:
+                            <a href="javascript:void(0)" class="btn btn-xs btn-success" onclick="" data-toggle="modal" data-target="#modal-choose-store">
+                               <span id="StoreApply">@numStoreApply</span>
+                            </a>
+                        </div>
+                    }
+                    <div style="clear:both"></div>
+                </div>
+            </div>
+        </div>
+        @*<div class="form-group">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <table id="datatable-responsive-list-devicesmanagement"
+                           class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action"
+                           cellspacing="0" style="width:100%;">
+                        <thead style="background-color:#06588C; color:#fff;">
+                            <tr>
+                                <th>DEVICE UUID</th>
+                                <th>ACTIVATED TIME</th>
+                                <th>LICENSE KEY</th>
+                                <th>TYPE</th>
+                                <th>STATUS</th>
+                                <th>ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody id="list-item-hardwares-and-services">
+                            <tr>
+                                <td>3A:JM:AE:VM:23</td>
+                                <td>02/06/2017 - 06:00</td>
+                                <td>abct223ddf</td>
+                                <td>Product</td>
+                                <td><span class="label label-danger">InActive</span></td>
+                                <td><a href="javascript:void(0)" class="btn btn-success" style="width:95%" onclick="ChangeStatusDevice('1','2','3')">ACTIVE</a></td>
+                            </tr>
+                            <tr>
+                                <td>3A:JM:AE:VM:23</td>
+                                <td>02/06/2017 - 06:00</td>
+                                <td>abct223ddf</td>
+                                <td>Product</td>
+                                <td><span class="label label-success">Active</span></td>
+                                <td><a href="javascript:void(0)" class="btn btn-danger" style="width:95%">INACTIVE</a></td>
+                            </tr>
+                            <tr>
+                                <td>3A:JM:AE:VM:23</td>
+                                <td>02/06/2017 - 06:00</td>
+                                <td>abct223ddf</td>
+                                <td>Product</td>
+                                <td>InActive</td>
+                                <td><a href="javascript:void(0)" class="btn btn-success" style="width:95%">ACTIVE</a></td>
+                            </tr>
+                            <tr>
+                                <td>3A:JM:AE:VM:23</td>
+                                <td>02/06/2017 - 06:00</td>
+                                <td>abct223ddf</td>
+                                <td>Product</td>
+                                <td>Active</td>
+                                <td><a href="javascript:void(0)" class="btn btn-danger" style="width:95%">INACTIVE</a></td>
+                            </tr>
+                            <tr>
+                                <td>3A:JM:AE:VM:23</td>
+                                <td>02/06/2017 - 06:00</td>
+                                <td>abct223ddf</td>
+                                <td>Product</td>
+                                <td>InActive</td>
+                                <td><a href="javascript:void(0)" class="btn btn-success" style="width:95%">ACTIVE</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>*@
+
+        @if (Model != null && Model.ListDevice != null && Model.ListDevice.Any())
+        {
+            <div class="devicesmanagement">
+                <div class="row" style="margin-bottom:10px;">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <label>Devices Management</label>
+                    </div>
+                </div>
+
+                <div class="form-group divtbDevice_@Model.ItemID">
+                    @Html.Partial("_ItemDevice", Model.ListDevice)
+                </div>
+
+            </div>
+        }
+
+        <div class="divButtom">
+            <div class="form-group">
+                <div class="col-md-12 col-sm-12 col-xs-12" style="text-align:center;">
+                    @if (Model.ApplyExtend)
+                    {
+                        @*<a href="@Url.ActionEncoded("Extend", "MyStoreAndBusiness",new { Id=Model.ItemID, AssetID = Model.AssetID })" class="btn btn-success">EXTEND</a>*@
+                        <a href="javascript:void(0);" class="btn text-uppercase btn-cyan text-white" id="btn-extend-@Model.AssetID"
+                           onclick="ShowModalProductExtend('#div-content-product-extend', '@Model.ItemID', '@Model.AssetID')">Extend</a>
+                    }
+                    @if ((!Model.ActiveTime.HasValue || (Model.ExpiryDate.HasValue && (Model.ExpiryDate.Value > DateTime.Now || Model.ExpiryDate.Value.Date == Commons.MinDate.Date))) && !Model.IsFree)
+                    {
+                        @*<a href="@Url.ActionEncoded("BuyingAdditionsStoreBusiness", "OurProducts", new { @AssetID = Model.AssetID })" class="btn btn-primary">BUY ADDITIONS</a>*@
+
+                        <a href="javascript:void(0);" class="btn text-uppercase btn-cyan text-white" id="btn-buy-additions-@Model.AssetID"
+                           onclick="ShowModalProductBuyAdditions('#div-content-product-buy-additions', '@Model.AssetID')">Buy Additions</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (Model.AssignStore != null && Model.AssignStore.ListAssignStore.Any())
+    {
+    <div id="modal-choose-store" class="modal fade modalfunctionInfo" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content modal-center model-center-item-product-detail">
+                <div class="modal-header" style="padding:20px 15px;background-color: #f9f9f9">
+                    <button type="button" id="closeFunction" class="close closeStore" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel2" style="text-align: center; font-weight:bolder">Applied Stores</h4> 
+                </div>
+                <div class="modal-body scroll modal-body-item-product-detail">
+                    @*<hr style="margin:0px;" />*@
+                    <div class="row">
+                        <a href="javascript:void(0);" class="btn btn-success" id="btnUpdateStore" style="float:right; margin-right:15px" onclick="AssignStoreToProduct('#form-assign-store','@Model.AssetID')">
+                            <i class="fa fa-check"></i>&nbsp;Update
+                        </a>
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            @using (Html.BeginForm("AssignStoreToProduct", "MyStoreAndBusiness", FormMethod.Post, new
+                            {
+                                @class = "form-horizontal",
+                                @id = "form-assign-store",
+                                @enctype = "multipart/form-data"
+                            }))
+                            {
+                                @Html.Hidden("tempAssetID", Model.AssignStore.tempAssetID)
+                                foreach (var item in Model.AssignStore.ListAssignStore)
+                                {
+                                    @Html.Hidden(string.Format("ListAssignStore[{0}].OffSet", item.Offset), item.Offset, new { @id = "hidOffset" + item.Offset })
+                                    @Html.Hidden(string.Format("ListAssignStore[{0}].StoreID", item.Offset), item.StoreID, new { @id = "hidAssetID" + item.Offset })
+                                    @Html.Hidden(string.Format("ListAssignStore[{0}].IsApply", item.Offset), item.IsApply, new { @id = "hidIsApply" + item.Offset })
+                                    @Html.Hidden(string.Format("ListAssignStore[{0}].StoreName", item.Offset), item.StoreName)
+                                    @Html.Hidden(string.Format("ListAssignStore[{0}].StoreType", item.Offset), item.StoreType)
+                                    @Html.Hidden(string.Format("ListProductApply[{0}].ActiveTime", item.Offset), item.ActivatedDate)
+                                    @Html.Hidden(string.Format("ListAssignStore[{0}].ExpiredDate", item.Offset), item.ExpiredDate)
+                                }
+                                <p id="falseToApply"></p>                                
+                                <div class="row">
+                                    <table class="table table-striped table-bordered dt-responsive dataTable-custom datatable-responsive-list-item-products">
+                                        <caption style="cursor:pointer; max-width:40%;" class="checkall caption-checkall">
+                                            <input type="checkbox" id="CheckAll" class="lineHeight" /><span> Check All</span>
+                                        </caption>
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center cols-4">Select</th>
+                                                <th class="text-center cols-2">Store Name</th>
+                                                <th class="text-center cols-3">Address</th>
+                                                <th class="text-center cols-1">Industry</th>
+                                                <th class="text-center cols-3">Activated Date</th>
+                                                <th class="text-center cols-3">Expried Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.AssignStore.ListAssignStore)
+                                            {
+                                                <tr class="ItemClient" style="cursor:pointer">
+                                                    <td class="text-center cols-4">
+                                                        <input type="checkbox" aria-label="Checkbox for following text input" class="chkItem " id="checkinput_@item.Offset"
+                                                               @string.Format("{0}", item.IsApply ? "checked" : "") />
+                                                    </td>
+                                                    <td class="cols-2">@item.StoreName</td>
+                                                    <td class="cols-3">@item.Address</td>
+                                                    <td class="cols-1">@item.Industry</td>
+                                                    <td class="cols-3">@string.Format("{0}", item.ActivatedDate.HasValue ? item.ActivatedDate.Value.ToString(Commons.FormatDateTime) : "")</td>
+                                                    <td class="cols-3">@string.Format("{0}", item.ExpiredDate.HasValue ? item.ExpiredDate.Value.Date == Commons.MaxDate.Date ? "Never" : item.ExpiredDate.Value.ToString(Commons.FormatDateTime) : "")</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>                                
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+</div>
+
+<script type="text/javascript">
+    var displayLength = 4;
+    //=============Devices
+    var _tableDevices = null;
+    var _settingsOptionTableDevices = {
+        "columnDefs": [
+            { "orderable": false, "targets": [4, 5] },
+            { "width": "25%", "targets": [0, 1, 2, 3, 4] },
+        ],
+        "order": [
+            [0, 'asc']
+        ],
+        "autoWidth": false,
+        "displayLength": displayLength,
+        "bInfo": false,
+        "searching": false,
+        "lengthChange": false,
+    };
+
+    $(document).ready(function (e) {
+        _tableHardware = $('#datatable-responsive-list-devicesmanagement').DataTable($.extend(true, {}, _settingsOptionTableDevices));
+        $('.datatable-responsive-list-item-products').DataTable(
+            {
+                "columnDefs": [
+                    { "orderable": false, "targets": [0] }
+                ],
+                "order": [
+                    [1, 'asc']
+                ],
+                "bInfo": false,
+                "paging": false,
+                "autoWidth": false,
+                "drawCallback": function () {
+                    var divHeight = $('.datatable-responsive-list-item-products tbody').prop('scrollHeight');
+                    if (divHeight == 0) {
+                        var previousCss = $("#modal-choose-items").attr("style");
+                        $("#modal-choose-items").css({
+                            position: 'absolute',
+                            visibility: 'hidden',
+                            display: 'block'
+                        });
+                        divHeight = $('.datatable-responsive-list-item-products tbody').prop('scrollHeight');
+                        $("#modal-choose-items").attr("style", previousCss ? previousCss : "");
+                    }
+                    if (divHeight > 500) {
+                        $(".datatable-responsive-list-item-products thead tr").css('width', 'calc( 100% - 16px )');
+                    } else {
+                        $(".datatable-responsive-list-item-products thead tr").css('width', '100%');
+                    }
+                },
+            }
+        );
+        checkAllItem();
+    });
+    function AssignStoreToProduct(form, AssetID) {
+        $.ajax({
+            url: CreateAbsoluteUrl('AssignStoreToProduct'),
+            type: "POST",
+            data: $(form).serialize(),
+            dataType: 'html',
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            },
+            success: function (data) {
+                data = JSON.parse(data);
+                if (data == true) {
+                    CountStoreApply();
+                    $("#falseToApply").html('');
+                    $('button.closeStore').trigger("click");
+                }
+                else
+                    $("#falseToApply").html('<span class="label-danger" style = "padding: 0 20px;border-radius: 5px;color: white;">Apply false </span>');
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(jqXHR.statusText);
+                $('.se-pre-con').hide();
+            }
+        });
+    }
+    var mode = 0;
+    $('.ItemClient').click(function (event) {
+        if (event.target.type != 'checkbox') {
+            mode = 0;
+            $('.chkItem', this).trigger('click');
+        }
+    });
+   @if (Model.AssignStore != null && Model.AssignStore.ListAssignStore.Any())
+    {
+        foreach (var item in Model.AssignStore.ListAssignStore)
+        {
+        <text>
+            $("#checkinput_"+@item.Offset).click(function () {
+                if ($(this).is(':checked')) {
+                    $("#hidIsApply"+@item.Offset).val(true);
+                } else {
+                    $("#hidIsApply"+@item.Offset).val(false);
+                }
+                checkAllItem();
+            })
+        </text>
+        }
+    }
+   var _Count = '@_Count'
+    function CountStoreApply() {
+        var s = 0;
+        for (var i = 0; i < _Count; i++) {
+            if ($("#checkinput_" + i).is(':checked'))
+                s++;
+        }
+        var _store = "";
+        if (s == 0)
+            _store = "0 Store";
+        else
+            if (s == 1)
+                _store = "1 Store";
+            else
+                _store = s + " Store(s)";
+        $("#StoreApply").html(_store);
+    }
+    $('.checkall').click(function (event) {
+        if (event.target.type != 'checkbox') {
+            $('#CheckAll').trigger('click');
+        }
+    });
+    $("#CheckAll").click(function () {
+        mode = 1;
+        for (var i = 0; i < _Count; i++) {
+            if ($(this).is(':checked')) {
+                if ($("#checkinput_" + i).is(':checked')) {
+                } else {
+                    $("#checkinput_" + i).trigger("click");
+                }
+            } else {
+                if ($("#checkinput_" + i).is(':checked')) {
+                    $("#checkinput_" + i).trigger("click");
+                } else {
+                }
+            }
+        }
+    });
+    function checkAllItem() {
+        var s = 0;
+        for (var i = 0; i < _Count; i++) {
+            if ($("#checkinput_" + i).is(':checked'))
+                s++;
+        }
+        if (s == _Count) {
+            if ($("#CheckAll").is(':checked')) { }
+            else {
+                $("#CheckAll").trigger("click");
+            }
+        } else {
+            if (mode == 0)
+                $("#CheckAll").removeAttr("checked");
+        }
+    }
+</script>

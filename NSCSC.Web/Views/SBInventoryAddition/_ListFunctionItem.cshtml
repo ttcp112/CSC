@@ -1,0 +1,27 @@
+﻿@model NSCSC.Shared.Models.SandBox.Inventory.Product.ProductDetailModels
+
+@if (Model != null && Model.ListFunction != null && Model.ListFunction.Count > 0)
+{
+    for (int i = 0; i < Model.ListFunction.Count; i++)
+    {
+        var item = Model.ListFunction[i];
+        <div class="col-md-4 col-sm-6 col-xs-12 chkItemFunction chkItemFunctionOffSet_@item." data-id="@item.FunctionID">
+            @Html.Hidden(string.Format("ListFunction[{0}].FunctionID", i), item.FunctionID)
+            @Html.Hidden(string.Format("ListFunction[{0}].FunctionName", i), item.FunctionName)
+
+            <label>@Html.CheckBox(string.Format("ListFunction[{0}].IsSelected", i), item.IsSelected, new { @class = "flatFuncItem" })</label> @item.FunctionName
+        </div>
+    }
+}
+<script>
+    $(document).ready(function () {
+        if ($("input.flatFuncItem")[0]) {
+            $(document).ready(function () {
+                $('input.flatFuncItem').iCheck({
+                    checkboxClass: 'icheckbox_flat-green',
+                    radioClass: 'iradio_flat-green'
+                });
+            });
+        }
+    });
+</script>

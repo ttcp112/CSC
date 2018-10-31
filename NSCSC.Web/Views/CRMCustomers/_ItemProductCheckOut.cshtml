@@ -1,0 +1,306 @@
+﻿@{
+    Layout = null;
+}
+@model NSCSC.Shared.Models.ClientSite.MyProfile.OrderDetailModels
+@using NSCSC.Shared
+
+@Html.HiddenFor(model => model.TotalBill)
+@Html.HiddenFor(model => model.ListItems[0].ProductName, new { @id = "idAppliedOnName"})
+<div class="form-group" style="font-size:30px;">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <div class="col-md-12 col-sm-12 col-xs-12" style="color:#cc1018">Check Out - Make Payment</div>
+</div>
+
+<div class="form-group  text-right">
+    <div class="col-md-9 col-sm-9 col-xs-12">
+        <button class="btn btn-sm btn-danger" type="button" data-dismiss="modal" onclick="CancelCheckout('@Model.ID')"><i class="fa fa-times"></i>&nbsp;Cancel</button>
+        @*<button  type="button" disabled="disabled" class="btn btn-sm btn-success" id="btn-done-checkout" data-toggle="modal"
+           data-backdrop="static" onclick="DoneOrder('@Model.ID', '@Model.ExpiryDate')">
+            <i class="fa fa-pie-chart"></i>&nbsp;Done
+        </button>*@
+        
+    </div>
+    <div class="col-md-3 col-sm-3 col-xs-12" id="paypal-button-container" style="text-align:left"></div>
+</div>
+
+<div class="row form-horizontal form-label-left">
+    <div class="form-group">
+        <label for="" class="col-md-4 col-sm-12 col-xs-12" style="font-size:20px;">Customer Information</label>
+        <div class="col-md-8 col-sm-12 col-xs-12 topDotBorder">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-2 col-sm-12 col-xs-12">
+            <img src="@Model.ImageURL" style="width: 100% !important" />
+        </div>
+        <div class="col-md-10 col-sm-12 col-xs-12">
+            <div class="form-group">
+                <div class="col-md-2 col-sm-2 col-xs-12">Customer: </div>
+                <div class="col-md-10 col-sm-10 col-xs-12">@Html.Raw(Model.CustomerDetail.Name)</div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-2 col-sm-2 col-xs-12">Email: </div>
+                <div class="col-md-10 col-sm-10 col-xs-12">@Html.Raw(Model.CustomerDetail.Email)</div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-2 col-sm-2 col-xs-12">Phone: </div>
+                <div class="col-md-10 col-sm-10 col-xs-12">@Html.Raw(Model.CustomerDetail.Phone)</div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-2 col-sm-2 col-xs-12">Merchant: </div>
+                <div class="col-md-10 col-sm-10 col-xs-12">@Html.Raw(Model.CustomerDetail.MerchantName)</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="" class="col-md-2 col-sm-12 col-xs-12" style="font-size:20px;">Check Out</label>
+        <div class="col-md-10 col-sm-12 col-xs-12 topDotBorder">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="" class="col-md-2 col-sm-12 col-xs-12" style="font-size:25px; color:#cc1018">@Html.Raw(Model.ReceiptNo)</label>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3 col-sm-12 col-xs-12">Sub Total</div>
+        <div class="col-md-9 col-sm-12 col-xs-12">@Model.CurrencySymbol@Model.SubTotal.ToString("#,0.00")</div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3 col-sm-12 col-xs-12">
+            @switch (Model.TaxInfo.TaxType)
+            {
+                case (byte)Commons.ETaxType.AddOn:
+                    <div>Tax (@Commons.ETaxType.AddOn.ToString() - @Model.TaxInfo.TaxPercent%)</div>
+                    break;
+                case (byte)Commons.ETaxType.Inclusive:
+                    <div>Tax (@Commons.ETaxType.Inclusive.ToString() - @Model.TaxInfo.TaxPercent%)</div>
+                    break;
+                case (byte)Commons.ETaxType.TaxExempt:
+                    <div>Tax (@Commons.ETaxType.TaxExempt.ToString() - @Model.TaxInfo.TaxPercent%)</div>
+                    break;
+                default:
+                    break;
+            }
+        </div>
+        <div class="col-md-9 col-sm-12 col-xs-12">@Model.CurrencySymbol@Model.Tax.ToString("#,0.00")</div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-6 col-sm-12 col-xs-12">
+            <div class="form-group">
+                <div class="col-md-6 col-sm-12 col-xs-12 font-bold" style="color:#cc1018; font-size:15px;">Total</div>
+                <div class="col-md-6 col-sm-12 col-xs-12 font-bold" style="color:#cc1018; font-size:15px;">@Model.CurrencySymbol@Model.Total.ToString("#,0.00")</div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-6 col-sm-12 col-xs-12">Received</div>
+                <div class="col-md-6 col-sm-12 col-xs-12" id="idChangeReceived">@Model.CurrencySymbol@Html.Raw("0.00")</div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-6 col-sm-12 col-xs-12">Remaining</div>
+                <div class="col-md-6 col-sm-12 col-xs-12" id="idChangeRemaing">@Model.CurrencySymbol@Model.Total.ToString("#,0.00")</div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-6 col-sm-12 col-xs-12">Change</div>
+                <div class="col-md-6 col-sm-12 col-xs-12" id="idChangeChange">@Model.CurrencySymbol@Html.Raw("0.00")</div>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-12 col-xs-12">
+            <textarea class="form-control" rows="5">Note</textarea>
+        </div>
+    </div>
+
+    @*<div class="box-body form-group" style="text-align:center; padding-bottom:30px;">
+        <div class="col-md-6 col-sm-12 col-xs-12">
+            <table class="table">
+                <thead>
+                    <tr style="background-color:#134F5C; color:#fff;">
+                        <td class="text-left">Payment Summary</td>
+                        <td style="width:20%;">
+                            <button type="button" onclick="ResetOrder('@Model.ID')" class="btn btn-xs btn-danger" style="color:#fff;">RESET</button>
+                        </td>
+                    </tr>
+                    <tr class="paddingTop30 font-bold">
+                        <td class="text-left paddingLeftCustomer">Type</td>
+                        <td class="text-left">Amount</td>
+                    </tr>
+                </thead>
+                <tbody id="tbl-listDetail-addPayMethod">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-6 col-sm-12 col-xs-12">
+            <table class="table">
+                <thead style="background-color:#134F5C; color:#fff;">
+                    <tr>
+                        <td class="text-left">Pay by</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="paddingTop30">
+                        <td class="text-left paddingLeftCustomer">
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-12 col-xs-12 lineHeight">Amount</div>
+                                <div class="col-md-6 col-sm-12 col-xs-12">
+                                    <input type="text" value="@Model.Total.ToString("#,0.00")" class="form-control" id="ValueAmount" name="amount" readonly="readonly" />
+                                </div>
+                                <div class="col-md-3 col-sm-12 col-xs-12 lineHeight">
+                                    <button class="btn btn-md btn-primary" id="addAmount" type="button" onclick="AddPayMethod('@Model.ID')">Add</button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    @{ if (Model.LstPayment != null && Model.LstPayment.Count() > 0)
+                        {
+                            foreach (var item in Model.LstPayment)
+                            {
+                                <tr class="paddingTop30 ListPayments" data-id="@item.ID">
+                                    @{if (item.ImageURL == null || item.ImageURL == "")
+                                        {
+                                        <td class="text-left paddingLeftCustomer">
+                                            <input type="radio" name="Payment" class="flat" id="" /> <img src=@Url.Content("~/Assets/Images/visa.png") alt="@item.Name"> @item.Name
+                                        </td>
+                                        }
+                                        else
+                                        {
+                                            <td class="text-left paddingLeftCustomer">
+                                                <input type="radio" name="Payment" class="flat" id="" /> <img src="@item.ImageURL" alt="@item.Name"> @item.Name
+
+                                            </td>
+                                        }
+                                    }
+
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>*@
+
+</div>
+@*<div class="row text-right">
+    <ul class="header-buttons pull-right list-inline">
+        <li><a href="javascript:void(0)" data-dismiss="modal" class="btn btn-sm btn-danger" id="btn-delete"><i class="fa fa-times"></i>&nbsp;Cancel</a></li>
+        @*<li>
+                <a href="javascript:void(0)" class="btn btn-sm btn-success" id="btn-done" data-toggle="modal"
+                   data-backdrop="static" data-target="#modalExtendConfirmation">
+                    <i class="fa fa-check"></i>&nbsp;Done
+                </a>
+            </li>
+    </ul>
+</div>*@
+
+<script type="text/javascript">
+    var Items = [];
+    var totalAmount = 0;
+    $(document).ready(function () {
+        $("#btn-done-checkout").attr("disabled", true);
+        $("#addAmount").attr("disabled", true);
+
+        init_ICheck();
+        $("#AppliedOnDdl").select2({
+            placeholder: "Please choose applied"
+        });
+
+        $('input').on('ifChecked', function (event) {
+            if (event.target.checked) {
+                $('[id=addAmount]').removeAttr('disabled')
+            } else {
+                $('[id=addAmount]').attr('disabled', 'disabled');
+            }
+            // $(event.target).trigger('change');
+        });
+
+        $("#ValueAmount").keydown(function (event) {
+            // Allow only backspace and delete
+            if (event.keyCode == 46 || event.keyCode == 8) {
+                // let it happen, don't do anything
+                return true;
+            }
+            else {
+                // Ensure that it is a number and stop the keypress
+                if (event.keyCode < 48 || event.keyCode > 57) {
+                    event.preventDefault();
+                }
+            }
+        });
+
+        // get list item of order
+        $.ajax({
+             url: CreateAbsoluteUrl('OrderPayPal'),
+             type: "POST",
+             data: { OrderID: '@Model.ID' },
+             dataType: 'json',
+             success: function (data) {
+                 $.each(data, function (index, item) {
+                     totalAmount += item.Price * item.Quantity;
+                     var item = {
+                         name: item.Name,
+                         price: item.Price,
+                         currency: "@Model.CurrencySymbol",
+                         quantity: item.Quantity
+                     };
+                     Items.push(item);
+                 });
+             },
+             error: function (jqXHR, textStatus, errorThrown) {
+             }
+        });
+        paypal.Button.render({
+            env: 'sandbox', // sandbox | production
+            // PayPal Client IDs - replace with your own
+            // Create a PayPal app: https://developer.paypal.com/developer/applications/create
+            client: {
+               // sandbox: 'AZDxjDScFpQtjWTOUtWKbyN_bDt4OgqaF4eYXlewfBP4-8aqX3PiV8e1GWU6liB2CUXlkA59kJXE7M6R',
+                sandbox: 'AR8peDp9jJo2dZ5otHkB5BMoQVe3KULEAB0ncLahGGGe1Cksvq9AM3O5LZuKe3xVdhhDQt7Kw1wlcHPv',
+                production: 'EO0Rn5K9K1aZmbrRCfb2OigRJaq5b7HLUs0TKjwRbmGAGiK35BT88OXL6AZCDtqWtxSZFeqjCyTICAj-'
+            },
+            // Show the buyer a 'Pay Now' button in the checkout flow
+            commit: true,
+            // payment() is called when the button is clicked
+            payment: function (data, actions) {
+                // Make a call to the REST api to create the payment
+                return actions.payment.create({
+                    payment: {
+                        transactions: [
+                            {
+                                amount: { total: totalAmount, currency: '@Model.CurrencySymbol' },
+                                item_list: {
+                                    items: Items
+                                }
+                            }
+                        ]
+                    }
+                });
+            },
+            // onAuthorize() is called when the buyer approves the payment
+            onAuthorize: function (data, actions) {
+                // Make a call to the REST api to execute the payment
+                return actions.payment.execute().then(function (data) {
+                    if (data.state === "approved")
+                    {
+                        OrderPay('@Model.ID', '@Model.ExpiryDate',"@Model.Total",data.id,"");
+                    }
+
+                });
+            }
+        }, '#paypal-button-container');
+    });
+
+    function init_ICheck() {
+        if ($("input.flat")[0]) {
+            $(document).ready(function () {
+                $('input.flat').iCheck({
+                    checkboxClass: 'icheckbox_flat-green',
+                    radioClass: 'iradio_flat-green'
+                });
+            });
+        }
+    };
+
+
+</script>

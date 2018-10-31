@@ -1,0 +1,160 @@
+﻿body {
+}
+
+.tm_pb_module h3 {
+    color: #333333;
+    text-align: center;
+    font-size: 40px
+}
+
+#tm_builder_outer_content .tm_pb_slide_description, #tm_builder_outer_content .tm_pb_pricing_content, #tm_builder_outer_content .tm_pb_text, #tm_builder_outer_content .product, #tm_builder_outer_content .tm_pb_widget {
+    word-wrap: break-word;
+}
+
+#productNuPos {
+    left: 46%;
+    top: 63%;
+    /*border: 1px solid;*/
+}
+
+#productNuDisplay {
+    left: 60%;
+    top: 63%;
+    /*border: 1px solid;*/
+}
+
+#productNuKiosk {
+    left: 32%;
+    top: 63%;
+    /*border: 1px solid;*/
+}
+
+#productNuWeb {
+    left: 46%;
+    top: 35%;
+    /*border: 1px solid;*/
+}
+
+.product {
+    height: 158px;
+    width: 154px;
+    position: absolute;
+    cursor: pointer;
+}
+
+#focus3 {
+    padding-left:30px
+}
+#focus3 h4 {
+    /*text-align:center;*/
+    text-transform: uppercase;
+    font-size: 30px;
+}
+
+#focus3 #div3 h6{
+    /*text-align:center;*/
+    font-size:18px;
+}
+
+#focus5 {
+    position: absolute;
+    margin-top: -330px;
+    margin-left: 450px;
+    height: 250px;
+    width: 45%;
+    text-align:center;
+    padding-top:15px;
+}
+
+#focus5 h4{
+    font-size:30px;
+    text-transform:uppercase;
+}
+
+#focus5 h6{
+    font-size:20px;
+    color:#333333;
+}
+
+.bx-wrapper {
+    background:none !important;
+    border:none !important;
+    box-shadow:none !important;
+    margin-left:15px !important;
+}
+
+.slideContent {
+    color:#FFF;
+}
+
+.slider-link {
+    position: absolute;
+    margin-top: -340px;
+    margin-left: 60%;
+    opacity: 0.2;
+}
+    .slider-link a {
+        color: #080808;
+        font-size:24px;
+    }
+    @media (min-width: 768px) and (max-width: 991px) {
+        #focus5 {
+        margin-left: 275px;
+        width: 55%;
+    }
+
+    #productNuWeb {
+        left: 42%;
+        top: 55%;
+        /*border: 1px solid;*/
+    }
+
+    #productNuKiosk {
+        left: 15%;
+        top: 98%;
+        /*border: 1px solid;*/
+    }
+
+    #productNuPos {
+        left: 42%;
+        top: 98%;
+        /*border: 1px solid;*/
+    }
+
+    #productNuDisplay {
+        left: 69%;
+        top: 98%;
+        /*border: 1px solid;*/
+    }
+}
+
+@media (min-width: 992px) and (max-width : 1200px) {
+    #focus5 {
+        margin-left: 384px;
+        width: 55%;
+    }
+
+    #productNuWeb {
+        left: 44%;
+        top: 54%;
+        /*border: 1px solid;*/
+    }
+
+    #productNuKiosk {
+        left: 21%;
+        top: 98%;
+        /*border: 1px solid;*/
+    }
+
+    #productNuPos {
+        left: 43%;
+        top: 98%;
+        /*border: 1px solid;*/
+    }
+
+    #productNuDisplay {
+        left: 66%;
+        top: 98%;
+        /*border: 1px solid;*/
+    }
+}

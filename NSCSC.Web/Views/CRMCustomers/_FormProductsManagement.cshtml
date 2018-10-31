@@ -1,0 +1,904 @@
+﻿@model NSCSC.Shared.Models.CRM.Customers.CustomerBaseModels
+@using NSCSC.Shared
+@{
+    Html.EnableUnobtrusiveJavaScript(true);
+    var _ID = Model.CustomerDetail.ID;
+}
+@Html.HiddenFor(model => model.CustomerDetail.ID)
+@if (!string.IsNullOrEmpty(_ID))
+{
+    @Html.HiddenFor(model => model.CustomerDetail.ImageURL, new { id="hidImgurl"})
+}
+
+<div class="row form-horizontal form-label-left" style="margin-bottom:15px;">
+
+
+    @*Products and Packages Management*@
+    <div class="form-group">
+        <label for="" class="col-md-3 col-sm-12 col-xs-12" style="font-size:15px;">Products and Packages Management</label>
+        <div class="col-md-9 col-sm-6 col-xs-12 topDotBorder">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <table id="datatable-responsive-list-products-and-packages"
+                   class="table table-striped table-bordered dt-responsive nowrap table table-striped dtr-inline jambo_table bulk_action"
+                   cellspacing="0" style="width:100%;">
+                <thead style="background-color:#34495e; color:#fff;">
+                    <tr>
+                        <th class="text-center">Item</th>
+                        <th class="text-center">Type</th>
+                        <th class="text-center">Bought - Time</th>
+                        <th class="text-center">Activate - Time</th>
+                        <th class="text-center">Expiry Time</th>
+                        <th class="text-center">Receipt No.</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="list-item-products-and-packages">
+                    @*Edit*@
+                    @Html.Partial("_ItemProductAndPackages", Model)
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="form-group" style="padding:20px 0;">
+    </div>
+
+    @*Hardwares and Services Management*@
+    <div class="form-group">
+        <label for="" class="col-md-3 col-sm-12 col-xs-12" style="font-size:15px;">Hardwares and Services Management</label>
+        <div class="col-md-9 col-sm-6 col-xs-12 topDotBorder">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <table id="datatable-responsive-list-hardwares-and-services"
+                   class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action"
+                   cellspacing="0" style="width:100%;">
+                <thead style="background-color:#34495e; color:#fff;">
+                    <tr>
+                        <th class="text-center">Item</th>
+                        <th class="text-center">Type</th>
+                        <th class="text-center">Bought - Time</th>
+                        <th class="text-center">Serial No.</th>
+                        <th class="text-center">Receipt No.</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="list-item-hardwares-and-services">
+                    @*edit*@
+                    @Html.Partial("_ItemHardwaresAndServices", Model)
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="form-group" style="padding:20px 0;">
+    </div>
+
+    @*Accounts Management*@
+    <div class="form-group">
+        <label for="" class="col-md-3 col-sm-12 col-xs-12" style="font-size:15px;">Accounts Management</label>
+        <div class="col-md-9 col-sm-6 col-xs-12 topDotBorder">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <table id="datatable-responsive-list-accounts"
+                   class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action"
+                   cellspacing="0" style="width:100%;">
+                <thead style="background-color:#34495e; color:#fff;">
+                    <tr>
+                        <th class="text-center">Account</th>
+                        <th class="text-center">License Key</th>
+                        <th class="text-center">Activate Time</th>
+                        <th class="text-center">Expiry Time</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="list-item-accounts">
+                    @Html.Partial("_ItemAccounts", Model)
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="form-group" style="padding:20px 0;">
+    </div>
+
+    @*Additional Functions Management*@
+    <div class="form-group">
+        <label for="" class="col-md-3 col-sm-12 col-xs-12" style="font-size:15px;">Additional Functions Management</label>
+        <div class="col-md-9 col-sm-6 col-xs-12 topDotBorder">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <table id="datatable-responsive-list-additional-functions"
+                   class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action"
+                   cellspacing="0" style="width:100%;">
+                <thead style="background-color:#34495e; color:#fff;">
+                    <tr>
+                        <th class="text-center">Function</th>
+                        <th class="text-center">License Key</th>
+                        <th class="text-center">Parent License Key</th>
+                        <th class="text-center">Activate Time</th>
+                        <th class="text-center">Expiry Time</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="list-item-additional-functions">
+                    @Html.Partial("_ItemProductFunction", Model)
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="form-group" style="padding:20px 0;">
+    </div>
+
+</div>
+
+@*Hardwares and Services Management*@
+@*Modal Device Serial Number*@
+<div id="modal-device-serial-number" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel2" style="text-align: left">Device Serial Number</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="serial-number" class="control-label">Serial Number:</label>
+                    <input type="text" class="form-control" id="txtSerialNumber" placeholder="Input serial number">
+                    <label class="label label-danger" id="lblErrorConfirn"></label>
+                    <input type="hidden" id="txtAssetId" />
+                    <input type="hidden" id="txtState" />
+                    <input type="hidden" id="txtItemId" />
+                    <input type="hidden" id="CustomerId" />
+                    <label style="display: none; color: white;" class="label label-danger" id="errorSerialNumberWithout">Please input the Serial Number.</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" @*data-dismiss="modal"*@ onclick="CloseModalComfirn(); return false;">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="ComfirnSerialNumber(); return false;">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*End Hardwares and Services Management*@
+
+@*Products and Packages Management*@
+
+@*======== Extend*@
+@*Extend Product*@
+<div class="modal fade" id="modelExtendProduct" tabindex="-1" role="dialog" aria-hidden="true" style="z-index:99999">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Extend Product</h4>
+            </div>
+            <div class="modal-body scroll" style="padding:0;">
+                <div id="tbl-listDetail-Extend" style="padding:15px;">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*Check Out*@
+<div class="modal fade" id="modelCheckOut" tabindex="-1" role="dialog" aria-hidden="true"style="z-index:999999">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body scroll" style="padding:0;">
+                <div id="tbl-listDetail-checkout" style="padding:15px;">                    
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+@*Extend Confirmation*@
+<div id="modalExtendConfirmation" class="modal fade bs-example-modal-sm" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" style="z-index:9999999">
+    <div class="modal-dialog modal-sm" style="width: 350px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel2" style="text-align: center">Extend Confirmation</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" id="tbl-checkout-Done">
+                </div>
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>*@
+                <button type="button" onclick="OkPayment()" class="btn btn-primary" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*======== End Extend*@
+
+@*======== Detail*@
+<div id="content-modal-detail">
+
+</div>
+@*======== End Detail*@
+@*End Products and Packages Management*@
+<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+<script type="text/javascript">    
+    var _displayLength = 5;
+    //=============HardwareService
+    var _tableHardwareService = null;
+    var _settingsOptionTableHardwareService = {
+        "columnDefs": [
+            { "orderable": false, "targets": [6] },
+            { "width": "5%", "targets": [2, 3, 4, 5, 6] },
+            {
+                "targets": [6],
+                "searchable": false
+            },
+        ],
+        "order": [
+            [4, 'asc']
+        ],
+        "autoWidth": false,
+        "displayLength": _displayLength,
+        "bInfo": false
+    };
+
+    //=============ProductPackage
+    var _tableProductPackage = null;
+    var _settingsOptionTableProductPackage = {
+        "columnDefs": [
+            { "orderable": false, "targets": [7] },
+            { "width": "8%", "targets": [2, 3, 4, 5, 6, 7] },
+        ],
+        "order": [
+            [4, 'asc']
+        ],
+        "autoWidth": false,
+        "displayLength": _displayLength,
+        "bInfo": false
+    };
+
+    //=============Account
+    var _tableAccount = null;
+    var _settingsOptionTableAccount = {
+        "columnDefs": [
+            { "orderable": false, "targets": [5] },
+            { "width": "5%", "targets": [2, 3, 4, 5] },
+        ],
+        "order": [
+            [2, 'asc']
+        ],
+        "autoWidth": false,
+        "displayLength": _displayLength,
+        "bInfo": false
+    };
+
+    //=============Addition Function
+    var _tableAdditionFunction = null;
+    var _settingsOptionTableAdditionFunction = {
+        "columnDefs": [
+            { "orderable": false, "targets": [6] },
+            { "width": "5%", "targets": [2, 3, 4, 5, 6] },
+        ],
+        "order": [
+            [3, 'asc']
+        ],
+        "autoWidth": false,
+        "displayLength": _displayLength,
+        "bInfo": false
+    };
+
+    //=============Composite/Additions
+    var _tableCompositeAdditions = null;
+    var _settingsOptionTableCompositeAdditions = {
+        "columnDefs": [
+            { "orderable": false, "targets": [1] },
+            { "width": "5%", "targets": [2, 3] },
+        ],
+        "order": [
+            [0, 'asc']
+        ],
+        "autoWidth": false,
+        "displayLength": _displayLength,
+        "searching": false,         // txtSearch in filter
+        "lengthChange": false,      // Dropdownlist Page
+        "bInfo": false              // text [showing...
+    };
+
+    //=============DevicesManagement
+    var _tableDevicesManagement = null;
+    var _settingsOptionTableDevicesManagement = {
+        "columnDefs": [
+            { "orderable": false, "targets": [4] },
+            { "width": "5%", "targets": [2, 3, 4] },
+        ],
+        "order": [
+            [0, 'asc']
+        ],
+        
+        "autoWidth": false,
+        "displayLength": _displayLength,
+        "searching": false,         // txtSearch in filter
+        "lengthChange": false,      // Dropdownlist Page
+        "bInfo": false              // text [showing...
+    };
+
+    $(window).resize(function () {
+        _tableProductPackage.responsive.recalc();
+        _tableHardwareService.responsive.recalc();
+        _tableAccount.responsive.recalc();
+        _tableAdditionFunction.responsive.recalc();
+    });
+
+    //=============
+    $(document).ready(function (e) {
+        _tableHardwareService = $('#datatable-responsive-list-hardwares-and-services').DataTable($.extend(true, {}, _settingsOptionTableHardwareService));
+        _tableProductPackage = $('#datatable-responsive-list-products-and-packages').DataTable($.extend(true, {}, _settingsOptionTableProductPackage));
+        _tableAccount = $('#datatable-responsive-list-accounts').DataTable($.extend(true, {}, _settingsOptionTableAccount));
+        _tableAdditionFunction = $('#datatable-responsive-list-additional-functions').DataTable($.extend(true, {}, _settingsOptionTableAdditionFunction));
+
+        _tableCompositeAdditions = $('.datatable-responsive-list-detail').DataTable($.extend(true, {}, _settingsOptionTableCompositeAdditions));
+        _tableDevicesManagement = $('#datatable-responsive-list-devices-management').DataTable($.extend(true, {}, _settingsOptionTableDevicesManagement));
+
+
+    });
+
+    /*Function*/
+    //=============HardwareService
+    function Recalled(_assetId,customerID) {
+        var con = confirm("Are you sure to recall this hardware/ service?");
+        if (con) {
+            $.ajax({
+                url: CreateAbsoluteUrl('ChangeStatusHardwareService'),
+                type: "GET",
+                data: { ID: _assetId, CustomerId: customerID },
+                dataType: 'html',
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+                success: function (data) {
+                    //  alert('success');
+                    _tableHardwareService.destroy();
+                    $("[id=list-item-hardwares-and-services]").html(data);
+                    _tableHardwareService = $('#datatable-responsive-list-hardwares-and-services').DataTable($.extend(true, {}, _settingsOptionTableHardwareService));
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(jqXHR.statusText);
+                }
+            });
+        }
+    }
+
+    function CloseModalComfirn() {
+        $('[id=modal-device-serial-number]').modal('toggle');
+        $('[id=txtAssetId]').val('');
+        $('[id=txtState]').val('');
+        $('[id=txtItemId]').val('');
+        $('[id=txtSerialNumber]').val('');
+        $('[id=lblErrorConfirn]').text('')
+        $('[id=CustomerId]').val('');
+        $('#errorSerialNumberWithout').hide();
+    }
+
+    function AddSerialNumberHardwareService(_assetId, _state, _itemId, _customerId) {
+        $('[id=modal-device-serial-number]').modal('show');
+        $('[id=txtAssetId]').val(_assetId);
+        $('[id=txtState]').val(_state);
+        $('[id=txtItemId]').val(_itemId);
+        $('[id=CustomerId]').val(_customerId);
+    }
+
+    function ComfirnSerialNumber() {
+        //var SerialNo = $('[id=txtSerialNumber]').val();
+        var SerialNo = $.trim($('#txtSerialNumber').val().replace(/[;,.\r\t\n\' ']+/g, ''));
+        if (SerialNo.length == 0) {
+            $('#errorSerialNumberWithout').show();
+            // Return new value after remove white space
+            $('#txtSerialNumber').val(SerialNo);
+        } else {
+            var AssetId = $('[id=txtAssetId]').val();
+            var State = $('[id=txtState]').val();
+            var ItemId = $('[id=txtItemId]').val();
+            var CustomerId = $('[id=CustomerId]').val();
+            var SerialNumbers = [];
+            var SerialNumber = {
+                AssetID: AssetId,
+                SerialNo: SerialNo,
+                State: State
+            };
+            SerialNumbers.push(SerialNumber);
+
+            $.ajax({
+                url: CreateAbsoluteUrl('AddSerialNumberHardwareService'),
+                type: "POST",
+                data: { ListSerialNumber: SerialNumbers, ID: ItemId, CustomerId: CustomerId },
+                dataType: 'html',
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+                success: function (data) {
+                    //Edit
+                    CloseModalComfirn();
+                    $('.se-pre-con').hide();
+                    _tableHardwareService.destroy();
+                    $("[id=list-item-hardwares-and-services]").html(data);
+                    _tableHardwareService = $('#datatable-responsive-list-hardwares-and-services').DataTable($.extend(true, {}, _settingsOptionTableHardwareService));
+                    //End
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    //alert(jqXHR.statusText);
+                    $('.se-pre-con').hide();
+                    $('[id=lblErrorConfirn]').text(jqXHR.statusText);
+                }
+            });
+        }
+        
+    }
+
+    //=============Products and Packages Management
+    function ChangeStatusHardwareService(_type, index, _ID, CustomerId) {
+        $.ajax({
+            url: CreateAbsoluteUrl('ChangeStatusHardwareService'),
+            type: "GET",
+            data: { ID: _ID, CustomerId: CustomerId },
+            dataType: 'html',
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            },
+            success: function (data) {
+              //  alert('success');
+                _tableHardwareService.destroy();
+                $("[id=list-item-hardwares-and-services]").html(data);
+                _tableHardwareService = $('#datatable-responsive-list-hardwares-and-services').DataTable($.extend(true, {}, _settingsOptionTableHardwareService));
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(jqXHR.statusText);
+            }
+        });
+    }
+
+    //=============Products and Packages Management
+    function ChangeStatusProductPackage(_type, index, _ID, _customerId) {
+        $.ajax({
+            url: CreateAbsoluteUrl('ChangeStatusProductPackage'),
+            type: "GET",
+            data: { ID: _ID, CustomerId: _customerId },
+            dataType: 'html',
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            },
+            success: function (data) {
+                //alert('success');Edit
+                _tableProductPackage.destroy();
+                $("[id=list-item-products-and-packages]").html(data);
+                _tableProductPackage = $('#datatable-responsive-list-products-and-packages').DataTable($.extend(true, {}, _settingsOptionTableProductPackage));
+                //End
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(jqXHR.statusText);
+            }
+        });
+    }
+
+    function ShowDetailProductPackageMana(AssetId,CustomerID) {
+
+        $.ajax({
+            url: CreateAbsoluteUrl('GetProductDetail'),
+            type: "POST",
+            data: {
+                Id: AssetId,
+                CustomerID: CustomerID
+            },
+            dataType: 'html',
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+                $('[id=modelDetailProduct]').modal('show');
+            },
+            success: function (data) {
+                $('[id=content-modal-detail]').html(data);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                //alert(jqXHR.statusText);
+                $('.se-pre-con').hide();
+            }
+        });
+    }
+
+    function ShowExtendProductPackageMana(AssetId, ProductId) {
+
+        $.ajax({
+            url: CreateAbsoluteUrl('ExtentProductMana'),
+            type: "POST",
+            data: { AssetId: AssetId, ProductId: ProductId },
+            dataType: 'html',
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+                $('[id=modelExtendProduct]').modal('show');
+            },
+            success: function (data) {
+                $('[id=tbl-listDetail-Extend]').html(data);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                //alert(jqXHR.statusText);
+                $('.se-pre-con').hide();
+            }
+        });
+    }
+
+    var _customerIdExtend = "";
+    var _assetidExtend = "";
+    var _periodExtend = "";
+    var _periodTypeExtend = "";
+    var _priceExtend = "";
+    var _productAppliOnExtend = "";
+
+    function GetDataExtendPrice(CustomerID, AssetId, Period, PeriodType, Price) {
+        _customerIdExtend = CustomerID;
+        _assetidExtend = AssetId;
+        _periodExtend = Period;
+        _periodTypeExtend = PeriodType;
+        _priceExtend = Price;
+    }
+
+    function LoadModalCheckOut(ExpiryDate) {
+        _productAppliOnExtend = $('#AppliedOnDdl').val();
+        $.ajax({
+            url: CreateAbsoluteUrl('CheckOutProductMana'),
+            type: "POST",
+            data: { CustomerID: _customerIdExtend, AssetId: _assetidExtend, Period: _periodExtend, PeriodType: _periodTypeExtend, Price: _priceExtend, ProductAppliOn: _productAppliOnExtend, ExpiryDate: ExpiryDate },
+            dataType: 'html',
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+                $('[id=modelCheckOut]').modal('show');
+            },
+            success: function (data) {
+                $('[id=tbl-listDetail-checkout]').html(data);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                //alert(jqXHR.statusText);
+                $('.se-pre-con').hide();
+            }
+        });
+    }
+
+    function format_number(n) {
+        return n.toFixed(2).replace(/./g, function (c, i, a) {
+            return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
+        });
+    }
+
+    function AddPayMethod(orderId) {
+        var id = "";
+        $('.ListPayments').each(function (index) {
+            if ($(this).find('.flat').iCheck('update')[0].checked == true) {
+                id = $(this).attr('data-id');
+            }
+        });
+        var _amount = $('#ValueAmount').val();
+        if (parseFloat(_amount) <= 0) {
+            alert('Please enter a value greater than or equal to 0.');
+        }
+        else {
+            $.ajax({
+                url: CreateAbsoluteUrl('AddPayMethod'),
+                type: "POST",
+                data: { OrderID: orderId, PaymentMethodID: id, AmountPay: _amount },
+                dataType: 'html',
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+                success: function (data) {
+                    $('[id=tbl-listDetail-addPayMethod]').html(data);
+                    var _Received = $('#idReceived').val();
+                    var ReceivedFormat = format_number(parseFloat(_Received));
+                    var _Remaning = $('#idRemaning').val();
+                    var remaingFormat = format_number(parseFloat(_Remaning));
+                    var _Change = $('#idChange').val();
+                    var changeFormat = format_number(parseFloat(_Change));
+                    var _CurrencySymbol = $('#idCurrencySymbol').val();
+                    if (_Remaning == 0) {
+                        $("#btn-done-checkout").attr("disabled", false);
+                        $("#addAmount").attr("disabled", true);
+                        $('#ValueAmount').val('');
+                    }
+                    else {
+                        $("#btn-done-checkout").attr("disabled", true);
+                        $("#addAmount").attr("disabled", false);
+                    }
+                    $('#idChangeReceived').html(_CurrencySymbol + "" + ReceivedFormat).trigger('change');
+                    $('#idChangeRemaing').html(_CurrencySymbol + "" + remaingFormat).trigger('change');
+                    $('#idChangeChange').html(_CurrencySymbol + "" + changeFormat).trigger('change');
+                    $('#ValueAmount').val(remaingFormat).trigger('change');
+                },
+                error: function (e) {
+                    $('.se-pre-con').hide();
+                    //if (e.status == 400) {
+                    //    $("#btn-done-checkout").attr("disabled", false);
+                    //    $("#addAmount").attr("disabled", true);
+                    //    $('#ValueAmount').val('');
+                    //}
+                    //else {
+                    //    $("#btn-done-checkout").attr("disabled", true);
+                    //    $("#addAmount").attr("disabled", false);
+                    //}
+                }
+            });
+        }
+    };
+
+    function DoneOrder(orderID, expiryDate) {
+        var _ProductAppliedOnName = $('#idAppliedOnName').val();
+        $.ajax({
+            url: CreateAbsoluteUrl('DoneOrder'),
+            type: "POST",
+            data: { OrderID: orderID, ExpiryDate: expiryDate, Period: _periodExtend, PeriodType: _periodTypeExtend, ProductAppliedOnName: _ProductAppliedOnName },
+            dataType: 'html',
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            },
+            success: function (data) {
+                $('[id=modalExtendConfirmation]').modal('show');
+                $('[id=tbl-checkout-Done]').html(data);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(jqXHR.statusText);
+                $('[id=modalExtendConfirmation]').modal('hide');
+                $('.se-pre-con').hide();
+            }
+        });
+    }
+
+    function OrderPay(orderID, expiryDate, AmountPay, TransactionId, Note) {
+        var _ProductAppliedOnName = $('#idAppliedOnName').val();
+        $.ajax({
+            url: CreateAbsoluteUrl('OrderPay'),
+            type: "POST",
+            data:
+            {
+                OrderID: orderID,
+                PaymentMethodID: "04591091-8926-476f-99cb-cadc1de3064d",
+                AmountPay: AmountPay,
+                TransactionId: TransactionId,
+                Note: Note,
+                ExpiryDate: expiryDate,
+                Period: _periodExtend,
+                PeriodType: _periodTypeExtend,
+                ProductAppliedOnName: _ProductAppliedOnName
+            },
+            dataType: 'html',
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            },
+            success: function (data) {
+                $('[id=modalExtendConfirmation]').modal('show');
+                $('[id=tbl-checkout-Done]').html(data);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(jqXHR.statusText);
+                $('[id=modalExtendConfirmation]').modal('hide');
+                $('.se-pre-con').hide();
+            }
+        });
+    }
+    @*function AddPayMethod(total, symbol) {
+        if (_valueRemaining == 0) {
+            _valueRemaining = total;
+        }
+        var type = "";
+        var idPayType = "";
+        var _typeCash = $('#PayCash').prop('checked');
+        var _typeCard = $('#PayCard').prop('checked');
+        var _amount = $('#ValueAmount').val();
+        if (_typeCash == true) {
+            type = "Cash";
+            idPayType = @Commons.EPayType.Cash.ToString("d");
+        }
+        else {
+            type = "Credit Card";
+            idPayType = @Commons.EPayType.CreditCard.ToString("d");
+        }
+        if (parseFloat(_amount) <= 0) {
+            alert('Please enter a value greater than or equal to 0.');
+        }
+        else {
+            if (_valueRemaining >= 0) {
+                var value1 = total.replace(',', '');
+                var value2 = _amount.replace(',', '');
+                _valueRemaining = parseFloat(_valueRemaining) - parseFloat(value2);
+                $('#ValueAmount').val(_valueRemaining.toFixed(2));
+            }
+            else {
+                $('#ValueAmount').val('');
+            }
+            $.ajax({
+                url: CreateAbsoluteUrl('AddPayMethod'),
+                type: "POST",
+                data: { Name: type, Amount: _amount, CurrencySymbol: symbol, },
+                dataType: 'html',
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                    if (_valueRemaining == 0) {
+                        $("#btn-done-checkout").attr("disabled", false);
+                        $("#addAmount").attr("disabled", true);
+                    }
+                },
+                success: function (data) {
+                    if ($('.itemamount').hasClass('item-' + idPayType) == true) {
+                        var valueItemAmount = $('.item-' + idPayType).text();
+                        var value3 = _amount.replace(',', '');
+                        var result = parseFloat(valueItemAmount) + parseFloat(value3);
+                        $('#item-' + idPayType).html(result).trigger('change');
+                    }
+                    else {
+                        $('[id=tbl-listDetail-addPayMethod]').append(data);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    //alert(jqXHR.statusText);
+                }
+            });
+        }
+    };*@
+
+    function CancelCheckout(orderID) {
+        $.ajax({
+            url: CreateAbsoluteUrl('CancelCheckout'),
+            type: "POST",
+            data: { OrderID: orderID },
+            dataType: 'html',
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+                $('[id=modelCheckOut]').modal('hide');
+                $('[id=modelExtendProduct]').modal('hide');
+            },
+            success: function (data) {
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                //alert(jqXHR.statusText);
+                $('.se-pre-con').hide();
+            }
+        });
+    }
+
+    function ResetOrder(orderID) {
+        $.ajax({
+            url: CreateAbsoluteUrl('ResetOrder'),
+            type: "POST",
+            data: { OrderID: orderID },
+            dataType: 'html',
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            },
+            success: function (data) {
+                $('[id=tbl-listDetail-addPayMethod]').html(data);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                //alert(jqXHR.statusText);
+                $('.se-pre-con').hide();
+            }
+        });
+    }
+
+    function OkPayment() {
+        $('[id=modalExtendConfirmation]').modal('hide'); 
+        $('[id=modelCheckOut]').modal('hide'); 
+        $('[id=modelExtendProduct]').modal('hide');
+    }
+    //=============Accounts Management
+    function ChangeStatusAccount(_type, index, _ID,_CustomerID) {
+        $.ajax({
+            url: CreateAbsoluteUrl('ChangeStatusAccount'),
+            type: "GET",
+            data: { ID: _ID, CustomerID: _CustomerID },
+            dataType: 'html',
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            },
+            success: function (data) {
+                _tableAccount.destroy();
+                $("#list-item-accounts").html(data);
+                _tableAccount = $('#datatable-responsive-list-accounts').DataTable($.extend(true, {}, _settingsOptionTableAccount));
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(jqXHR.statusText);
+            }
+        });
+    }
+
+    //=============Additional Functions Management
+    function ChangeBlockFunction(_type, index, _ID, _customerId) {
+        $.ajax({
+            url: CreateAbsoluteUrl('ChangeBlockFunction'),
+            type: "GET",
+            data: { ID: _ID, CustomerID: _customerId },
+            dataType: 'html',
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            },
+            success: function (data) {
+                _tableAdditionFunction.destroy();
+                $('#list-item-additional-functions').html(data);
+                _tableAdditionFunction = $('#datatable-responsive-list-additional-functions').DataTable($.extend(true, {}, _settingsOptionTableAdditionFunction));
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(jqXHR.statusText);
+            }
+        });
+    }
+
+    function ChangeStatusFunction(_type, index, _ID, _customerId) {
+        $.ajax({
+            url: CreateAbsoluteUrl('ChangeStatusFunction'),
+            type: "GET",
+            data: { ID: _ID, CustomerID: _customerId },
+            dataType: 'html',
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            },
+            success: function (data) {
+                _tableAdditionFunction.destroy();
+                $('#list-item-additional-functions').html(data);
+                _tableAdditionFunction = $('#datatable-responsive-list-additional-functions').DataTable($.extend(true, {}, _settingsOptionTableAdditionFunction));
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(jqXHR.statusText);
+            }
+        });
+    }
+
+</script>
+

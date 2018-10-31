@@ -1,0 +1,61 @@
+﻿@model NSCSC.Shared.Models.SandBox.Inventory.Product.ProductDetailModels
+@using NSCSC.Shared
+
+@if (Model != null && Model.ListComposite != null && Model.ListComposite.Count > 0)
+{
+    for (int i = 0; i < Model.ListComposite.Count; i++)
+    {
+        var item = Model.ListComposite[i];
+        <tr class="ItemComposite Item_@item.OffSet" data-id="@item.ProductID" data-name="@item.ProductName" data-status="@item.Status"
+            data-quantity="@item.Quantity" data-sequence="@item.Sequence" data-offset="@item.OffSet" data-producttype="@item.ProductType"
+            data-additiontype="@item.AdditionType" data-categoryname="@item.CategoryName" data-typename="@item.TypeName" data-isunlimited="@item.IsUnlimited">
+            <td>
+                @item.ProductName
+                @Html.Hidden(string.Format("ListComposite[{0}].OffSet", item.OffSet), item.OffSet)
+                @Html.Hidden(string.Format("ListComposite[{0}].ProductID", item.OffSet), item.ProductID)
+                @Html.Hidden(string.Format("ListComposite[{0}].ProductName", item.OffSet), item.ProductName)
+                @Html.Hidden(string.Format("ListComposite[{0}].ProductType", item.OffSet), item.ProductType)
+                @Html.Hidden(string.Format("ListComposite[{0}].AdditionType", item.OffSet), item.AdditionType)
+                @Html.Hidden(string.Format("ListComposite[{0}].CategoryName", item.OffSet), item.CategoryName)
+                @Html.Hidden(string.Format("ListComposite[{0}].TypeName", item.OffSet), item.TypeName)
+
+                @Html.Hidden(string.Format("ListComposite[{0}].Quantity", item.OffSet), item.Quantity)
+                @Html.Hidden(string.Format("ListComposite[{0}].Sequence", item.OffSet), item.Sequence)
+                @Html.Hidden(string.Format("ListComposite[{0}].IsUnlimited", item.OffSet), item.IsUnlimited)
+
+                @Html.Hidden(string.Format("ListComposite[{0}].Status", item.OffSet), item.Status, new { @class = "ItemStatus" })
+            </td>
+            @*<td>
+                @item.CategoryName
+            </td>*@
+            <td>
+                @item.TypeName
+            </td>
+            <td class="text-center">
+                @if (item.IsUnlimited)
+                {
+                    @Html.Raw("Unlimited")
+                }
+                else
+                {
+                    @Html.Raw(item.Quantity)
+                }
+            
+            </td>
+            <td class="text-center">@item.Sequence</td>
+            <td class="text-center">
+                <a href="javascript:void(0)" class="btn btn-info btn-xs edit details"
+                   @*onclick="FilterData('@item.ProductType')"*@ data-whatever="@item.ProductType"
+                   onclick="ShowModalSelect('#modal-choose-items', '#tbl-choose-items', '@item.ProductType', '@item.AdditionType');"
+                   >
+                    <i class="fa fa-pencil"></i>
+                </a>
+                <a href="javascript:void(0)" class="btn btn-danger btn-xs delete details" onclick="DeleteItem(this); return false;">
+                <i class="fa fa-trash-o"></i></a>
+            </td>
+        </tr>
+
+    }
+}
+<script>
+</script>

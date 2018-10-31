@@ -1,0 +1,214 @@
+﻿@model NSCSC.Shared.Models.ClientSite.MyStoreAndBusiness.StoreDetailModels
+@using NSCSC.Shared.Helpers
+@using NSCSC.Shared
+@{
+    ViewBag.Title = "Store Applied Products";
+    Html.EnableUnobtrusiveJavaScript(true);
+    var _ID = Model.ID;
+}
+
+@using (@Html.BeginForm("AssignProductToStore", "MyStoreAndBusiness", FormMethod.Post,
+    new
+    {
+        @class = "form-horizontal",
+        @enctype = "multipart/form-data",
+        @id = "form-store-applied-products",
+    }))
+{
+    @Html.HiddenFor(model => model.ApplyProductCount)
+    @Html.HiddenFor(model => model.ID, new {  @id="_hidStoreId" })
+    @Html.HiddenFor(model => model.IsActive)
+
+    <div class="row">
+        <div class="col-md-3 col-sm-3 col-xs-12">
+            <div class="col-md-12 col-sm-12 col-xs-12 reset-padding-left-right width-height-200 border-radius-img" style="overflow: hidden;">
+                <!--Image Placeholder-->
+                <div class="col-md-12 col-sm-12 col-xs-12 reset-padding-left-right">
+                    <img id="upload-preview-store-applied-products" src="@Model.ImageURL" class="width-height-200" />
+                </div>
+                <!--element choose change-->
+                @*<div class="col-md-12 col-sm-12 col-xs-12 ele-choose-change">
+                        <div class="upload-i-wrapper ele-choose-change-input">
+                            @Html.TextBoxFor(model => model.PictureUpload, new
+                               {
+                                   @id = "PictureUploadStoreEdit",
+                                   @type = "file",
+                                   @onchange = "PreviewImage(this,\"upload-preview-store-applied-products\")",
+                                   @accept = "*.jpg"
+                               })
+                            <a href="javascript:void(0);" class="text-white">Change</a>
+                        </div>
+                    </div>*@
+            </div>
+
+            <!--msg image error-->
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                @Html.ValidationMessageFor(model => model.PictureUpload, null, new { @class = "label label-danger" })
+            </div>
+            <!--Active Store-->
+            <div class="col-md-12 col-sm-12 col-xs-12 text-center" style="margin-top:10px;">
+                @Html.CheckBoxFor(model => model.IsActive, new { @id = "chkActiveAppliedProducts", @class = "js-switch-store-applied-products", @disabled = "disabled" }) Active
+            </div>
+        </div>
+
+        <div class="col-md-9 col-sm-9 col-xs-12">
+            @*Applied on*@
+            <div class="form-group">
+                <div class="col-md-2 col-sm-2 col-xs-12 height-30 reset-padding-left-right">
+                    Applied on
+                </div>
+                <div class="col-md-5 col-sm-10 col-xs-12">
+                    <button type="button" class="btn btn-view-detail" id="btnPopupStoreAppliedProducts">@Model.ApplyProductCount</button>
+                </div>
+            </div>
+
+            @*list Product*@
+            <div class="form-group">
+                <div class="col-md-12 col-sm-12 col-xs-12 reset-padding-left-right" style="border:1px solid #f2f2f2;">
+                    <div class="table-responsive" style="overflow-x:hidden;">
+                        <div class="x_panel">
+                            <div class="x_title text-left" style="padding-left:20px;">
+                                <h2></h2>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+                                <table id="datatable-responsive-list-product"
+                                       class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action text-left"
+                                       role="grid" aria-describedby="example_info" cellspacing="0" style="width:100%;">
+                                    <thead style="background-color:#D9E0E8; color:#000;">
+                                        <tr>
+                                            <th class="text-center">@*<input type="checkbox" class="flat-product" />*@</th>
+                                            <th class="text-center">Product</th>
+                                            <th class="text-center">Activated Date</th>
+                                            <th class="text-center">Expired Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (@Model.ListProductApply != null && @Model.ListProductApply.Count > 0)
+                                        {
+                                            for (int i = 0; i < @Model.ListProductApply.Count; i++)
+                                            {
+                                                var @item = @Model.ListProductApply[i];
+                                                <tr class="">
+                                                    <td class="text-center">
+                                                        @Html.CheckBox(string.Format("ListProductApply[{0}].IsApply", item.OffSet), item.IsApply,
+                                                       new { @class="flat-product", @id = "chkProducts_" + item.OffSet })
+
+                                                        @Html.Hidden(string.Format("ListProductApply[{0}].OffSet", item.OffSet), item.OffSet, new { @id = "hidOffset" + item.OffSet })
+                                                        @Html.Hidden(string.Format("ListProductApply[{0}].AssetID", item.OffSet), item.AssetID, new { @id = "hidAssetID" + item.OffSet })
+                                                        @Html.Hidden(string.Format("ListProductApply[{0}].ProductName", item.OffSet), item.ProductName)
+                                                        @Html.Hidden(string.Format("ListProductApply[{0}].ActiveTime", item.OffSet), item.ActiveTime)
+                                                        @Html.Hidden(string.Format("ListProductApply[{0}].ExpiredTime", item.OffSet), item.ExpiredTime)
+                                                        @Html.Hidden(string.Format("ListProductApply[{0}].sActiveTime", item.OffSet), item.sActiveTime)
+                                                        @Html.Hidden(string.Format("ListProductApply[{0}].sExpiredTime", item.OffSet), item.sExpiredTime)
+
+                                                    </td>
+                                                    <td style="font-size:12px;">@item.ProductName</td>
+                                                    <td class="text-center">@item.sActiveTime</td>
+                                                    <td class="text-center">@item.sExpiredTime</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @*Action*@
+            <div class="form-group">
+                <div class="col-md-2 col-sm-2 col-xs-12 height-30 reset-padding-left-right">
+                </div>
+                <div class="col-md-5 col-sm-10 col-xs-12">
+                    <ul class="header-buttons list-inline">
+                        <li>
+                            <a href="javascript:void(0);" class="btn btn-cyan" style="width: 150px;" id="btn-actives-applied-products"
+                               onclick="SubmitForm('#form-store-applied-products')">Done</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" class="btn text-cyan bg-white" data-dismiss="modal">
+                                Cancel
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#datatable-responsive-list-product').DataTable({
+            "columnDefs": [
+                { "orderable": false, "targets": 0 },
+                { "width": "1%", "targets": [0] },
+            ],
+            "order": [
+                [1, "asc"],
+            ],
+            "searching": true,
+            "info": false,
+            "lengthChange": false,
+            "paging": false,
+            "displayLength": 25,
+            "sPaginationType": "numbers",//hide Pre|Next on row footer
+            "ordering": true, //hide Order on row header
+        });
+
+        init_ICheckProduct();
+        init_SwitcheryAppliedProducts();
+    });
+
+    // iCheck
+    function init_ICheckProduct() {
+        if ($("input.flat-product")[0]) {
+            $(document).ready(function () {
+                $('input.flat-product').iCheck({
+                    checkboxClass: 'icheckbox_flat-green',
+                    radioClass: 'iradio_flat-green'
+                });
+            });
+        }
+    };
+
+    // Switchery
+    function init_SwitcheryAppliedProducts() {
+        if ($(".js-switch-store-applied-products")[0]) {
+            var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch-store-applied-products'));
+            elems.forEach(function (html) {
+                var switchery = new Switchery(html, {
+                    color: '#26B99A'
+                });
+            });
+        }
+    };
+
+    $("#form-store-applied-products").submit(function (e) {
+        var isSubmit = $(this).valid();
+        if (isSubmit) {
+            $.ajax({
+                url: CreateAbsoluteUrl("AssignProductToStore"),
+                type: "POST",
+                data: new FormData(this),
+                processData: false,
+                contentType: false,
+                success: function () {
+                    $("#modal-store-info-list-product").modal('hide');
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                },
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+            });
+        }
+        e.preventDefault();
+    });
+
+</script>

@@ -1,0 +1,47 @@
+﻿@model NSCSC.Shared.Models.ClientSite.MyProfile.CustomerDetailModels
+
+<div class="row form-horizontal form-label-left" style="margin-top:10px;">
+    @*Header*@
+    <div class="row" id="head-personal-information" style="padding-bottom:30px;">
+        <span class="text-uppercase font-weight" style="font-size:20px;">My Profile</span>
+    </div>
+
+    @*Information*@
+    <div class="row box-my-profile" id="personal-information">
+        <div class="col-md-12 col-sm-12 col-xs-12 reset-padding-left-right" style="margin-bottom:20px">
+            <div class="x_title" style="font-weight:bolder">
+                Personal Information &nbsp;
+                <small>
+                    <a href="javascript:void(0)" onclick="ShowPesonalEdit('@Url.Action("Edit", "MyProfile")')" class="">Edit</a>
+                </small>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 col-sm-3 col-xs-12">
+                <img id="imagepreview" src="@Model.CustomerDetail.ImageURL" class="border-radius-img  width-height-200" />
+            </div>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+                <div class="customer-infor">
+                    <p class="" style="font-weight:bold; font-size:18px;">@Model.CustomerDetail.Name</p>
+                    <p>Email: @Model.CustomerDetail.Email</p>
+                    <p>Phone: @Model.CustomerDetail.Phone</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*Purchase*@
+    <div class="row box-my-profile" id="purchase-history" style="margin-top:8px; padding:0;">
+        <div class="" style="padding-left:0px; padding-right:0px;">
+            @if (Model.CustomerDetail.IsReseller)
+            {
+                @Html.Partial("_HistoryReceiptsReseller", Model)
+            }
+            else
+            {
+                @Html.Partial("_HistoryReceipts", Model)
+            }
+        </div>
+    </div>
+
+</div>

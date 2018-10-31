@@ -1,0 +1,129 @@
+﻿
+@model NSCSC.Shared.Models.Sandbox.Inventory.Category.CategoriesModels
+@using NSCSC.Shared
+
+<div role="main" class="right_col">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left" style="padding: 10px 0px;">
+                @Html.Partial("~/Views/Shared/_breadcrumb.cshtml",
+                new Dictionary<string, string> { { "A", "Sandbox" }, { "B", "Inventory" }, { "C", "Product Categories - View Detail" } })
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12 x_panel">
+                    <div class="x_content">
+                        <div class="row text-right">
+                            <ul class="header-buttons pull-right list-inline">
+                                <li><a href="javascript:void(0)" onclick="CloseDetail(); return false;" class="btn btn-danger" id="btn-delete"><i class="fa fa-times"></i>&nbsp;Close</a></li>
+                            </ul>
+                        </div>
+                        <div class="row form-horizontal form-label-left">
+                            <div class="row form-horizontal form-label-left" style="margin-bottom:15px;">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                         @if (!string.IsNullOrEmpty(Model.ImageURL))
+                                         {
+                                            <img id="upload-preview" src="@Model.ImageURL" height="100" width="100" class="img-circle" />
+                                            }
+                                            else
+                                            {
+                                                <img id="upload-preview" src="@Commons.Image100_100" height="100" width="100" class="img-circle" />
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2 col-sm-2 col-xs-12">Name</label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            @Model.Name
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2 col-sm-2 col-xs-12">Active</label>
+                                        <div class="col-md-2 col-sm-2 col-xs-12">
+                                            @if (Model.IsActive == true)
+                                            {
+                                                @Html.Raw("Yes")
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw("No")
+                                            }
+                                        </div>
+                                        <label class="control-label col-md-2 col-sm-2 col-xs-12">Sequence</label>
+                                        <div class="col-md-2 col-sm-2 col-xs-12">
+                                            @Model.Sequence
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2 col-sm-2 col-xs-12">Category Code</label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            @Model.Code
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2 col-sm-2 col-xs-12">Type</label>
+                                        <div class="col-md-2 col-sm-2 col-xs-12">
+                                            @switch (Model.Type)
+                                            {
+                                                case (int)Commons.EType.NuPOS:
+                                                    @Commons.FunctionProductTypeNuPOS;
+                                                    break;
+                                                case (int)Commons.EType.NuKiosk:
+                                                    @Commons.FunctionProductTypeNuKiosk;
+                                                    break;
+                                                case (int)Commons.EType.NuDisplay:
+                                                    @Commons.FunctionProductTypeNuDisplay;
+                                                    break;
+                                                case (int)Commons.EType.POZZ:
+                                                    @Commons.FunctionProductTypePOZZ;
+                                                    break;
+                                                case (int)Commons.EType.POZZ_Kiosk:
+                                                    @Commons.FunctionProductTypePOZZKiosk;
+                                                    break;
+                                                case (int)Commons.EType.POZZ_Display:
+                                                    @Commons.FunctionProductTypePOZZDisplay;
+                                                    break;
+                                                case (int)Commons.EType.POinS_Link_App:
+                                                    @Commons.FunctionProductTypePOinSLinkApp;
+                                                    break;
+                                            }
+                                        </div>
+                                        <label class="control-label col-md-2 col-sm-2 col-xs-12">Free Trial</label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            @if (Model.IsFreeTrial == true)
+                                            {
+                                                @Html.Raw("Yes")
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw("No")
+                                            }
+                                        </div>
+                                    </div>
+                                </div>                                                     
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Short Description</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @Model.ShortDescription
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Description</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @Html.Raw(Model.Description)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

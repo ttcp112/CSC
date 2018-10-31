@@ -1,0 +1,110 @@
+﻿@using NSCSC.Shared.Models;
+@model NSCSC.Shared.Models.Settings.Permissions.RoleDetailDTO
+
+<div role="main" class="right_col">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left" style="padding: 10px 0px;">
+                @Html.Partial("~/Views/Shared/_breadcrumb.cshtml",
+                new Dictionary<string, string> { { "A", "Settings" }, { "B", "Permissions" }, { "C", "Permissions - View Detail" } })
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12 x_panel">
+                    <div class="x_content">
+                        <div class="row text-right">
+                            <ul class="header-buttons pull-right list-inline">
+                                <li><a href="javascript:void(0)" onclick="CloseDetail(); return false;" class="btn btn-danger" id="btn-delete"><i class="fa fa-times"></i>&nbsp;Close</a></li>
+                            </ul>
+                        </div>
+                        <div class="row form-horizontal form-label-left">
+                            <div class="row form-horizontal form-label-left" style="margin-bottom:15px;">
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Role Name </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @Model.Name
+                                    </div>
+                                </div>
+                                @*<div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Description </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @Model.Description
+                                    </div>
+                                </div>*@
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Active </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @string.Format("{0}", Model.IsActive ? "Active" : "Inactive")
+                                    </div>
+                                </div>
+
+
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Level </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @Model.Level
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Role Detail </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @helper ShowPermissions(List<PermissionDTO> permissions, string type, int level = 1, string parent = "")
+                                        {
+
+for (int i = 0; i < permissions.Count; i++)
+{
+
+    var item = permissions[i];
+    //if (/*item.IsAction == true &&*/ item.IsActive == true/* && item.IsView == true*/)
+    //{
+                        <tr class="role-level-@level @level-@parent">
+                            <td>
+                                @item.Name
+                                @Html.Hidden(type + "[" + i + "]" + ".Id", item.ID)
+                                @Html.Hidden(type + "[" + i + "]" + ".ModuleID", item.ModuleID)
+                                @Html.Hidden(type + "[" + i + "]" + ".ModuleParentID", item.ModuleParentID)
+                            </td>
+                            <td class="table-actions">@Html.CheckBox(type + "[" + i + "]" + ".IsView", item.IsView)</td>
+                            <td class="table-actions">
+                               
+                             @Html.CheckBox(type + "[" + i + "]" + ".IsAction", item.IsAction)
+                            </td>
+                        </tr>
+
+        if (item.ListChild != null && item.ListChild.Count != 0)
+        {
+                        @ShowPermissions(item.ListChild, type + "[" + i + "].ListChild", level + 1, item.Name)
+    }
+    //}
+}
+}
+                                        <table class="table table-bordered role-table">
+                                            <tr style="background-color:#34495e; color:#fff;">
+                                                <th>Module Name</th>
+                                                <th class="table-actions">View</th>
+                                                <th class="table-actions">Action</th>
+                                            </tr>
+                                            <tr></tr>
+                                            @ShowPermissions(Model.ListPermission, "ListPermission")
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(':checkbox').attr('disabled', true);
+    })    
+</script>

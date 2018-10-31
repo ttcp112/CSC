@@ -1,0 +1,155 @@
+﻿@{
+    Layout = null;
+}
+@model NSCSC.Shared.Models.CRM.Customers.StoreDetailModels
+@using NSCSC.Shared
+@{
+    ViewBag.Title = "Customers - Add New Store";
+}
+<div role="main" class="right_col">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left" style="padding:10px 0">
+                @Html.Partial("~/Views/Shared/_breadcrumb.cshtml",
+                new Dictionary<string, string> { { "A", "CRM" }, { "B", "Customer" }, { "C", "Customer - Add New Store" } })
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12 x_panel">
+                    <div class="x_content">
+                        <div class="row text-right">
+                            <ul class="header-buttons pull-right list-inline">
+                                <li><a href="javascript:void(0)" class="btn btn-danger" id="btn-delete" onclick="CloseDetail(); return false;"><i class="fa fa-times"></i>&nbsp;Cancel</a></li>
+                                <li><a href="javascript:void(0);" class="btn btn-success" id="btn-edit-save" onclick="SubmitForm('#form-create-store')"><i class="fa fa-save"></i>&nbsp;Save</a></li>
+                            </ul>
+                        </div>
+                        <div class="box-body" style="display: block;">
+                            @using (@Html.BeginForm("Edit", "SBInventoryProducts", FormMethod.Post, new { @id = "form-create-store", @class = "form-horizontal" }))
+                            {
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Applied on</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @Html.DropDownListFor(model => model.StoreType,
+                                            new SelectList(Model.StoreTypes, "Value", "Text", Model.StoreType), null,
+                                            new
+                                            {
+                                                @class = "form-control select2_multiple",
+                                                @id = "StoreTypedll",
+                                                @style = "width : 100%;",
+                                            })
+                                        @Html.ValidationMessageFor(model => model.StoreType, null, new { @class = "label label-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                </div>
+
+                                <!--Image-->
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Image</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @if (!string.IsNullOrEmpty(Model.ImageURL))
+                                        {
+                                            <img id="upload-preview" src="@Model.ImageURL" height="100" width="120" />
+                                        }
+                                        else
+                                        {
+                                            <img id="upload-preview" src="@Commons.Image100_100" height="100" width="120" />
+                                        }
+                                        &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <button class="btn btn-default" type="button" onclick="showPictureUpload();" style="margin-top:-6%">Add/Edit</button>
+                                        @Html.TextBoxFor(model => model.PictureUpload, new { @type = "file", @onchange = "PreviewImage(this,\"upload-preview\")", @accept = "*.jpg", @class = "hidden", @id = "urlImage" })
+
+                                        @Html.ValidationMessageFor(model => model.PictureUpload, null, new { @class = "label label-danger" })
+                                    </div>
+                                </div>
+
+                                <!--Status-->
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Status</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @Html.CheckBoxFor(model => model.IsActive, new { @class="flat"}) Active
+                                        @Html.ValidationMessageFor(model => model.IsActive, null, new { @class="label label-danger"})
+                                    </div>
+                                </div>
+
+                                <!--Store Name and country-->
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Store Name</label>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        @Html.TextBoxFor(model =>model.Name, new { @class="form-control", @id="txtName"})
+                                        @Html.ValidationMessageFor(model=>model.Name, null, new { @class="label label-danger"})
+                                    </div>
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Country</label>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        @Html.TextBoxFor(model => model.Country, new { @class="form-control", @id="txtCountry"})
+                                        @Html.ValidationMessageFor(model =>model.Country, null, new { @class="label label-danger"})
+                                    </div>
+                                </div>
+
+                                <!--Email and City-->
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Email *</label>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        @Html.TextBoxFor(model => model.Email, new { @class="form-control", @id="txtEmail"})
+                                        @Html.ValidationMessageFor(model => model.Email, null, new { @class="label label-danger"})
+                                    </div>
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">City</label>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        @Html.TextBoxFor(model => model.City, new { @class="form-control", @id="txtCity"})
+                                        @Html.ValidationMessageFor(model => model.City,null, new { @class="label label-danger"})
+                                    </div>
+                                </div>
+
+                                <!--Phone and ZipCode-->
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Phone *</label>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        @Html.TextBoxFor(model => model.Phone, new { @class="form-control", @id="txtPhone"})
+                                        @Html.ValidationMessageFor(model => model.Phone, null, new { @class="label label-danger"})
+                                    </div>
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">ZipCode</label>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        @Html.TextBoxFor(model => model.ZipCode, new { @class="form-control", @id="txtZipCode"})
+                                        @Html.ValidationMessageFor(model =>model.ZipCode, null, new { @class="label label-danger"})
+                                    </div>
+                                </div>
+
+                                <!--Industry and Street-->
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Industry *</label>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        @Html.TextBoxFor(model => model.Industry, new { @class="form-control", @id="txtIndustry"})
+                                        @Html.ValidationMessageFor(model => model.Industry, null, new { @class="label label-danger"})
+                                    </div>
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Street</label>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        @Html.TextBoxFor(model=>model.Street , new { @class="form-control", @id="txtStreet"})
+                                        @Html.ValidationMessageFor(model => model.Street, null, new { @class="label label-danger"})
+                                    </div>
+
+                                </div>
+
+                                <!--GST Reg No and TimeZone-->
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">GST Reg No</label>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        @Html.TextBoxFor(model => model.GSTRegNo, new { @class="form-control", @id="txtGSTRegNo"})
+                                        @Html.ValidationMessageFor(model => model.GSTRegNo, null, new { @class="label label-danger"})
+                                    </div>
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Timezone</label>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        @Html.TextBoxFor(model => model.TimeZone, new { @class="form-control" , @id="txtTimezone"})
+                                        @Html.ValidationMessageFor(model => model.TimeZone, null, new { @class="label label-danger"})
+                                    </div>
+                                </div>
+
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

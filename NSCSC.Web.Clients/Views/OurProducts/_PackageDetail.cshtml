@@ -1,0 +1,697 @@
+﻿@model NSCSC.Shared.Models.OurProducts.Package.PackageDetailViewModels
+@using NSCSC.Shared
+@{
+    var PackageName = "";
+    var CategoryName = "";
+    var CategoryID = "";
+    if (!string.IsNullOrEmpty(Model.PackageDetail.Name))
+    {
+        PackageName = Model.PackageDetail.Name;
+    }
+    if (!string.IsNullOrEmpty(Model.PackageDetail.ListProductChild.FirstOrDefault().ListCategory.FirstOrDefault().CategoryName))
+    {
+        CategoryName = Model.PackageDetail.ListProductChild.FirstOrDefault().ListCategory.FirstOrDefault().CategoryName;
+    }
+    if (!string.IsNullOrEmpty(Model.PackageDetail.ListProductChild.FirstOrDefault().ListCategory.FirstOrDefault().CategoryID))
+    {
+        CategoryID = Model.PackageDetail.ListProductChild.FirstOrDefault().ListCategory.FirstOrDefault().CategoryID;
+    }
+    ViewBag.Title = "Package - " + PackageName;
+
+}
+<div class="title_left">
+    @*@Html.Partial("~/Views/Shared/_breadcrumb.cshtml",
+        new Dictionary<string, string> { { "A", "PACKAGES" }, { "B", "HOME/OUR PRODUCTS" }, { "C", "" + Model.PackageDetail.Name.ToUpper() + "" } })*@
+    <div class="container">
+        @*<div class="col-sm-12 col-xs-12 col-md-12" style="margin-top:-25px;float:right">*@
+            @*@if (Model.PackageDetail.ListProductOnPackage.FirstOrDefault().ProductType == 1)
+                {*@
+            @if (Model.PackageDetail.ProductType == 1)
+            {
+                <h3>
+                    @PackageName.ToUpper()
+                    <small class="breadcrum">
+                        <a href="@Url.Action("Index", "Home")">home</a>
+                        @if (Model.PackageDetail != null)
+                        {
+                            <i class='fa fa-caret-right'></i>
+                            <a href="@Url.Action("Index", "OurProducts", new { ProductType = "Products", CategoryID = CategoryID })">@CategoryName.ToLower()</a>
+                            <i class='fa fa-caret-right'></i>
+                            <a href="@Url.Action("Products", "OurProducts", new { CategoryID = CategoryID })">products list</a>
+                            <i class='fa fa-caret-right'></i>
+                            <span>@PackageName.ToLower()</span>
+                        }
+                    </small>
+                </h3>
+            }
+            else if (Model.PackageDetail.ProductType == 4)
+            {
+                <h3>
+                    @PackageName.ToUpper()
+                    <small class="breadcrum">
+                        <a href="@Url.Action("Index", "Home")">home</a>
+                        @if (Model.PackageDetail != null)
+                        {
+                            <i class='fa fa-caret-right'></i>
+                            <a href="@Url.Action("Index", "OurProducts", new { ProductType ="Packages"})">packages</a>
+                            <i class='fa fa-caret-right'></i>
+                            <a href="@Url.Action("Packages", "OurProducts")">packages list</a>
+                            <i class='fa fa-caret-right'></i>
+                            <span>@PackageName.ToLower()</span>
+                        }
+                    </small>
+                </h3>
+            }
+        @*</div>*@
+        <div class="clearfix"></div>
+    </div>
+</div>
+<div class="se-pre-con" style="display: none;"></div>
+<div id="package-detail">
+    @using (@Html.BeginForm("AddToCartOfPackage", "OurProducts", FormMethod.Post, new
+    {
+        @class = "",
+        @id = "form-package",
+        @enctype = "multipart/form-data"
+    }))
+    {
+        @Html.HiddenFor(model => model.PackageDetail.ID)
+        @Html.HiddenFor(model => model.PackageDetail.Name)
+        @Html.HiddenFor(model => model.PackageDetail.ProductType)
+        @Html.HiddenFor(model => model.PackageDetail.AdditionType)
+
+        @Html.HiddenFor(model => model.PackageDetail.NumberOfAccount)
+        @Html.HiddenFor(model => model.PackageDetail.NumOfStore)
+
+        @Html.HiddenFor(model => model.PackageDetail.ImageURL)
+
+        @Html.HiddenFor(model => model.PackageDetail.Period, new { @id = "hidPeriod" })
+        @Html.HiddenFor(model => model.PackageDetail.PeriodType, new { @id = "hidPeriodType" })
+        @Html.HiddenFor(model => model.PackageDetail.Price, new { @id = "hidPrice" })
+
+        @Html.HiddenFor(model => model.PackageDetail.PromotionID)
+        @Html.HiddenFor(model => model.PackageDetail.PromotionName)
+        @Html.HiddenFor(model => model.PackageDetail.PromotionAmount)
+        @Html.HiddenFor(model => model.PackageDetail.IsApplyPromotion)
+
+        @Html.HiddenFor(model => model.PackageDetail.DiscountID)
+        @Html.HiddenFor(model => model.PackageDetail.DiscountName)
+        @Html.HiddenFor(model => model.PackageDetail.DiscountAmount)
+        @Html.HiddenFor(model => model.PackageDetail.DiscountValue)
+        @Html.HiddenFor(model => model.PackageDetail.DiscountType)
+
+        @Html.HiddenFor(model => model.PackageDetail.Description)
+        @Html.HiddenFor(model => model.PackageDetail.ItemGroup)
+        @Html.HiddenFor(model => model.PackageDetail.IsDelete)
+
+        <div class="form-horizontal form-label-left listItemYourCart">
+            @*Product*@
+            <div class="form-group itemProduct">
+                <div class="col-md-2 col-sm-2 col-xs-12">
+                    <div class="form-group text-center imageProduct">
+                        <img id="upload-preview" class="" src="@Model.PackageDetail.ImageURL" height="110" width="150" />
+                    </div>
+                </div>
+                <div class="col-md-10 col-sm-10 col-xs-12">
+                    <div class="form-group infoProduct">
+                        @*Header*@
+                        <div class="col-md-12 col-sm-12 col-xs-12 ">
+                            <div class="col-md-4 col-sm-4 col-xs-4 " style="padding-left:0px;">
+                                <div class="header">
+                                    <label class="fontBold text-danger">@Model.PackageDetail.Name</label>
+                                </div>
+                               
+                                @if (Model.PackageDetail.ListProductOnPackage != null && Model.PackageDetail.ListProductOnPackage.Any())
+                                {
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12 col-xs-12 fontBold" style="padding:10px 0 10px 0;">
+                                            <i class="fa fa-circle" style="font-size:8px;"></i> <span class="text-success">Product(s)</span>&nbsp;&nbsp;
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin:0;">
+                                        <div class="col-md-12 col-sm-12 col-xs-12">
+                                            @for (int k = 0; k < Model.PackageDetail.ListProductOnPackage.Count; k++)
+                                            {
+                                                @Html.HiddenFor(ss => ss.PackageDetail.ListProductOnPackage[k].ProductID)
+                                                @Html.HiddenFor(ss => ss.PackageDetail.ListProductOnPackage[k].ProductType)
+                                                @Html.HiddenFor(ss => ss.PackageDetail.ListProductOnPackage[k].Quantity)
+                                                @Html.HiddenFor(ss => ss.PackageDetail.ListProductOnPackage[k].AdditionType)
+                                                @Html.HiddenFor(ss => ss.PackageDetail.ListProductOnPackage[k].Sequence)
+
+                                                <div class="row pading-top-bottom">
+                                                    @Model.PackageDetail.ListProductOnPackage[k].ProductName
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+
+                                @if (Model.PackageDetail.ListComposite != null && Model.PackageDetail.ListComposite.Any())
+                                {
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12 col-xs-12 fontBold" style="padding:10px 0 10px 0;">
+                                            <i class="fa fa-circle" style="font-size:8px;"></i> <span class="text-success">Composite</span>&nbsp;&nbsp;
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin:0;">
+                                        <div class="col-md-12 col-sm-12 col-xs-12">
+                                            @for (int j = 0; j < Model.PackageDetail.ListComposite.Count; j++)
+                                            {
+                                                @Html.HiddenFor(ss => ss.PackageDetail.ListComposite[j].ProductID)
+                                                @Html.HiddenFor(ss => ss.PackageDetail.ListComposite[j].ProductType)
+                                                @Html.HiddenFor(ss => ss.PackageDetail.ListComposite[j].Quantity)
+                                                @Html.HiddenFor(ss => ss.PackageDetail.ListComposite[j].AdditionType)
+                                                @Html.HiddenFor(ss => ss.PackageDetail.ListComposite[j].Sequence)
+
+                                                <div class="row pading-top-bottom">
+                                                    @Model.PackageDetail.ListComposite[j].Quantity x @Model.PackageDetail.ListComposite[j].ProductName
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <div class="col-md-3 col-sm-3 col-xs-3">
+
+                            </div>
+                            <div class="col-md-5 col-sm-5 col-xs-5 total">
+                                <div class="col-md-6 col-sm-6 col-xs-6">
+                                    Package Price:
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-6 text-right text-bold">
+                                    @Model.PackageDetail.CurrencySymbol<span id="lblPackagePrice">@Model.PackageDetail.TotalPrice.ToString("n2")</span>
+                                </div><br /><br />
+                                <div class="col-md-6 col-sm-6 col-xs-6">
+                                    Addition(s) Price:
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-6 text-right text-bold">
+                                    @Model.PackageDetail.CurrencySymbol<span id="lblAdditionsPrice">0.00</span>
+                                </div><br /><br />
+                                <div class="col-md-6 col-sm-6 col-xs-6 fontUppercase text-bold text-total">
+                                    total
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-6 text-right fontBold text-price">
+                                    @Model.PackageDetail.CurrencySymbol<span id="lblTotalPrice">@Model.PackageDetail.TotalPrice.ToString("n2")</span>
+                                </div>
+                            </div>
+                      </div>
+                        @*Content*@
+                        @*<div class="col-md-12 col-sm-12 col-xs-12 content">
+                            <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12 fontBold" style="padding:10px 0 10px 0;">
+                                        <i class="fa fa-circle" style="font-size:8px;"></i> <span class="text-success">Composite</span>&nbsp;&nbsp;
+                                    </div>
+                                </div>
+                                <div class="row" style="margin:0;">
+                                    <div class="col-md-8 col-sm-8 col-xs-8">
+                                        @foreach (var composite in Model.PackageDetail.ListComposite)
+                                        {
+                                            <div class="row pading-top-bottom">
+                                                @composite.Quantity x @composite.ProductName
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="col-md-2 col-sm-2 col-xs-2">
+                                        <div class="row pading-top-bottom">
+                                            Package Price:
+                                        </div>
+                                        <div class="row pading-top-bottom">
+                                            Addition(s) Price:
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-2 col-xs-2 text-right" style="font-size:20px; color:darkred;">
+                                        <div class="row pading-top-bottom">
+                                            @Model.PackageDetail.CurrencySymbol<span id="lblPackagePrice">@Model.PackageDetail.TotalPrice.ToString("n2")</span>
+                                        </div>
+                                        <div class="row pading-top-bottom">
+                                            @Model.PackageDetail.CurrencySymbol<span id="lblAdditionsPrice">0.00</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            @if (Model.PackageDetail.ListProductOnPackage != null && Model.PackageDetail.ListProductOnPackage.Any())
+                            {
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12 fontBold" style="padding:10px 0 10px 0;">
+                                        <i class="fa fa-circle" style="font-size:8px;"></i> <span class="text-success">Product(s)</span>&nbsp;&nbsp;
+                                    </div>
+                                </div>
+                                <div class="row" style="margin:0;">
+                                    <div class="col-md-8 col-sm-8 col-xs-8">
+                                        @for (int k = 0; k < Model.PackageDetail.ListProductOnPackage.Count; k++)
+                                        {
+                                            @Html.HiddenFor(ss => ss.PackageDetail.ListProductOnPackage[k].ProductID)
+                                            @Html.HiddenFor(ss => ss.PackageDetail.ListProductOnPackage[k].ProductType)
+                                            @Html.HiddenFor(ss => ss.PackageDetail.ListProductOnPackage[k].Quantity)
+                                            @Html.HiddenFor(ss => ss.PackageDetail.ListProductOnPackage[k].AdditionType)
+                                            @Html.HiddenFor(ss => ss.PackageDetail.ListProductOnPackage[k].Sequence)
+
+                                            <div class="row pading-top-bottom">
+                                                @Model.PackageDetail.ListProductOnPackage[k].ProductName
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+
+                            @if (Model.PackageDetail.ListComposite != null && Model.PackageDetail.ListComposite.Any())
+                            {
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12 fontBold" style="padding:10px 0 10px 0;">
+                                        <i class="fa fa-circle" style="font-size:8px;"></i> <span class="text-success">Composite</span>&nbsp;&nbsp;
+                                    </div>
+                                </div>
+                                <div class="row" style="margin:0;">
+                                    <div class="col-md-8 col-sm-8 col-xs-8">
+                                        @for (int j = 0; j < Model.PackageDetail.ListComposite.Count; j++)
+                                        {
+                                            @Html.HiddenFor(ss => ss.PackageDetail.ListComposite[j].ProductID)
+                                            @Html.HiddenFor(ss => ss.PackageDetail.ListComposite[j].ProductType)
+                                            @Html.HiddenFor(ss => ss.PackageDetail.ListComposite[j].Quantity)
+                                            @Html.HiddenFor(ss => ss.PackageDetail.ListComposite[j].AdditionType)
+                                            @Html.HiddenFor(ss => ss.PackageDetail.ListComposite[j].Sequence)
+
+                                            <div class="row pading-top-bottom">
+                                                @Model.PackageDetail.ListComposite[j].Quantity x @Model.PackageDetail.ListComposite[j].ProductName
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                            <div class="row" style="margin:0;">
+                                <div class="col-md-8 col-sm-8 col-xs-8">
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-2">
+                                    <div class="row pading-top-bottom">
+                                        Package Price:
+                                    </div>
+                                    <div class="row pading-top-bottom">
+                                        Addition(s) Price:
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-2 text-right" style="font-size:20px; color:darkred;">
+                                    <div class="row pading-top-bottom">
+                                        @Model.PackageDetail.CurrencySymbol<span id="lblPackagePrice">@Model.PackageDetail.TotalPrice.ToString("n2")</span>
+                                    </div>
+                                    <div class="row pading-top-bottom">
+                                        @Model.PackageDetail.CurrencySymbol<span id="lblAdditionsPrice">0.00</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--end new-->
+                            <div class="row pading-top-bottom" style="font-size:30px; color:darkred;">
+                                <div class="col-md-offset-7 col-md-2 col-sm-2 col-xs-2 fontUppercase">
+                                    total
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-3 text-right fontBold">
+                                    @Model.PackageDetail.CurrencySymbol<span id="lblTotalPrice">@Model.PackageDetail.TotalPrice.ToString("n2")</span>
+                                </div>
+                            </div>
+                        </div>*@
+                    </div>
+                </div>
+            </div>
+
+            @*Period Time*@
+            <div class="form-group itemProduct pading-top-bottom">
+                <div class="row infoProduct" style="padding-bottom:10px;">
+                    <div class="col-md-12 col-sm-12 col-xs-12 pading-top-bottom" style="font-size:15px;">
+                        <div class="col-md-12 col-sm-12 col-xs-2">
+                            Please select the period for this item
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12" style="padding-top:10px; padding-bottom:10px;">
+                        <div class="col-md-8 col-sm-8 col-xs-8 fontBold text-left" style="padding-left:0px;">
+                            Period time
+                            &nbsp;&nbsp;
+
+                            @if (Model.PackageDetail.ListPrice.Where(x => !x.IsExtend).ToList().Count() > 1)
+                            {
+                                <a href="javascript:void(0);" class="btn btn-default" id="btn-period-time" data-backdrop="static"
+                                   data-toggle="modal" data-target="#bs-modal-pricing-list">
+                                    <span id="lblPeriodTime">@Model.PackageDetail.PeriodTime</span> &nbsp;&nbsp; <i class="fa fa-angle-down"></i>
+                                </a>
+                            }
+                            else
+                            {
+                                <button disabled class="btn btn-default">
+                                    <span id="lblPeriodTime">@Model.PackageDetail.PeriodTime</span> &nbsp;&nbsp; @*<i class="fa fa-angle-down"></i>*@
+                                </button>
+                            }
+                        </div>
+                        @*<div class="col-md-2 col-sm-2 col-xs-2  text-right">
+                            Price:
+                        </div>
+                        <div class="col-md-2 col-sm-2 col-xs-2 text-right">
+                            @Model.PackageDetail.CurrencySymbol<span id="lblPeriodTimePrice">@Model.PackageDetail.Price.ToString("n2")</span>
+                        </div>*@
+                    </div>
+                </div>
+            </div>
+
+            @*Addition*@
+            <div class="form-group itemProduct">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="row infoProduct" style="padding-bottom:10px;">
+                        <div class="col-md-12 col-sm-12 col-xs-12 pading-top-bottom" style="font-size:15px;">
+                            <div class="col-md-12 col-sm-12 col-xs-2 fontBold" style="padding-left:0px;">
+                                Additions
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12 space-padding-left">
+                            <div class="col-md-8 col-sm-8 col-xs-8 space-padding-left">
+                                @*Do you want to buy additions for this item?
+                                &nbsp;&nbsp;*@
+                                <a href="javascript:void(0);" class="btn btn-success btn-xs fontUppercase" id="btn-buy-addition" onclick="buyingAdditionsPackage(true);">
+                                    buy additions
+                                </a>
+                            </div>
+                            @*<div class="col-md-2 col-sm-2 col-xs-2  text-right fontBold">
+                                    Additions Price:
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-2 text-right fontBold" style="font-size:20px; color:darkred;">
+                                    @Model.PackageDetail.CurrencySymbol<span id="lblTotalAdditionPrice-main">0.00</span>
+                                </div>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <table id="datatable-responsive-list-addition-main"
+                           class="table table-striped dt-responsive nowrap table table-striped jambo_table bulk_action"
+                           cellspacing="0" style="width:100%;">
+                        <thead style="background-color:#f9f9f9;">
+                            <tr>
+                                <th>Type</th>
+                                <th>Item Name</th>
+                                <th>Quantity</th>
+                                <th>Applied On</th>
+                                <th>Period</th>
+                                <th>Price</th>
+                                <th class="text-center">Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.ListAdditionBuy != null && Model.ListAdditionBuy.Any())
+                            {
+                                foreach (var itemAddition in Model.ListAdditionBuy)
+                                {
+                                    @Html.Partial("_ItemAdditionPackage", itemAddition)
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            @*Cancel | Add to Cart*@
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12 text-right">
+                    @*<a href="@Url.Action("Packages")" class="btn btn-default fontUppercase">cancel</a>*@
+                    <a href="javascript:void(0)" class="btn btn-default fontUppercase" onclick="history.back()">cancel</a>
+                    @*<a href="javascript:void(0)" class="btn btn-primary fontUppercase" data-toggle="modal"
+                       data-backdrop="static" data-target="#bs-modal-on-quantity">Add to Cart</a>*@
+                    <a class="btn btn-primary fontUppercase" onclick="SubmitForm('#form-package')">Add to Cart</a>
+                </div>
+            </div>
+        </div>
+
+        <!--modal Pricing List-->
+        <div class="modal fade" id="bs-modal-pricing-list" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color:#f2f2f2;">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        <h4 class="modal-title fontUppercase text-left">@Model.PackageDetail.Name | <span style="color:darkred;">Pricing List</span></h4>
+                    </div>
+                    <div class="modal-body" style="padding:0px;">
+                        <table id="tbl-pricing-list" class="table-format-client">
+                            <thead>
+                                <tr>
+                                    <td class="" style="width:70%;"><span class="fontBold fontUppercase">period</span></td>
+                                    <td class="text-right fontBold"><span class="fontBold fontUppercase">price</span></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.PackageDetail.ListPrice != null && Model.PackageDetail.ListPrice.Any())
+                                {
+                                    //foreach (var item in Model.PackageDetail.ListPrice.Where(w => !w.IsExtend).OrderBy(o => o.PeriodType).ThenBy(o => o.Period).ToList())
+                                    foreach (var item in Model.PackageDetail.ListPrice.Where(w => !w.IsExtend).OrderBy(o => o.PeriodType).ThenBy(o => o.Period).ThenBy(o => o.Price).ToList())
+                                    {
+                                        @*Period Time != One Time*@
+                                string itmName = "";
+                                if (item.PeriodType != (byte)Commons.EPeriodType.OneTime)
+                                {
+                                    itmName = item.Period + " " + item.NamePeriodType;
+                                }
+                                else
+                                {
+                                    itmName = item.NamePeriodType;
+                                }
+                                <tr data-name="@itmName" data-price="@item.Price.ToString("n2")" data-period="@item.Period" data-periodtype="@item.PeriodType">
+                                    <td>
+                                        <input type="radio" class="flat" value="@item.Price" name="itemPeriodTime" />
+                                        &nbsp;
+                                        @itmName
+                                    </td>
+                                    <td class="text-right">@Model.PackageDetail.CurrencySymbol@item.Price.ToString("n2")</td>
+                                </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Confirmation-->
+        <div class="modal fade" id="bs-modal-on-quantity" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title fontUppercase">Confirmation</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="control-label">Choose the quantity for the product/package that you want to buy</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label text-danger">
+                                *Please note that all composite and additions of the product/package
+                                will also be multipled by the quantity
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="txt-quantity" class="control-label">Quantity:</label>
+                            @Html.TextBoxFor(model => model.PackageDetail.Quantity, new { @class = "form-control", @id = "txt-quantity", })
+                        </div>
+                        <div class="form-group text-right">
+                            <span class="label label-danger" id="lblMsg"></span>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="border:none;">
+                        <a class="btn btn-success" data-dismiss="modal">Close</a>
+                        <a class="btn btn-primary" onclick="SubmitForm('#form-package')">Confirm</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+@*Buying Additions*@
+<div id="package-buying-additions" style="display:none;">
+    @Html.Partial("_ModalBuyingAdditionsPackage")
+</div>
+
+<script type="text/javascript">
+
+    var displayLengthMain = 200;
+    var _tableAdditionMain = null;
+    var _settingsOptionTableAdditionMain = {
+        "columnDefs": [
+               { "orderable": false, "targets": [6] },
+               { "width": "12%", "targets": [] },
+               { "width": "5%", "targets": [2, 3, 4, 5, 6] },
+        ],
+        "order": [
+            [0, 'asc'],
+            [1, 'asc']
+        ],
+        "autoWidth": false,
+        "displayLength": displayLengthMain,
+        "bInfo": false,
+        "searching": false,
+        "lengthChange": false,
+        "paging": false,
+
+        "drawCallback": function () {
+            var api = this.api();
+            updateTotalAdditionsPrice('#datatable-responsive-list-addition-main', '#lblTotalAdditionPrice-main');
+            //$('#lblAdditionsPrice').html(parseFloat($('#lblTotalAdditionPrice-main').html()).toFixed(2));
+            $('#lblAdditionsPrice').html($('#lblTotalAdditionPrice-main').html());
+            updateTotalPrice();
+        },
+    };
+    var countItem = 0;
+    var curIndexAddition = 0;
+    $(document).ready(function (e) {
+        init_ICheck();
+        countItem = document.getElementsByClassName('item-adddition-by-package').length;
+        hideTable();
+        _tableAdditionMain = $('#datatable-responsive-list-addition-main').DataTable($.extend(true, {}, _settingsOptionTableAdditionMain));
+
+        // Set Period time default
+        $('#tbl-pricing-list tr[data-name="@Model.PackageDetail.PeriodTime"]').find('input[type="radio"]').prop('checked', true);
+
+        curIndexAddition = $('#datatable-responsive-list-addition-main tr.group-itm-addition').length;
+
+        /*===============*/
+        //$("#bs-modal-on-quantity").on('show.bs.modal', function (event) {
+        //    $('#txt-quantity').val(1);
+        //    $('#lblMsg').html('');
+        //});
+
+        // If it has 1 period => disabled Modal Pricing List
+        if( @Model.PackageDetail.ListPrice.Count() == 1 ){
+            $("#btn-period-time").prop('disabled', true);
+            $("#btn-period-time").attr('disabled', 'disabled');
+        }
+
+       
+    });
+    function hideTable() {
+        if (countItem == 0)
+            $('#datatable-responsive-list-addition-main').hide();
+        else
+            $('#datatable-responsive-list-addition-main').show();
+    }
+    /* ICHECK */
+    function init_ICheck() {
+        //if ($("input.flat")[0]) {
+        //    $(document).ready(function () {
+        //        $('input.flat').iCheck({
+        //            checkboxClass: 'icheckbox_flat-blue',
+        //            radioClass: 'iradio_flat-blue'
+        //        });
+        //    });
+        //}
+    };
+    /* END ICHECK */
+
+    $('#tbl-pricing-list tr').click(function (event) {
+        var row = $(this);
+        var _radio = row.find('input[type="radio"]');
+        _radio.prop('checked', true);
+
+        $('#lblPeriodTime').html(row.data('name'));
+        $('#lblPeriodTimePrice').html(row.data('price'));
+        $('#lblPackagePrice').html(row.data('price'));
+
+        $('#hidPeriod').val(row.data('period'));
+        $('#hidPeriodType').val(row.data('periodtype'));
+        $('#hidPrice').val(row.find('input[type=radio]').val());
+        updateTotalPrice();
+        //========
+        //$('input[name="itemPeriodTime"]').iCheck({
+        //    radioClass: 'iradio_flat-blue'
+        //});
+    });
+
+    function updateTotalPrice() {
+        var pricePackage = parseFloat(($('#lblPackagePrice').html()).replace(/,/g, ''));
+        var priceAddition = parseFloat(($('#lblAdditionsPrice').html()).replace(/,/g, ''));
+
+        //$('#lblTotalPrice').html((pricePackage + priceAddition).toFixed(2));
+        $('#lblTotalPrice').html(NumberFormatCurrency((pricePackage + priceAddition), 2));
+    }
+
+    // Display content of Buying Additions Package
+    function buyingAdditionsPackage(isBuy){
+        if(isBuy == false){
+            $("#package-detail").show();
+            $("#package-buying-additions").hide();
+        } else {
+            $('.se-pre-con').show();
+            if ( _tableAdditionMain.data().any() ) {
+                _tableAddition.destroy();
+                $('#datatable-responsive-list-addition tbody').empty().promise().done(function () {
+                    $('#datatable-responsive-list-addition tbody').html($('#datatable-responsive-list-addition-main tbody').html());
+                    _tableAddition = $('#datatable-responsive-list-addition').DataTable($.extend(true, {}, _settingsOptionTableAddition));
+                });
+            } else {
+                _tableAddition.destroy();
+                $('#datatable-responsive-list-addition tbody').empty().promise().done(function () {
+                    _tableAddition = $('#datatable-responsive-list-addition').DataTable($.extend(true, {}, _settingsOptionTableAddition));
+                });
+            }
+            $('#lblTotalAdditionPrice').html($('#lblTotalAdditionPrice-main').html());
+            $("#package-detail").hide();
+            $("#package-buying-additions").show();
+            $('.se-pre-con').hide();
+        }
+    }
+
+    $("#form-package").submit(function (e) {
+        var isSubmit = $(this).valid();
+        var Qty = $('#txt-quantity').val();
+        if (Qty == '') {
+            $('#lblMsg').html('[Quantity] can\'t empty !!!');
+            $('#txt-quantity').focus();
+            isSubmit = false;
+        }
+        else if (!$.isNumeric(Qty)) {
+            $('#lblMsg').html('[Quantity] is a number !!!');
+            $('#txt-quantity').focus();
+            isSubmit = false;
+        }
+        else if (Qty <= 0) {
+            $('#lblMsg').html('Please enter [Quantity] greater than to 0. !!!');
+            $('#txt-quantity').focus();
+            isSubmit = false;
+        }
+        if (isSubmit) {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: "POST",
+                data: new FormData(this),
+                processData: false,
+                contentType: false,
+                dataType: "html",
+                success: function (data) {
+                    data = JSON.parse(data);
+                    //=========
+                    var countItemCart = data.TotalQuantity;//data.ListItems.length;
+                    //$('#bs-modal-on-quantity').modal('hide');
+                    createOrUpdateOrder('@Model.PackageDetail.CusId', data.ID, countItemCart);
+                    //getOrder();
+                    getOrder('@Model.PackageDetail.CusId');
+                    //=========
+                    window.location.assign('@Url.Action("Packages", "OurProducts")');
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $('#lblMsg').html(jqXHR.statusText);
+                    if (jqXHR.status == 400) {
+                        deleteOrder();
+                    }
+                },
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+            });
+        }
+        e.preventDefault();
+    });
+
+</script>

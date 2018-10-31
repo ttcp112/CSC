@@ -1,0 +1,588 @@
+﻿@model NSCSC.Shared.Models.CRM.Customers.StoreDetailModels
+@using NSCSC.Shared
+@{
+    Html.EnableUnobtrusiveJavaScript(true);
+    var _ID = Model.ID;
+    var ProductType = Model.ProductApplyStore.ProductType;
+}
+<style type="text/css">
+    .upload-i-wrapper {
+        border: 5px none;
+        cursor: pointer;
+        display: block;
+        overflow: hidden;
+        position: absolute;
+        right: 70px;
+        width: 30px;
+        bottom: 10px;
+    }
+
+        .upload-i-wrapper i {
+            font-size: 25px;
+            color: #9d9c9c;
+        }
+
+        .upload-i-wrapper input[type=file] {
+            left: 0;
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            cursor: pointer;
+        }
+
+    table#select-store {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+    }
+
+    #select-store th {
+        background-color: #d7d7d7;
+        padding-bottom: 11px;
+        padding-top: 11px;
+        font-size: 16px;
+    }
+
+    #select-store td, #select-store th {
+        padding: 8px;
+        height: 50px;
+        font-weight: lighter;
+    }
+
+    #select-store tr:nth-child(2n) {
+        background-color: #f2f2f2;
+    }
+
+    #select-store tr {
+        border-bottom: 1px solid #ddd;
+        cursor: pointer;
+    }
+
+    .modal-header {
+        padding: 15px;
+        border-bottom: 1px solid #e5e5e5;
+        background-color: #bdbdbd;
+        text-align: center;
+    }
+</style>
+<div role="main" class="right_col">
+    <div class="se-pre-con" style="display: none;"></div>
+    <div class="">
+        <div class="page-title">
+            <div class="title_left" style="padding: 10px 0px;">
+                @Html.Partial("~/Views/Shared/_breadcrumb.cshtml",
+                        new Dictionary<string, string> { { "A", "CRM" }, { "B", "Customers" }, { "C", "Edit - Edit Store" } })
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_title">
+                    <div class="row text-right">
+                        <ul class="header-buttons pull-right list-inline">
+                            <li>
+                                <a href="javascript:void(0)" class="btn btn-danger" id="btn-delete" onclick="CloseStoreDetail('@Model.CustomerID');">
+                                    <i class="fa fa-times"></i>
+                                    &nbsp;Cancel
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" class="btn btn-success"  onclick="SubmitForm('.form-store')">
+                                    <i class="fa fa-save"></i>
+                                    &nbsp;Save
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+
+@using (@Html.BeginForm("EditStoreInfo", "CRMCustomers", FormMethod.Post, new
+{
+    @class = "form-horizontal form-store",
+    @enctype = "multipart/form-data"
+}))
+{
+    @Html.HiddenFor(model => model.ImageURL, new { @id = "hidImageURL" })
+    @Html.HiddenFor(model => model.tempAssetID, new { @id = "hidtempAssetID" })
+    @Html.HiddenFor(model => model.ID, new { @id = "hidID" })
+    @Html.HiddenFor(model => model.CustomerID, new { @id="hidCustomerID" })
+    @Html.HiddenFor(model => model.MerchantID, new { @id= "hidMerchantID" })
+    @Html.HiddenFor(model => model.Industry)
+
+    <div class="row form-horizontal form-label-left">
+        <div class="form-group">
+            <div class="col-md-offset-1 col-md-3 col-sm-3 col-xs-12">
+                <div class="form-group text-center">
+                    <div class="col-md-10 col-sm-10 col-xs-12">
+                        @if (!string.IsNullOrEmpty(Model.ImageURL))
+                {
+                    <img id="upload-preview-create-store" src="@Model.ImageURL" height="200" width="200" class="" />
+        }
+        else
+        {
+            <img id="upload-preview-create-store" class=""
+                 src="/images/store.jpg"
+                 height="200" width="200" />
+}
+                        <div class="upload-i-wrapper">
+                            @Html.TextBoxFor(model => model.PictureUpload, new
+                    {
+                        @id = "PictureUploadStore",
+                        @type = "file",
+                        @onchange = "PreviewImage(this,\"upload-preview-create-store\")",
+                        @accept = "*.jpg"
+                    })
+                            <i class="fa fa-camera"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-10 col-sm-10 col-xs-12" style="margin: 5px 5px;">
+                        @Html.ValidationMessageFor(model => model.PictureUpload, null, new { @class = "label label-danger" })
+                    </div>
+                    <div class="col-md-10 col-sm-10 col-xs-12" style="margin: 5px 5px;">
+                        <label>@Html.CheckBoxFor(model => model.IsActive, new { @class = "flat", @id = "chkActive" })</label> Active
+                    </div>
+                </div>
+            </div>
+       
+            <div class="col-md-8 col-sm-8 col-xs-12">
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        Applied on:
+                        @{
+                            string _countProduct = "0 Product";
+                            if (Model.ListProductApply != null && Model.ListProductApply.Count > 0)
+                            {
+                                int _Count = Model.ListProductApply.Where(x => x.IsApply).ToList().Count;
+                                _countProduct = _Count == 1 ? "1 Product" : _Count + " Product(s)";
+                            }
+                        }
+                        <button type="button" id="applyProduct" href="javascript:void(0)" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-choose-items" style="font-size:15px;">
+                            <span id="Product">@_countProduct</span>
+                        </button>
+
+                    </div><br /><br />
+                </div>
+                <div class="form-group">
+                    @*Store Name*@
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                        <div class="row">
+                            <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Store Name(*)</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                @Html.TextBoxFor(model => model.Name, new
+                        {
+                            @class = "form-control",
+                            @placeholder = "Store Name",
+                            @autocomplete = "off",
+                            @id = "txtStoreStoreName"
+                        })
+                                @Html.ValidationMessageFor(model => model.Name, null, new { @class = "label label-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    @*Country*@
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                        <div class="row">
+                            <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Country</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                @Html.DropDownListFor(model => model.Country, new SelectList(@ViewBag.ListCountry, "Name", "Name", Model.Country),
+                                 new
+                                 {
+                                     @class = "form-control",
+                                     @id = "txtCountry",
+                                     @style = "width:100%;",
+                                 })
+                                @Html.ValidationMessageFor(model => model.Country, null, new { @class = "label label-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @*Email*@
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                        <div class="row">
+                            <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Email(*)</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                @Html.TextBoxFor(model => model.Email, new
+                        {
+                            @class = "form-control",
+                            @placeholder = "Email",
+                            @autocomplete = "off",
+                            @id = "txtStoreEmail"
+                        })
+                                @Html.ValidationMessageFor(model => model.Email, null, new { @class = "label label-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    @*City*@
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                        <div class="row">
+                            <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">City</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                @Html.TextBoxFor(model => model.City, new
+                        {
+                            @class = "form-control",
+                            @placeholder = "City",
+                            @autocomplete = "off",
+                            @id = "txtStoreCity"
+                        })
+                                @Html.ValidationMessageFor(model => model.City, null, new { @class = "label label-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @*Phone*@
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                        <div class="row">
+                            <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Phone(*)</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                @Html.TextBoxFor(model => model.Phone, new
+                        {
+                            @class = "form-control",
+                            @placeholder = "0123456789",
+                            @autocomplete = "off",
+                            @id = "txtStorePhone"
+                        })
+                                @Html.ValidationMessageFor(model => model.Phone, null, new { @class = "label label-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    @*Zip Code*@
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                        <div class="row">
+                            <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Zip Code</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                @Html.TextBoxFor(model => model.ZipCode, new
+                        {
+                            @class = "form-control",
+                            @placeholder = "Zip Code",
+                            @autocomplete = "off",
+                            @id = "txtStoreZipCode"
+                        })
+                                @Html.ValidationMessageFor(model => model.ZipCode, null, new { @class = "label label-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @*Industry*@
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                        <div class="row">
+                            <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Industry(*)</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                @Html.DropDownListFor(model => model.Industry,
+                              new SelectList(Model.ListIndustry, "Value", "Text", Model.Industry), null,
+                               new
+                               {
+                                   @class = "form-control select2_multiple",
+                                   @id = "txtStoreIndustry",
+                                   @style = "width:100%;",
+                                   @disabled = "disabled"
+                               })
+                                @Html.ValidationMessageFor(model => model.Industry, null, new { @class = "label label-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    @*Street*@
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                        <div class="row">
+                            <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Street</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                @Html.TextBoxFor(model => model.Street, new
+                        {
+                            @class = "form-control",
+                            @placeholder = "Street",
+                            @autocomplete = "off",
+                            @id = "txtStoreStreet"
+                        })
+                                @Html.ValidationMessageFor(model => model.Street, null, new { @class = "label label-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @*Tax Code*@
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                        <div class="row">
+                            <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Tax Code</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                @Html.TextBoxFor(model => model.GSTRegNo, new
+                        {
+                            @class = "form-control",
+                            @placeholder = "Tax Code",
+                            @autocomplete = "off",
+                            @id = "txtStoreTaxCode"
+                        })
+                                @Html.ValidationMessageFor(model => model.GSTRegNo, null, new { @class = "label label-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    @*Time Zone*@
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                        <div class="row">
+                            <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Time Zone</label>
+                        </div>
+                        <div class="row">
+                            <div id="TimeZones" class="col-md-12 col-sm-12 col-xs-12">
+                                @Html.DropDownListFor(model => model.TimeZone, new SelectList(ViewBag.TimeZones), new
+                        {
+                            @class = "form-control",
+                            @placeholder = "Timezone",
+                            @autocomplete = "off",
+                            @id = "txtStoreTimeZone"
+                        })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  }
+    <div id="modal-choose-items" class="modal fade modalfunctionInfo" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" style="padding:20px 15px;background-color: #f9f9f9">
+                        <button type="button" id="closeFunction" class="close closeStore" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel2" style="text-align: center; font-weight:bolder">Applied Products</h4>
+                    </div>
+                    <div class="modal-body scroll">
+                        <div class="row">
+                                  <a href="javascript:void(0);" class="btn btn-success" id="btnUpdateStore" style="float:right; margin-right:15px" onclick="AssignProductToStore('#form-assign-store')">
+                            <i class="fa fa-check"></i>&nbsp;Update
+                        </a>
+                             <p id="falseToApply"></p>
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                 @using (Html.BeginForm("AssignProductToStore", "CRMCustomer", FormMethod.Post, new
+                                 {
+                                     @class = "form-horizontal",
+                                     @id = "form-assign-store",
+                                     @enctype = "multipart/form-data"
+                                 }))
+                                 {
+                                    @Html.HiddenFor(model => model.ID)
+                                     if (Model.ListProductApply != null && Model.ListProductApply.Count > 0)
+                                     {
+                                         foreach (var _itemProductApply in Model.ListProductApply)
+                                         {
+                                            @Html.Hidden(string.Format("ListProductApply[{0}].OffSet", _itemProductApply.OffSet), _itemProductApply.OffSet, new { @id = "hidOffset" + _itemProductApply.OffSet })
+                                            @Html.Hidden(string.Format("ListProductApply[{0}].AssetID", _itemProductApply.OffSet), _itemProductApply.AssetID, new { @id = "hidAssetID" + _itemProductApply.OffSet })
+                                            @Html.Hidden(string.Format("ListProductApply[{0}].IsApply", _itemProductApply.OffSet), _itemProductApply.IsApply, new { @id = "hidIsApply" + _itemProductApply.OffSet })
+                                            @Html.Hidden(string.Format("ListProductApply[{0}].ProductName", _itemProductApply.OffSet), _itemProductApply.ProductName)
+                                            @Html.Hidden(string.Format("ListProductApply[{0}].ActiveTime", _itemProductApply.OffSet), _itemProductApply.ActiveTime)
+                                            @Html.Hidden(string.Format("ListProductApply[{0}].ExpiredTime", _itemProductApply.OffSet), _itemProductApply.ExpiredTime)
+                                         }
+                                     }
+                                <table id="datatable-responsive-list-item-products" class="table table-striped table-bordered dt-responsive dataTable-custom">
+                                    <caption style="margin-top:-35px; cursor:pointer; max-width:40%;" class="checkall">
+                                        <input type="checkbox" id="CheckAll" class="lineHeight" /><span> Check All</span>
+                                    </caption>
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center col1">Select</th>
+                                            <th class="text-center col2">Product</th>
+                                            <th class="text-center col3">Activated Date</th>
+                                            <th class="text-center col3">Expried Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.ListProductApply != null && Model.ListProductApply.Count > 0)
+                                        {
+                                             @Html.Partial("_ItemStoreAssignToProduct", Model)
+                                        }
+                                    </tbody>
+                                </table>
+                                 }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="@Url.Content("~/build/js/customInput.js")"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        init_ICheck();
+        $("#AppliedOnDdl").select2({
+            placeholder: "Please choose applied"
+        });
+
+        $("#txtStoreIndustry").select2({
+            placeholder: "Please choose industry"
+        });
+        $("#txtCountry").select2({
+            placeholder: "Please choose industry"
+        });
+        $("#txtStoreTimeZone").select2({
+            placeholder: "Time Zone"
+        });
+        $('#datatable-responsive-list-item-products').DataTable(
+            {
+                "columnDefs": [
+                    { "orderable": false, "targets": [0] }
+                ],
+                "order": [
+                    [1, 'asc']
+                ],
+                "bInfo": false,
+                "paging": false,
+                "autoWidth": false,
+                "drawCallback": function () {
+                    var divHeight = $('#datatable-responsive-list-item-products tbody').prop('scrollHeight');
+                    if (divHeight == 0) {
+                        var previousCss = $("#modal-choose-items").attr("style");
+                        $("#modal-choose-items").css({
+                            position: 'absolute',
+                            visibility: 'hidden',
+                            display: 'block'
+                        });
+                        divHeight = $('#datatable-responsive-list-item-products tbody').prop('scrollHeight');
+                        $("#modal-choose-items").attr("style", previousCss ? previousCss : "");
+                    }
+                    if (divHeight > 500) {
+                        $("#datatable-responsive-list-item-products thead tr").css('width', 'calc( 100% - 16px )');
+                    } else {
+                        $("#datatable-responsive-list-item-products thead tr").css('width', '100%');
+                    }
+                },
+            }
+        );
+    });
+    $("#txtCountry").change(function () {
+        GetTimeZones();
+    });
+    function GetTimeZones() {
+          var _Country = $('#txtCountry').val();
+        $.ajax({
+                type: "GET",
+                url: "@Url.Action("GetTimeZones", "CRMCustomers")",
+                traditional: true,
+                data: { _Country: _Country },
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (data) {
+                    $('#TimeZones').html(data);
+                },
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+        });
+    }
+    function init_ICheck() {
+        if ($("input.flat")[0]) {
+            $(document).ready(function () {
+                $('input.flat').iCheck({
+                    checkboxClass: 'icheckbox_flat-green',
+                    radioClass: 'iradio_flat-green'
+                });
+            });
+        }
+    };
+
+    function init_ICheckSelectStore() {
+        if ($("input.flatSlectStore")[0]) {
+            $(document).ready(function () {
+                $('input.flatSlectStore').iCheck({
+                    checkboxClass: 'icheckbox_flat-green',
+                    radioClass: 'iradio_flat-green'
+                });
+            });
+        }
+    };
+    $('.checkall').click(function (event) {
+        if (event.target.type != 'checkbox') {
+            $('#CheckAll').trigger('click');
+        }
+    });
+    $(".form-store").submit(function (e) {
+        var isSubmit = $(this).valid();
+        var storeName = $("#txtStoreStoreName").val();
+
+        if (isSubmit) {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: "POST",
+                data: new FormData(this),
+                processData: false,
+                contentType: false,
+                success: function (content) {
+                    $(".detail-view").html(content);
+                    $(".detail-view").show();
+                    $(".gridview").css("display", "none");
+                    $('#myTab a[href="#tab_content2"]').tab('show');
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                },
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+            });
+        }
+        e.preventDefault();
+    }); 
+    function AssignProductToStore(form) {
+        $.ajax({
+            url: CreateAbsoluteUrl('AssignProductToStore'),
+            type: "POST",
+            data: $(form).serialize(),
+            dataType: 'html',
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            },
+            success: function (data) {
+                data = JSON.parse(data);
+                if (data == true) {
+                    $("#falseToApply").html('');
+                    $('button.closeStore').trigger("click");
+                }
+                else
+                    $("#falseToApply").html('<span class="label-danger" style = "padding: 0 20px;border-radius: 5px;color: white;">Apply false </span>');
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(jqXHR.statusText);
+                $('.se-pre-con').hide();
+            }
+        });
+    }
+</script>

@@ -1,0 +1,969 @@
+﻿@model NSCSC.Shared.Models.SandBox.Inventory.Product.ProductDetailModels
+@using NSCSC.Shared
+@{
+    Html.EnableUnobtrusiveJavaScript(true);
+    var _ID = Model.ID;
+}
+@Html.HiddenFor(model => model.ID)
+@if (!string.IsNullOrEmpty(_ID))
+{
+    @Html.HiddenFor(model => model.ImageURL)
+}
+<style>
+    .top-10 {
+        margin-top: 10px;
+    }
+</style>
+<div class="row form-horizontal form-label-left" style="margin-bottom:15px;">
+
+    @*Message error from service*@
+    <div class="form-group">
+        <div class="col-md-6 col-md-offset-2 col-sm-6 col-sm-offset-2 col-xs-12">
+            @Html.ValidationMessage("Error", null, new { @class = "label" })
+        </div>
+    </div>
+
+    @*Package Name*@
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Package Name*</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @placeholder = "Package Name", @autocomplete = "off" })
+            @Html.ValidationMessageFor(model => model.Name, null, new { @class = "label" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @* Active*@
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 fontLighter">Active</label>
+        <div class="col-md-1 col-sm-1 col-xs-12">
+            <label>@Html.CheckBoxFor(model => model.IsActive, new { @class = "js-switch-chk" })</label>
+        </div>
+
+        @*Sequence*@
+        <label class="control-label col-md-1 col-sm-1 col-xs-12 fontLighter lineHeight">Sequence</label>
+        <div class="col-md-1 col-sm-1 col-xs-12">
+            @Html.TextBoxFor(model => model.Sequence, new { @class = "form-control keyNumber", @placeholder = "Sequence", @autocomplete = "off", @type = "number", @min = 0 })
+            @Html.ValidationMessageFor(model => model.Sequence, null, new { @class = "label" })
+        </div>
+
+        @*Public*@
+        <label class="control-label col-md-1 col-sm-1 col-xs-12 fontLighter">Public</label>
+        <div class="col-md-1 col-sm-1 col-xs-12">
+            <label>@Html.CheckBoxFor(model => model.IsPublic, new { @class = "js-switch-chk" })</label>
+        </div>
+    </div>
+
+    @*Sale Form - Sale To*@
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Sale From</label>
+        <div class="col-md-2 col-sm-2 col-xs-12">
+            @*@Html.TextBox("SaleFrom", Model.SaleFrom.ToString(Commons.FormatDate), new { @class = "form-control datepicker" })*@
+            @*@Html.TextBoxFor(ss => ss.SaleFrom, "{0:dd/MM/yyyy}",new { @class = "form-control datepicker" })*@
+            @Html.TextBox("SaleFrom", string.Format("{0:dd/MM/yyyy}", Model.SaleFrom),
+               new { @id = "SaleFrom", @class = "form-control datepicker", @placeholder = "dd/MM/yyyy" })
+            @*@Html.ValidationMessageFor(model => model.SaleFrom, null, new { @class = "label" })*@
+            @Html.ValidationMessage("DateSaleValidate", null, new { @class = "label label-danger" })
+        </div>
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">To</label>
+        <div class="col-md-2 col-sm-2 col-xs-12">
+            @Html.TextBox("SaleTo", Model.SaleTo.ToString(Commons.FormatDate), new { @class = "form-control datepicker" })
+            @*@Html.ValidationMessageFor(model => model.SaleTo, null, new { @class = "label" })*@
+
+        </div>
+
+    </div>
+
+    <div class="form-group">
+        @*Package Code*@
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Package Code</label>
+        <div class="col-md-2 col-sm-2 col-xs-12">
+            @Html.TextBoxFor(model => model.Code, new { @class = "form-control", @placeholder = "Package Code", @autocomplete = "off" })
+            @Html.ValidationMessageFor(model => model.Code, null, new { @class = "label" })
+        </div>
+        @*Image*@
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Image</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            @if (!string.IsNullOrEmpty(Model.ImageURL))
+            {
+                <img id="upload-preview" src="@Model.ImageURL" height="100" width="100" class="" />
+            }
+            else
+            {
+                <img id="upload-preview" class="" src="@Commons.Image100_100" height="100" width="100" />
+            }
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <div class="upload-btn-wrapper" style="cursor:pointer;">
+                <button class="btn btn-default btnFile" type="button">Add/Edit</button>
+                @Html.TextBoxFor(model => model.PictureUpload, new { @id = "PictureUpload", @type = "file", @onchange = "PreviewImage(this,\"upload-preview\")", @accept = "*.jpg", @class = "inputFile" })
+            </div>
+            @Html.ValidationMessageFor(model => model.PictureUpload, null, new { @class = "label label-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @*Include Store(s)*@
+        <label  class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Include Store(s)</label>
+        <div class="col-md-2 col-sm-2 col-xs-12">
+            <div class="input-group">
+                @Html.TextBoxFor(model => model.IncludeStore, new { @class = "form-control keyNumber text-center", @id = "txtIncludeStore", value = "0", @type = "number", min = "1" })
+            </div>
+            @Html.ValidationMessageFor(model => model.IncludeStore, null, new { @class = "label" })
+        </div>
+        <div class="col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">
+            <label>@Html.CheckBoxFor(model => model.IsUnlimitedIncludeStore, new { @class = "flat" })</label> Unlimited
+        </div>
+
+        @*Is extend*@
+        <label class="control-label col-md-1 col-sm-1 col-xs-12 lineHeight fontLighter">Is extend</label>
+        <div class="col-md-3 col-sm-3 col-xs-12">
+            <label class="top-10">@Html.CheckBoxFor(model => model.IsExtend, new { @class = "js-switch-chk", id = "chkIsExtend" })</label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        @*Number of Accounts*@
+        <label for="" class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Number of Accounts</label>
+        <div class="col-md-2 col-sm-2 col-xs-12">
+            <div class="input-group">
+                @Html.TextBoxFor(model => model.NumberOfAccount, new { @class = "form-control keyNumber text-center", @id = "txtNumberOfAccount", value = "0", @type = "number", min = "1" })
+            </div>
+            @Html.ValidationMessageFor(model => model.IncludeStore, null, new { @class = "label" })
+        </div>
+        <div class="col-md-2 col-sm-1 col-xs-12 lineHeight fontLighter">
+            <label>@Html.CheckBoxFor(model => model.IsUnlimitedNumberOfAccount, new { @class = "flat" })</label> Unlimited
+        </div>
+    </div>
+
+    <div class="form-group">
+        @*Display web url for client*@
+        <label for="" class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Display web url for client</label>
+        <div class="col-md-3 col-sm-3 col-xs-12">
+            <label class="top-10">@Html.CheckBoxFor(model => model.IsDisplayWeb, new { @class = "js-switch-chk" })</label>
+        </div>
+        @*Is intergration*@
+        <label for="" class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Is integration</label>
+        <div class="col-md-3 col-sm-3 col-xs-12">
+            <label class="top-10">@Html.CheckBoxFor(model => model.IsIntegrate, new { @class = "js-switch-chk" })</label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        @*Include Local Server*@
+        <label for="" class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Include Local Server</label>
+        <div class="col-md-3 col-sm-3 col-xs-12">
+            <label class="top-10">@Html.CheckBoxFor(model => model.IsIncludeLocalServer, new { @class = "js-switch-chk" })</label>
+        </div>
+        @*Include Cloud Server*@
+        <label for="" class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Include Cloud Server</label>
+        <div class="col-md-3 col-sm-3 col-xs-12">
+            <label class="top-10">@Html.CheckBoxFor(model => model.IsIncludeCloudServer, new { @class = "js-switch-chk" })</label>
+        </div>
+    </div>
+
+    @*Composite*@
+    <div class="form-group">
+        <label for="" class="col-md-offset-1 col-md-1 col-sm-12 col-xs-12">Composite</label>
+        <div class="col-md-6 col-sm-6 col-xs-12 topDotBorder">
+        </div>
+    </div>
+    <div class="form-group" style="margin-bottom:0px;">
+        <div for="" class="col-md-offset-1 col-md-10 col-sm-12 col-xs-12">
+            <a id="btn-add-more-tab" href="javascript:void(0)" class="btn btn-primary btn-sm" style="font-size:15px;"
+               @*data-toggle="modal" data-backdrop="static" data-target="#modal-choose-items" data-type=""*@
+               onclick="ShowModalSelect('#modal-choose-items', '#tbl-choose-items', '@Commons.EProductType.Product.ToString("d")', '@Commons.EAdditionType.Hardware.ToString("d")');"
+               >
+                <i class="fa fa-plus-square" style="font-size:14px;"></i>
+                <span>Add New</span>
+            </a>
+            @Html.ValidationMessageFor(model => model.ListComposite, null, new { @class = "label label-danger", @id = "ltrErrorComposite" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-1 col-md-7 col-sm-12 col-xs-12">
+            <table id="datatable-responsive-list-item-composite"
+                   class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action"
+                   cellspacing="0" style="width:100%;">
+                <thead style="background-color:#34495e; color:#fff;">
+                    <tr>
+                        <th class="text-center">Item Name</th>
+                        @*<th class="text-center">Category</th>*@
+                        <th class="text-center">Type</th>
+                        <th class="text-center">Quantity</th>
+                        <th class="text-center">Sequence</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="list-item-product-select">
+                    @Html.Partial("_ListItem", Model)
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @*Price Items*@
+    <div class="form-group">
+        <label for="" class="col-md-offset-1 col-md-1 col-sm-12 col-xs-12">Prices</label>
+        <div class="col-md-6 col-sm-6 col-xs-12 topDotBorder">
+        </div>
+    </div>
+    <div class="form-group" style="margin-bottom:0px;">
+        <div for="" class="col-md-offset-1 col-md-10 col-sm-12 col-xs-12">
+            <a id="btn-add-more-tab" href="javascript:void(0)" class="btn btn-primary btn-sm" style="font-size:15px;"
+               data-toggle="modal" data-backdrop="static" data-target=".bs-example-modal-lg-price-items" data-type="">
+                <i class="fa fa-plus-square" style="font-size:14px;"></i>
+                <span>Add New</span>
+            </a>
+            @Html.ValidationMessageFor(model => model.ListPrice, null, new { @class = "label label-danger", @id = "ltrErrorPrice" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-1 col-md-7 col-sm-12 col-xs-12">
+            <table id="datatable-responsive-list-price-items"
+                   class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action"
+                   cellspacing="0" style="width:100%;">
+                <thead style="background-color:#34495e; color:#fff;">
+                    <tr>
+                        <th class="text-center">Period</th>
+                        <th class="text-center">Price</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="divListPrice">
+                    @for (int k = 0; k < Model.ListPrice.Count; k++)
+                    {
+                        @Html.Partial("_ItemPrice", Model.ListPrice[k])
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="form-group" style="padding:20px 0;">
+    </div>
+
+    @*Extend Prices*@
+    <div class="form-group">
+        <label for="" class="col-md-offset-1 col-md-2 col-sm-12 col-xs-12">Extend Prices</label>
+        <div class="col-md-5 col-sm-6 col-xs-12 topDotBorder">
+        </div>
+    </div>
+    <div class="form-group" style="margin-bottom:0px;">
+        <div for="" class="col-md-offset-1 col-md-10 col-sm-12 col-xs-12">
+            <a id="btn-add-more-tab" href="javascript:void(0)" class="btn btn-primary btn-sm" style="font-size:15px;"
+               data-toggle="modal" data-backdrop="static" data-target=".bs-example-modal-lg-price-items" data-type="Extend">
+                <i class="fa fa-plus-square" style="font-size:14px;"></i>
+                <span>Add New</span>
+            </a>
+            @Html.ValidationMessageFor(model => model.ListPrice, null, new { @class = "label label-danger", @id = "ltrErrorPriceExtend" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-1 col-md-7 col-sm-12 col-xs-12">
+            <table id="datatable-responsive-list-extend-price-items"
+                   class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action"
+                   cellspacing="0" style="width:100%;">
+                <thead style="background-color:#34495e; color:#fff;">
+                    <tr>
+                        <th class="text-center">Period</th>
+                        <th class="text-center">Price</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="divListPriceExtend">
+                    @for (int i = 0; i < Model.ListPriceExtend.Count; i++)
+                    {
+                        @Html.Partial("_ItemPriceExtend", Model.ListPriceExtend[i])
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="form-group" style="padding:20px 0;">
+    </div>
+
+    @*Description*@
+    <div class="form-group" style="padding-top:30px;">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 fontLighter">Description </label>
+        <div class="col-md-6 col-sm-12 col-xs-12">
+            @Html.TextAreaFor(model => model.Description, new { @class = "form-control ckeditor", placeholder = "Description" })
+            @Html.ValidationMessageFor(model => model.Description, null, new { @class = "label" })
+        </div>
+    </div>
+</div>
+
+@*Popup Composite*@
+<div class="modal fade second" id="modal-choose-items" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Select Products/Additions</h4>
+            </div>
+            <div class="modal-body scroll">
+                <div class="form-group">
+                    <div class="col-md-12 col-xs-12">
+                        <div class="input-group">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn bg-fnb" id="btnItemType">Products</button>
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="javascript:void(0)" onclick="FilterData('@Commons.EProductType.Product.ToString("d")')">Products</a></li>
+                                    <li><a href="javascript:void(0)" onclick="FilterData('@Commons.EProductType.Addition.ToString("d")')">Additions</a></li>
+                                </ul>
+                            </div>
+                            <input type="text" class="form-control col-md-10" placeholder="Search" onkeypress="HandleKeyPress(event)" id="txtSearchEarning" autocomplete="off" />
+                            <div class="input-group-btn">
+                                <button type="button" onclick="SearchByKeyName(this); return false;" class="btn bg-fnb">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12" style="padding-left:0px;">
+                        <table id="datatable-responsive-list-item-products" class="table table-striped table-bordered dt-responsive nowrap table table-striped" @*style="width:100%;"*@>
+                            <thead style="background-color:#34495e; color:#fff;">
+                                <tr>
+                                    <th class="text-center">Select</th>
+                                    <th class="text-center">Item Name</th>
+                                    @*<th class="text-center">Category</th>*@
+                                    <th class="text-center">Type</th>
+                                    <th class="text-center">Quantity</th>
+                                    <th class="text-center">Sequence</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbl-choose-items">
+                                @Html.Partial("_ListProduct", Model)
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button onclick="AddItems(this, '#modal-choose-items', '#list-item-product-select');"
+                        type="button" class="btn btn-beauty bg-fnb">
+                    Add
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Popup Prices*@
+<div class="modal fade bs-example-modal-lg-price-items" tabindex="-1" role="dialog" aria-hidden="true" id="modal-add-price">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="mymodalTitle">Price Info</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="message-period" class="col-md-3 col-sm-3 col-xs-12 lineHeight">Period</label>
+                    <div class="col-md-3 col-sm-3 col-xs-12">
+                        <input type="number" class="form-control text-center keyNumber" id="txtPeriod" value="1" autocomplete="off" min="1" />
+                        <span class="label label-danger" id="ltrError"></span>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        @Html.DropDownListFor(model => model.PeriodType,
+                            new SelectList(Model.ListPeriodType, "Value", "Text", Model.PeriodType), null,
+                             new
+                             {
+                                 @class = "form-control select2_multiple",
+                                 @id = "PeriodTypeDdl",
+                                 @style = "width:100%;"
+                             })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="buying-price" class="col-md-3 col-sm-3 col-xs-12 lineHeight">Buying Price</label>
+                    <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input type="text" class="form-control keyNumber" data-type="float" id="txtPrice" value="0" autocomplete="off" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="AddItemsPrice(this)">Save</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="@Url.Content("~/build/js/customInput.js")"></script>
+<script type="text/javascript">
+
+    // Disable some input when checked Unlimited checkbox
+    @if (Model.IsUnlimitedIncludeStore)
+    {
+        <text>$("#txtIncludeStore").attr('disabled', true);</text>
+    } else {
+        <text>$("#txtIncludeStore").attr('disabled', false);</text>
+    }
+    @if(Model.IsUnlimitedNumberOfAccount)
+    {
+        <text>$("#txtNumberOfAccount").attr('disabled', true);</text>
+    }else{
+        <text>$("#txtNumberOfAccount").attr('disabled', false);</text>
+    }
+
+    var IsEdit = false;
+    var _offset = -1;
+    var _typePrice = '';
+    var _valueEdit = "";
+
+    var btnGlobal;
+    var listItem;
+    var _ProductType = '@Commons.EProductType.Product.ToString("d")';
+
+    /*Format DataTables*/
+    var _tableComposite = null;
+    var _settingsOptionTableComposite = {
+        "columnDefs": [
+                { "targets": [4], "orderable": false },
+                { "width": "8%", "targets": [2, 3] },
+                { "width": "15%", "targets": [4] },
+        ],
+        "order": [
+            [1, 'asc'],
+            [0, 'asc']
+        ],
+        "autoWidth": false, /*Feature control DataTables' smart column width handling.*/
+        "displayLength": 100,
+        //"pagingType": "full_numbers",
+        "searching": false,         // txtSearch in filter
+        "lengthChange": false,      // Dropdownlist Page
+        "bInfo": false,              // text [showing...
+        "paging": false           //
+    };
+
+    var _tableProduct = null;
+    var _settingsOptionTableProduct = {
+        "columnDefs": [
+                { "orderable": false, "targets": [0, 2, 3, 4] },
+                { "width": "8%", "targets": [0] },
+                { "width": "15%", "targets": [4] },
+                { "width": "20%", "targets": [2] },
+                { "width": "25%", "targets": [3] },
+        ],
+        "order": [
+            //[1, 'asc'],
+            [0, 'asc']
+        ],
+        "autoWidth": false, /*Feature control DataTables' smart column width handling.*/
+        "searching": false,         // txtSearch in filter
+        //"lengthChange": false,      // Dropdownlist Page
+        "bInfo": false,             // text [showing...
+        "paging": false,
+        "scrollY": 400,
+        //"scrollCollapse": true,
+        "fixedHeader": true,
+    };
+
+    var _tablePriceItem = null;
+    var _tableExtendPriceItem = null;
+    var _settingsOptionTablePriceItem = {
+        "columnDefs": [
+                { "orderable": false, "targets": [2] },
+                { "width": "15%", "targets": [1, 2] },
+        ],
+        "order": [[0, 'desc']],
+        "autoWidth": false, /*Feature control DataTables' smart column width handling.*/
+        "oLanguage": { "sZeroRecords": "", "sEmptyTable": "" },
+        "displayLength": 25,
+        "pagingType": "full_numbers",
+        "searching": false,         // txtSearch in filter
+        "lengthChange": false,      // Dropdownlist Page
+        "bInfo": false              // text [showing...
+        //"paging": false           //
+    };
+
+    $(document).ready(function (e) {
+
+        $("#PeriodTypeDdl").select2({
+            placeholder: "Please choose period type"
+        });
+
+        $('.datepicker').daterangepicker({
+            singleDatePicker: true,
+            calender_style: "picker_2",
+            showDropdowns: true,
+            //locale: {
+            //    format: 'DD/MM/YYYY'
+            //}
+        });
+
+        //Table
+        _tableComposite = $('#datatable-responsive-list-item-composite').DataTable($.extend(true, {}, _settingsOptionTableComposite));
+        _tableProduct = $('#datatable-responsive-list-item-products').DataTable($.extend(true, {}, _settingsOptionTableProduct));
+
+        //========Prices
+        _tablePriceItem = $('#datatable-responsive-list-price-items').DataTable($.extend(true, {}, _settingsOptionTablePriceItem));
+        _tableExtendPriceItem = $('#datatable-responsive-list-extend-price-items').DataTable($.extend(true, {}, _settingsOptionTablePriceItem));
+
+        /*===============*/
+        $("#modal-choose-items").on('show.bs.modal', function (event) {
+            btnGlobal = $(event.relatedTarget); // Button that triggered the modal
+            $('#txtSearchEarning').val('');
+            $("#tbl-choose-items").html('');
+            //FilterData(_ProductType);
+        });
+
+        // Disable some input when checked Unlimited checkbox
+        $('#IsUnlimitedIncludeStore').on('ifChanged', function (event) {
+            $("#txtIncludeStore").attr('disabled', event.target.checked);
+        });
+        $('#IsUnlimitedNumberOfAccount').on('ifChanged', function (event) {
+            $("#txtNumberOfAccount").attr('disabled', event.target.checked);
+        });
+
+        /****** key number ***/
+        KeyNumberCheck();
+
+    });
+
+    // Disable input Quantity when checked Unlimited checkbox
+    function checkDisableInputQty(btn) {
+        $(btn).parent().parent().find("input[type=number]").attr('disabled', event.target.checked);
+    }
+
+    /*Function*/
+    function ShowModalSelect(_modal, elemnetFillData, _Eproducttype, _EAdditionType) {
+        $(_modal).modal({
+            show: true,
+            backdrop: 'static'
+        });
+        _ProductType = _Eproducttype;
+        //LoadItem(_modal, elemnetFillData, _Eproducttype, _EAdditionType);
+        FilterData(_ProductType);
+    }
+
+    function FilterData(val) {
+        if (val === '@Commons.EProductType.Product.ToString("d")') {
+            _ProductType = '@Commons.EProductType.Product.ToString("d")';
+            $("#btnItemType").text('Products');
+        } else {
+            _ProductType = '@Commons.EProductType.Addition.ToString("d")';
+            $("#btnItemType").text("Additions");
+        }
+        LoadItem("#modal-choose-items", "#tbl-choose-items", _ProductType, '0');
+    }
+
+    function LoadItem(_modal, elemnetFillData, ProductType, EAdditionType) {
+        $.ajax({
+            url: CreateAbsoluteUrl("LoadItems"),
+            type: 'GET',
+            data: {
+                Eproducttype: ProductType,
+                EAdditionType: EAdditionType
+            },
+            dataType: 'html',
+            traditional: true,
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            error: function (e) {
+            },
+            success: function (data) {
+                //$(elemnetFillData).html(data);
+
+                // get the html table rows then
+                _tableProduct.destroy();
+                $(elemnetFillData).empty().promise().done(function () {
+                    $(elemnetFillData).html(data);
+                    _tableProduct = $("#datatable-responsive-list-item-products").DataTable($.extend(true, {}, _settingsOptionTableProduct));
+                });
+
+                //=====
+                $('.ItemClient').each(function (index, value) {
+                    var idCate = $(this).data('id');
+                    var offset = $(this).data('offset');
+
+                    var _this = $(this);
+                    //======
+                    $('.ItemComposite:visible').each(function (index, value) {
+                        var id = $(this).data('id');
+                        var quantity = $(this).data('quantity');
+                        var sequence = $(this).data('sequence');
+
+                        if (idCate == id) {
+                            _this.find('#chkIsSelect_' + offset).prop('checked', true);
+                            _this.find('#txtQuantity_' + offset + '-' + _ProductType).val(quantity);
+                            _this.find('#txtSequence_' + offset + '-' + _ProductType).val(sequence);
+                            if (quantity == -1) {
+                                _this.find('#txtQuantity_' + offset + '-' + _ProductType).val("1");
+                                _this.find('#txtQuantity_' + offset + '-' + _ProductType).attr('disabled', true);;
+                                //_this.find('input[type="checkbox"]').prop('checked', true);
+                                _this.find('#chkIsUnlimited_' + offset).prop('checked', true);
+                            }
+                        }
+                    });
+                });
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            }
+        });
+    }
+
+    function AddItems(btn, _modal, elemnetFillData) {
+        var data = [];
+        var listID = [];
+        var isValid = true;
+
+        //Data form Popup list Product [_ListProduct.cshtml]
+        $.each($('.ItemClient'), function () {
+            var OffSet = $(this).data('offset');
+            var ProductID = $(this).data('id');
+            var ProductName = $(this).data('name');
+            var status = $(this).data('status');
+            var ProductType = $(this).find('#hidProductType').val();
+            var AdditionType = $(this).find('#hidAdditionType').val();
+            var CategoryName = $(this).find('#hidCategoryName').val();
+            var TypeName = $(this).find('#hidTypeName').val();
+            var IsSelect = $(this).find('#chkIsSelect_' + OffSet).prop('checked');;//$(this).find('input[type="checkbox"]').prop('checked');
+            var Quantity = $(this).find('#txtQuantity_' + OffSet + '-' + _ProductType).val();
+            var Sequence = $(this).find('#txtSequence_' + OffSet + '-' + _ProductType).val();
+            var IsUnlimited = $(this).find('#chkIsUnlimited_' + OffSet).prop('checked');
+            $(this).find('.label-danger').html();
+            if (IsSelect) {
+                if (Quantity <= 0 && !IsUnlimited) {
+                    $(this).find('#txtQuantity_' + OffSet + '-' + _ProductType).focus();
+                    isValid = false;
+                    $(this).find('.label-danger').html('<span for="txtQuantity_'
+                        + OffSet + '-' + _ProductType + '" class="">Please enter a value greater than or equal to 1.</span>');
+                    return false;
+                }
+                //alert(isValid);
+                //else
+                if (isValid) {
+                    var ProductCompositeModels = {
+                        ProductID: ProductID,
+                        ProductName: ProductName,
+                        ProductType: ProductType,
+                        AdditionType: AdditionType,
+                        Quantity: Quantity,
+                        Sequence: Sequence,
+                        CategoryName: CategoryName,
+                        TypeName: TypeName,
+                        OffSet: OffSet,
+                        Status: status,
+                        IsSelect: IsSelect,
+                        IsUnlimited: IsUnlimited
+                    };
+                    data.push(ProductCompositeModels);
+                    listID.push(ProductID);
+                }
+            }
+        });
+        if (isValid) {
+            //========Get List Item Composite
+            $.each($('.ItemComposite:visible'), function () {
+                var ProductID = $(this).data('id');
+                if (listID.indexOf(ProductID) == -1) {
+                    var OffSet = $(this).data('offset');
+                    var ProductName = $(this).data('name');
+                    var status = $(this).data('status');
+                    var ProductType = $(this).data('producttype');
+                    var AdditionType = $(this).data('additiontype');
+                    var CategoryName = $(this).data('categoryname');
+                    var TypeName = $(this).data('typename');
+                    var Quantity = $(this).data('quantity');
+                    var Sequence = $(this).data('sequence');
+                    var IsUnlimited = $(this).data('isunlimited');
+                    var ProductCompositeModels = {
+                        ProductID: ProductID,
+                        ProductName: ProductName,
+                        ProductType: ProductType,
+                        AdditionType: AdditionType,
+                        Quantity: Quantity,
+                        Sequence: Sequence,
+                        CategoryName: CategoryName,
+                        TypeName: TypeName,
+                        OffSet: OffSet,
+                        Status: status,
+                        IsSelect: true,
+                        IsUnlimited: IsUnlimited
+                    };
+                    data.push(ProductCompositeModels);
+                }
+            });
+            //========End Get List Item Composite
+
+            var POSTItem = {
+                ProductType: _ProductType,
+                ListItem: data
+            }
+            $.ajax({
+                type: "POST",
+                url: CreateAbsoluteUrl("AddItems"),
+                traditional: true,
+                data: JSON.stringify(POSTItem),
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                error: function (e) {
+                },
+                success: function (data) {
+                    $(_modal).modal('hide');
+                    //$(elemnetFillData).html(data);
+
+                    // get the html table rows then
+                    _tableComposite.destroy();
+                    $(elemnetFillData).empty().promise().done(function () {
+                        $(elemnetFillData).html(data);
+                        _tableComposite = $("#datatable-responsive-list-item-composite").DataTable($.extend(true, {}, _settingsOptionTableComposite));
+                    });
+
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                }
+            });
+        }
+    }
+
+    function DeleteItem(e) {
+        var tr = $(e).parents('tr:first');
+        $(tr).find('input.ItemStatus').val(9);
+        $(tr).css('display', 'none');
+    }
+
+
+    /*Add Price - Edit Price*/
+    
+    function AddItemsPrice(btn) {
+        var Period = $('#txtPeriod').val();
+        var Price = $('#txtPrice').val();
+        var PeriodType = $('#PeriodTypeDdl').val();
+        var NamePeriodType = $("#PeriodTypeDdl option:selected").select2().text();
+
+        var Periods = Period;
+        var NamePeriodTypes = NamePeriodType;
+        if (Period > 1)
+        {
+            NamePeriodTypes = NamePeriodTypes + 's';
+        }
+        if (PeriodType == '@Commons.EPeriodType.OneTime.ToString("d")') {
+            Period = 1;
+            Periods = Period;
+            NamePeriodTypes = NamePeriodType;
+        }
+        //validition
+        //if (Period == '') {
+        //    $('#ltrError').html('[Period] can\'t empty !!!');
+        //    $('#txtPeriod').focus();
+        //    return false;
+        //}
+        /*else */if (!$.isNumeric(Period)) {
+            $('#ltrError').html('[Period] is invalid!');
+            $('#txtPeriod').focus();
+            return false;
+        }
+        else if (Period <= 0) {
+            $('#ltrError').html('Please enter a value greater than or equal to 1.');
+            $('#txtPeriod').focus();
+            return false;
+        }
+            //else if (Price == '') {
+            //    $('#ltrError').html('[Price] can\'t empty!');
+            //    $('#txtPrice').focus();
+            //    return false;
+            //}
+        else if (!$.isNumeric(Price)) {
+            $('#ltrError').html('[Price] is invalid!');
+            $('#txtPrice').focus();
+            return false;
+        }
+        else if (Price < 0) {
+            $('#ltrError').html('Please enter [Price] greater than or equal to 0!');
+            $('#txtPrice').focus();
+            return false;
+        }
+
+        var itemValue = Periods + NamePeriodTypes;
+        var checkPeriod = CheckPeriodForProduct('.ng-Price' + _typePrice + ':visible', itemValue, _typePrice);
+        if (checkPeriod) {
+            if (_valueEdit != itemValue) {
+                $('#ltrError').html('This period is already existed');
+                return false;
+            }
+        }
+
+        /*==============*/
+        if (!IsEdit) { //Create
+            var currentItemOffset = $('.ng-Price' + _typePrice).length;
+            var ProductPriceModels = {
+                Price: Price,
+                Period: Period,
+                PeriodType: PeriodType,
+                IsActive: 'false',
+                //IsSelected: IsSelected,
+                currentItemOffset: currentItemOffset,
+                NamePeriodType: NamePeriodType,
+                //======
+                IsExtend: (_typePrice == 'Extend' ? true : false)
+            }
+            $.ajax({
+                type: "POST",
+                url: CreateAbsoluteUrl("AddItemsPrice"),
+                traditional: true,
+                data: JSON.stringify(ProductPriceModels),
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+                success: function (data) {
+                    $('#txtPeriod').val('');
+                    $('#txtPrice').val('');
+                    $('#modal-add-price').modal('hide');
+                    //$('#divListPrice' + _typePrice).append(data);
+                    if (_typePrice == 'Extend') {
+                        _tableExtendPriceItem.row.add($(data)).draw();
+                    }
+                    else {
+                        _tablePriceItem.row.add($(data)).draw();
+                    }
+                }
+            });
+        } else { //Edit
+            $('#lblperiod' + _typePrice + '_' + _offset).html(Period);
+            $('#lblnameperiodtype' + _typePrice + '_' + _offset).html(NamePeriodTypes);
+            $('#lblprice' + _typePrice + '_' + _offset).html(Price);
+
+            $('#hidPeriodType' + _typePrice + '_' + _offset).val(PeriodType);
+            $('#hidPeriod' + _typePrice + '_' + _offset).val(Period);
+            $('#hidPrice' + _typePrice + '_' + _offset).val(Price);
+            $('#hidnameperiodtype_' + _offset).val(NamePeriodTypes);
+            //=============
+            $('#edit' + _typePrice + '_' + _offset).data('period', Period);
+            $('#edit' + _typePrice + '_' + _offset).data('periodtype', PeriodType);
+            $('#edit' + _typePrice + '_' + _offset).data('nameperiodtype', NamePeriodTypes);
+            $('#edit' + _typePrice + '_' + _offset).data('price', Price);
+            //=============
+            IsEdit = false;
+            _offset = -1;
+            $('#modal-add-price').modal('hide');
+            _valueEdit = "";
+        }
+    }
+
+    function DeletePrice(OffSet, _type) {
+        var count = $('.ng-Price' + _type + ':visible').length;
+        if (_type != 'Extend') {
+            if (count == 1) {
+                $('#ltrErrorPrice' + _type + '').html("Unable to delete it. The price list must have at least one item");
+                return false;
+            }
+        }
+        var tr = $('#tr_add_price' + _type + '_' + OffSet);
+        $(tr).find('input.PriceStatus').val(9);
+        $(tr).css('display', 'none');
+    }
+
+    /*Function changeStatus*/
+    function changeStatus(e, _OffSet, _type) {
+        var text = $(e).html();
+        if (text == 'Active') {
+            $(e).removeClass('btn-success');
+            $(e).addClass('btn-danger');
+
+            //$('#lblstatus' + _type + '_' + _OffSet).html('Active');
+            $('#hidIsSelected' + _type + '_' + _OffSet).val(true);
+
+            $(e).html('Inactive');
+        }
+        else {
+            $(e).removeClass('btn-danger');
+            $(e).addClass('btn-success');
+
+            //$('#lblstatus' + _type + '_' + _OffSet).html('Inactive');
+            $('#hidIsSelected' + _type + '_' + _OffSet).val(false);
+
+            $(e).html('Active');
+        }
+    }
+    /*End Function changeStatus*/
+
+    /*Edit*/
+    $('#modal-add-price').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        var _period = button.data('period'); // Extract info from data-* attributes
+        _typePrice = button.data('type');
+        var modal = $(this)
+
+        if (typeof _period != 'undefined') {//Edit
+
+            _offset = button.data('offset');
+            IsEdit = true;
+
+            var _price = button.data('price');
+            var _periodtype = button.data('periodtype');
+            var _nameperiodtype = button.data('nameperiodtype');
+            _valueEdit = _period + _nameperiodtype;
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            modal.find('#mymodalTitle').text('Price Info');
+            modal.find('.modal-body input#txtPeriod').val(_period);
+            modal.find('.modal-body input#txtPrice').val(_price);
+            modal.find('.modal-body #PeriodTypeDdl').val(_periodtype).trigger("change");
+        }
+        else {//Create
+            IsEdit = false;
+            modal.find('#mymodalTitle').text('Price Info');
+            modal.find('.modal-body input#txtPeriod').val(1);
+            modal.find('.modal-body , input#txtPrice').val(0);
+            modal.find('.modal-body #PeriodTypeDdl').val(@Commons.EPeriodType.Day.ToString("d")).trigger("change");
+        }
+        modal.find('.modal-body #ltrError').html('');
+    })
+
+    $("#PeriodTypeDdl").change(function () {
+        var value = this.value;
+        if (value == '@Commons.EPeriodType.OneTime.ToString("d")') {
+            $('#txtPeriod').attr('disabled', true);
+        } else {
+            $('#txtPeriod').removeAttr('disabled');
+        }
+    });
+
+    function SearchByKeyName(btn) {
+        var keySearch = $(btn).parents('div.form-group:first').find('input').val().toLowerCase();
+        var trs = $(btn).parents('.modal-body:first').find('tbody tr');
+        var arrKeySearch = keySearch.split(' ');
+        if (keySearch != '') {
+            for (var i = 0; i < trs.length; i++) {
+                var name = $.trim($(trs[i]).find('td.nameSearch').text());
+                for (var j = 0; j < arrKeySearch.length; j++) {
+                    if (name.toLowerCase().indexOf(arrKeySearch[j]) != -1) {
+                        if ($(trs[i]).css('display') == 'none')
+                            $(trs[i]).css('display', 'table-row');
+                        break;
+                    }
+                    else
+                        if ($(trs[i]).css('display') == 'table-row')
+                            $(trs[i]).css('display', 'none');
+                }
+            }
+        }
+        else {
+            $(trs).each(function (e) {
+                if ($(this).css('display') == 'none')
+                    $(this).css('display', 'table-row');
+            });
+        }
+    }
+</script>

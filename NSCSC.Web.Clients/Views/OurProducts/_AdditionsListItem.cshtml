@@ -1,0 +1,41 @@
+﻿@model NSCSC.Shared.Models.OurProducts.Addition.AdditionViewModels
+@using NSCSC.Shared.Helpers
+<!--List Product-->
+@foreach (var item in Model.ListProduct)
+{
+    <div class="form-group itemProduct">
+        <div class="col-md-2 col-sm-2 col-xs-12">
+            <div class="form-group text-center imageProduct">
+               <a href="@Url.ActionEncoded("AdditionDetail", new { id = item.ID })">
+                    <img id="upload-preview" class="" src="@item.ImageURL" height="110" width="150" />
+                </a>
+            </div>
+        </div>
+        <div class="col-md-10 col-sm-10 col-xs-12">
+            <div class="form-group infoProduct">
+                <div class="col-md-12 col-sm-12 col-xs-12 content">
+                    <div class="row">
+                        <label class="fontBold title fontUppercase"><a href="@Url.ActionEncoded("AdditionDetail", new { id = item.ID })">@item.Name</a></label>
+                    </div>
+                    <div class="row">
+                        <label class="fontLighter">@if (item.Description != null)
+                        {<span class="fontBold">Description:</span>} @Html.Raw(item.Description)</label>
+                    </div>
+                    <div class="row">
+                        <label class="fontLighter">@if (item.ApplicableProducts != null)
+                        {<span class="fontBold">Applicable Products:</span>} @item.ApplicableProducts</label>
+                    </div>
+                    <div class="row">
+                        <label class="fontLighter">
+                            <span class="fontBold">Price: </span>
+                            <span class="fontBold" style="font-size:25px;">@item.CurrencySymbol@item.Price.ToString("N2")</span>
+                        </label>
+                    </div>
+                    <div class="row text-right">
+                        <a href="@Url.ActionEncoded("AdditionDetail", new { id = item.ID })" class="btn btn-primary fontUppercase">select</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

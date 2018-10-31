@@ -1,0 +1,604 @@
+﻿@model NSCSC.Shared.Models.OurProducts.Addition.AdditionDetailViewModels
+@using NSCSC.Shared.Helpers
+@using NSCSC.Shared
+
+@{
+    var AdditionName = "";
+    var additionid = "";
+    if ((Model.AdditionDetail != null))
+    {
+        AdditionName = Model.AdditionDetail.Name;
+        additionid = Model.AdditionDetail.ID;
+    }
+    ViewBag.Title = "Addition - " + AdditionName;
+    //===========
+    var CusId = "";
+    if (Session["UserClientSite"] != null)
+    {
+        var Client = Session["UserClientSite"] as NSCSC.Shared.Models.UserSession;
+        CusId = Client.UserId;
+
+    }
+    else
+    {
+        CusId = "";
+    }
+}
+
+<div class="se-pre-con" style="display: none;"></div>
+<div class="title_left">
+    @*@Html.Partial("~/Views/Shared/_breadcrumb.cshtml",
+        new Dictionary<string, string> { { "A", "ADDITIONS" }, { "B", "HOME" },
+                                    { "C", "OUR PRODUCTS/" + Model.AdditionDetail.Name.ToUpper() + "" } })*@
+    <div class="container">
+        @*<div class="col-sm-12 col-xs-12 col-md-12" style="margin-top:-25px;float:right">*@
+            <h3>
+                @*@AdditionName.ToUpper()*@
+                <small class="breadcrum">
+                    <a href="@Url.Action("Index", "Home")">home</a>
+                    @if (!string.IsNullOrEmpty(Model.AdditionDetail.Name))
+                    {
+                        <i class='fa fa-caret-right'></i>
+                        <a href="@Url.Action("Addition", "OurProducts")">additions list</a>
+                        <i class='fa fa-caret-right'></i>
+                        <span>@AdditionName.ToLower()</span>
+                    }
+                </small>
+            </h3>
+        @*</div>*@
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+@using (@Html.BeginForm("AddToCartOfAddition", "OurProducts", FormMethod.Post, new
+{
+    @class = "",
+    @id = "form-addition",
+    @enctype = "multipart/form-data"
+}))
+{
+    @Html.HiddenFor(model => model.AdditionDetail.ID)
+    @Html.HiddenFor(model => model.AdditionDetail.Name)
+    @Html.HiddenFor(model => model.AdditionDetail.ProductType)
+    @Html.HiddenFor(model => model.AdditionDetail.AdditionType)
+
+    @Html.HiddenFor(model => model.AdditionDetail.NumberOfAccount)
+    @Html.HiddenFor(model => model.AdditionDetail.NumOfStore)
+    @Html.HiddenFor(model => model.AdditionDetail.AmountOfUnit)
+
+    @Html.HiddenFor(model => model.AdditionDetail.ImageURL)
+
+    @Html.HiddenFor(model => model.AdditionDetail.Period, new { @id = "hidPeriod" })
+    @Html.HiddenFor(model => model.AdditionDetail.PeriodType, new { @id = "hidPeriodType" })
+    @Html.HiddenFor(model => model.AdditionDetail.Price)
+
+    @Html.HiddenFor(model => model.AdditionDetail.PromotionID)
+    @Html.HiddenFor(model => model.AdditionDetail.PromotionName)
+    @Html.HiddenFor(model => model.AdditionDetail.PromotionAmount)
+    @Html.HiddenFor(model => model.AdditionDetail.IsApplyPromotion)
+
+    @Html.HiddenFor(model => model.AdditionDetail.DiscountID)
+    @Html.HiddenFor(model => model.AdditionDetail.DiscountName)
+    @Html.HiddenFor(model => model.AdditionDetail.DiscountAmount)
+    @Html.HiddenFor(model => model.AdditionDetail.DiscountValue)
+    @Html.HiddenFor(model => model.AdditionDetail.DiscountType)
+
+    @Html.HiddenFor(model => model.AdditionDetail.Description)
+    @Html.HiddenFor(model => model.AdditionDetail.ItemGroup)
+    @Html.HiddenFor(model => model.AdditionDetail.IsDelete)
+
+    <div class="row form-horizontal form-label-left listItemYourCart">
+        @*Product*@
+        <div class="form-group itemProduct">
+            <div class="col-md-2 col-sm-2 col-xs-12">
+                <div class="form-group text-center imageProduct">                    
+                        <img id="upload-preview" class="" src="@Model.AdditionDetail.ImageURL" height="110" width="150" />                    
+                </div>
+            </div>
+            <div class="col-md-10 col-sm-10 col-xs-12">
+                <div class="form-group infoProduct">
+                    @*Header*@
+                    <div class="col-md-12 col-sm-12 col-xs-12 header" style="border:none;">
+                        <div class="col-md-12 col-sm-12 col-xs-12" style="padding-left:0px;">
+                            <label class="fontBold text-success fontUppercase">@Model.AdditionDetail.Name</label>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12" style="padding-left:0px;">
+                            <div id="elem-apple-to-product">
+                                Apply to product/package
+                                &nbsp;&nbsp;
+                                <a href="javascript:void(0);" class="btn btn-default" id="btn-apple-to-product" @*data-target="#bs-modal-select-product-package"*@ onclick="SelectApplyforProduct('#bs-modal-select-product-package')">
+                                    select &nbsp;&nbsp; <i class="fa fa-angle-down"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*Period Time*@
+        <div class="form-group itemProduct pading-top-bottom">
+            <div class="row infoProduct" style="padding-bottom:10px;">
+                <div class="col-md-12 col-sm-12 col-xs-12 pading-top-bottom" style="font-size:15px; padding-bottom:15px;">
+                    <div class="col-md-12 col-sm-12 col-xs-2">
+                        Please select the period for this addition
+                    </div>
+                </div>
+                @*list item*@
+                <div class="col-md-12 col-sm-12 col-xs-12" style="padding:10px 0;">
+                    <div class="col-md-2 col-sm-2 col-xs-2 fontBold text-left" style="padding-left:0px;">
+                        <input type="radio" class="flatPrice" checked name="PeriodPrice" />
+                        &nbsp;&nbsp;Period time
+                    </div>
+                    <div class="col-md-3 col-sm-3 col-xs-3">
+                        @if (Model.AdditionDetail.ListPrice.Where(x => !x.IsExtend).ToList().Count() > 1)
+                        {
+                            <a href="javascript:void(0);" class="btn btn-default" id="btn-period-time" @*data-backdrop="static"*@
+                               data-toggle="modal" data-target="#bs-modal-pricing-list">
+                                <span id="lblPeriodTime">@Model.AdditionDetail.PeriodTime</span> &nbsp;&nbsp; <i class="fa fa-angle-down"></i>
+                            </a>
+                        }
+                        else
+                        {
+                            <button disabled class="btn btn-default">
+                                <span>@Model.AdditionDetail.PeriodTime</span> &nbsp;&nbsp; <i class="fa fa-angle-down"></i>
+                            </button>
+                        }
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-xs-2  text-right">
+                        with price at
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-xs-2 text-right fontBold">
+                        @Model.AdditionDetail.CurrencySymbol<span id="lblPeriodTimePrice">@Model.AdditionDetail.Price.ToString("n2")</span>
+                    </div>
+                </div>
+
+                <div id="divProductApplied">
+                </div>
+            </div>
+        </div>
+
+        @*Cancel | Add to Cart*@
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12 text-right">
+                <a href="@Url.Action("Addition")" class="btn btn-default fontUppercase">cancel</a>
+                @*<button class="btn btn-primary fontUppercase" data-toggle="modal" type="button"
+                        data-backdrop="static" data-target="#bs-modal-on-quantity" id="AddtoCartAddition">
+                    Add to Cart
+                </button>*@
+                <button class="btn btn-primary fontUppercase" id="AddtoCartAddition">
+                    Add to Cart
+                </button>
+                
+            </div>
+        </div>
+    </div>
+
+    <!--modal Pricing List-->
+    <div class="modal fade" id="bs-modal-pricing-list" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:#f2f2f2;">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title fontUppercase text-left">@Model.AdditionDetail.Name | <span style="color:darkred;">Pricing List</span></h4>
+                </div>
+                <div class="modal-body" style="padding:0px;">
+                    <table id="tbl-pricing-list" class="table-format-client">
+                        <thead>
+                            <tr>
+                                <td class="" style="width:70%;"><span class="fontBold fontUppercase">period</span></td>
+                                <td class="text-right fontBold"><span class="fontBold fontUppercase">price</span></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.AdditionDetail.ListPrice != null && Model.AdditionDetail.ListPrice.Count > 0)
+                            {
+                                foreach (var item in Model.AdditionDetail.ListPrice.Where(w => !w.IsExtend).OrderBy(o => o.PeriodType).ThenBy(o => o.Period).ThenBy(o => o.Price).ToList())
+                                {
+                                    var NamePeriodType = "";
+                                    if (item.PeriodType != (int)Commons.EPeriodType.OneTime)
+                                    {
+                                        NamePeriodType = item.Period + " ";
+                                    }
+                                    NamePeriodType += item.NamePeriodType;
+                                    <tr data-name="@NamePeriodType" data-price="@item.Price.ToString("n2")"
+                                        data-period="@item.Period" data-periodtype="@item.PeriodType">
+                                        <td>
+                                            <input type="radio" class="flat" value="@item.Price" name="itemPeriodTime" @string.Format("{0}", item.IsActive ? "checked" : "") />
+                                            &nbsp;@NamePeriodType
+                                        </td>
+                                        <td class="text-right">@Model.AdditionDetail.CurrencySymbol @item.Price.ToString("n2")</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end modal Pricing List -->
+
+    <!--modal select product package-->
+    <div class="modal fade" id="bs-modal-select-product-package" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-toggle="modal" data-additionid="@Model.AdditionDetail.ID">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:#f2f2f2;">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title fontUppercase">select product / package</h4>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group text-center" style="padding-top: 10px;">
+                        <button type="button" class="btn btn-warning fontUppercase" id="btnProduct"
+                                onclick="ChangeProductType('@Commons.EProductType.Product.ToString("d")')">
+                            products
+                        </button>
+                        <button type="button" class="btn btn-default fontUppercase" id="btnPackage"
+                                onclick="ChangeProductType('@Commons.EProductType.Package.ToString("d")')">
+                            packages
+                        </button>
+                    </div>
+                    <div class="form-group text-center">
+                        <div class="input-group" style="margin: auto; width: 60%;">
+                            <input class="form-control" id="txtSearch" placeholder="Enter product / package name" aria-label="Enter product / package name" type="text">
+                            <span class="input-group-btn">
+                                <button class="btn btn-secondary" type="button" onclick="SearchProduct(this, false); return false;">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                    <div>
+                        <div id="list-product-apply">
+                            <table id="tbl-select-product-package" class="table-format-client">
+                                <thead style="background-color:#ddd;">
+                                    <tr>
+                                        <td class="text-left"><span class="fontBold fontUppercase">product</span></td>
+                                        <td class="text-center"><span class="fontBold fontUppercase">bought date</span></td>
+                                        <td class="text-right"><span class="fontBold fontUppercase">expiry date</span></td>
+                                    </tr>
+                                </thead>
+                                <tbody id="list-item-select-product-package"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="border:none;">
+                    <button type="button" class="btn btn-primary" onclick="SetProductForAddition('#divProductApplied', '#bs-modal-select-product-package')" id="btnconfirm" disabled="disabled">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end modal select product package -->
+
+    <!--Confirmation-->
+    <div class="modal fade" id="bs-modal-on-quantity" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title fontUppercase">Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label">Choose the quantity for the addition that you want to buy</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="txt-quantity" class="control-label">Quantity:</label>
+                        @Html.TextBoxFor(model => model.AdditionDetail.Quantity, new { @class = "form-control", @id = "txt-quantity", @autocomplete = "off" })
+                    </div>
+                    <div class="form-group text-right">
+                        <span class="label label-danger" id="lblMsg"></span>
+                    </div>
+                </div>
+                <div class="modal-footer" style="border:none;">
+                    <a class="btn btn-success" data-dismiss="modal">Close</a>
+                    <a class="btn btn-primary" onclick="SubmitForm('#form-addition')">Confirm</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+    #list-product-apply {
+        height: 420px;
+        overflow: auto;
+        margin-top: 15px;
+    }
+
+    #tbl-select-product-package {
+        width: 100%;
+        position: relative;
+    }
+    /*#tbl-select-product-package thead tr td{
+        position:absolute;
+        top:-20px;
+        z-index:2;
+        height:50px;
+        width: 100%;
+        background-color: #ddd;
+    }*/
+    /*#tbl-select-product-package thead {
+            position: fixed;
+            width: calc(100% - 32px);
+            display: table;
+            z-index: 2;
+        }*/
+</style>
+
+<script type="text/javascript">
+    var btnGlobal;
+    var _AdditionID;
+
+    var ProductApplyAdditionModels;
+    var MinDay = '@Model.AdditionDetail.MinDay';
+    var MaxDay = '@Model.AdditionDetail.MaxDay';
+
+    $(document).ready(function (e) {
+        init_ICheck();
+        $("#AppliedOnDdl").select2({
+            placeholder: "Please choose applied"
+        });
+
+        $('#list-item-select-product-package tr').find('input[type="radio"]').prop('checked', true);
+
+        var AdditionType = '@Model.AdditionDetail.AdditionType'
+        if (AdditionType == '@Commons.EAdditionType.Hardware.ToString("d")' || AdditionType == '@Commons.EAdditionType.Service.ToString("d")'
+            || AdditionType == '@Commons.EAdditionType.Function.ToString("d")') {
+            $('#elem-apple-to-product').hide();
+        }
+        else {
+            $('#AddtoCartAddition').attr('disabled', true)
+        }
+
+        /*===============*/
+        //$("#bs-modal-on-quantity").on('show.bs.modal', function (event) {
+        //    $('#txt-quantity').val(1);
+        //    $('#lblMsg').html('');
+        //});
+
+        /*===============*/
+        $("#bs-modal-select-product-package").on('show.bs.modal', function (event) {
+            //btnGlobal = $(event.relatedTarget); // Button that triggered the modal
+            //_AdditionID = btnGlobal.data('additionid');
+            _AdditionID = $('#bs-modal-select-product-package').attr('data-additionid');
+            //alert(_AdditionID);
+            $('#txtSearch').val('');
+
+            $('#btnProduct').addClass('btn-warning');
+            $('#btnPackage').addClass('btn-default');
+            $('#btnPackage').removeClass('btn-warning');
+
+            //=========
+            //_TypeProductApply
+            //'@Commons.EProductType.Product.ToString("d")'
+            //alert(_TypeProductApply);
+            //AdditionApplyProduct(_TypeProductApply, '#list-item-select-product-package');
+            ChangeProductType(_TypeProductApply);
+        });
+
+    });
+
+    function SelectApplyforProduct(_modal) {
+        if ('@CusId' == null || '@CusId' == '') {
+            window.location.assign(BaseUrl + 'login');
+        }
+        else {
+            $(_modal).modal('show', true);
+        }
+        //$("#bs-modal-select-product-package").modal('show', true);
+    }
+
+    /*Function*/
+
+    function init_ICheck() {
+        //if ($("input.flat")[0]) {
+        //    $(document).ready(function () {
+        //        $('input.flat').iCheck({
+        //            checkboxClass: 'icheckbox_flat-blue',
+        //            radioClass: 'iradio_flat-blue'
+        //        });
+        //    });
+        //}
+
+        //if ($("input.flatPrice")[0]) {
+        //    $(document).ready(function () {
+        //        $('input.flatPrice').iCheck({
+        //            checkboxClass: 'icheckbox_flat-green',
+        //            radioClass: 'iradio_flat-green'
+        //        });
+        //    });
+        //}
+    };
+
+    $('#tbl-pricing-list tr').click(function (event) {
+        var row = $(this);
+        var _radio = row.find('input[type="radio"]');
+        _radio.prop('checked', true);
+
+        $('#lblPeriodTime').html(row.data('name'));
+        $('#lblPeriodTimePrice').html(row.data('price'));
+
+        $('#hidPeriod').val(row.data('period'));
+        $('#hidPeriodType').val(row.data('periodtype'));
+        $('#AdditionDetail_Price').val(row.data('price').replace(/\,/g, ''));
+        //========
+        //$('input[name="itemPeriodTime"]').iCheck({
+        //    radioClass: 'iradio_flat-blue'
+        //});
+        $('#bs-modal-pricing-list').modal('hide');
+    });
+    var _TypeProductApply = '@Commons.EProductType.Product.ToString("d")';
+    function ChangeProductType(type) {
+        _TypeProductApply = type;
+        if (type == '@Commons.EProductType.Product.ToString("d")') {
+            $('#btnProduct').addClass('btn-warning');
+            $('#btnPackage').addClass('btn-default');
+            $('#btnPackage').removeClass('btn-warning');
+        } else {
+            $('#btnPackage').addClass('btn-warning');
+            $('#btnProduct').addClass('btn-default');
+            $('#btnProduct').removeClass('btn-warning');
+        }
+        var ele = '#list-item-select-product-package';
+        AdditionApplyProduct(type, ele);
+    }
+
+    //AdditionApplyProduct
+    function AdditionApplyProduct(type, ele) {
+        $(ele).html('');
+        $.ajax({
+            type: "GET",
+            url: CreateAbsoluteUrl("AdditionApplyProduct"),
+            traditional: true,
+            data: {
+                Type: type,
+                AdditionID: _AdditionID,
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                $(ele).html(data);
+            },
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+                if (typeof ProductApplyAdditionModels !== 'undefined') {
+                    $('#' + ProductApplyAdditionModels.ProductID).iCheck('check');
+                }
+            },
+        });
+    }
+
+    function SetProductForAddition(ele, _modal) {
+        if (ProductApplyAdditionModels.ProductType == '@Commons.EProductType.Product.ToString("d")')
+        {
+            $('#btn-apple-to-product').html(ProductApplyAdditionModels.ProductName).trigger('change');
+        } else {
+            $('#btn-apple-to-product').html(ProductApplyAdditionModels.ProductName + " ( in " + ProductApplyAdditionModels.ParentProductName + ")").trigger('change');
+        }
+        if (ProductApplyAdditionModels.ProductName.length > 0) {
+            $('#AddtoCartAddition').attr('disabled', false);
+        }
+        var PeriodType = '@Model.AdditionDetail.PeriodType';
+        var CountItemPrice = '@Model.AdditionDetail.ListPrice.Count';
+        @*if (PeriodType == '@Commons.EPeriodType.OneTime.ToString("d")' || CountItemPrice == 1) {
+            $(_modal).modal('hide');
+            return false;
+        }*@
+        ProductApplyAdditionModels.MinDay = MinDay;
+        ProductApplyAdditionModels.MaxDay = MaxDay;
+
+        $.ajax({
+            type: "POST",
+            url: CreateAbsoluteUrl("SetProductForAddition"),
+            traditional: true,
+            data: JSON.stringify(ProductApplyAdditionModels),
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                $(ele).html(data);
+                $(_modal).modal('hide');
+            },
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            },
+        });
+    }
+
+    function SearchProduct(btn) {
+        var keySearch = $(btn).parents('div.form-group:first').find('input').val().toLowerCase();
+        var trs = $(btn).parents('.modal-body:first').find('tbody tr');
+        var arrKeySearch = keySearch.split(' ');
+        if (keySearch != '') {
+            for (var i = 0; i < trs.length; i++) {
+                var name = $.trim($(trs[i]).find('td:first').text());
+                for (var j = 0; j < arrKeySearch.length; j++) {
+                    if (name.toLowerCase().indexOf(arrKeySearch[j]) != -1) {
+                        if ($(trs[i]).css('display') == 'none')
+                            $(trs[i]).css('display', 'table-row');
+                        break;
+                    }
+                    else
+                        if ($(trs[i]).css('display') == 'table-row')
+                            $(trs[i]).css('display', 'none');
+                }
+            }
+        }
+        else {
+            $(trs).each(function (e) {
+                if ($(this).css('display') == 'none')
+                    $(this).css('display', 'table-row');
+            });
+        }
+    }
+
+    $("#form-addition").submit(function (e) {
+        var isSubmit = $(this).valid();
+        var Qty = $('#txt-quantity').val();
+        if (Qty == '') {
+            $('#lblMsg').html('[Quantity] can\'t empty !!!');
+            $('#txt-quantity').focus();
+            isSubmit = false;
+        }
+        else if (!$.isNumeric(Qty)) {
+            $('#lblMsg').html('[Quantity] is a number !!!');
+            $('#txt-quantity').focus();
+            isSubmit = false;
+        }
+        else if (Qty <= 0) {
+            $('#lblMsg').html('Please enter [Quantity] greater than to 0. !!!');
+            $('#txt-quantity').focus();
+            isSubmit = false;
+        }
+        if (isSubmit) {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: "POST",
+                data: new FormData(this),
+                processData: false,
+                contentType: false,
+                dataType: "html",
+                success: function (data) {
+                    data = JSON.parse(data);
+                    //=========
+                    var countItemCart = data.TotalQuantity;//data.ListItems.length;
+                    //$('#bs-modal-on-quantity').modal('hide');
+                    createOrUpdateOrder('@Model.AdditionDetail.CusId', data.ID, countItemCart);
+                    //getOrder();
+                    window.location.assign(CreateAbsoluteUrl('Addition'));
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(jqXHR.statusText)
+                    // $('#lblMsg').html(jqXHR.statusText);
+                    if (jqXHR.status == 400 && jqXHR.statusText !== "The curent order contains free trial product. Please checkout this order before buying other items.") {
+                        deleteOrder();
+                    }
+                },
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+            });
+        }
+        e.preventDefault();
+    });
+
+</script>

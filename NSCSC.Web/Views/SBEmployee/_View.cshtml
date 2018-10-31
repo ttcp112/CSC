@@ -1,0 +1,173 @@
+﻿@using NSCSC.Shared
+@model NSCSC.Shared.Models.Sandbox.Employee.EmployeeDetailModels
+<div role="main" class="right_col">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left" style="padding: 10px 0px;">
+                @Html.Partial("~/Views/Shared/_breadcrumb.cshtml",
+                    new Dictionary<string, string> { { "A", "Sandbox" }, { "B", "Employees" }, { "C", "View Detail" } })
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12 x_panel">
+                    <div class="x_content">
+                        <div class="row text-right">
+                            <ul class="header-buttons pull-right list-inline">
+                                <li><a href="javascript:void(0)" onclick="CloseDetail(); return false;" class="btn btn-danger" id="btn-delete"><i class="fa fa-times"></i>&nbsp;Close</a></li>
+                            </ul>
+                        </div>
+                        <div class="row form-horizontal form-label-left">
+                            <div class="row form-horizontal form-label-left" style="margin-bottom:15px;">
+                                <div class="col-md-12 col-sm-12 col-xs-12 topDotBorder"></div>
+                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                    <!--Image Placeholder-->
+                                    <div class="form-group">
+                                        <div class="col-md-12" style="text-align:center;width:100%;">
+                                            @if (!string.IsNullOrEmpty(Model.ImageURL))
+                                            {
+                                                <img id="upload-preview" src="@Model.ImageURL" height="200" width="200" style="max-width:100%"/>
+                                            }
+                                            else
+                                            {
+                                                <img id="upload-preview" class="" src="@Commons.Image200_200" height="200" width="200" style="max-width:100%"/>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-9 col-sm-9 col-xs-12" style="padding:0;">
+                                    @*Name*@
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2 col-sm-2 col-xs-12">Name</label>
+                                        <div class="col-md-8 col-sm-8 col-xs-12">
+                                            @Model.Name
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @*Phone*@
+                                        <label class="control-label col-md-2 col-sm-2 col-xs-12">Phone</label>
+                                        <div class="col-md-8 col-sm-8 col-xs-12">
+                                            @Model.Phone
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @*Email*@
+                                        <label class="control-label col-md-2 col-sm-2 col-xs-12">Email</label>
+                                        <div class="col-md-8 col-sm-8 col-xs-12">
+                                            @Model.Email
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @*Active*@
+                                        <label class="control-label col-md-2 col-sm-2 col-xs-12">Active</label>
+                                        <div class="checkbox col-md-4" style="padding-top:0">
+                                            @string.Format("{0}", Model.IsActive ? @Html.Raw("Yes") : @Html.Raw("No"))
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group" style="clear:both;">
+                                    @*Gender*@
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Gender</label>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        @string.Format("{0}", Model.Gender ? @Html.Raw("Male") : @Html.Raw("Female"))
+                                    </div>
+                                    @*Marital*@
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Marital Status</label>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        @string.Format("{0}", Model.IsMarital ? @Html.Raw("Married") : @Html.Raw("Single"))
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @*NRIC/ID*@
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">NRIC/ID</label>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        @Model.IC
+                                    </div>
+                                    @*PinCode*@
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Pin Code</label>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        @*@Model.PinCode*@
+                                        ***
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @*Birthday*@
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Birthday</label>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        @Model.Birthday.ToString("dd/MM/yyyy")
+                                    </div>
+                                    @*Hired  Date*@
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Hired Date</label>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        @Model.HiredDate.ToString("dd/MM/yyyy")
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @*Role*@
+                                    <label for="Role" class="col-sm-2 control-label">Role</label>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        @Model.RoleName
+                                    </div>
+                                    @*Expried  Date*@
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Expried Date</label>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        @if (DateTime.Compare(Model.ExpiredDate.Date, Commons.MaxDate.Date) >= 0)
+                                        {
+                                            @Html.Raw("Never")
+                                        }
+                                        else
+                                        {
+                                            @Model.ExpiredDate.ToString("dd/MM/yyyy")
+                                        }
+                                        
+                                    </div>
+                                </div>
+
+                                @*Home Address*@
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Home Address</label>
+                                    <div class="col-md-10 col-sm-10 col-xs-12 topDotBorder">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @*Street*@
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Street</label>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        @Model.Street
+                                    </div>
+                                    @*City*@
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">City</label>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        @Model.City
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @*Country*@
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Country</label>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        @Model.Country
+                                    </div>
+                                    @*ZIP Code*@
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Zip Code</label>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        @Model.ZipCode
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

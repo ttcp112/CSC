@@ -1,0 +1,971 @@
+﻿@model NSCSC.Shared.Models.ClientSite.YourCart.CheckOutViewModels
+@using NSCSC.Shared.Helpers
+@using NSCSC.Shared
+@{
+    ViewBag.Title = "Check Out";
+}
+<div class="se-pre-con" style="display: none;"></div>
+
+<div class="title_left">
+    @*@Html.Partial("~/Views/Shared/_breadcrumb.cshtml",
+        new Dictionary<string, string> { { "A", "CHECK OUT" }, { "B", "YOUR CART" }, { "C", "CHECK OUT" } })*@
+    <div class="container">
+        @*<div class="col-sm-12 col-xs-12 col-md-12" style="margin-top:-25px;float:right">*@
+        <h3>
+            @*CHECK OUT*@
+            <small class="breadcrum">
+                <a href="@Url.Action("Index", "Home")">home</a>
+                <i class='fa fa-caret-right'></i>
+                <a href="@Url.Action("Index", "YourCart")">Your Cart</a>
+                <i class='fa fa-caret-right'></i>
+                <span>check out </span>
+            </small>
+        </h3>
+        @*</div>*@
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+@*Focus*@
+<div id="ajaxResponse">
+    <div class="row">
+        <div id="wizard" class="form_wizard wizard_horizontal">
+            <ul class="wizard_steps" style=" z-index:-1">
+                <li>
+                    <a href="javascript:void(0)" class="selected" id="focus1">
+                        <span class="step_no">1</span>
+                        <span class="step_descr">
+                            Input Store
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" class="disabled" id="focus2">
+                        <span class="step_no">2</span>
+                        <span class="step_descr">
+                            Terms and Conditions
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" class="disabled" id="focus3">
+                        <span class="step_no">3</span>
+                        <span class="step_descr">
+                            Check Out
+                        </span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    @*=====> STEP 01*@
+    <div id="step1">
+        <!--Description-->
+        <div class="row">
+            <div class="product_price">
+                <h1 class="title">Description</h1>
+                <div class="content" style="font-style: italic; ">
+                    <p class="">Store will be attached with your inventory data sale and others. It's recommended to set up store for each of your products.</p>
+                    <p>Each product will provide you a number of stores (if any). You can use them to create new store or to extend the expiry date of any existing store.</p>
+                    <p>Store provided when buying product will be expired when its product expires</p>
+                </div>
+            </div>
+        </div>
+
+        <!--Summary-->
+        <div class="row">
+            <div class="product_price">
+                <h1 class="title">Summary <span style="font-style: italic; ">(Click on the product's name to go straight to that product)</span></h1>
+                <div class="content">
+                    @if (Model.ListProduct != null && Model.ListProduct.Count > 0)
+                {
+                    foreach (var item in Model.ListProduct)
+                    {
+                        if (item.ProductType == (byte)Commons.EProductType.Addition)
+                        {
+                            //if (item.AdditionType == (int)Commons.EAdditionType.Location || item.AdditionType == (int)Commons.EAdditionType.Software || item.AdditionType == (int)Commons.EAdditionType.Account)
+                            //{
+                            @*<a href="@Url.Action("AdditionDetail", "OurProducts", new { id = item.ProductID })" class=""><span class="product">@item.ProductName:</span></a> @item.sStoreCompleted<br />*@
+                                @*<a href="#itemP_@item.ProductID" class=""><span class="product">@item.ProductName:</span></a> @item.sStoreCompleted<br />*@
+                            //}
+                            //else
+                            //{
+                            @*<a href="@Url.Action("AdditionDetail", "OurProducts", new { id = item.ProductID })" class=""><span class="product">@item.ProductName:</span></a> @: not <br />*@
+                                @*<a href="#itemP_@item.ProductID" class=""><span class="product">@item.ProductName</span></a> <br />*@
+                            //}
+                            if (item.AdditionType == (int)Commons.EAdditionType.Location)
+                            {
+                                    <a href="#itemP_@item.OffSet" class=""><span class="product">@item.ProductName:</span></a> @item.sStoreCompleted<br />
+                            }
+                            else
+                            {
+                                    <a href="#itemP_@item.OffSet" class=""><span class="product">@item.ProductName</span></a> <br />
+                            }
+                        }
+                        if (item.ProductType == (byte)Commons.EProductType.Package)
+                        {
+                                @*<a href="@Url.Action("PackageDetail", "OurProducts", new { id = item.ProductID })" class=""><span class="product">@item.ProductName:</span></a> @item.sStoreCompleted<br />*@
+                                <a href="#itemP_@item.OffSet" class=""><span class="product">@item.ProductName:</span></a> @item.sStoreCompleted<br />
+                        }
+                        if (item.ProductType == (byte)Commons.EProductType.Product)
+                        {
+                                @*<a href="@Url.Action("ProductDetail", "OurProducts", new { id = item.ProductID })" class=""><span class="product">@item.ProductName:</span></a> @item.sStoreCompleted<br />*@
+                                <a href="#itemP_@item.OffSet" class=""><span class="product">@item.ProductName:</span></a> @item.sStoreCompleted<br />
+                        }
+                    }
+                }
+                </div>
+            </div>
+        </div>
+
+        <!--button Cancel | Next -->
+        <div class="row text-right" style="border-bottom: 1px solid #c7c7c7; padding:15px 0;">
+            <a class="btn btn-default fontUppercase classcancel" style="width:200px;" href="@Url.Action("Index")">cancel</a>
+            <a class="btn btn-info fontUppercase" style="width:200px;" href="javascript:void(0)" onclick="checkStep(2, true)">next</a>
+        </div>
+
+        <!--List Product-->
+        <div class="row form-horizontal form-label-left listItemCheckOut">
+
+            @if (Model.ListProduct != null && Model.ListProduct.Count > 0)
+        {
+            foreach (var item in Model.ListProduct)
+            {
+                    <div class="form-group itemProduct" id="itemP_@item.OffSet">
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                            <div class="form-group text-center imageProduct">
+                                <img id="upload-preview" class="" src="@item.ImageURL" height="110" width="150" />
+                            </div>
+                        </div>
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <div class="form-group infoProduct">
+                                <div class="col-md-12 col-sm-12 col-xs-12 content">
+                                    <div class="row">
+                                        <label class="fontBold title fontUppercase">@item.ProductName</label>
+                                    </div>
+                                    <div class="row">
+                                        <label class="fontLighter"><span class="fontBold">Period:</span> @item.PeriodName</label>
+                                    </div>
+                                    <div class="row">
+                                        <label class="fontLighter">@item.sAmountOfUnit</label>
+                                    </div>
+
+                                    @if (item.ProductType == (int)Commons.EProductType.Addition && item.AdditionType != (int)Commons.EAdditionType.Location)
+                                //&& item.AdditionType == (int)Commons.EAdditionType.Hardware
+                                //|| item.AdditionType == (int)Commons.EAdditionType.Function
+                                //|| item.AdditionType == (int)Commons.EAdditionType.Service)
+                                {
+                                        <br />
+                                }
+                                else
+                                {
+
+                                    if (item.ListStoreApply != null && item.ListStoreApply.Count > 0)
+                                    {
+                                            <div class="row">
+                                                <label class="fontBold">Applied Stored(s)</label>
+                                            </div>
+                                        foreach (var itemStore in item.ListStoreApply.OrderBy(x => x.sStatus).ThenBy(x => x.sTitle))
+                                        {
+                                                <div class="row">
+                                                    <span class="new">(@itemStore.sStatus)</span><span>@itemStore.sTitle</span>
+                                                </div>
+                                        }
+                                    }
+                                        <div class="row text-right">
+                                            <a href="@Url.ActionEncoded("InputStoreInfo", new { id = item.ID })" class="btn btn-success fontUppercase">Create / Edit Store</a>
+                                        </div>
+                                }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            }
+        }
+        </div>
+    </div>
+    @*End STEP 01*@
+
+    @*=====> STEP 02*@
+    <div id="step2">
+        <!--button Cancel | Previous | Next -->
+        <div class="row text-right" style="border-bottom: 1px solid #c7c7c7; padding:15px 0;">
+            <a class="btn btn-default fontUppercase classcancel" href="@Url.Action("Index")">cancel</a>
+            <a class="btn btn-default fontUppercase previousbuttom" href="javascript:void(0)" onclick="checkStep(1, false)">previous</a>
+            <a class="btn btn-warning fontUppercase" href="javascript:void(0)" onclick="checkStep(3, true)" id="btnNextStep2">next</a>
+        </div>
+
+        <!--Terms and Conditions-->
+        <div class="row">
+            <div class="product_price">
+                <h1 class="title">Terms and Conditions</h1>
+                <div class="content">
+                    <p class="">Store will be attached with your inventory data sale and others. It's recommended to set up store for each of your products.</p>
+                    <p>Each product will provide you a number of stores (if any). You can use them to create new store or to extend the expiry date of any existing store.</p>
+                    <p>Store provided when buying product will be expired when its product expires</p>
+                </div>
+                <div class="content">
+                    <p class="">Store will be attached with your inventory data sale and others. It's recommended to set up store for each of your products.</p>
+                    <p>Each product will provide you a number of stores (if any). You can use them to create new store or to extend the expiry date of any existing store.</p>
+                    <p>Store provided when buying product will be expired when its product expires</p>
+                </div>
+                <div class="content">
+                    <p class="">Store will be attached with your inventory data sale and others. It's recommended to set up store for each of your products.</p>
+                    <p>Each product will provide you a number of stores (if any). You can use them to create new store or to extend the expiry date of any existing store.</p>
+                    <p>Store provided when buying product will be expired when its product expires</p>
+                </div>
+                <br />
+                <div class="content">
+                    <p class="">Store will be attached with your inventory data sale and others. It's recommended to set up store for each of your products.</p>
+                    <p>Each product will provide you a number of stores (if any). You can use them to create new store or to extend the expiry date of any existing store.</p>
+                    <p>Store provided when buying product will be expired when its product expires</p>
+                </div>
+                <br />
+                <div class="content">
+                    <p class="">Store will be attached with your inventory data sale and others. It's recommended to set up store for each of your products.</p>
+                    <p>Each product will provide you a number of stores (if any). You can use them to create new store or to extend the expiry date of any existing store.</p>
+                    <p>Store provided when buying product will be expired when its product expires</p>
+                </div>
+                <br />
+                <div class="text-center" style="font-size:15px;">
+                    <input type="checkbox" class="flat" id="chkAgreeStep2" />&nbsp;&nbsp;&nbsp;I agree with the terms and conditions
+                </div>
+            </div>
+        </div>
+    </div>
+    @*End STEP 02*@
+
+    @*=====> STEP 03*@
+    <!--button Cancel | Previous | Done -->
+    <div id="step3">
+        <form id="payment_confirmation" action="https://testsecureacceptance.cybersource.com/pay" method="post">
+            @{
+            var transaction_uuid = System.Guid.NewGuid().ToString();
+            var signed_date_time = DateTime.Now.ToUniversalTime().ToString("yyyy-MM-dd'T'HH:mm:ss'Z'");
+            var reference_number = System.Guid.NewGuid().ToString();
+            }
+            <input type="hidden" name="access_key" value="1f03a6d39cac3099a9522542b303b0c7">
+            <input type="hidden" name="profile_id" value="E6335B56-1C7F-47A6-9483-9D971A829D53">
+            <input type="hidden" name="transaction_uuid" value="@transaction_uuid">
+            <input type="hidden" name="signed_field_names" value="access_key,profile_id,transaction_uuid,signed_field_names,unsigned_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_address_line1,bill_to_address_city,bill_to_address_country,bill_to_email,bill_to_surname,bill_to_forename">
+            <input type="hidden" name="unsigned_field_names">
+            <input type="hidden" name="signed_date_time" value="@signed_date_time">
+            <input type="hidden" name="locale" value="en">
+            <input type="hidden" name="transaction_type" size="25" value="authorization">
+            <input type="hidden" name="reference_number" size="25" value="@reference_number">
+            <input type="hidden" name="amount" size="25" value="@Model.CheckOut.TotalOrder">
+            <input type="hidden" name="currency" size="25" value="@Model.CurrencySymbol">
+            <input type="hidden" name="bill_to_address_line1" size="25" value="@string.Format("{0}",string.IsNullOrEmpty(Model.CheckOut.Address)? "Default" : Model.CheckOut.Address)" />
+            <input type="hidden" name="bill_to_address_city" size="25" value="@string.Format("{0}",string.IsNullOrEmpty(Model.CheckOut.Address)? "Default" : Model.CheckOut.Address)" />
+            <input type="hidden" name="bill_to_address_country" size="25" value="SG" />
+            <input type="hidden" name="bill_to_email" size="25" value="@string.Format("{0}",string.IsNullOrEmpty(Model.CheckOut.Email)? "Default@gmail.com" : Model.CheckOut.Email)" />
+            <input type="hidden" name="bill_to_surname" size="25" value="@string.Format("{0}",string.IsNullOrEmpty(Model.CheckOut.FullName)? "Default" : Model.CheckOut.FullName)" />
+            <input type="hidden" name="bill_to_forename" size="25" value="@string.Format("{0}",string.IsNullOrEmpty(Model.CheckOut.FullName)? "Default" : Model.CheckOut.FullName)" />
+            @*<input type="hidden" name="merchant_id" size="25" value="uobsg_001500068812" />*@
+            @{
+            IDictionary<string, string> parameters = new Dictionary<string, string>();
+            parameters.Add("access_key", "1f03a6d39cac3099a9522542b303b0c7");
+            parameters.Add("profile_id", "E6335B56-1C7F-47A6-9483-9D971A829D53");
+            parameters.Add("transaction_uuid", transaction_uuid);
+            parameters.Add("signed_field_names", "access_key,profile_id,transaction_uuid,signed_field_names,unsigned_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_address_line1,bill_to_address_city,bill_to_address_country,bill_to_email,bill_to_surname,bill_to_forename");
+            parameters.Add("unsigned_field_names", "");
+            parameters.Add("signed_date_time", signed_date_time);
+            parameters.Add("locale", "en");
+            parameters.Add("transaction_type", "authorization");
+            parameters.Add("reference_number", reference_number);
+            parameters.Add("amount", Model.CheckOut.TotalOrder.ToString());
+            parameters.Add("currency", Model.CurrencySymbol);
+            parameters.Add("bill_to_address_line1", string.Format("{0}", string.IsNullOrEmpty(Model.CheckOut.Address) ? "Default" : Model.CheckOut.Address));
+            parameters.Add("bill_to_address_city", string.Format("{0}", string.IsNullOrEmpty(Model.CheckOut.Address) ? "Default" : Model.CheckOut.Address));
+            parameters.Add("bill_to_address_country", "SG");
+            parameters.Add("bill_to_email", string.Format("{0}", string.IsNullOrEmpty(Model.CheckOut.Email) ? "Default@gmail.com" : Model.CheckOut.Email));
+            parameters.Add("bill_to_surname", string.Format("{0}", string.IsNullOrEmpty(Model.CheckOut.FullName) ? "Default" : Model.CheckOut.FullName));
+            parameters.Add("bill_to_forename", string.Format("{0}", string.IsNullOrEmpty(Model.CheckOut.FullName) ? "Default" : Model.CheckOut.FullName));
+          //  parameters.Add("merchant_id", "uobsg_001500068812");
+            }
+            <input type="hidden" id="signature" name="signature" value="@NSCSC.Shared.Utilities.Security.sign(parameters)" />
+            <input type="submit" id="submitSecureAcceptance" value="Confirm" class="hidden" />
+        </form>
+
+        <div class="row text-right" style="padding:15px 0;" id="divBtnStep">
+            <a class="btn btn-default fontUppercase classcancel" href="@Url.Action("Index")">cancel</a>
+            <a class="btn btn-default fontUppercase previousbuttom" href="javascript:void(0)" onclick="checkStep(2, false)">previous</a>
+            @*<a class="btn btn-warning fontUppercase" href="javascript:void(0)" onclick="OrderPay()" id="btnDone">Make Payment</a>*@
+
+            <a class="btn btn-warning fontUppercase" href="javascript:void(0)" onclick="OrderPayPal()" id="btnDone">Make Payment</a>
+        </div>
+
+        <div class="row text-right" style="padding:15px 0;" id="btnFinalDone">
+            <a class="btn btn-warning fontUppercase" href="@Url.Action("Index","Home")">Finish</a>
+        </div>
+
+        <div class="row check-out-step-3">
+            <div class="col-xs-6" style="padding-left:0px;">
+                <div class="panel">
+                    <a class="panel-heading" href="javascript:void(0)">Customer Information</a>
+                    <div class="panel-body">
+                        <div class="col-md-4">
+                            <img id="upload-preview" class="" src="@Model.CheckOut.ImageURL" width="150" height="150">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="row pading-top-bottom">
+                                <div class="col-md-4 fontBold">Full name:</div>
+                                <div class="col-md-8">@Model.CheckOut.FullName</div>
+                            </div>
+                            <div class="row pading-top-bottom">
+                                <div class="col-md-4 fontBold">Email:</div>
+                                <div class="col-md-8">@Model.CheckOut.Email</div>
+                            </div>
+                            <div class="row pading-top-bottom">
+                                <div class="col-md-4 fontBold">Merchant:</div>
+                                <div class="col-md-8">@Model.CheckOut.Merchant</div>
+                            </div>
+                            <div class="row pading-top-bottom">
+                                <div class="col-md-4 fontBold">Address:</div>
+                                <div class="col-md-8">@Model.CheckOut.Address</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6" style="padding-right:0px;">
+                <div class="panel">
+                    <a class="panel-heading" href="javascript:void(0)">Order Summary</a>
+                    <div class="panel-body">
+                        <div class="row pading-top-bottom">
+                            <div class="col-md-4 fontBold">Number of items:</div>
+                            <div class="col-md-8">@Model.CheckOut.NumberOfItems</div>
+                        </div>
+                        <div class="row pading-top-bottom">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-8" style="font-style: italic">
+                                @Model.CheckOut.sNumberOfItems
+                            </div>
+                        </div>
+                        <div class="row pading-top-bottom">
+                            <div class="col-md-4 fontBold">Sub Total:</div>
+                            <div class="col-md-8">@Model.CurrencySymbol@Model.CheckOut.SubTotal.ToString("N2")</div>
+                        </div>
+                        <div class="row pading-top-bottom">
+                            <div class="col-md-4 fontBold">Discount:</div>
+                            <div class="col-md-8">@Model.CurrencySymbol@Model.CheckOut.Discount.ToString("N2")</div>
+                        </div>
+                        <div class="row pading-top-bottom">
+                            <div class="col-md-4 fontBold">Promotion:</div>
+                            <div class="col-md-8">@Model.CurrencySymbol@Model.CheckOut.TotalPromotion</div>
+                        </div>
+                        <div class="row pading-top-bottom">
+                            <div class="col-md-4 fontBold">Tax(@Model.CheckOut.TaxName: @Model.CheckOut.TaxValue%):</div>
+                            <div class="col-md-8">@Model.CurrencySymbol@Model.CheckOut.Tax.ToString("N2")</div>
+                        </div>
+                        <div class="row pading-top-bottom">
+                            <div class="col-md-4 fontBold">Total Order:</div>
+                            <div class="col-md-8" style="font-size:18px; color:red; font-weight:bold;">@Model.CurrencySymbol@Model.CheckOut.TotalOrder.ToString("N2")</div>
+                        </div>
+                        <div class="row pading-top-bottom">
+                            @if (Model.CheckOut.Note != null)
+                        {
+                                <div class="col-md-12">
+                                    *Note: @*@Model.CheckOut.Note*@
+                                    @Html.TextAreaFor(model => model.CheckOut.Note, new { @class = "form-control area150", @disabled = "disabled", @rows = "5" })
+                                </div>
+                        }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" id="divListPayment">
+            <div class="col-xs-12">
+                <div class="row">
+                    <p class="lead text-danger fontBold" style="font-size:16px;">Select your card to make payment:</p>
+                </div>
+                @*@if (Model.CheckOut.ListPayment != null && Model.CheckOut.ListPayment.Count > 0)
+                    {
+                        foreach (var itemPayment in Model.CheckOut.ListPayment)
+                        {
+                            <div class="row">
+                                <div class="row">
+                                    <div class="col-md-1">
+                                        <a href="javascript:void(0)" onclick="setPayment('@itemPayment.ID')">
+                                            <img id="@itemPayment.ID" src="@itemPayment.ImageURL" class="payment-border">
+                                        </a>
+                                    </div>
+                                    <div class="col-md-11" style="line-height:25px; padding-top:15px"><p class="fontBold" style="font-size:20px;">@itemPayment.Name</p></div>
+                                </div>
+                            </div>
+                            if (itemPayment.ListChild != null && itemPayment.ListChild.Count > 0)
+                            {
+                                <div class="row col-md-offset-1" style="margin-bottom:20px;">
+                                    @foreach (var itemChild in itemPayment.ListChild)
+                                    {
+                                        <div class="col-md-1">
+                                            <a href="javascript:void(0)" onclick="setPayment('@itemChild.ID')">
+
+                                                <img id="@itemChild.ID" src="@itemChild.ImageURL" class="payment-border">
+
+                                            </a>
+                                        </div>
+                                        <div class="col-md-11" style="padding-top:15px">
+                                            <p style="font-size:16px;">@itemChild.Name</p>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    }
+                                </div>
+                            }
+                        }
+                    }*@
+                <div class="row">
+                    @if (Model.CheckOut.ListPayment != null && Model.CheckOut.ListPayment.Count > 0)
+                {
+                    foreach (var itemPayment in Model.CheckOut.ListPayment)
+                    {
+                            <div class="form-group">
+                                <div class="col-md-12">
+
+                                    @*<a href="javascript:void(0)" onclick="setPayment('@itemPayment.ID')">*@
+                                    <img id="@itemPayment.ID" src="@itemPayment.ImageURL" class="payment-border">
+                                    <span class="fontBold" style="line-height:25px; font-size:20px">@itemPayment.Name</span>
+
+
+                                    @*<div style="line-height:25px; padding-top:15px"><p class="fontBold" style="font-size:20px;">@itemPayment.Name</p></div>*@
+                                </div>
+                            </div>
+                        if (itemPayment.ListChild != null && itemPayment.ListChild.Count > 0)
+                        {
+                                <div class="col-md-1 col-xs-1 col-sm-1"></div>
+                                <div class="col-md-11 col-xs-11 col-sm-11" style="margin:20px 0">
+                                    @foreach (var itemChild in itemPayment.ListChild)
+                                {
+
+                                        <div class="col-md-2" style="margin-bottom:20px">
+                                            <a href="javascript:void(0)" onclick="setPayment('@itemChild.ID','@itemChild.Payment')" style="color:black">
+                                                <div class="col-md-12">
+                                                    <img id="@itemChild.ID" src="@itemChild.ImageURL" class="payment-border">
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <p style="font-size:16px;">@itemChild.Name</p>
+                                                </div>
+                                            </a>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                }
+                                </div>
+                        }
+                    }
+                }
+                </div>
+            </div>
+
+            @*<div class="col-xs-6">
+                <p class="lead">Input your card's information:</p>
+                <div class="table-responsive">
+                <table class="table">
+                <tbody>
+                <tr>
+                <th style="width:40%">Card Number:</th>
+                <td><input type="text" class="form-control" placeholder="Card Number" /></td>
+                </tr>
+                <tr>
+                <th>Card Holder Name:</th>
+                <td><input type="text" class="form-control" placeholder="Card Holder Name" /></td>
+                </tr>
+                <tr>
+                <th>Expiration Date:</th>
+                <td><input type="text" class="form-control" placeholder="mm/yy" /></td>
+                </tr>
+                <tr>
+                <th>Card Security Code:</th>
+                <td><input type="text" class="form-control" placeholder="Card Security Code" /></td>
+                </tr>
+                </tbody>
+                </table>
+                </div>
+                </div>*@
+        </div>
+
+        <div class="row" id="divFinal">
+            <div class="row" style="border-bottom: 1px solid #c7c7c7; padding:15px 0; margin-bottom: 15px;">
+                <div class="col-md-12">
+                    <i class="fa fa-circle"></i>&nbsp;Your payment is complete. Please check your email as we will send confirmation to you. Thanks for your interest with our products and services!
+                </div>
+                <div class="col-md-12" style="margin-top:10px;">
+                    <i class="fa fa-circle"></i>&nbsp;Your receipt is <span class="fontBold text-danger" id="lblReceiptNo"></span>. You can check this receipt at
+                    <a href="@Url.Action("Index", "MyProfile")" target="_blank">History Receipts</a>.
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    Is there anything making your inconvenience? Please give us your feedback here. They will be very valuable forus to make our service better.
+                </div>
+            </div>
+
+            @using (@Html.BeginForm("Feedback", "YourCart", FormMethod.Post, new
+        {
+            @class = "",
+            @id = "form-feedback",
+            @enctype = "multipart/form-data"
+        }))
+        {
+                <div class="row" style="margin:20px 0;">
+                    <div class="col-md-12 col-sm-12 col-xs-12" style="padding-left:0;">
+                        @Html.TextAreaFor(model => model.Feedback.Message, new { @class = "form-control text-area-no-resize", @placeholder = "Please note your feedback here...", @id = "txtFeedback" })
+                    </div>
+                </div>
+        }
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <span class="label label-success" id="lblMsgFeedback"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <button class="btn btn-info fontUppercase pull-right" onclick="SubmitForm('#form-feedback')">submit</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    @*End STEP 03*@
+
+    <!--Warning-->
+    <div class="modal fade" id="bs-modal-warning-store" tabindex="-1" role="dialog" aria-hidden="true" style="z-index:999999">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Notification</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <span>You have not set up stores to all products. You can set up them later in My Store/ Business -> Stores.</span>
+                    </div>
+                </div>
+                <div class="modal-footer" style="border:none;">
+                    @*<button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>*@
+                    <button type="button" class="btn btn-primary fontUppercase" data-dismiss="modal" id="idOKCheckout">OK</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+@*<div id="ajaxResponse" class="hidden">
+    <div class="row" id="divResponse"></div>
+</div>*@
+
+<script src="https://uat2.enets.sg/GW2/pluginpages/env.jsp"></script>
+<script src="~/Scripts/eNETs.js"></script>
+<script type="text/javascript">
+
+    var isCheckPrevious = false;
+    var isCheckPopupCheckout = '@ViewBag.isCheckPopupCheckout';
+    var linkReturnMyStore  = '@Url.Action("Extend", "MyStoreAndBusiness", new { Id = ViewBag.ItemID, AssetID = ViewBag.AssetID })';
+    $(document).ready(function (e) {
+        init_ICheck();
+        if ('@ViewBag.StepType' == 1) {
+            $(".classcancel").attr("href", "javascript:void(0)");
+            $('.previousbuttom').hide();
+            $(".classcancel").click(function () {
+                DeleteOrder();
+            });
+            checkStep(2, true);
+        }
+        else {
+            checkStep(1, true);
+        }
+        CheckGree();
+        CheckPayment(paymentId);
+          @if (Model.CheckOut.Note == null) {
+        <text>
+    $(".panel").removeClass("panel-450").addClass("panel-300");
+    </text>
+    }
+    else {
+         <text>
+    $(".panel").removeClass("panel-300").addClass("panel-450");
+    </text>
+    }
+
+
+        //Tuan check paymentPayPal
+    if ('@ViewBag.TransactionId' !== "")
+    {
+        $('#step1').hide();
+        $('#step2').hide();
+        $('#step3').show();
+
+        $('#focus1').removeClass('disabled');
+        $('#focus2').removeClass('disabled');
+        $('#focus3').removeClass('disabled');
+
+        $('#btnFinalDone').hide();
+        $('#divFinal').hide();
+        if ('@ViewBag.State' === "approved")
+        {
+            paymentId = '@ViewBag.PaymentMethodID';
+            OrderPay('@ViewBag.TransactionId','@ViewBag.Note');
+        } else {
+            if ('@ViewBag.Message' !== "")
+            {
+                alert('@ViewBag.Message');
+            }
+        }
+    }
+    });
+    /*Function*/
+    function init_ICheck() {
+        if ($("input.flat")[0]) {
+            $(document).ready(function () {
+                $('input.flat').iCheck({
+                    checkboxClass: 'icheckbox_flat-green iradioNoneBorder',
+                    radioClass: 'iradio_flat-green'
+                });
+            });
+        }
+    };
+
+    function checkStep(index, IsValue) {
+        if (IsValue == false) {
+            isCheckPrevious = true;
+        }
+        if (index == 1) {
+            $('#step1').show();
+            $('#step2').hide();
+            $('#step3').hide();
+            $('#focus1').removeClass('disabled');
+            $('#focus2').addClass('disabled');
+            $('#focus3').addClass('disabled');
+        }
+        else if (index == 2) {
+            if (isCheckPopupCheckout.toLowerCase() == "false" && isCheckPrevious == false) {
+                $('#bs-modal-warning-store').modal('show');
+                $('#idOKCheckout').click(function () {
+                    $('#step1').hide();
+                    $('#step2').show();
+                    $('#step3').hide();
+                    $('#focus1').removeClass('disabled');
+                    $('#focus2').removeClass('disabled');
+                    $('#focus3').addClass('disabled');
+                    //$('#btnNextStep2').addClass('buttonDisabled');
+                });
+            }
+            else {
+                $('#bs-modal-warning-store').modal('hide');
+                $('#step1').hide();
+                $('#step2').show();
+                $('#step3').hide();
+                $('#focus1').removeClass('disabled');
+                $('#focus2').removeClass('disabled');
+                $('#focus3').addClass('disabled');
+                //$('#btnNextStep2').removeClass('buttonDisabled');
+            }
+            //$('#step2').show();
+            //$('#step3').hide();
+
+            //$('#focus1').removeClass('disabled');
+            //$('#focus2').removeClass('disabled');
+            //$('#focus3').addClass('disabled');
+
+           // $('#btnNextStep2').addClass('buttonDisabled');
+        }
+        else if (index == 3) {
+            $('#step1').hide();
+            $('#step2').hide();
+            $('#step3').show();
+
+            $('#focus1').removeClass('disabled');
+            $('#focus2').removeClass('disabled');
+            $('#focus3').removeClass('disabled');
+
+            $('#btnFinalDone').hide();
+            $('#divFinal').hide();
+        }
+        else {
+            if (index == 3 && IsValue == false) {
+                $('#btnNextStep2').removeClass('buttonDisabled');
+            }
+        }
+    }
+
+    $("#chkAgreeStep2").on("ifChanged", function () {
+        CheckGree();
+    });
+    function CheckGree() {
+        if ($('#chkAgreeStep2').is(':checked')) {
+            $('#btnNextStep2').removeClass('buttonDisabled');
+            window.document.body.scrollTop = 0;
+            window.document.documentElement.scrollTop = 0;
+        }
+        else
+            $('#btnNextStep2').addClass('buttonDisabled');
+    };
+    var paymentId = "";
+    var Payment = 0;
+    function setPayment(id, _Payment) {
+        paymentId = id;
+        Payment = _Payment;
+        CheckPayment(paymentId);
+    };
+    function CheckPayment(id){
+        if (id == "") {
+            if ('@Model.CheckOut.TotalOrder' == 0)
+                $('#btnDone').removeClass('buttonDisabled');
+            else {
+                $('#btnDone').addClass('buttonDisabled');
+                $('.payment-border').removeClass('payment');
+            }
+        } else {
+
+            ///var _id = '#' + id;
+            $('.payment-border').removeClass('payment');
+            $('#btnDone').removeClass('buttonDisabled');
+            $('#' + id).addClass('payment');
+        }
+    };
+
+    function OrderPayWithCybersource(payment) {
+        $.ajax({
+            type: "GET",
+            url: CreateAbsoluteUrl("OrderPayWithCybersource"),
+            traditional: true,
+            data: {
+                PaymentMethodID: payment,
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                $('[id=submitSecureAcceptance]').click();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(jqXHR.statusText);
+            },
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            },
+        });
+    }
+
+    function OrderPayWitheNETS(OrderID, PaymentMethodID, Payment) {
+        $.ajax({
+            type: "GET",
+            url: CreateAbsoluteUrl("OrderPayWitheNets"),
+            traditional: true,
+            data: {
+                OrderID: OrderID,
+                PaymentMethodID: PaymentMethodID,
+                Payment: Payment
+            },
+            contentType: "application/json; charset=UTF-8",
+            cache: false,
+            dataType: "json",
+            success: function (data) {
+              //  data = JSON.parse(data);
+                console.log(data);
+                if (data[0] !== "" && data[1] !== "")
+                {
+                    var keyId = '154eb31c-0f72-45bb-9249-84a1036fd1ca'; // once api key is available, 
+                    sendPayLoad(data[0], data[1], keyId);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(jqXHR.statusText);
+            },
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            },
+        });
+    }
+
+    function OrderPayPal()
+    {
+        var id = '@Model.CheckOut.OrderID';
+        var payment = paymentId;
+        if (Payment != 0 && @Model.CheckOut.TotalOrder != 0)
+        {
+            if (Payment == '@Commons.EPayment.PayPal.ToString("d")')
+            {
+                $.ajax({
+                    type: "GET",
+                    url: CreateAbsoluteUrl("OrderPayPal"),
+                    traditional: true,
+                    data: {
+                        OrderID: id,
+                        PaymentMethodID: payment,
+                        Payment: Payment
+                    },
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "html",
+                    success: function (data) {
+                        data = JSON.parse(data);
+                        console.log(data);
+                        if (data.url !== "") {
+                            window.location.href = data.url;
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert(jqXHR.statusText);
+                    },
+                    beforeSend: function () {
+                        $('.se-pre-con').show();
+                    },
+                    complete: function () {
+                        $('.se-pre-con').hide();
+                    },
+                });
+            }
+            else if (Payment == '@Commons.EPayment.SecureAcceptance.ToString("d")')
+            {
+                OrderPayWithCybersource(payment);
+            }
+            else if (Payment == '@Commons.EPayment.eNETS.ToString("d")')
+            {
+                OrderPayWitheNETS(id, payment, Payment);
+            }
+        }
+        else {
+            OrderPay("0","0");
+        }
+    }
+
+    function OrderPay(transactionId,note) {
+        var id = '@Model.CheckOut.OrderID';
+        var payment = paymentId;
+        var amount = @Model.CheckOut.TotalOrder;
+        if (payment == '' && amount != 0 ) {
+            alert('Unable to done check out process unless you finish the payment.');
+            return false;
+        }
+        $.ajax({
+            type: "GET",
+            url: CreateAbsoluteUrl("OrderPay"),
+            traditional: true,
+            data: {
+                OrderID: id,
+                PaymentMethodID: payment,
+                AmountPay: amount,
+                TransactionId: transactionId,
+                Note: note,
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                data = JSON.parse(data);
+                //Reset Numer Your Cart
+                deleteOrderPay(id);
+                //Set ReceiptNo
+                $('#lblReceiptNo').html(data.ID);
+
+                $('#divBtnStep').hide();
+                $('#divListPayment').hide();
+                $('#btnFinalDone').show();
+                $('#divFinal').show();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(jqXHR.statusText);
+                if (jqXHR.status == 400)
+                {
+                    var Url = '@Url.Action("Index","YourCart")';
+                    deleteOrderPay(id);
+                    location.href = Url;
+                }
+            },
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            },
+        });
+    }
+
+    $("#form-feedback").submit(function (e) {
+        var isSubmit = $(this).valid();
+        var msgFeedback = $('#txtFeedback').val();
+        if (msgFeedback == '') {
+            alert('Please enter feedback');
+            $('#txtFeedback').focus();
+            isSubmit=false;
+        }
+        if (isSubmit) {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: "POST",
+                data: new FormData(this),
+                processData: false,
+                contentType: false,
+                dataType: "html",
+                success: function (data) {
+                    $('#lblMsgFeedback').html('Thanks for your feedback. It will help us a lot to improve our products and services.');
+                    $('#txtFeedback').val('');
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                },
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+            });
+        }
+        e.preventDefault();
+    });
+
+    function DeleteOrder() {
+        $.ajax({
+            type: "GET",
+            url: CreateAbsoluteUrl("DeleteOrder"),
+            traditional: true,
+            data: { },
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                createOrUpdateOrder('@ViewBag.CusID', '@ViewBag.OrderID', 0);
+                getOrder('@ViewBag.CusID');
+                deleteOrderPay('@ViewBag.OrderID');
+                window.location.assign(BaseUrl + linkReturnMyStore);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status == 400)
+                {
+                    alert("Please delete order!");
+                }
+            },
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            },
+        });
+    }
+
+    //function ViewInputStoreInfo() {
+    //    $.ajax({
+    //        type: "GET",
+    //        url: CreateAbsoluteUrl("ViewInputStoreInfo"),
+    //        traditional: true,
+    //        data: { StoreID: _StoreID },
+    //        contentType: "application/json; charset=utf-8",
+    //        dataType: "html",
+    //        success: function (data) {
+    //            $(ele).html(data);
+    //        },
+    //        beforeSend: function () {
+    //            $('.se-pre-con').show();
+    //        },
+    //        complete: function () {
+    //            $('.se-pre-con').hide();
+    //        },
+    //    });
+    //}
+</script>

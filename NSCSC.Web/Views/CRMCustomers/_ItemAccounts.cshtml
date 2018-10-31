@@ -1,0 +1,40 @@
+﻿@model NSCSC.Shared.Models.CRM.Customers.CustomerBaseModels
+@using NSCSC.Shared
+
+
+@{
+    Html.EnableUnobtrusiveJavaScript(true);
+    var _ID = Model.CustomerDetail.ID;
+}
+
+@if (Model.ProductManagement.ListAccount != null && Model.ProductManagement.ListAccount.Count > 0)
+{
+    foreach (var item in Model.ProductManagement.ListAccount)
+    {
+        <tr>
+            <td>@item.Account</td>
+            <td>@item.LicenseKey</td>
+            <td>@item.sActivateTime</td>
+            <td>@item.sExpiryDate</td>
+            <td>@item.Status</td>
+            <td>
+                @if (item.Status.Equals(Commons.EStatusAccountFunction.Active.ToString()))
+                {
+                    <a href="javascript:void(0)" class="btn btn-xs btn-danger" onclick="ChangeStatusAccount('active', '0', '@item.AssetAccountID','@_ID')">
+                        <i class="fa fa-check"></i>&nbsp;Inactive
+                    </a>
+                }
+                else if (item.Status.Equals(Commons.EStatusAccountFunction.Inactive.ToString()))
+                {
+                    <a href="javascript:void(0)" class="btn btn-xs btn-primary" onclick="ChangeStatusAccount('inactive', '0', '@item.AssetAccountID','@_ID')">
+                        <i class="fa fa-check"></i>&nbsp;Active
+                    </a>
+                }
+                else if (item.Status.Equals(Commons.EStatusAccountFunction.Expired.ToString()))
+                {
+
+                }
+            </td>
+        </tr>
+    }
+}

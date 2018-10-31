@@ -1,0 +1,53 @@
+﻿@model NSCSC.Shared.Models.SandBox.Inventory.Product.ProductDetailModels
+@{
+    ViewBag.Title = "Addition - Export";
+}
+<div role="main" class="right_col">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left" style="padding: 10px 0px;">
+                @Html.Partial("~/Views/Shared/_breadcrumb.cshtml",
+                new Dictionary<string, string> { { "A", "Sand Box" }, { "B", "Inventory" }, { "C", "Addition - Export" } })
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12 x_panel">
+                    <div class="x_title">
+                        @Html.Partial("_TabMenu", "export")
+                        <div class="clearfix"></div>
+                    </div>
+
+                    <div class="x_content">
+                        <div class="row text-right">
+                            <ul class="header-buttons pull-right list-inline">
+                                <li><a href="javascript:void(0)" class="btn btn-success" id="btn-actives" 
+                                       onclick="SubmitForm('.export-form')"><i class="fa fa-save"></i>&nbsp;Export</a></li>
+                                <li><a href="@Url.Action("Index", "SBInventoryAddition")" class="btn btn-danger" 
+                                       id="btn-delete"><i class="fa fa-times"></i>&nbsp;Cancel</a></li>
+                            </ul>
+                        </div>
+                        <div class="box-body" style="display: block;">
+                            @using (@Html.BeginForm("Export", "SBInventoryAddition", FormMethod.Post,
+                new { @class = "form-horizontal export-form", @enctype = "multipart/form-data" }))
+                            {
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        function SubmitForm(form) {
+            $(form).submit();
+        }
+
+        $(document).ready(function () {
+          
+        });
+    </script>
+}

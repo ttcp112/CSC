@@ -1,0 +1,15 @@
+D:\NuWeb.NCSC\NSCSC.Payments.PayPal\bin\Debug\NSCSC.Payments.Paypal.dll.config
+D:\NuWeb.NCSC\NSCSC.Payments.PayPal\bin\Debug\NSCSC.Payments.Paypal.dll
+D:\NuWeb.NCSC\NSCSC.Payments.PayPal\bin\Debug\NSCSC.Payments.Paypal.pdb
+D:\NuWeb.NCSC\NSCSC.Payments.PayPal\bin\Debug\log4net.dll
+D:\NuWeb.NCSC\NSCSC.Payments.PayPal\bin\Debug\Newtonsoft.Json.dll
+D:\NuWeb.NCSC\NSCSC.Payments.PayPal\bin\Debug\NSLog.dll
+D:\NuWeb.NCSC\NSCSC.Payments.PayPal\bin\Debug\PayPal.dll
+D:\NuWeb.NCSC\NSCSC.Payments.PayPal\bin\Debug\log4net.xml
+D:\NuWeb.NCSC\NSCSC.Payments.PayPal\bin\Debug\Newtonsoft.Json.xml
+D:\NuWeb.NCSC\NSCSC.Payments.PayPal\bin\Debug\PayPal.xml
+D:\NuWeb.NCSC\NSCSC.Payments.PayPal\obj\Debug\NSCSC.Payments.Paypal.csprojAssemblyReference.cache
+D:\NuWeb.NCSC\NSCSC.Payments.PayPal\obj\Debug\NSCSC.Payments.Paypal.csproj.CoreCompileInputs.cache
+D:\NuWeb.NCSC\NSCSC.Payments.PayPal\obj\Debug\NSCSC.Payments.Paypal.csproj.CopyComplete
+D:\NuWeb.NCSC\NSCSC.Payments.PayPal\obj\Debug\NSCSC.Payments.Paypal.dll
+D:\NuWeb.NCSC\NSCSC.Payments.PayPal\obj\Debug\NSCSC.Payments.Paypal.pdb

@@ -1,0 +1,54 @@
+﻿@{
+    Layout = null;
+}
+@model List<NSCSC.Shared.Models.Sandbox.Inventory.Product.ProductFunctionModels>
+@if (Model != null && Model.Any())
+{
+    int count = Model.Count;
+    double x = Math.Ceiling((double)(count / 2));
+    <div class="col-md-6 col-md-6 col-xs-12">
+        @for(int i = 0; i <= (int)x; i++){
+            <div style="margin-bottom: 5px;">
+                @Html.Hidden(string.Format("ListFunction[{0}].FunctionName",i), Model[i].FunctionName,new { @id= "txtFunctionName" })
+                @Html.Hidden(string.Format("ListFunction[{0}].FunctionID", i), Model[i].FunctionID, new { @id = "txtFunctionID" })
+                @Html.Hidden(string.Format("ListFunction[{0}].IsDefault", i), Model[i].IsDefault, new { @id = "txIsDefault" })
+
+                @if (Model[i].IsDefault)
+                {
+                    @Html.CheckBox(string.Format("ListFunction[{0}].IsSelected", i), Model[i].IsSelected, new { @id = "txtIsSelected", @class = "flatFunction", @disabled = "disabled" }) <span style="margin-right:5px;position:relative;top:2px;">@Model[i].FunctionName</span>
+                }
+                else
+                {
+                    @Html.CheckBox(string.Format("ListFunction[{0}].IsSelected", i), Model[i].IsSelected, new { @id = "txtIsSelected", @class = "flatFunction" }) <span style="margin-right:5px;position:relative;top:2px;">@Model[i].FunctionName</span>
+                }
+            </div>
+        }
+    </div>
+    <div class="col-md-6 col-md-6 col-xs-12">
+        @for(int i = (int)x + 1 ; i < count; i++){
+            <div style="margin-bottom: 5px;">
+                @Html.Hidden(string.Format("ListFunction[{0}].FunctionName",i), Model[i].FunctionName,new { @id= "txtFunctionName" })
+                @Html.Hidden(string.Format("ListFunction[{0}].FunctionID", i), Model[i].FunctionID, new { @id = "txtFunctionID" })
+                @Html.Hidden(string.Format("ListFunction[{0}].IsDefault", i), Model[i].IsDefault, new { @id = "txIsDefault" })
+
+                @if (Model[i].IsDefault)
+                {
+                @Html.CheckBox(string.Format("ListFunction[{0}].IsSelected", i), Model[i].IsSelected, new { @id = "txtIsSelected", @class = "flatFunction", @disabled = "disabled" }) <span style="margin-right:5px;position:relative;top:2px;">@Model[i].FunctionName</span>
+                }
+                else
+                {
+                @Html.CheckBox(string.Format("ListFunction[{0}].IsSelected", i), Model[i].IsSelected, new { @id = "txtIsSelected", @class = "flatFunction" }) <span style="margin-right:5px;position:relative;top:2px;">@Model[i].FunctionName</span>
+                }
+            </div>
+        }
+    </div>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('input.flatFunction').iCheck({
+            checkboxClass: 'icheckbox_flat-green',
+            radioClass: 'iradio_flat-green'
+        });
+    });
+</script>

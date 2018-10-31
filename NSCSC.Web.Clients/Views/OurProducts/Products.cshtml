@@ -1,0 +1,314 @@
+﻿@model NSCSC.Shared.Models.OurProducts.OurProductListViewModels
+@using NSCSC.Shared.Helpers
+@using NSCSC.Shared
+@{
+    ViewBag.Title = "LIST PRODUCTS";
+    Html.EnableUnobtrusiveJavaScript(true);
+    var ID = Model.CategoryID;
+    var Name = "";
+    if (!string.IsNullOrEmpty(Model.Name))
+    {
+        Name = Model.Name;
+    }
+}
+
+
+<div class="se-pre-con" style="display: none;"></div>
+<div class="" style="margin-top:10px;">
+    <div class="title_left">
+        @*@Html.Partial("~/Views/Shared/_breadcrumb.cshtml",
+            new Dictionary<string, string> { { "A", "PRODUCT LIST" }, { "B", "HOME" },
+                                        { "C", "OUR PRODUCTS" } })*@
+        <div class="container">
+            @*<div class="col-sm-12 col-xs-12 col-md-12 col-breadcrumb">*@
+                <h3>
+                    @*PRODUCTS LIST*@
+                    <small class="breadcrum">
+                        <a href="@Url.Action("Index", "Home")">home</a>
+                        @if (!string.IsNullOrEmpty(Model.Name))
+                        {
+                            <i class='fa fa-caret-right'></i>
+                            <a href="@Url.ActionEncoded("Index", "OurProducts", new { ProductType = "Products", CategoryID = Model.CategoryID })">@Name.ToLower()</a>
+                            <i class='fa fa-caret-right'></i>
+                            <span>products list</span>
+                        }
+                    </small>
+                </h3>
+            @*</div>*@
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="row" style="margin-top:10px;">
+        <div class="col-md-6 col-sm-6 col-xs-12 menuProductAndPackages">
+            <a href="javascript:void(0)" class="btn btn-default btn-warning" id="defaultActive" onclick="LoadPartialView('PRODUCTS',this)">PRODUCTS</a>
+            @if (Model.IsReCommen)
+            {
+                <a href="javascript:void(0)" class="btn btn-default" onclick="LoadPartialView('PACKAGES',this)">RECOMMENDATIONS</a>
+            }
+
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-12 text-right">
+            @*<a href="javascript:void(0)" class="btn btn-danger" data-toggle="modal" data-target="#bs-modal-pricing-list">PRICE LIST</a>*@
+            @*<select class="select" id="idSelected">
+                    <option>SORT BY POPULARITY</option>
+                </select>*@
+        </div>
+    </div>
+
+    <div class="row divMainProductList">
+        @*  @Html.Partial("_ItemPackages")*@
+    </div>
+</div>
+
+@*@Html.Partial("_ModalPriceListProduct")*@
+
+<!--modal Pricing List-->
+<div class="modal fade" id="bs-modal-pricing-list" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#f2f2f2;">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title fontUppercase text-left">nupos | <span style="color:darkred;">Price List</span></h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="row" style="background-color:#ddd; border-radius:5px;  margin: 15px;">
+                    <div class="row  fontUppercase text-center" style="line-height: 50px; font-size: 30px;">Products</div>
+                    <div class="row" style="padding:15px 0;">
+                        <div class="row">
+                            <div class="col-md-3">
+                            </div>
+                            @if (Model.PriceList != null && Model.PriceList.ListProduct != null && Model.PriceList.ListProduct.Any())
+                            {
+                                foreach (var item in Model.PriceList.ListProduct)
+                                {
+                                    <div class="col-md-2 bgPrice">
+                                        <span class="fontUppercase fontBold col-md-12 text-center">@item.Name</span>
+                                        @if (item.ProductType == (int)Commons.EProductType.Product || item.ProductType == (int)Commons.EProductType.Package)
+                                        {
+                                            <span class="col-md-12 text-center">(@item.NumberOfDevice Devices)</span>
+                                            string mAdditions = "";
+                                            foreach (var itemAddition in item.ListAddition)
+                                            {
+                                                mAdditions = string.IsNullOrEmpty(mAdditions) ? mAdditions : mAdditions + " + " + itemAddition.Quantity + " X " + itemAddition.Name;
+                                            }
+                                            <small class="col-md-12 fontItalic text-center">@mAdditions</small>
+                                        }
+                                        else
+                                        {
+                                            string mApplyOn = "";
+                                            foreach (var itemApplyOn in item.ListApplyOn)
+                                            {
+                                                mApplyOn = string.IsNullOrEmpty(mApplyOn) ? mApplyOn : mApplyOn + " + " + itemApplyOn;
+                                            }
+                                            <small class="col-md-12 fontItalic text-center">@mApplyOn</small>
+                                        }
+                                    </div>
+                                }
+                            }
+                            @*<div class="col-md-2 bgPrice">
+                                    <span class="fontUppercase fontBold col-md-12 text-center">standard</span>
+                                    <span class="col-md-12 text-center">(2 Devices)</span>
+                                    <small class="col-md-12 fontItalic text-center">1 iPad Pro + 1 iPad Mini</small>
+                                </div>
+                                <div class="col-md-2 bgPrice">
+                                    <span class="fontUppercase fontBold col-md-12 text-center">plus</span>
+                                    <span class="col-md-12 text-center">(5 Devices)</span>
+                                    <small class="col-md-12 fontItalic text-center">3 iPad Pro + 2 iPad Mini</small>
+                                </div>
+                                <div class="col-md-2 bgPrice">
+                                    <span class="fontUppercase fontBold col-md-12 text-center">pro</span>
+                                    <span class="col-md-12 text-center">(10 Devices)</span>
+                                    <small class="col-md-12 fontItalic text-center">7 iPad Pro + 3 iPad Mini</small>
+                                </div>
+                                <div class="col-md-2 bgPrice">
+                                    <span class="fontUppercase fontBold col-md-12 text-center">enterprise</span>
+                                    <span class="col-md-12 text-center">(30 Devices)</span>
+                                    <small class="col-md-12 fontItalic text-center">20 iPad Pro + 10 iPad Mini</small>
+                                </div>*@
+                        </div>
+                        @if (Model != null && Model.PriceList != null && Model.PriceList.ListPeriod != null && Model.PriceList.ListPeriod.Any())
+                        {
+                            foreach (var itemPeriod in Model.PriceList.ListPeriod)
+                            {
+                                string _PeriodName = "";
+                                if (itemPeriod.PeriodType != (byte)Commons.EPeriodType.OneTime)
+                                {
+                                    _PeriodName = itemPeriod.PeriodName;
+                                    if (itemPeriod.Period > 1)
+                                    {
+                                        _PeriodName += "s";
+                                    }
+                                }
+                                else
+                                {
+                                    _PeriodName = itemPeriod.PeriodName;
+                                }
+                                <div class="row">
+                                    <div class="col-md-3 fontUppercase text-right">
+
+                                        @itemPeriod.Period - @_PeriodName <br />
+                                        subcription
+                                    </div>
+                                    @foreach (var itemProduct in Model.PriceList.ListProduct)
+                                    {
+                                        <div class="col-md-2 bgPrice line-heigh-price">
+                                            @{
+                                                var txtPrice = "-";
+                                                if (itemProduct.ListPeriod != null && itemProduct.ListPeriod.Any())
+                                                {
+                                                    var _Price = itemProduct.ListPeriod.FirstOrDefault(x => x.PeriodType == itemPeriod.PeriodType && x.Period == itemPeriod.Period);
+                                                    if (_Price != null)
+                                                    {
+                                                        txtPrice = _Price.Price.ToString("#,0.00");
+                                                    }
+                                                }
+                                            }
+                                            <a class="fontBold col-md-12 text-center" style="cursor:pointer;text-decoration:none;color:#0d0c0c" 
+                                               href="@Url.ActionEncoded("ProductDetail","OurProducts",new {ProductID = itemProduct.ID,PeriodType=itemPeriod.PeriodType })">
+                                                @txtPrice
+                                            </a>
+                                        </div>
+                                                }
+                                </div>
+                                                    }
+                                                }
+                                                @*<div class="row">
+
+                                                        <div class="col-md-3 fontUppercase text-right">
+                                                            month <br />
+                                                            subcription
+                                                        </div>
+                                                        <div class="col-md-2 bgPrice line-heigh-price">
+                                                            <a class="fontBold col-md-12 text-center" style="cursor:pointer;text-decoration:none;color:#0d0c0c" href="@Url.Action("ProductDetail","OurProducts",new {ProductID = "122323",PeriodType="1" })" >$28.80</a>
+                                                        </div>
+                                                        <div class="col-md-2 bgPrice line-heigh-price">
+                                                            <span class="fontBold col-md-12 text-center">$58.80</span>
+                                                        </div>
+                                                        <div class="col-md-2 bgPrice line-heigh-price">
+                                                            <span class="fontBold col-md-12 text-center">$88.80</span>
+                                                        </div>
+                                                        <div class="col-md-2 bgPrice line-heigh-price">
+                                                            <span class="fontBold col-md-12 text-center">$198.80</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-3 fontUppercase text-right">
+                                                            pre-paid 1-year <br />subcription
+                                                        </div>
+                                                        <div class="col-md-2 bgPrice line-heigh-price">
+                                                            <span class="fontBold col-md-12 text-center">$28.80</span>
+                                                        </div>
+                                                        <div class="col-md-2 bgPrice line-heigh-price">
+                                                            <span class="fontBold col-md-12 text-center">$58.80</span>
+                                                        </div>
+                                                        <div class="col-md-2 bgPrice line-heigh-price">
+                                                            <span class="fontBold col-md-12 text-center">$88.80</span>
+                                                        </div>
+                                                        <div class="col-md-2 bgPrice line-heigh-price">
+                                                            <span class="fontBold col-md-12 text-center">$198.80</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-3 fontUppercase text-right">
+                                                            pre-paid 2-year <br />subcription
+                                                        </div>
+                                                        <div class="col-md-2 bgPrice line-heigh-price">
+                                                            <span class="fontBold col-md-12 text-center">$28.80</span>
+                                                        </div>
+                                                        <div class="col-md-2 bgPrice line-heigh-price">
+                                                            <span class="fontBold col-md-12 text-center">$58.80</span>
+                                                        </div>
+                                                        <div class="col-md-2 bgPrice line-heigh-price">
+                                                            <span class="fontBold col-md-12 text-center">$88.80</span>
+                                                        </div>
+                                                        <div class="col-md-2 bgPrice line-heigh-price">
+                                                            <span class="fontBold col-md-12 text-center">$198.80</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-3 fontUppercase text-right">
+                                                            pre-paid 3-year <br />subcription
+                                                        </div>
+                                                        <div class="col-md-2 bgPrice line-heigh-price">
+                                                            <span class="fontBold col-md-12 text-center">$28.80</span>
+                                                        </div>
+                                                        <div class="col-md-2 bgPrice line-heigh-price">
+                                                            <span class="fontBold col-md-12 text-center">$58.80</span>
+                                                        </div>
+                                                        <div class="col-md-2 bgPrice line-heigh-price">
+                                                            <span class="fontBold col-md-12 text-center">$88.80</span>
+                                                        </div>
+                                                        <div class="col-md-2 bgPrice line-heigh-price">
+                                                            <span class="fontBold col-md-12 text-center">$198.80</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-3 fontUppercase text-right">
+                                                            one-time <br />subcription
+                                                        </div>
+                                                        <div class="col-md-2 bgPrice line-heigh-price">
+                                                            <span class="fontBold col-md-12 text-center" style="color:#337ab7;">$28.80</span>
+                                                        </div>
+                                                        <div class="col-md-2 bgPrice line-heigh-price">
+                                                            <span class="fontBold col-md-12 text-center">$58.80</span>
+                                                        </div>
+                                                        <div class="col-md-2 bgPrice line-heigh-price">
+                                                            <span class="fontBold col-md-12 text-center">$88.80</span>
+                                                        </div>
+                                                        <div class="col-md-2 bgPrice line-heigh-price">
+                                                            <span class="fontBold col-md-12 text-center">$198.80</span>
+                                                        </div>
+                                                    </div>*@
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!--end modal Pricing List -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#defaultActive').click();
+            $("#idSelected").select2({});
+    })
+
+    function LoadPartialView(mAction,that) {
+        var url = "";
+        $('.menuProductAndPackages a').removeClass('btn-warning');
+        $(that).addClass('btn-warning');
+        if (mAction === "PRODUCTS")
+        {
+            url = '@Url.ActionEncoded("LoadProducts", "OurProducts", new { CategoryID= ID })';
+        } else if (mAction === "PACKAGES")
+        {
+            url = '@Url.ActionEncoded("LoadPackages", "OurProducts", new { CategoryID= ID })';
+        }
+        $.ajax({
+            type: "GET",
+            url: url,
+            traditional: true,
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            //data: JSON.stringify({ CategoryID: '@ID' }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                $('.divMainProductList').html(data);
+            },
+            complete: function () {
+                setTimeout(function () {
+                    $('.se-pre-con').hide();
+                }, 1000);
+            },
+            error: function () {
+                setTimeout(function () {
+                    $('.se-pre-con').hide();
+                }, 1000);
+            }
+      });
+    }
+                        </script>

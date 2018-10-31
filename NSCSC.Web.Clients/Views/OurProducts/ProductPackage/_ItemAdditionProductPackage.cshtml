@@ -1,0 +1,32 @@
+﻿@model NSCSC.Shared.Models.ClientSite.OurProDucts.OurProDuctsModel
+@using NSCSC.Shared
+
+<tr class="ng-Price group-itm-addition item-adddition-by-package" id="tr_add_price_@Model.Index" data-value="@Model.Index"
+    style="@string.Format("display:{0}", Model.Status != (int)Commons.EStatus.Deleted ? "table-row" : "none"); background-color: transparent;     border-bottom: 1px solid #c7c7c7;">
+    <td>@Model.AdditionTypeName</td>
+    <td>@Model.Name</td>
+    <td class="text-center colQty">@Model.Quantity</td>
+    <td>@Model.Code</td>
+    <td>@Model.PeriodTime</td>
+    <td class="text-right colAmount">@Model.Amount.ToString("n2")</td>
+    <td class="text-center hidGroupVal"> 
+        <a href="javascript:void(0)" class="" onclick="DeleteAddition(this,'@Model.Index'); return false;">
+            <i class="fa fa-trash" style="color:red; font-size:22px;"></i>
+        </a>
+
+        @Html.Hidden(string.Format("ListAdditionBuy[{0}].ItemID", Model.Index), Model.ItemID)
+        @Html.Hidden(string.Format("ListAdditionBuy[{0}].ID", Model.Index), Model.ID, new { @class = "hidID" })
+        @Html.Hidden(string.Format("ListAdditionBuy[{0}].Index", Model.Index), Model.Index)
+        @Html.Hidden(string.Format("ListAdditionBuy[{0}].AdditionType", Model.Index), Model.AdditionType)
+        @Html.Hidden(string.Format("ListAdditionBuy[{0}].PeriodType", Model.Index), Model.PeriodType, new { @class = "hidPeriodType", @id = "hidPeriodType_" + Model.Index })
+        @Html.Hidden(string.Format("ListAdditionBuy[{0}].Period", Model.Index), Model.Period, new { @class = "hidPeriod", @id = "hidPeriod_" + Model.Index })
+        @Html.Hidden(string.Format("ListAdditionBuy[{0}].Price", Model.Index), Model.Price, new { @class = "hidPrice", @id = "hidPrice_" + Model.Index })
+        @Html.Hidden(string.Format("ListAdditionBuy[{0}].Quantity", Model.Index), Model.Quantity, new { @class = "hidQuantity", @id = "hidQuantity_" + Model.Index })
+        @Html.Hidden(string.Format("ListAdditionBuy[{0}].Status", Model.Index), Model.Status, new { @class = "PriceStatus" })
+        @Html.Hidden(string.Format("ListAdditionBuy[{0}].IsDelete", Model.Index), Model.IsDelete, new { @class = "hidIsDelete", @id = "hidIsDelete", @value = "false" })
+        @Html.Hidden(string.Format("ListAdditionBuy[{0}].NamePeriodType", Model.Index), Model.PeriodTime, new { @id = "hidnameperiodtype_" + Model.Index })
+        @Html.Hidden(string.Format("ListAdditionBuy[{0}].IsActive", Model.Index), Model.IsActive, new { @class = "", @id = "hidIsSelected_" + Model.Index })
+        @Html.Hidden(string.Format("ListAdditionBuy[{0}].ApplyProductId", Model.Index), Model.ApplyProductId, new { @class = "hidApplyProductId" })
+        @Html.Hidden(string.Format("ListAdditionBuy[{0}].AmountOfUnit", Model.Index), Model.AmountOfUnit, new { @class = "hidAmountOfUnit" })
+    </td>
+</tr>

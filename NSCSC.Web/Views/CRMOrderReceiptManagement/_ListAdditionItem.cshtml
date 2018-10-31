@@ -1,0 +1,63 @@
+﻿@model NSCSC.Shared.Models.CRM.OrderReceiptManagement.HardwareServiceDTO
+@using NSCSC.Shared
+@{string styleRow = "row-evenModel"; }
+@{if (Model.Offset % 2 == 0)
+    {
+        styleRow = "row-oddModel";
+    }
+}
+
+<tr class="@styleRow" style="">
+    <td class="groupVal">
+        @Html.Hidden(string.Format("ListAdditionItem[{0}].AssetID", Model.Offset), Model.AssetID)
+        @Html.Hidden(string.Format("ListAdditionItem[{0}].ItemID", Model.Offset), Model.ItemID)
+        @Html.Hidden(string.Format("ListAdditionItem[{0}].ItemName", Model.Offset), Model.ItemName)
+        @Html.Hidden(string.Format("ListAdditionItem[{0}].AdditionType", Model.Offset), Model.AdditionType, new { @class = "hidAdditionType" })
+
+        @Html.Hidden(string.Format("ListAdditionItem[{0}].SerialNoView", Model.Offset), Model.SerialNoView, new { @id = "SerialNoView-" + Model.AssetID })
+
+        @*@Html.Hidden(string.Format("ListAdditionItem[{0}].State", Model.Offset), Model.State)*@
+        @Html.Hidden(string.Format("ListAdditionItem[{0}].Update", Model.Offset), Model.Update, new { @id = "SerialUpdate-" + Model.AssetID })
+        @Html.Hidden(string.Format("ListAdditionItem[{0}].SerialNo", Model.Offset), Model.SerialNo, new { @id = "SerialNoUpdate-" + Model.AssetID, @class = "hidSerialNo" })
+        @Html.Hidden(string.Format("ListAdditionItem[{0}].StateChange", Model.Offset), Model.StateChange, new { @id = "StatusNameUpdate-" + Model.AssetID, @class = "hidStateChange" })
+        @Html.Hidden(string.Format("ListAdditionItem[{0}].StatusName", Model.Offset), Model.StatusName)
+
+        @Html.Label(string.Format("ListAdditionItem[{0}].ItemName", Model.Offset), Model.ItemName, new { @id = "", style = "font-weight:normal;" })
+        
+    </td>
+    <td>
+        @Html.Label(string.Format("ListAdditionItem[{0}].AdditionName", Model.Offset), Model.AdditionName, new { @id = "", style = "font-weight:normal;" })
+    </td>
+    <td id="SerialNo-@Model.AssetID">
+        @Html.DisplayFor(x => x.SerialNoView)
+    </td>
+    <td id="Status-@Model.AssetID">
+        @Html.Label(string.Format("ListAdditionItem[{0}].StatusName", Model.Offset), Model.StatusName, new { @id = "", style = "font-weight:normal;" })
+    </td>
+    <td style="">
+        @{if (Model.State == (byte)Commons.EServiceAssetStatus.New)
+            {
+                <a href="javascript:void(0)" onclick="ChaneStatus('@Model.AdditionType', '@Commons.EChangeStatus.Done.ToString()', '@Model.AssetID')" id="Action-Done-@Model.AssetID" class="btn btn-success btn-xs">Done</a>
+                <a href="javascript:void(0)" onclick="ChaneStatus('@Model.AdditionType', '@Commons.EChangeStatus.Edit.ToString()', '@Model.AssetID')" id="Action-Edit-@Model.AssetID" class="btn btn-info btn-xs" style="display: none">Edit</a>
+                <a href="javascript:void(0)" onclick="ChaneStatus('@Model.AdditionType', '@Commons.EChangeStatus.Recall.ToString()', '@Model.AssetID')" id="Action-Recall-@Model.AssetID" class="btn btn-primary btn-xs" style="display: none">Recall</a>
+            }
+            else
+            if (Model.State == (byte)Commons.EServiceAssetStatus.Done)
+            {
+                if (Model.AdditionType == (byte)Commons.EAdditionType.Service)
+                {
+                    <a href="javascript:void(0)" onclick="ChaneStatus('@Model.AdditionType', '@Commons.EChangeStatus.Recall.ToString()', '@Model.AssetID')" id="Action-Recall-@Model.AssetID" class="btn btn-primary btn-xs">Recall</a>
+                }
+                else
+                {
+                    <a href="javascript:void(0)" onclick="ChaneStatus('@Model.AdditionType', '@Commons.EChangeStatus.Edit.ToString()', '@Model.AssetID')" id="Action-Edit-@Model.AssetID" class="btn btn-info btn-xs" style="display: inline-block">Edit</a>
+                    <a href="javascript:void(0)" onclick="ChaneStatus('@Model.AdditionType', '@Commons.EChangeStatus.Recall.ToString()', '@Model.AssetID')" id="Action-Recall-@Model.AssetID" class="btn btn-primary btn-xs" style="display: inline-block">Recall</a>
+                }
+            }
+            if(Model.State == (byte)Commons.EServiceAssetStatus.Recalled)
+            {
+
+            }
+        }
+    </td>
+</tr>

@@ -1,0 +1,57 @@
+﻿@model NSCSC.Shared.Models.ClientSite.MyProfile.CustomerDetailModels
+@{
+    ViewBag.Title = "My Profile";
+    Html.EnableUnobtrusiveJavaScript(true);
+}
+<link href="~/Content/myProfile.css" rel="stylesheet" />
+<div class="title_left">
+    <div class="container">
+            <h3>
+                <small class="breadcrum">
+                    <a href="@Url.Action("Index", "Home")">Home</a> 
+                    <i class='fa fa-caret-right'></i>
+                    <span>My Profile</span>
+                </small>
+            </h3>
+        </div>
+        <div class="clearfix"></div>
+</div>
+
+<div class="Show-UserInformation">
+    <div class="clearfix"></div>
+    <div class="row">
+        <div class="personalData">
+            @Html.Partial("_PersonInfo", Model)
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">     
+        function ShowPesonalEdit(action) {
+            $.ajax({
+                url: action,
+                type: "GET",
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    $(".se-pre-con").show();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(errorThrown);
+                    $(".se-pre-con").hide();
+                },
+                success: function (html) {
+                    $(".se-pre-con").hide();   
+                    var isLogin = BackToLoginWhenSessionEnd(html);
+                    if (isLogin === true) {
+                        window.location = "/Login/Index";
+                    }
+                    else {
+                         $(".Show-UserInformation").html(html);
+                    }                  
+                }
+            });
+        }
+    </script>
+}

@@ -1,0 +1,901 @@
+﻿@using NSCSC.Shared
+@model NSCSC.Shared.Models.SandBox.Inventory.Product.ProductDetailModels
+@{
+    Html.EnableUnobtrusiveJavaScript(true);
+    var _ID = Model.ID;
+}
+@Html.HiddenFor(model => model.ID)
+@if (!string.IsNullOrEmpty(_ID))
+{
+    @Html.HiddenFor(model => model.ImageURL)
+    @Html.HiddenFor(model => model.AdditionType)
+}
+
+<div class="row form-horizontal form-label-left" style="margin-bottom:15px;">
+
+    @*Message error from service*@
+    <div class="form-group">
+        <div class="col-md-6 col-md-offset-2 col-sm-6 col-sm-offset-2 col-xs-12">
+            @Html.ValidationMessage("Error", null, new { @class = "label" })
+        </div>
+    </div>
+
+    @*Addition Name*@
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Addition Name</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @placeholder = "Addition Name", @autocomplete = "off" })
+            @Html.ValidationMessageFor(model => model.Name, null, new { @class = "label" })
+        </div>
+    </div>
+
+    @*Type*@
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Type</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            @Html.DropDownListFor(model => model.AdditionType,
+                            new SelectList(Model.ListAdditionType, "Value", "Text", Model.AdditionType), null,
+                             new
+                             {
+                                 @class = "form-control select2_multiple",
+                                 @id = "AdditionTypeDdl",
+                                 @style = "width:100%;",
+                             })
+            @Html.ValidationMessageFor(model => model.AdditionType, null, new { @class = "label" })
+        </div>
+    </div>
+
+    @*Image*@
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Image</label>
+        <div class="col-md-5 col-sm-5 col-xs-12">
+            @if (!string.IsNullOrEmpty(Model.ImageURL))
+            {
+                <img id="upload-preview" src="@Model.ImageURL" height="100" width="100" class="" />
+            }
+            else
+            {
+                <img id="upload-preview" class="" src="@Commons.Image100_100" height="100" width="100" />
+            }
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <div class="upload-btn-wrapper" style="cursor:pointer;">
+            <button class="btn btn-default btnFile" type="button">Add/Edit</button>
+            @Html.TextBoxFor(model => model.PictureUpload, new { @id = "PictureUpload", @type = "file", @onchange = "PreviewImage(this,\"upload-preview\")", @accept = "*.jpg", @class = "inputFile" })
+        </div>
+        @Html.ValidationMessageFor(model => model.PictureUpload, null, new { @class = "label label-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @* Active*@
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 fontLighter">Active</label>
+        <div class="col-md-1 col-sm-1 col-xs-12">
+            <label>@Html.CheckBoxFor(model => model.IsActive, new { @class = "js-switch-chk" })</label>
+        </div>
+
+        @*Sequence*@
+        <label class="control-label col-md-1 col-sm-1 col-xs-12 fontLighter lineHeight">Sequence</label>
+        <div class="col-md-1 col-sm-1 col-xs-12">
+            @Html.TextBoxFor(model => model.Sequence, new { @class = "form-control keyNumber", @placeholder = "Sequence", @autocomplete = "off", @type = "number", @min = 0 })
+            @Html.ValidationMessageFor(model => model.Sequence, null, new { @class = "label" })
+        </div>
+
+        @*Public*@
+        <label class="control-label col-md-1 col-sm-1 col-xs-12 fontLighter">Public</label>
+        <div class="col-md-1 col-sm-1 col-xs-12">
+            <label>@Html.CheckBoxFor(model => model.IsPublic, new { @class = "js-switch-chk" })</label>
+        </div>
+    </div>
+
+    @*Sale Form - Sale To*@
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Sale From</label>
+        <div class="col-md-2 col-sm-2 col-xs-12">
+            @Html.TextBox("SaleFrom", Model.SaleFrom.ToString(Commons.FormatDate), new { @class = "form-control datepicker" })
+            @Html.ValidationMessageFor(model => model.SaleFrom, null, new { @class = "label" })
+        </div>
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">To</label>
+        <div class="col-md-2 col-sm-2 col-xs-12">
+            @Html.TextBox("SaleTo", Model.SaleTo.ToString(Commons.FormatDate), new { @class = "form-control datepicker" })
+            @Html.ValidationMessageFor(model => model.SaleTo, null, new { @class = "label" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @*Addition Code*@
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Addition Code</label>
+        <div class="col-md-2 col-sm-2 col-xs-12">
+            @Html.TextBoxFor(model => model.Code, new { @class = "form-control AddCode", @placeholder = "Addition Code", @autocomplete = "off" })
+            @*@Html.HiddenFor(model => model.Code)*@
+            @Html.ValidationMessageFor(model => model.Code, null, new { @class = "label" })
+        </div>
+    </div>
+
+    @*Amount of units*@
+    <div class="form-group" id="amountOfUnits">
+        <label for="" class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Amount of units</label>
+        <div class="col-md-2 col-sm-2 col-xs-12">
+            @*<div class="input-group">
+                <span class="input-group-btn"><button class="btn btn-danger" type="button" onclick="AddOrSubtract('sub', '#txt-amount-of-units')"><i class="fa fa-minus"></i></button></span>*@
+            @Html.TextBoxFor(model => model.AmountOfUnit, new { @class = "form-control keyNumber text-center", @id = "txt-amount-of-units", value = "0", @type = "number", min = "1" })
+            @*<span class="input-group-btn"> <button class="btn btn-info" type="button" onclick="AddOrSubtract('add', '#txt-amount-of-units')"><i class="fa fa-plus"></i></button> </span>
+                </div>*@
+            @Html.ValidationMessageFor(model => model.AmountOfUnit, null, new { @class = "label" })
+        </div>
+        <div class="col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">
+            <label>@Html.CheckBoxFor(model => model.IsUnlimitedAmountOfUnit, new { @class = "flat chbTime" })</label> Unlimited
+        </div>
+    </div>
+
+    @*Applicable Categories*@
+    <div class="form-group notFunction">
+        <label for="" class="col-md-offset-1 col-md-2 col-sm-12 col-xs-12">Applicable Categories</label>
+        <div class="col-md-5 col-sm-6 col-xs-12 topDotBorder">
+        </div>
+    </div>
+    <div class="form-group notFunction" style="margin-bottom:0px;">
+        <div for="" class="col-md-offset-1 col-md-11 col-sm-12 col-xs-12">
+            <button type="button" id="btnAppCate" class="btn btn-primary btn-sm" style="font-size:14px;"
+               onclick="ShowModalAddCategories('.bs-example-select-categories', '#list-item-client-category');"
+               @*data-toggle="modal" data-backdrop="static" data-target=".bs-example-select-categories"*@>
+                <i class="fa fa-plus-square" style="font-size:14px;"></i>
+                <span>Add New</span>
+            </button>
+        </div>
+    </div>
+    <div class="form-group notFunction">
+        <div class="col-md-offset-1 col-md-7 col-sm-12 col-xs-12">
+            <table id="datatable-responsive-list-item-applicable-categories" class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action"
+                   cellspacing="0" style="width:100%;">
+                <thead style="background-color:#34495e; color:#fff;">
+                    <tr>
+                        <th class="text-center">Category</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="list-item-cate">
+                    @Html.Partial("_ListAddCate", Model)
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="form-group" style="padding:20px 0;"></div>
+
+    @*Price Items*@
+    <div class="form-group">
+        <label for="" class="col-md-offset-1 col-md-1 col-sm-12 col-xs-12">Prices</label>
+        <div class="col-md-6 col-sm-6 col-xs-12 topDotBorder">
+        </div>
+    </div>
+    <div class="form-group" style="margin-bottom:0px;">
+        <div for="" class="col-md-offset-1 col-md-10 col-sm-12 col-xs-12">
+            <a id="btn-add-more-tab" href="javascript:void(0)" class="btn btn-primary btn-sm" style="font-size:15px;"
+               data-toggle="modal" data-backdrop="static" data-target=".bs-example-modal-lg-price-items">
+                <i class="fa fa-plus-square" style="font-size:14px;"></i>
+                <span>Add New</span>
+            </a>
+            @Html.ValidationMessageFor(model => model.ListPrice, null, new { @class = "label label-danger", @id = "ltrErrorPrice" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-1 col-md-7 col-sm-12 col-xs-12">
+            <table id="datatable-responsive-list-price-items" class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action"
+                   cellspacing="0" style="width:100%;">
+                <thead style="background-color:#34495e; color:#fff;">
+                    <tr>
+                        <th class="text-center">Period</th>
+                        <th class="text-center">Price</th>
+                        @*<th class="text-center">Status</th>*@
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="divListPrice">
+                    @for (int i = 0; i < Model.ListPrice.Count; i++)
+                    {
+                        @Html.Partial("_ItemPrice", Model.ListPrice[i])
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="form-group" style="padding:20px 0;">
+    </div>
+
+    @*Description*@
+    <div class="form-group" style="padding-top:30px;">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 fontLighter">Description </label>
+        <div class="col-md-6 col-sm-12 col-xs-12">
+            @Html.TextAreaFor(model => model.Description, new { @class = "form-control ckeditor", placeholder = "Description" })
+            @Html.ValidationMessageFor(model => model.Description, null, new { @class = "label" })
+        </div>
+    </div>
+
+    @*Functions*@
+    <div class="form-group Function">
+        <label for="" class="col-md-offset-1 col-md-1 col-sm-12 col-xs-12">Functions</label>
+        <div class="col-md-6 col-sm-6 col-xs-12 topDotBorder">
+        </div>
+    </div>
+
+    @*Product Type*@
+    <div class="form-group Function">
+        <label class="col-md-offset-1 col-md-1 col-sm-12 col-xs-12 lineHeight fontLighter">Product Type</label>
+        <div class="col-md-2 col-sm-6 col-xs-12">
+            @Html.DropDownListFor(model => model.Type,
+                            new SelectList(Model.ListFuncProductType, "Value", "Text", Model.Type), null,
+                             new
+                             {
+                                 @class = "form-control select2_multiple",
+                                 @id = "FuncProductTypeDdl",
+                                 @style = "width:100%;"
+                             })
+            @Html.ValidationMessageFor(model => model.Type, null, new { @class = "label" })
+        </div>
+    </div>
+
+    @*List Item Function*@
+    <div class="form-group Function">
+        <div class="col-md-offset-2 col-md-7 col-sm-12 col-xs-12" id="list-function-item">
+            @Html.Partial("_ListFunctionItem", Model)
+        </div>
+    </div>
+
+</div>
+
+@*Popup Select Categories*@
+<div class="modal fade bs-example-select-categories" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Select Categories</h4>
+            </div>
+            <div class="modal-body">
+                <div class="product_price" style="margin:0px;border:none;">
+                    <div class="form-group" style="margin-bottom:0px;">
+                        <div class="col-md-12 col-sm-12 col-xs-12" style="padding-left:0px;">
+                            <button type="button" class="btn btn-info btn-sm" onclick="SelectOrDeselect(true, '.chkCate')">Select All</button>
+                            <button type="button" class="btn btn-danger btn-sm" onclick="SelectOrDeselect(false, '.chkCate')">Deselect All</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12" style="padding-left:0px;">
+                            <table id="datatable-responsive-list-item-categories"
+                                   class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action"
+                                   cellspacing="0" style="width:100%;">
+                                <thead style="background-color:#34495e; color:#fff;">
+                                    <tr>
+                                        <th class="text-center">Select</th>
+                                        <th class="text-center">Category</th>
+                                        <th class="text-center">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="list-item-client-category">
+                                    @Html.Partial("_ListCategoy", Model)
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="AddCategories(this, '.bs-example-select-categories', '#list-item-cate');">Add</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Popup Price Items*@
+<div class="modal fade bs-example-modal-lg-price-items" tabindex="-1" role="dialog" aria-hidden="true" id="modal-add-price">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="mymodalTitle">Price Info</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="message-period" class="col-md-3 col-sm-3 col-xs-12 lineHeight">Period</label>
+                    <div class="col-md-3 col-sm-3 col-xs-12">
+                        <input type="number" class="form-control text-center keyNumber" id="txtPeriod" value="1" autocomplete="off" min="1" />
+                        <span class="label label-danger" id="ltrError"></span>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        @Html.DropDownListFor(model => model.PeriodType,
+                            new SelectList(Model.ListPeriodType, "Value", "Text", Model.PeriodType), null,
+                             new
+                             {
+                                 @class = "form-control select2_multiple",
+                                 @id = "PeriodTypeDdl",
+                                 @style = "width:100%;"
+                             })
+                        <span class="label label-danger" id="ltrPeriodTypeError"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="buying-price" class="col-md-3 col-sm-3 col-xs-12 lineHeight">Buying Price</label>
+                    <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input type="text" class="form-control keyNumber" id="txtPrice" value="0" autocomplete="off" data-type="float" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="AddItems(this)">Save</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    #datatable-responsive-list-item-categories_wrapper .row .col-sm-12 {
+        padding-right: 0;
+    }
+</style>
+<script src="@Url.Content("~/build/js/customInput.js")"></script>
+<script type="text/javascript">
+
+    var IsEdit = false;
+    var _offset = -1;
+    var _valueEdit = "";
+    var _listFuncItem = [];
+
+    /*Format DataTables*/
+    var _tableApplicableCategories = null;
+    var _settingsOptionTableApplicableCategories = {
+        "columnDefs": [
+                { "targets": [2], "orderable": false },
+                { "width": "5%", "targets": [1, 2] },
+        ],
+        "order": [[0, 'asc']],
+        "autoWidth": false, /*Feature control DataTables' smart column width handling.*/
+        "displayLength": 25,
+        "pagingType": "full_numbers",
+        "searching": false,         // txtSearch in filter
+        "lengthChange": false,      // Dropdownlist Page
+        "bInfo": false,              // text [showing...
+        //"paging": false           //
+    };
+
+    var _tableCategories = null;
+    var _settingsOptionTableCategories = {
+        "columnDefs": [
+                { "orderable": false, "targets": [0] },
+                { "width": "1%", "targets": [0, 2] },
+        ],
+        "order": [[1, 'asc']],
+        "autoWidth": false, /*Feature control DataTables' smart column width handling.*/
+        "displayLength": 25,
+        "searching": true,         // txtSearch in filter
+        "lengthChange": false,      // Dropdownlist Page
+        "bInfo": false,              // text [showing...
+        "paging": false,           //
+        "scrollY": 600,
+        "scrollCollapse": false,
+    };
+
+
+    var _tablePriceItem = null;
+    var _settingsOptionTablePriceItem = {
+        "columnDefs": [
+                { "orderable": false, "targets": [1, 2] },
+                { "width": "8%", "targets": [1, 2] },
+        ],
+        "order": [[0, 'desc']],
+        "autoWidth": false, /*Feature control DataTables' smart column width handling.*/
+        "displayLength": 25,
+        "pagingType": "full_numbers",
+        "searching": false,         // txtSearch in filter
+        "lengthChange": false,      // Dropdownlist Page
+        "bInfo": false,             // text [showing...
+        "oLanguage": { "sZeroRecords": "", "sEmptyTable": "" }
+        //"paging": false           //
+    };
+
+    // Can not edit Type
+    @if (!string.IsNullOrEmpty(Model.ID))
+    {
+        <text>$("#AdditionTypeDdl").attr("disabled", true); 
+
+    $("#btnAppCate").attr("disabled", true);
+    $(".dltitemcate").attr("disabled", true);  
+    //$(".AddCode").attr("disabled", true);  
+    $("#FuncProductTypeDdl").attr("disabled", true);
+   
+    </text>
+    }
+
+    @if (Model.IsUnlimitedAmountOfUnit)
+    {
+        <text>$("#txt-amount-of-units").attr('disabled', true);</text>
+    } else
+    {
+       <text>$("#txt-amount-of-units").attr('disabled', false);</text>
+    }
+
+    @if (Model.AdditionType == (int)Commons.EAdditionType.Hardware
+        || Model.AdditionType == (int)Commons.EAdditionType.Service
+        || Model.AdditionType == (int)Commons.EAdditionType.Function
+        )
+    {
+        <text>$('#amountOfUnits').addClass('hidden');</text>
+
+    } else
+    {
+       <text>$('#amountOfUnits').removeClass('hidden');</text>
+    }
+
+    $(document).ready(function (e) {
+        $('.chbTime').on('ifChanged', function (event) {
+            $("#txt-amount-of-units").attr('disabled', event.target.checked);
+        });
+
+        $("#AdditionTypeDdl").select2({
+            placeholder: "Please choose type"
+        });
+        $("#FuncProductTypeDdl").select2({
+            placeholder: "Please choose product type"
+        });
+        $("#PeriodTypeDdl").select2({
+            placeholder: "Please choose period type"
+        });
+        $('.datepicker').daterangepicker({
+            singleDatePicker: true,
+            calender_style: "picker_2",
+            showDropdowns: true,
+            //maxDate: new Date()
+        });
+
+        //Table
+        _tableApplicableCategories = $('#datatable-responsive-list-item-applicable-categories').DataTable($.extend(true, {}, _settingsOptionTableApplicableCategories));
+        _tableCategories = $('#datatable-responsive-list-item-categories').DataTable($.extend(true, {}, _settingsOptionTableCategories));
+        //========Prices
+        _tablePriceItem = $('#datatable-responsive-list-price-items').DataTable($.extend(true, {}, _settingsOptionTablePriceItem));
+
+        @if (Model.ListFunction != null && Model.ListFunction.Count > 0)
+        {
+            foreach (var item in Model.ListFunction)
+            {
+                if (item.IsSelected)
+                {
+                        @:_listFuncItem.push('@item.FunctionID');
+                }
+            }
+        }
+        checkAdditionType(@Model.AdditionType);
+        DisableInputAmountOfUnit();
+
+        /****** key number ***/
+        KeyNumberCheck();
+    });
+
+    /*Function*/
+    $("#AdditionTypeDdl").change(function () {
+        var value = this.value;
+        _listFuncItem = [];
+        checkAdditionType(value);
+        //HiddenAmountOfUnits(value);
+        ClearListPrice();
+        DisableInputAmountOfUnit()
+    });
+
+    //When choose "Type" field is Hardware or Service - "Amount of untis" field will be hidden
+    function DisableInputAmountOfUnit(){
+        if ($("#AdditionTypeDdl").val() == '@Commons.EAdditionType.Hardware.ToString("d")'
+            || $("#AdditionTypeDdl").val() == '@Commons.EAdditionType.Service.ToString("d")'
+            || $("#AdditionTypeDdl").val() == '@Commons.EAdditionType.Function.ToString("d")'
+        ) {
+            $('#amountOfUnits').addClass('hidden');
+            $("#amountOfUnits").hide();
+        }
+        else {
+            $('#amountOfUnits').removeClass('hidden');
+            $("#amountOfUnits").show();
+        }
+    }
+    function ClearListPrice()
+    {
+        $(".ng-Price:visible").each(function () {
+            var OffSet = $(this).attr("data-value");
+            var tr = $('#tr_add_price_' + OffSet);
+            $(tr).find('input.PriceStatus').val(9);
+            $(tr).css('display', 'none');
+        });
+    }
+
+    @*function HiddenAmountOfUnits(value) {
+
+        if (value == '@Commons.EAdditionType.Service.ToString("d")'
+            || value == '@Commons.EAdditionType.Hardware.ToString("d")'
+            || value == '@Commons.EAdditionType.Function.ToString("d")'
+        )
+        {
+            $('#amountOfUnits').addClass('hidden');
+            $('#amountOfUnits').hide();
+        } else {
+            $('#amountOfUnits').removeClass('hidden');
+            $('#amountOfUnits').show();
+        }
+    }*@
+
+    function checkAdditionType(value) {
+        $('.Function').hide();
+        $('.notFunction').hide();
+
+        if (value == '@Commons.EAdditionType.Function.ToString("d")') {
+            $('.Function').show();
+            GetListFunctionProductType(@Model.Type, '#list-function-item');
+        }
+        else if (value != '@Commons.EAdditionType.Function.ToString("d")')
+        {
+            $('.notFunction').show();
+        }
+    }
+
+    $("#FuncProductTypeDdl").change(function () {
+        var value = this.value;
+        _listFuncItem = [];
+        GetListFunctionProductType(value, '#list-function-item');
+    });
+
+    function ShowModalAddCategories(_modal, elemnetFillData) {
+        $(_modal).modal({
+            show: true,
+            backdrop: 'static'
+        });
+        LoadCategories(_modal, elemnetFillData)
+    }
+
+    function LoadCategories(_modal, elemnetFillData) {
+        $.ajax({
+            url: CreateAbsoluteUrl("LoadCategories"),
+            type: 'GET',
+            data: {},
+            dataType: 'html',
+            traditional: true,
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            error: function (e) {
+            },
+            success: function (data) {
+                //$(elemnetFillData).html(data);
+
+                // get the html table rows then
+                _tableCategories.destroy();
+                $(elemnetFillData).empty().promise().done(function () {
+                    $(elemnetFillData).html(data);
+                    _tableCategories = $("#datatable-responsive-list-item-categories").DataTable($.extend(true, {}, _settingsOptionTableCategories));
+                });
+
+                $('.ItemCate').each(function (index, value) {
+                    var idCate = $(this).data('id');
+                    var _this = $(this);
+                    //======
+                    $('.mediate-cate:visible').each(function (index, value) {
+                        var id = $(this).data('id');
+                        if (idCate == id) {
+                            //_this.addClass('hide');
+                            _this.find('input[type="checkbox"]').prop('checked', true);
+                        }
+                    });
+                });
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            }
+        });
+    }
+
+    function AddCategories(btn, _modal, elemnetFillData) {
+        var data = [];
+        $.each($('.ItemCate'), function () {
+            var isSelect = $(this).find('input[type="checkbox"]').prop('checked');
+            var id = $(this).data('id');
+            var name = $(this).data('name');
+            var status = $(this).data('status');
+            if (isSelect) {
+                var ItemDisCate = {
+                    Id: id,
+                    Name: name,
+                    Status: status,
+                    IsSelect: isSelect
+                };
+                data.push(ItemDisCate);
+            }
+        });
+
+        var POSTDisCate = {
+            ListItem: data
+        }
+        $.ajax({
+            type: "POST",
+            url: CreateAbsoluteUrl("AddCategories"),
+            traditional: true,
+            data: JSON.stringify(POSTDisCate),
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            error: function (e) {
+
+            },
+            success: function (data) {
+                $(_modal).modal('hide');
+                //$(elemnetFillData).html(data);
+
+                // get the html table rows then
+                _tableApplicableCategories.destroy();
+                $(elemnetFillData).empty().promise().done(function () {
+                    $(elemnetFillData).html(data);
+                    _tableApplicableCategories = $("#datatable-responsive-list-item-applicable-categories").DataTable($.extend(true, {}, _settingsOptionTableApplicableCategories));
+                });
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            }
+        });
+    }
+
+    function DeleteCategory(e) {
+        var tr = $(e).parents('tr:first');
+        $(tr).find('input.CateStatus').val(9);
+        $(tr).css('display', 'none');
+    }
+
+    /*Add Price - Edit Price*/    
+    function AddItems(btn)
+    {
+        var Period = $('#txtPeriod').val();
+        var Price = $('#txtPrice').val();
+        var PeriodType = $('#PeriodTypeDdl').val();
+        var NamePeriodType = $("#PeriodTypeDdl option:selected").select2().text();
+        var Periods = Period;
+        var NamePeriodTypes = NamePeriodType;
+        if (Period > 1)
+        {
+            NamePeriodTypes = NamePeriodTypes + 's';
+        }
+        if (PeriodType == '@Commons.EPeriodType.OneTime.ToString("d")') {
+            Period = 1;
+            Periods = Period;
+            NamePeriodTypes = NamePeriodType;
+        }
+        //validition
+        //if (Period == '') {
+        //    $('#ltrError').html('[Period] can\'t empty !!!');
+        //    $('#txtPeriod').focus();
+        //    return false;
+        //}
+        /*else */if (!$.isNumeric(Period)) {
+            $('#ltrError').html('[Period] is invalid!');
+            $('#txtPeriod').focus();
+            return false;
+        }
+        else if (Period <= 0) {
+            $('#ltrError').html('Please enter a value greater than or equal to 1.');
+            $('#txtPeriod').focus();
+            return false;
+        }
+        //else if (Price == '') {
+        //    $('#ltrError').html('[Price] can\'t empty!');
+        //    $('#txtPrice').focus();
+        //    return false;
+        //}
+        else if (!$.isNumeric(Price)) {
+            $('#ltrError').html('[Price] is invalid!');
+            $('#txtPrice').focus();
+            return false;
+        }
+        else if (Price < 0) {
+            $('#ltrError').html('Please enter [Price] greater than or equal to 0!');
+            $('#txtPrice').focus();
+            return false;
+        }
+
+        if (PeriodType == null || PeriodType === "null")
+        {
+            $('#ltrPeriodTypeError').html('Please choose period type. !!!');
+            return false;
+        }        
+        var itemValue = Periods + NamePeriodTypes;
+        var checkPeriod = CheckPeriodForProduct('.ng-Price:visible', itemValue, '');
+        if (checkPeriod) {
+            if (_valueEdit != itemValue) {
+                $('#ltrError').html('This period is already existed');
+                return false;
+            }
+        }
+        /*==============*/
+        if (!IsEdit) { //Create
+            var currentItemOffset = $('.ng-Price').length;
+            var ProductPriceModels = {
+                Price: Price,
+                Period: Period,
+                PeriodType: PeriodType,
+                IsActive: 'false',
+                currentItemOffset: currentItemOffset,
+                NamePeriodType: NamePeriodType
+            }
+            $.ajax({
+                type: "POST",
+                url: CreateAbsoluteUrl("AddItems"),
+                traditional: true,
+                data: JSON.stringify(ProductPriceModels),
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+                success: function (data) {
+                    $('#txtPeriod').val('');
+                    $('#txtPrice').val('');
+                    $('#modal-add-price').modal('hide');
+
+                    //$('#divListPrice').append(data);
+                    _tablePriceItem.row.add($(data)).draw();
+                }
+            });
+        } else { //Edit
+
+            $('#lblperiod_' + _offset).html(Period);
+            $('#lblnameperiodtype_' + _offset).html(NamePeriodTypes);
+            $('#lblprice_' + _offset).html(Price);
+
+            $('#hidPeriodType_' + _offset).val(PeriodType);
+            $('#hidPeriod_' + _offset).val(Period);
+            $('#hidPrice_' + _offset).val(Price);
+            $('#hidnameperiodtype_' + _offset).val(NamePeriodTypes);
+            //=============
+            $('#edit_' + _offset).data('period', Period);
+            $('#edit_' + _offset).data('periodtype', PeriodType);
+            $('#edit_' + _offset).data('nameperiodtype', NamePeriodTypes);
+            $('#edit_' + _offset).data('price', Price);
+
+            IsEdit = false;
+            _offset = -1;
+            //=============
+            //$('#txtPeriod').html(Period);
+            //$('#txtPrice').html(Price);
+            //$('#PeriodTypeDdl').val(PeriodType).trigger("change");
+
+            $('#modal-add-price').modal('hide');
+            _valueEdit = "";
+        }
+    }
+
+    function DeletePrice(OffSet) {
+        var count = $(".ng-Price:visible").length;
+        if (count == 1) {
+            //$('#ltrErrorPrice').html("Can't delete item price, price least at one item");
+            $('#ltrErrorPrice').html("Unable to delete it. The price list must have at least one item");
+            return false;
+        }
+        var tr = $('#tr_add_price_' + OffSet);
+        $(tr).find('input.PriceStatus').val(9);
+        $(tr).css('display', 'none');
+    }
+
+    /*Function changeStatus*/
+    function changeStatus(e, _OffSet) {
+        var text = $(e).html();
+        if (text == 'Active') {
+            $(e).removeClass('btn-success');
+            $(e).addClass('btn-danger');
+
+            //$('#lblstatus_' + _OffSet).html('Active');
+            $('#hidIsSelected_' + _OffSet).val(true);
+
+            $(e).html('Inactive');
+        }
+        else {
+            $(e).removeClass('btn-danger');
+            $(e).addClass('btn-success');
+
+            //$('#lblstatus_' + _OffSet).html('Inactive');
+            $('#hidIsSelected_' + _OffSet).val(false);
+
+            $(e).html('Active');
+        }
+    }
+    /*End Function changeStatus*/
+
+    /*Edit*/
+    $('#modal-add-price').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        var _period = button.data('period'); // Extract info from data-* attributes
+        var modal = $(this);
+        //===========
+        var additionType = $('#AdditionTypeDdl').val();
+
+        modal.find(".modal-body #PeriodTypeDdl").empty();
+        //modal.find(".modal-body #PeriodTypeDdl").select2('data', null);
+
+        if (additionType == '@Commons.EAdditionType.Hardware.ToString("d")' || additionType == '@Commons.EAdditionType.Service.ToString("d")') {
+            modal.find(".modal-body #PeriodTypeDdl option[value='@Commons.EPeriodType.Day.ToString("d")']").remove();
+            modal.find(".modal-body #PeriodTypeDdl option[value='@Commons.EPeriodType.Month.ToString("d")']").remove();
+            modal.find(".modal-body #PeriodTypeDdl option[value='@Commons.EPeriodType.Year.ToString("d")']").remove();
+            modal.find(".modal-body #PeriodTypeDdl").prepend('<option value="' + @Commons.EPeriodType.OneTime.ToString("d") +'">@Commons.PeriodTypeOneTime</option>');
+            modal.find(".modal-body #PeriodTypeDdl").val('@Commons.EPeriodType.OneTime.ToString("d")').trigger("change");
+        }
+        else {
+             modal.find(".modal-body #PeriodTypeDdl").prepend('<option value="' + @Commons.EPeriodType.OneTime.ToString("d") +'">@Commons.PeriodTypeOneTime</option>');
+             modal.find(".modal-body #PeriodTypeDdl").prepend('<option value="' + @Commons.EPeriodType.Year.ToString("d") +'">@Commons.PeriodTypeYear</option>');
+               modal.find(".modal-body #PeriodTypeDdl").prepend('<option value="' + @Commons.EPeriodType.Month.ToString("d") +'">@Commons.PeriodTypeMonth</option>');
+               modal.find(".modal-body #PeriodTypeDdl").prepend('<option value="' + @Commons.EPeriodType.Day.ToString("d") +'">@Commons.PeriodTypeDay</option>');
+        }
+        //===========
+        if (typeof _period != 'undefined') { //Edit
+
+            _offset = button.data('offset');
+            IsEdit = true;
+
+            var _price = button.data('price');
+            var _periodtype = button.data('periodtype');
+            var _nameperiodtype = button.data('nameperiodtype');
+            _valueEdit = _period + _nameperiodtype;
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            modal.find('#mymodalTitle').text('Price Info');
+            modal.find('.modal-body input#txtPeriod').val(_period);
+            modal.find('.modal-body input#txtPrice').val(_price);
+            modal.find('.modal-body #PeriodTypeDdl').val(_periodtype).trigger("change");
+        }
+        else { //Create
+            IsEdit = false;
+            modal.find('#mymodalTitle').text('Price Info');
+            modal.find('.modal-body input#txtPeriod, input#txtPrice').val(1);
+            modal.find('.modal-body, input#txtPrice').val(0);
+            if (additionType == '@Commons.EAdditionType.Hardware.ToString("d")' || additionType == '@Commons.EAdditionType.Service.ToString("d")') {
+                modal.find('.modal-body #PeriodTypeDdl').val(@Commons.EPeriodType.OneTime.ToString("d")).trigger("change");
+            }
+            else{
+                modal.find('.modal-body #PeriodTypeDdl').val(@Commons.EPeriodType.Day.ToString("d")).trigger("change");
+            }
+        }
+        modal.find('.modal-body #ltrError').html('');
+        modal.find('.modal-body #ltrPeriodTypeError').html('');
+    })
+
+    $("#PeriodTypeDdl").change(function () {
+        var value = this.value;
+        if (value == '@Commons.EPeriodType.OneTime.ToString("d")') {
+            $('#txtPeriod').attr('disabled', true);
+        } else {
+            $('#txtPeriod').removeAttr('disabled');
+        }
+    });
+
+    function GetListFunctionProductType(type, elemnetFillData) {
+        $.ajax({
+            url: CreateAbsoluteUrl("GetListFunctionProductType"),
+            type: 'GET',
+            data: { Type: type, ListFuncItem: _listFuncItem },
+            dataType: 'html',
+            traditional: true,
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            error: function (e) {
+            },
+            success: function (data) {
+                $(elemnetFillData).html(data);
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            }
+        });
+    }
+
+</script>

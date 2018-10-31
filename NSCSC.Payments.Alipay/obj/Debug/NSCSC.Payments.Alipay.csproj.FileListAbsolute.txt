@@ -1,0 +1,6 @@
+D:\NuWeb.NCSC\NSCSC.Payments.Alipay\bin\Debug\NSCSC.Payments.Alipay.dll
+D:\NuWeb.NCSC\NSCSC.Payments.Alipay\bin\Debug\NSCSC.Payments.Alipay.pdb
+D:\NuWeb.NCSC\NSCSC.Payments.Alipay\obj\Debug\NSCSC.Payments.Alipay.csprojAssemblyReference.cache
+D:\NuWeb.NCSC\NSCSC.Payments.Alipay\obj\Debug\NSCSC.Payments.Alipay.csproj.CoreCompileInputs.cache
+D:\NuWeb.NCSC\NSCSC.Payments.Alipay\obj\Debug\NSCSC.Payments.Alipay.dll
+D:\NuWeb.NCSC\NSCSC.Payments.Alipay\obj\Debug\NSCSC.Payments.Alipay.pdb

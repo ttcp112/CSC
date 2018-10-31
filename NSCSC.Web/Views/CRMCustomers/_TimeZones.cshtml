@@ -1,0 +1,18 @@
+﻿@model NSCSC.Shared.Models.CRM.Customers.StoreDetailModels
+@using NSCSC.Shared
+@Html.DropDownListFor(model => model.TimeZone, new SelectList(ViewBag.TimeZones), new
+{
+    @class = "form-control",
+    @placeholder = "Timezone",
+    @autocomplete = "off",
+    @id = "txtStoreTimeZone"
+})
+@*@Html.TextBoxFor(model => model.TimeZone)*@
+@Html.ValidationMessageFor(model => model.TimeZone, null, new { @class = "label label-danger" })
+<script>
+    $(document).ready(function () {
+        $("#txtStoreTimeZone").select2({
+            placeholder: "Time Zone"
+        });
+    });
+</script>

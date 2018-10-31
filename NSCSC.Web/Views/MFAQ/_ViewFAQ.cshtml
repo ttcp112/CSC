@@ -1,0 +1,58 @@
+﻿@model NSCSC.Shared.Models.ManagementTool.FAQ.FAQDTO
+
+<div role="main" class="right_col">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left" style="padding: 10px 0px;">
+                @Html.Partial("~/Views/Shared/_breadcrumb.cshtml",
+                new Dictionary<string, string> { { "A", "Management Tools" }, { "B", "FAQ" }, { "C", "FAQ - View Detail" } })
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12 x_panel">
+                    <div class="x_content">
+                        <div class="row text-right">
+                            <ul class="header-buttons pull-right list-inline">
+                                <li><a href="javascript:void(0)" onclick="CloseDetail(); return false;" class="btn btn-danger" id="btn-delete"><i class="fa fa-times"></i>&nbsp;Close</a></li>
+                            </ul>
+                        </div>
+                        <div class="row form-horizontal form-label-left">
+                            <div class="row form-horizontal form-label-left" style="margin-bottom:15px;">
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Topic: </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @Model.TopicName
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Question: </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @Model.Question
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Answer: </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @Model.Answer
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Status: </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @string.Format("{0}", Model.IsActive ? @Html.Raw("Active") : @Html.Raw("InActive"))
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+   
+</script>

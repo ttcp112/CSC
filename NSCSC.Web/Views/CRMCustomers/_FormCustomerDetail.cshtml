@@ -1,0 +1,948 @@
+﻿@model NSCSC.Shared.Models.CRM.Customers.CustomerBaseModels
+@using NSCSC.Shared
+@{
+    Html.EnableUnobtrusiveJavaScript(true);
+    var _ID = Model.CustomerDetail.ID;
+}
+@Html.HiddenFor(model => model.CustomerDetail.ID, new { id = "hidCustomerIDdetail" })
+@if (!string.IsNullOrEmpty(_ID))
+{
+    @Html.HiddenFor(model => model.CustomerDetail.ImageURL)
+    if (Model.CustomerDetail.ListCounTry != null && Model.CustomerDetail.ListCounTry.Count > 0)
+    {
+        for (int i = 0; i < Model.CustomerDetail.ListCounTry.Count; i++)
+        {
+            @Html.HiddenFor(model => model.CustomerDetail.ListCounTry[i].Name)
+            if (Model.CustomerDetail.ListCounTry[i].Currencies != null && Model.CustomerDetail.ListCounTry[i].Currencies.Count > 0)
+            {
+                for (int k = 0; k < Model.CustomerDetail.ListCounTry[i].Currencies.Count; k++)
+                {
+                    @Html.HiddenFor(model => model.CustomerDetail.ListCounTry[i].Currencies[k].Name)
+                    @Html.HiddenFor(model => model.CustomerDetail.ListCounTry[i].Currencies[k].Code)
+                    @Html.HiddenFor(model => model.CustomerDetail.ListCounTry[i].Currencies[k].Symbol)
+                }
+            }
+            @Html.HiddenFor(model => model.CustomerDetail.ListCounTry[i].NumericCode)
+            @Html.HiddenFor(model => model.CustomerDetail.ListCounTry[i].TimeZones)
+            @Html.HiddenFor(model => model.CustomerDetail.ListCounTry[i].Alpha2Code)
+            @Html.HiddenFor(model => model.CustomerDetail.ListCounTry[i].Callingcode)
+        }
+
+    }
+
+    if (Model.CustomerDetail.ListReceipt != null && Model.CustomerDetail.ListReceipt.Count > 0)
+    {
+        for (int t = 0; t < Model.CustomerDetail.ListReceipt.Count; t++)
+        {
+            @Html.HiddenFor(model => model.CustomerDetail.ListReceipt[t].ID)
+            @Html.HiddenFor(model => model.CustomerDetail.ListReceipt[t].currency)
+            @Html.HiddenFor(model => model.CustomerDetail.ListReceipt[t].NumberOfItem)
+            @Html.HiddenFor(model => model.CustomerDetail.ListReceipt[t].ReceiptNo)
+            if (Model.CustomerDetail.ListReceipt[t].PaidByMethod != null && Model.CustomerDetail.ListReceipt[t].PaidByMethod.Count > 0)
+            {
+                for (int l = 0; l < Model.CustomerDetail.ListReceipt[t].PaidByMethod.Count; l++)
+                {
+                    @Html.HiddenFor(model => model.CustomerDetail.ListReceipt[t].PaidByMethod[l])
+                }
+            }
+        }
+    }
+}
+<div class="row form-horizontal form-label-left" style="margin-bottom:15px;">
+
+    <div class="form-group">
+        <div class="col-md-offset-1 col-md-3 col-sm-3 col-xs-12">
+            <div class="form-group text-center">
+                <div class="col-md-10 col-sm-10 col-xs-12">
+                    @if (!string.IsNullOrEmpty(Model.CustomerDetail.ImageURL))
+                    {
+                        <img id="upload-preview" src="@Model.CustomerDetail.ImageURL" height="200" width="200" class="" />
+                    }
+                    else
+                    {
+                        <img id="upload-preview" class="" src="@Commons.Image200_200" height="200" width="200" />
+                    }
+                </div>
+                <div class="col-md-10 col-sm-10 col-xs-12" style="margin: 5px 5px;">
+                    <div class="upload-btn-wrapper" style="cursor: pointer;">
+                        <button class="btn btn-default btnFile" style="width:100%;" type="button">Add/Edit</button>
+                        @Html.TextBoxFor(model => model.CustomerDetail.PictureUpload, new
+                   {
+                       @id = "PictureUpload",
+                       @type = "file",
+                       @onchange = "PreviewImage(this,\"upload-preview\")",
+                       @accept = "*.jpg",
+                       @class = "inputFile"
+                   })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.CustomerDetail.PictureUpload, null, new { @class = "label label-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8 col-sm-8 col-xs-12">
+            @*Name*@
+            <div class="form-group">
+                <label class="col-md-1 col-sm-2 col-xs-12 lineHeight fontLighter">Name</label>
+                <div class="col-md-7 col-sm-12 col-xs-12">
+                    @Html.TextBoxFor(model => model.CustomerDetail.Name, new { @class = "form-control", @placeholder = "Name", @autocomplete = "off" })
+                    @Html.ValidationMessageFor(model => model.CustomerDetail.Name, null, new { @class = "label" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @*Phone*@
+                <label class="col-md-1 col-sm-2 col-xs-12 lineHeight fontLighter">Phone</label>
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    @if (!string.IsNullOrEmpty(_ID))
+                    {
+                        @Html.TextBoxFor(model => model.CustomerDetail.Phone, new { @class = "form-control", @placeholder = "Phone", @autocomplete = "off", @style = "display:none" })
+                        @Html.TextBoxFor(model => model.CustomerDetail.PhoneDisplay, new { @class = "form-control", @placeholder = "Phone", @autocomplete = "off" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.CustomerDetail.Phone, new { @class = "form-control", @placeholder = "Phone", @autocomplete = "off" })
+                    }
+                    @Html.ValidationMessageFor(model => model.CustomerDetail.Phone, null, new { @class = "label" })
+                </div>
+                @*Email*@
+                <label class="control-label col-md-1 col-sm-2 col-xs-12 lineHeight fontLighter">Email</label>
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    @if (!string.IsNullOrEmpty(_ID))
+                    {
+                        @Html.TextBoxFor(model => model.CustomerDetail.Email, new { @class = "form-control", @placeholder = "Email", @autocomplete = "off", @style = "display:none" })
+                        @Html.TextBoxFor(model => model.CustomerDetail.EmailDisplay, new { @class = "form-control", @placeholder = "Email", @autocomplete = "off" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.CustomerDetail.Email, new { @class = "form-control", @placeholder = "Email", @autocomplete = "off", @id = "txtEmail" })
+                    }
+                    @Html.ValidationMessageFor(model => model.CustomerDetail.Email, null, new { @class = "label" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @*Status*@
+                <label class="col-md-1 col-sm-2 col-xs-12 lineHeight fontLighter">Active</label>
+                <div class="col-md-2 col-sm-6 col-xs-12">
+                    <label>@Html.CheckBoxFor(model => model.CustomerDetail.IsActive, new { @class = "js-switch-chk", id = "chkActive" })</label>
+                </div>
+                @*Marital Status*@
+                <label class="control-label col-md-2 col-sm-2 col-xs-12 fontLighter">Marital Status</label>
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    @Html.DropDownListFor(model => model.CustomerDetail.ClientMaritalStatus,
+                new SelectList(Model.CustomerDetail.ListMaritalStatus, "Value", "Text", Model.CustomerDetail.ClientMaritalStatus), null,
+                 new
+                 {
+                     @class = "form-control select2_multiple",
+                     @id = "MaritalStatusDdl",
+                     @style = "width:100%;"
+                 })
+                </div>
+            </div>
+
+            @*Gender*@
+            <div class="form-group">
+                <label for="" class="col-md-1 col-sm-2 col-xs-12 lineHeight fontLighter">Gender</label>
+                <div class="col-md-3 col-sm-6 col-xs-12" style="width: 150px; ">
+                    <label class="radio-inline">
+                        @Html.RadioButtonFor(model => model.CustomerDetail.Gender, "true", new { @checked = "checked", @class = "flat", @name = "radMale", id = "chkMale" }) Male
+                    </label>
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <label class="radio-inline">
+                        @Html.RadioButtonFor(model => model.CustomerDetail.Gender, "false", new { @class = "flat", @name = "radFemale", id = "chkFeMale" }) Female
+                    </label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    @*=====================================*@
+    <div class="form-group">
+        @*NRIC*@
+        <label for="" class="col-md-offset-1 col-md-1 col-sm-12 col-xs-12 lineHeight fontLighter">NRIC</label>
+        <div class="col-md-3 col-sm-3 col-xs-12">
+            @if (!string.IsNullOrEmpty(_ID))
+            {
+                @Html.TextBoxFor(model => model.CustomerDetail.NRIC, new { @class = "form-control", @placeholder = "NRIC", @autocomplete = "off", @style = "display:none" })
+                @Html.TextBoxFor(model => model.CustomerDetail.NRICDisplay, new { @class = "form-control", @placeholder = "NRIC", @autocomplete = "off" })
+
+            }
+            else
+            {
+                @Html.TextBoxFor(model => model.CustomerDetail.NRIC, new { @class = "form-control", @placeholder = "NRIC", @autocomplete = "off" })
+            }
+        </div>
+        @*Joined data*@
+        <label for="" class="col-md-1 col-sm-12 col-xs-12  lineHeight fontLighter" style="width: 90px;">Joined date</label>
+        <div class="col-md-2 col-sm-6 col-xs-12">
+            @Html.TextBox("CustomerDetail.JoinedDate", Model.CustomerDetail.JoinedDate.ToString(Commons.FormatDate), new { @class = "form-control datepicker", @id = "joinday" })
+            @Html.ValidationMessageFor(model => model.CustomerDetail.JoinedDate, null, new { @class = "label" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @*Birthday*@
+        <label for="" class="col-md-offset-1 col-md-1 col-sm-12 col-xs-12 lineHeight fontLighter">Birthday</label>
+        <div class="col-md-3 col-sm-3 col-xs-12">
+            @Html.TextBox("CustomerDetail.Birthday", Model.CustomerDetail.Birthday.ToString(Commons.FormatDate), new { @class = "form-control datepicker" })
+
+            @Html.ValidationMessageFor(model => model.CustomerDetail.Birthday, null, new { @class = "label" })
+        </div>
+        @*Anniversary*@
+        <label for="" class="col-md-1 col-sm-12 col-xs-12  lineHeight fontLighter">Anniversary</label>
+        <div class="col-md-2 col-sm-6 col-xs-12">
+            @Html.TextBox("CustomerDetail.Anniversary", Model.CustomerDetail.Anniversary.ToString(Commons.FormatDate), new { @class = "form-control datepicker" })
+            @Html.ValidationMessageFor(model => model.CustomerDetail.Anniversary, null, new { @class = "label" })
+        </div>
+    </div>
+
+    @*Home Address*@
+    <div class="form-group">
+        <label for="" class="col-md-offset-1 col-md-2 col-sm-12 col-xs-12">Home Address</label>
+        <div class="col-md-7 col-sm-7 col-xs-12 topDotBorder">
+        </div>
+    </div>
+    <div class="form-group">
+        @*Street*@
+        <label for="" class="col-md-offset-1 col-md-1 col-sm-12 col-xs-12  lineHeight fontLighter">Street</label>
+        <div class="col-md-4 col-sm-4 col-xs-12">
+            @Html.TextBoxFor(model => model.CustomerDetail.HomeStreet, new { @class = "form-control", @placeholder = "Home Street", @autocomplete = "off" })
+            @Html.ValidationMessageFor(model => model.CustomerDetail.HomeStreet, null, new { @class = "label" })
+        </div>
+        @*City*@
+        <label for="" class="col-md-1 col-sm-12 col-xs-12  lineHeight fontLighter">City</label>
+        <div class="col-md-2 col-sm-3 col-xs-12">
+            @Html.TextBoxFor(model => model.CustomerDetail.HomeCity, new { @class = "form-control", @placeholder = "Home City", @autocomplete = "off" })
+            @Html.ValidationMessageFor(model => model.CustomerDetail.HomeCity, null, new { @class = "label" })
+        </div>
+    </div>
+    <div class="form-group">
+        @*Country*@
+        <label for="" class="col-md-offset-1 col-md-1 col-sm-12 col-xs-12  lineHeight fontLighter">Country</label>
+        <div class="col-md-4 col-sm-4 col-xs-12">
+            @Html.DropDownListFor(model => model.CustomerDetail.HomeCountry,
+                new SelectList(ViewBag.ListCountry, "Name", "Name", Model.CustomerDetail.HomeCountry), "",
+                 new
+                 {
+                     @class = "form-control select2_multiple",
+                     @id = "CountryDdl",
+                     @style = "width:100%;",
+                     @tabindex = "-1"
+                 })
+            @Html.ValidationMessageFor(model => model.CustomerDetail.HomeCountry, null, new { @class = "label" })
+        </div>
+        @*ZIP Code*@
+        <label for="" class="col-md-1 col-sm-1 col-xs-12  lineHeight fontLighter">ZIP Code</label>
+        <div class="col-md-2 col-sm-2 col-xs-12">
+            @Html.TextBoxFor(model => model.CustomerDetail.HomeZipCode, new { @class = "form-control", @placeholder = "Home ZIP Code", @autocomplete = "off" })
+            @Html.ValidationMessageFor(model => model.CustomerDetail.HomeZipCode, null, new { @class = "label" })
+        </div>
+    </div>
+
+    @*Office Address*@
+    <div class="form-group">
+        <label for="" class="col-md-offset-1 col-md-2 col-sm-12 col-xs-12">Office Address</label>
+        <div class="col-md-7 col-sm-7 col-xs-12 topDotBorder">
+        </div>
+    </div>
+    <div class="form-group">
+        @*Street*@
+        <label for="" class="col-md-offset-1 col-md-1 col-sm-12 col-xs-12 lineHeight fontLighter">Street</label>
+        <div class="col-md-4 col-sm-4 col-xs-12">
+            @Html.TextBoxFor(model => model.CustomerDetail.OfficeStreet, new { @class = "form-control", @placeholder = "Office Street", @autocomplete = "off" })
+            @Html.ValidationMessageFor(model => model.CustomerDetail.OfficeStreet, null, new { @class = "label" })
+        </div>
+        @*City*@
+        <label for="" class="col-md-1 col-sm-12 col-xs-12 lineHeight fontLighter">City</label>
+        <div class="col-md-2 col-sm-3 col-xs-12">
+            @Html.TextBoxFor(model => model.CustomerDetail.OfficeCity, new { @class = "form-control", @placeholder = "Office City", @autocomplete = "off" })
+            @Html.ValidationMessageFor(model => model.CustomerDetail.OfficeCity, null, new { @class = "label" })
+        </div>
+    </div>
+    <div class="form-group">
+        @*Country*@
+        <label for="" class="col-md-offset-1 col-md-1 col-sm-12 col-xs-12  lineHeight fontLighter">Country</label>
+        <div class="col-md-4 col-sm-4 col-xs-12">
+
+            @Html.DropDownListFor(model => model.CustomerDetail.OfficeCountry,
+                new SelectList(ViewBag.ListCountry, "Name", "Name", Model.CustomerDetail.OfficeCountry), "",
+                 new
+                 {
+                     @class = "form-control select2_multiple",
+                     @id = "CountryDdl2",
+                     @style = "width:100%;",
+                     @tabindex = "-1"
+                 })
+            @Html.ValidationMessageFor(model => model.CustomerDetail.OfficeCountry, null, new { @class = "label" })
+        </div>
+        @*ZIP Code*@
+        <label for="" class="col-md-1 col-sm-1 col-xs-12 lineHeight fontLighter">ZIP Code</label>
+        <div class="col-md-2 col-sm-2 col-xs-12">
+            @Html.TextBoxFor(model => model.CustomerDetail.OfficeZipCode, new { @class = "form-control", @placeholder = "Office ZIP Code", @autocomplete = "off" })
+            @Html.ValidationMessageFor(model => model.CustomerDetail.OfficeZipCode, null, new { @class = "label" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-offset-1 col-md-2 col-sm-12 col-xs-12 lineHeight fontLighter">@Html.Raw("Applicable Products")</label>
+        <div class="col-md-6 text-right">
+            <a id="btn-add-more-tab" href="#" class="a-fnb" onclick="AddMoreTabProduct(this); return false;" style="font-size:16px; color:#34495e;">
+                <i class="fa fa-plus"></i>
+                <span>@Html.Raw("Add Product")</span>
+            </a>
+            @*<span style="color:red; display:none" id="storeSpending">@Html.Raw(_AttributeForLanguage.CurrentUser.GetLanguageTextFromKey("Please entering...."))</span>*@
+        </div>
+        <div class="col-md-7 col-sm-7 col-xs-12 topDotBorder">
+        </div>
+    </div>
+    <div class="form-group">
+        <div id="div-applicable-product" class="col-md-offset-1 col-md-8" style="float:none;">
+            <table id="datatable-responsive-list-applicable-product" class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action" cellspacing="0" style="width:100%;">
+                <thead>
+                    <tr style="background-color: #34495e; color: #fff; ">
+                        <th>Product Name</th>
+                        <th style="text-align: center;">Price</th>
+                        <th style="text-align: center;">Active</th>
+                    </tr>
+                </thead>
+                <tbody style="" id="tr-add-more-tab-applicable-product">
+                    @Html.Partial("_TabChooseProduct", Model)
+                </tbody>
+            </table>
+        </div>
+        @Html.ValidationMessage("DeliveryFee", new { @class = "col-md-offset-2 col-md-10 label" })
+    </div>
+
+    @if (!string.IsNullOrEmpty(_ID))
+    {
+        @*Receipt History*@
+        <div class="form-group">
+            <label for="" class="col-md-offset-1 col-md-2 col-sm-12 col-xs-12" style="color:#cc1018; font-size:17px;">Receipt History</label>
+            <div class="col-md-7 col-sm-7 col-xs-12 topDotBorder">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-1 col-md-8 col-sm-12 col-xs-12">
+                <table id="datatable-responsive-list-receipt-history" class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action"
+                       cellspacing="0" style="width:100%;">
+                    <thead style="background-color:#34495e; color:#fff;">
+                        <tr>
+                            <th class="text-center">Receipt No.</th>
+                            <th class="text-center">Paid Time</th>
+                            <th class="text-center">Total</th>
+                            <th class="text-center">Paid by</th>
+                            <th class="text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="list-item-cate">
+                        @if (Model.CustomerDetail != null && Model.CustomerDetail.ListReceipt != null && Model.CustomerDetail.ListReceipt.Any())
+                        {
+                            foreach (var item in Model.CustomerDetail.ListReceipt)
+                            {
+                                <tr>
+                                    <td class="text-center"><a href="javascript:void(0)" onclick="showreceiptdetail('@item.ID')">@item.ReceiptNo</a></td>
+                                    <td class="text-center">@item.PaidTime.ToString(Commons.FormatDateTime)</td>
+                                    <td class="text-center">@Model.CurrencySymbol @item.Total.ToString("#,0.00")</td>
+                                    <td class="text-center">                                       
+                                            @item.PaidByMethodText
+                                            @*string.Join(",", item.PaidByMethod)*@                                       
+                                    </td>
+                                    <td class="text-center">
+                                        @{
+                                            var StatusName = "";
+                                        }
+                                        @if (item.OrderStatus == (int)Commons.EOrderStatus.Completed)
+                                        {
+                                            StatusName = Commons.EOrderStatus.Completed.ToString();
+                                        }
+                                        else if (item.OrderStatus == (int)Commons.EOrderStatus.Full_Refunded)
+                                        {
+                                            StatusName = Commons.EOrderStatus.Full_Refunded.ToString();
+                                        }
+                                        else
+                                        {
+                                            StatusName = Commons.EOrderStatus.Half_Refunded.ToString();
+                                        }
+                                        @StatusName
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        @*<tr>
+                                <td class="text-center"><a href="javascript:void(0)" data-toggle="modal" data-backdrop="static" data-target="#modelDetail">RC00013</a></td>
+                                <td class="text-center">02/06/2017 06:00</td>
+                                <td class="text-center">$369.00</td>
+                                <td class="text-center">Visa</td>
+                                <td class="text-center">Completed</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center"><a href="javascript:void(0)" data-toggle="modal" data-backdrop="static" data-target="#modelDetail">RC00012</a></td>
+                                <td class="text-center">04/03/2017 06:34</td>
+                                <td class="text-center">$354.00</td>
+                                <td class="text-center">Master Card</td>
+                                <td class="text-center">Completed</td>
+                            </tr>*@
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="form-group" style="padding:20px 0;">
+        </div>
+    }
+</div>
+@*Receipt Detail*@
+<div class="modal" id="modelDetail" tabindex="-1" role="dialog" aria-hidden="true" data-toggle="modal" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="box-header">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title" style="text-align: left;font-weight:bolder">RECEIPT DETAIL</h4>
+                </div>
+                @*<div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-dismiss="modal">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>*@
+            </div>
+            <div class="modal-body scroll" style="padding:0;">
+                <div id="tbl-listDetail" style="padding:15px;">
+                    <div class="row form-horizontal form-label-left">
+                        <div class="receiptdetail">
+                        </div>
+                    </div>
+                    <div class="row text-right">
+                        <ul class="header-buttons pull-right list-inline">
+                            @*<li><a href="javascript:void(0)" data-dismiss="modal" class="btn btn-sm btn-danger" id="btn-delete"><i class="fa fa-times"></i>&nbsp;Cancel</a></li>*@
+                            <li> <a href="javascript:void(0)" class="btn btn-sm btn-danger editOrder" style="display:none;" onclick="showOrHideRefund(false)"><i class="fa fa-times"></i>&nbsp;Cancel</a></li>
+                            <li><a href="javascript:void(0)" class="btn btn-sm btn-success editOrder disabled clsComfirn" style="display:none;" @*onclick="showOrHideRefund(false)"*@ @*data-target="#modelRefundConfirmation" data-toggle="modal"*@ onclick="RefurnConfirm(); return false;"><i class="fa fa-pie-chart"></i>&nbsp;Confirm</a></li>
+                            <li> <a href="javascript:void(0)" class="btn btn-sm btn-primary" id="btnRefund" onclick="showOrHideRefund(true)"><i class="fa fa-reply"></i>&nbsp;Refund</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Refund Confirmation*@
+<div class="modal fade" id="modelRefundConfirmation" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="myModalLabel">Refund Confirmation</h3>
+            </div>
+            <div class="modal-body scroll" style="padding:0;">
+                <div id="tbl-listDetail-Refund-Confirm" style="padding:15px;">
+
+                    @*<div class="row text-right">
+                            <ul class="header-buttons pull-right list-inline">
+                                <li><a href="javascript:void(0)" data-dismiss="modal" class="btn btn-sm btn-danger" id="btn-delete"><i class="fa fa-times"></i>&nbsp;Cancel</a></li>
+                                <li><a href="javascript:void(0)" data-dismiss="modal" class="btn btn-sm btn-success" id="btn-done"><i class="fa fa-check"></i>&nbsp;Done</a></li>
+                            </ul>
+                        </div>*@
+                </div>
+            </div>
+            <div class="modal-footer text-right">
+                <ul class="header-buttons pull-right list-inline">
+                    <li><a href="javascript:void(0)" data-dismiss="modal" class="btn btn-sm btn-danger" id="btn-delete"><i class="fa fa-times"></i>&nbsp;Cancel</a></li>
+                    <li><a href="javascript:void(0)" class="btn btn-sm btn-success" id="btn-done" onclick="DoneRefund(); return false;"><i class="fa fa-check"></i>&nbsp;Done</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@*choose Item *@
+<div class="modal fade second" id="modal-choose-list-appli-product" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" style="font-weight:bold;">Choose Products</h4>
+            </div>
+            <div class="modal-body scroll">
+                <div id="tbl-choose-items" class="form-group-sm" style="overflow: auto; height: 500px;">
+                    <table id="table-list-product" class="table table-striped table-hover">
+                        <thead>
+                            <tr style="background-color:#34495e; color:#fff;">
+                                <th style="width:1%; color: #fff"><input type="checkbox" id="chkAllProduct_" onchange="ToogleCheckAll(this, '#list-data-product')"> </th>
+                                <th>All</th>
+                            </tr>
+                        </thead>
+                        <tbody id="list-data-product">
+                            @for (int i = 0; i < Model.CustomerDetail.ListAppProduct.Count; i++)
+                            {
+                                <tr data-id="@Model.CustomerDetail.ListAppProduct[i].ID" style="cursor:pointer;" class="SpecificItems">
+                                    <td>
+                                        @Html.CheckBoxFor(model => model.CustomerDetail.ListAppProduct[i].Ischeck, new { @class = "", @onClick = "CheckBoxForChildProduct(this, " + Model.CustomerDetail.ListAppProduct[i].OffSet + ")" })
+                                        @Html.HiddenFor(model => model.CustomerDetail.ListAppProduct[i].ID, new { @class = "hidID" })
+                                        @Html.HiddenFor(model => model.CustomerDetail.ListAppProduct[i].Name, new { @class = "hidName" })
+                                        @Html.HiddenFor(model => model.CustomerDetail.ListAppProduct[i].OffSet, new { @Value = Model.CustomerDetail.ListAppProduct[i].OffSet })
+                                    </td>
+                                    <td onclick="CheckBoxForProduct(this)"> @Model.CustomerDetail.ListAppProduct[i].Name</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button onclick="AddItemProducts(this)" type="button" class="btn btn-beauty bg-fnb">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Popup Price Items*@
+<div class="modal fade bs-example-modal-lg-price-items" tabindex="-1" role="dialog" aria-hidden="true" id="modal-add-price">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="mymodalTitle">Price Info</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="message-period" class="col-md-3 col-sm-3 col-xs-12 lineHeight">Period</label>
+                    <div class="col-md-3 col-sm-3 col-xs-12">
+                        <input type="number" class="form-control text-center keyNumber" id="txtPeriod" value="1" autocomplete="off" min="1" />
+                        <span class="label label-danger" id="ltrError"></span>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        @Html.DropDownListFor(model => model.CustomerDetail.PeriodType,
+                            new SelectList(Model.CustomerDetail.ListPeriodType, "Value", "Text", Model.CustomerDetail.PeriodType), null,
+                             new
+                             {
+                                 @class = "form-control select2_multiple",
+                                 @id = "PeriodTypeDdl",
+                                 @style = "width:100%;"
+                             })
+                        <span class="label label-danger" id="ltrPeriodTypeError"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="buying-price" class="col-md-3 col-sm-3 col-xs-12 lineHeight">Buying Price</label>
+                    <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input type="text" class="form-control keyNumber" id="txtPrice" value="0" autocomplete="off" data-type="float" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="AddItems(this)">Save</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<script src="@Url.Content("~/build/js/customInput.js")"></script>*@
+<script type="text/javascript">
+    var IsEdit = false;
+    var btnGlobal;
+    var listItem;
+
+    var _tableReceiptHistory = null;
+    var _settingsOptionTableReceiptHistory = {
+        "columnDefs": [
+               { "orderable": false, "targets": [] },
+               { "width": "12%", "targets": [2, 3, 4] },
+        ],
+        "order": [[1, 'desc']],
+        "autoWidth": false, /*Feature control DataTables' smart column width handling.*/
+        "displayLength": 25,
+        //"pagingType": "full_numbers",
+        "searching": true,         // txtSearch in filter
+        "lengthChange": true,      // Dropdownlist Page
+        "bInfo": false,              // text [showing...
+        "paging": true           //
+    };
+
+    var _tableApplicableProduct = null;
+    var _settingsOptionTableApplicableProduct = {
+        "columnDefs": [
+               { "orderable": false, "targets": [2] },
+               { "width": "25%", "targets": [1] },
+               { "width": "10%", "targets": [2] },
+        ],
+        "order": [[0, 'desc']],
+        "autoWidth": false, /*Feature control DataTables' smart column width handling.*/
+        //"displayLength": 25,
+        //"pagingType": "full_numbers",
+        "searching": false,         // txtSearch in filter
+        "lengthChange": false,      // Dropdownlist Page
+        "bInfo": false,              // text [showing...
+        "paging": true           //
+    };
+
+
+    $(document).ready(function (e) {
+        $('#joinday').attr('disabled', true);
+        $("#CountryDdl").select2({
+            placeholder: "Please choose the Country"
+        });
+        $("#CountryDdl2").select2({
+            placeholder: "Please choose the Country"
+        });
+        $("#MaritalStatusDdl").select2({
+            placeholder: "Please choose marital status"
+        });
+        $("#PeriodTypeDdl").select2({
+            placeholder: "Please choose Period"
+        });
+        $('.datepicker').daterangepicker({
+            singleDatePicker: true,
+            calender_style: "picker_2",
+        });
+
+        _tableApplicableProduct = $('#datatable-responsive-list-applicable-product').DataTable($.extend(true, {}, _settingsOptionTableApplicableProduct));
+        _tableReceiptHistory = $('#datatable-responsive-list-receipt-history').DataTable($.extend(true, {}, _settingsOptionTableReceiptHistory));
+
+        $('.modal').on("hidden.bs.modal", function (e) {
+            if ($('.modal:visible').length) {
+                //$('.modal-backdrop').first().css('z-index', parseInt($('.modal:visible').last().css('z-index')) - 10);
+                $('body').addClass('modal-open');
+            }
+
+        });
+    });
+
+    /*Function*/
+    function showreceiptdetail(ID) {
+        $('.se-pre-con').show();
+        $.ajax({
+            url: '@Url.Action("GetDetailReceipt", "CRMCustomers")',
+            type: "POST",
+            data: { ID: ID},
+            dataType:'html',
+            //processData: false,
+            //contentType: false,
+            success: function (data) {
+                $('.se-pre-con').hide();
+                $("#modelDetail").modal({
+                    show: true,
+                    backdrop: 'static'
+                })
+                $(".receiptdetail").html(data);
+                showOrHideRefund(false);
+                /* Check enable or disable button confirn */
+                var flag = true;
+                $('.tbCustomer .clsRefurn').each(function () {
+                    var chckValue = $(this).iCheck('update')[0].checked;
+                    if (chckValue) {
+                        flag = false;
+                        return (false);
+                    } else {
+                        flag = true;
+                    }
+                });
+                if (flag) {
+                    $('.clsComfirn').addClass('disabled');
+                } else {
+                    $('.clsComfirn').removeClass('disabled');
+                }
+                /* End */
+                $('.clsRefurn').addClass('hidden');
+
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $('.se-pre-con').hide();
+                $(".Show-UserInformation").html(jqXHR.responseText);
+            }
+        });
+    }
+
+    function showOrHideRefund(refundClick) {
+        if (refundClick == true) {
+            //for (let el of document.querySelectorAll('.editOrder'))
+            //{
+            //    el.style.display = 'block';
+            //}
+            $.each($('.editOrder'), function () {
+                $(this).show();
+            });
+            document.getElementById("btnRefund").style.display = "none";
+
+            $('.clsRefurn').removeClass('hidden');
+        }
+        else {
+            //for (let el of document.querySelectorAll('.editOrder'))
+            //{
+            //    el.style.display = 'none';
+            //}
+            $.each($('.editOrder'), function () {
+                $(this).hide();
+            });
+            document.getElementById("btnRefund").style.display = "block";
+
+            $('.clsRefurn').addClass('hidden');
+            //$('.clsRefurn').iCheck('uncheck');
+        }
+
+
+    }
+
+    function AddMoreTabProduct(e) {
+        AddMoreProduct(e);
+    }
+
+    function AddMoreProduct(e) {
+        var trs = $('#list-data-product').find('tr');
+        listItem = [];
+        for (var i = 0; i < trs.length; i++) {
+            var tr = trs[i];
+            if ($(tr).find('td input[type="checkbox"]').prop('checked')) {
+                var ID = $(tr).find('td .hidID').val();
+                listItem.push(ID);
+            }
+        }
+        $('.SpecificItems').each(function (index, value) {
+            var dataId = $(this).attr('data-id');
+            if (listItem.indexOf(dataId) != -1) {
+                $(this).addClass('hide');//.hide();
+            }
+        });
+        $('#modal-choose-list-appli-product').modal({
+            show: true,
+            backdrop: 'static'
+        });
+    }
+
+    function DeleteTabPanelAllicableProduct(btn) {
+        var count = $(".applicableProductRow:visible").length;
+        var tr = $(btn).parents('tr:first');
+        $(tr).find('input.GroupStatus').val(9);
+        $(tr).css('display', 'none');
+    }
+
+    function AddItemProducts(btn) {
+        var groupOffSet = $('.ng-Product').length;
+        //var currentItemOffset = $(btnGlobal).parents('table:first > tbody').find('tr').length - 1;
+        var trs = $(btn).parents('.modal').find('.modal-body table tbody tr:visible');
+        var data = [];
+        listItem = [];
+        for (var i = 0; i < trs.length; i++) {
+            var tr = trs[i];
+            if ($(tr).find('td input[type="checkbox"]').prop('checked')) {
+                var ID = $(tr).find('td .hidID').val();
+                var Name = $(tr).find('td .hidName').val();
+
+                var ProductModels = {
+                    ID: ID,
+                    Name: Name,
+                }
+                listItem.push(ID);
+                data.push(ProductModels);
+            }
+        }
+        var ProductOnGroupModels = {
+            CurrentOffset: groupOffSet,
+            ListProductOnGroup: data,
+        }
+        if (data.length > 0) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("AddItemProducts", "CRMCustomers")',
+                traditional: true,
+                data: JSON.stringify(ProductOnGroupModels),
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+                success: function (data) {
+                    _tableApplicableProduct.destroy();
+                    $("#tr-add-more-tab-applicable-product").append(data);
+                    $('#modal-choose-list-appli-product').modal('hide');
+                    $('.SpecificItems').each(function (index, value) {
+                        var dataId = $(this).attr('data-id');
+                        if (listItem.indexOf(dataId) != -1) {
+                            $(this).addClass('hide');
+                        }
+                    });
+                    _tableApplicableProduct = $('#datatable-responsive-list-applicable-product').DataTable($.extend(true, {}, _settingsOptionTableApplicableProduct));
+                }
+            });
+        }
+    }
+
+    var countchild = 0;
+    var countAll = 0;
+    function CheckBoxForProduct(td, offset) {
+        countchild = parseFloat(countchild) + 1;
+        var tr = $(td).parents('tr:first');
+        $(tr).find('input[type=checkbox]').prop('checked', !$(tr).find('input[type=checkbox]').prop('checked'))
+        $('.SpecificItems').find('input[type=checkbox]').prop('checked');
+
+        countAll = $('#list-data-product').find("tr:visible").length;
+        countchild = $('#list-data-product').find("tr:visible").find("input[type='checkbox']:checked").length;
+        if (countchild === countAll) {
+            $('#chkAllProduct_').prop('checked', true);
+        } else {
+            $('#chkAllProduct_').prop('checked', false);
+        }
+    }
+
+    function CheckBoxForChildProduct(td, offset) {
+        var tr = $(td).parents('tr:first');
+        $(tr).find('input[type=checkbox]').prop('checked', !$(tr).find('input[type=checkbox]').prop('checked'))
+        CheckBoxForProduct(td, offset);
+    }
+
+    function DeleteProduct(OffSet, Id) {
+        $('.SpecificItems').each(function (index, value) {
+            var dataId = $(this).attr('data-id');
+            if (Id.indexOf(dataId) != -1) {
+                $(this).removeClass('hide');//.hide();
+                $(this).find('input[type=checkbox]').prop('checked', false);
+            }
+        });
+        //var count = $(".ng-Product:visible").length;
+        //if (count == 1) {
+        //    //$('#ltrErrorPrice').html("Can't delete item price, price least at one item");
+        //    $('#ltrErrorPrice').html("Unable to delete it. The price list must have at least one item");
+        //    return false;
+        //}
+        var tr = $('#tr_add_product_' + OffSet);
+        $(tr).find('input.ProductStatus').val(9);
+        $(tr).css('display', 'none');
+    }
+
+    /*Add Price - Edit Price*/
+
+    function ShowModalProductPrice(btn, _ProductID) {
+        var tr = $(btn).parents('tr:first');
+        var modal = $(tr).find(".modal");
+        $(modal).modal({
+            keyboard: false,
+            show: true,
+            //backdrop: false
+        });
+    }
+
+    function AddItemPrices(btn, ProductOffset) {
+        var Period = $('#txtPeriod_' + ProductOffset).val();
+        var Price = $('#txtPrice_' + ProductOffset).val();
+        var PeriodType = $('#PeriodTypeDdl_' + ProductOffset).val();
+        var NamePeriodType = $("#PeriodTypeDdl_" + ProductOffset + " option:selected").select2().text();
+        var Periods = Period;
+        var NamePeriodTypes = NamePeriodType;
+        if (Period > 1)
+        {
+            NamePeriodTypes = NamePeriodTypes + 's';
+        }
+        if (PeriodType == '@Commons.EPeriodType.OneTime.ToString("d")') {
+            Period = 1;
+            Periods = Period;
+            NamePeriodTypes = NamePeriodType;
+        }
+        if (!$.isNumeric(Period)) {
+            $('#ltrError_' + ProductOffset).html('[Period] is invalid!');
+            $('#txtPeriod_' + ProductOffset).focus();
+            return false;
+        }
+        else if (Period <= 0) {
+            $('#ltrError_' + ProductOffset).html('Please enter a value greater than or equal to 1.');
+            $('#txtPeriod_' + ProductOffset).focus();
+            return false;
+        }
+        else if (!$.isNumeric(Price)) {
+            $('#ltrError_' + ProductOffset).html('[Price] is invalid!');
+            $('#txtPrice_' + ProductOffset).focus();
+            return false;
+        }
+        else if (Price < 0) {
+            $('#ltrError_' + ProductOffset).html('Please enter [Price] greater than or equal to 0!');
+            $('#txtPrice_' + ProductOffset).focus();
+            return false;
+        }
+
+        if (PeriodType == null || PeriodType === "null")
+        {
+            $('#ltrPeriodTypeError_' + ProductOffset).html('Please choose period type. !!!');
+            return false;
+        }
+        var itemValue = Periods + NamePeriodTypes;
+        var checkPeriod = CheckPeriodForProduct('.ng-Price_ '+ ProductOffset +':visible', itemValue, '');
+        if (checkPeriod) {
+            if (_valueEdit != itemValue) {
+                $('#ltrError_').html('This period is already existed');
+                return false;
+            }
+        }
+        /*==============*/
+        if (!IsEdit) { //Create
+            var currentItemOffset = $('.ng-Price_' + ProductOffset).length;
+            var ProductPriceModels = {
+                Price: Price,
+                Period: Period,
+                PeriodType: PeriodType,
+                IsActive: 'false',
+                currentItemOffset: currentItemOffset,
+                NamePeriodType: NamePeriodType,
+                ProductOffSet: ProductOffset,
+            }
+            $.ajax({
+                type: "POST",
+                url: CreateAbsoluteUrl("AddItemPrices"),
+                traditional: true,
+                data: JSON.stringify(ProductPriceModels),
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+                success: function (data) {
+                    $('#txtPeriod_' + ProductOffset).val('');
+                    $('#txtPrice_' + ProductOffset).val('');
+                    //$('#modal-add-price').modal('hide');
+                    //$('#divListPrice').append(data);
+                    //_tablePriceItem.destroy();
+                    //$("#list-data-choose-price_" + ProductOffset).add(data);
+                    var _tablePriceItemData = $('#table-list-choose-price_' + ProductOffset).DataTable();
+                    _tablePriceItemData.row.add($(data)).draw();
+                }
+            });
+        } else { //Edit
+
+            $('#lblperiod_' + _offset).html(Period);
+            $('#lblnameperiodtype_' + _offset).html(NamePeriodTypes);
+            $('#lblprice_' + _offset).html(Price);
+
+            $('#hidPeriodType_' + _offset).val(PeriodType);
+            $('#hidPeriod_' + _offset).val(Period);
+            $('#hidPrice_' + _offset).val(Price);
+            $('#hidnameperiodtype_' + _offset).val(NamePeriodTypes);
+            //=============
+            $('#edit_' + _offset).data('period', Period);
+            $('#edit_' + _offset).data('periodtype', PeriodType);
+            $('#edit_' + _offset).data('nameperiodtype', NamePeriodTypes);
+            $('#edit_' + _offset).data('price', Price);
+
+            IsEdit = false;
+            _offset = -1;
+            //=============
+            //$('#txtPeriod').html(Period);
+            //$('#txtPrice').html(Price);
+            //$('#PeriodTypeDdl').val(PeriodType).trigger("change");
+
+            $('#modal-add-price').modal('hide');
+            _valueEdit = "";
+        }
+    }
+</script>
+

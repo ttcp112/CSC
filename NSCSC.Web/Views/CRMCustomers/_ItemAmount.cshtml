@@ -1,0 +1,20 @@
+﻿
+@model NSCSC.Shared.Models.ClientSite.MyProfile.HistoriesPaid
+
+@Html.HiddenFor(model => model.Received, new { @id = "idReceived" })
+@Html.HiddenFor(model => model.Remaining, new { @id ="idRemaning"})
+@Html.HiddenFor(model => model.Change, new { @id = "idChange" })
+@Html.HiddenFor(model => model.CurrencySymbol, new { @id = "idCurrencySymbol" })
+@{if (Model.ListPaidMethod != null && Model.ListPaidMethod.Count() > 0)
+    {
+        foreach (var item in Model.ListPaidMethod)
+        {
+            <tr class="paddingTop30">
+                <td class="text-left">@item.Name</td>
+                <td class="text-left">@item.CurrencySymbol@item.Amount.ToString("#,0.00")</td>
+            </tr>
+        }
+    }
+
+}
+

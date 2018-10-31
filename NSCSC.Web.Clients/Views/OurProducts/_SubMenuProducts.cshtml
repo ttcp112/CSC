@@ -1,0 +1,193 @@
+﻿@using NSCSC.Shared
+@using NSCSC.Shared.Helpers
+@{
+    Layout = null;
+}
+<!--bxslider css-->
+<link href="~/vendors/jquery.bxslider/jquery.bxslider.min.css" rel="stylesheet" />
+<center>
+    <div class="package">
+        <div class="menu_product">
+            <a class="menu_product" href="@Url.Action("Addition", "OurProducts")">
+                <h4 class="menu_product"><i class="fa fa-plus-circle" aria-hidden="true"></i></h4>
+                <h5 class="menu_product">ADDITIONS</h5>
+            </a>
+        </div>
+        <div class="menu_product">
+            <a class="menu_product" href="@Url.ActionEncoded("Index", "OurProducts", new { ProductType = "Packages" })">
+                <h4 class="menu_product"> <i class="fa fa-cube" aria-hidden="true"></i></h4>
+                <h5 class="menu_product">PACKAGES</h5>
+            </a>
+        </div>
+    </div>
+    <div id="sub-menu" class="menu right">
+        @if (Session["ListItemCategory"] != null)
+        {
+            List<NSCSC.Shared.Models.OurProducts.CategoryDetailModels> _item = (List<NSCSC.Shared.Models.OurProducts.CategoryDetailModels>)Session["ListItemCategory"];
+            foreach (var item in _item)
+            {
+                <div class="sub_menu_product right">
+                    <a class="menu_product" @*href="@Url.Action("Index", "OurProducts", new { ProductType = "Products", CategoryID = item.ID })"*@
+                       href="@Url.ActionEncoded("Index", "OurProducts", new { ProductType = "Products", CategoryID = item.ID })">
+                        @if (string.IsNullOrEmpty(item.ImageURL))
+                        {
+                            <img class="menu_product" src="~/images/dummy/product.jpg" />
+                        }
+                        else
+                        {
+                            <img class="menu_product" src="@item.ImageURL" />
+                        }
+                        <h5 class="menu_product">@item.Name</h5><h6 class="menu_product">@item.ShortDescription</h6>
+                    </a>
+                </div>
+            }
+        }
+        <input id="NewUserID" type="hidden" value="80" >
+    </div>
+
+</center>
+
+<script src="~/vendors/jquery.bxslider/jquery.bxslider.js"></script>
+<script>
+    var timer;
+    var CountItemMenu;
+    $(document).ready(function () {
+        var CountItemMenu = document.getElementsByClassName("sub_menu_product").length;
+        if (CountItemMenu == 0) {
+            timer = setInterval(function () {
+                CallSubMenuCate();
+            }, 1000);
+        }
+        //silde Menu
+        SlideForSubMenu(CountItemMenu);
+
+        //hidden prev/next
+        $(".bx-next").click(function () {
+            if (s != 0) {
+                _star++;
+                _end++;
+                if (_end >= s)
+                    $(".bx-next").addClass("disabled");
+                if (_star > 0)
+                    $(".bx-prev").removeClass("disabled");
+            }
+        });
+        $(".bx-prev").click(function () {
+            if (s != 0) {
+                _star--;
+                _end--;
+                if (_star <= 0)
+                    $(".bx-prev").addClass("disabled");
+                if (_end<=s)
+                    $(".bx-next").removeClass("disabled");
+            }
+        });
+    });
+    var _star = 0;
+    var _end = 6;
+    var s = 0;
+    function SlideForSubMenu(_CountItemMenu) {
+        if (_CountItemMenu > 6) {
+            $('#sub-menu').removeClass("right").addClass("lefts");
+            $('.sub_menu_product').removeClass("right").addClass("lefts");
+            s = _CountItemMenu;
+            $('#sub-menu').bxSlider({
+                speed: 400,
+                moveSlides: 1,
+                slideWidth: 150,
+                minSlides: 1,
+                maxSlides: 6,
+                auto: false,
+                pager: false,
+                useCSS: false,
+                touchEnabled: false,
+                infiniteLoop: false,
+                hideControlOnEnd: true
+            });
+        } else {
+            $('#sub-menu').addClass("right");
+            $('.sub_menu_product').addClass("right");
+        }
+    }
+    function CallSubMenuCate() {
+        var urlSubMenu = "@Url.Action("GetListCategory", "OurProducts")";
+        clearInterval(timer);
+        $.ajax({
+            type: "GET",
+            url: urlSubMenu,
+            traditional: true,
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                data = JSON.parse(data);
+                CountItemMenu = data.length;
+                if (data.length == 0) {
+                    timer = setInterval(function () {
+                        CallSubMenuCate();
+                    }, 1000);
+                } else {
+                    clearInterval(timer);
+
+                    $.each(data, function (key, item) {
+                        var imgURL = item.ImageURL;
+                        if (imgURL == '') {
+                            imgURL = '/images/dummy/product.jpg';
+                        }
+                        var _url = item.UrlEncrypt;
+                        var item = "<div class=\"sub_menu_product\"> <a class=\"menu_product\" href=\"" + _url + "\"> <img class=\"menu_product\" src=" + imgURL
+                                        + " /> <h5 class=\"menu_product\">" + item.Name
+                                        + "</h5><h6 class=\"menu_product\">" + item.ShortDescription
+                                        + "</h6></a></div>";
+                        $(item).appendTo('#sub-menu');
+                    });
+                    SlideForSubMenu(data.length);
+                    //addClass(data.length);
+
+                    //ADD IN FOOTER-------------------
+                    var row = 4;
+                    var Columns = data.length % row == 0 ? (data.length / row) : ((data.length / row) + 1);
+                    var EndItem = 0;
+                    if (data.length >= 4)
+                        EndItem = row;
+                    else
+                        EndItem = data.length;
+                    for (var k = 0; k < Columns; k++) {
+                        var item2 = "<li id=\"nav_menu-2\" class=\"widget widget_nav_menu\">"
+                                    + "<h2 class=\"widgettitle\">";
+                        if (k == 0)
+                            item2 += "OUR PRODUCTS </h2>";
+                        else
+                            item2 += "<br/></h2>";
+                        item2 += "<div class=\"menu-features-menu-container\"><ul id=\"menu-features-menu\" class=\"menu\">";
+                        var StartItem = k * row;
+                        for (var m = StartItem; m < EndItem; m++) {
+                            var item = data[m];
+                            item2 += "<li id=\"menu-item-805\" class=\"menu-item menu-item-type-post_type menu-item-object-page menu-item-805\">";
+                            item2 += "<a href=\"" + item.UrlEncrypt + "\">" + item.Name + "</a></li>";
+                        }
+                        item2 += " </ul></div></li>";
+                        EndItem = data.length - EndItem > row ? (EndItem + row) : data.length;
+                        $(item2).appendTo('#footer-sidebar-2');
+                    }
+                    //END FOOTER------------------------
+
+                    //ADD IN VIEW START YOU BUSINESS-----
+                    if (document.getElementsByClassName("category").length == 0) {
+                        $.each(data, function (key, item) {
+                            var imgURL = item.ImageURL;
+                            if (imgURL == '') {
+                                imgURL = '/images/dummy/product.jpg';
+                            }
+                            var item = "<div class=\"col-md-3 col-sm-3 col-xs-3 text-center\"> <a href=\""
+                                            + item.UrlEncrypt + "\"><div class=\"form-group text-center imageProduct\"> <img class=\"img-cate\" src=" + imgURL + " />"
+                                            + "</div><div class=\"form-group\">" + item.Name + " </div></a> </div>"
+                            $(item).appendTo('#category');
+                        });
+                    }
+                    //END STAR YOU BUSSINESS-----------
+                }
+            },
+        });
+    }
+</script>

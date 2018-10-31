@@ -1,0 +1,186 @@
+﻿@model  List<NSCSC.Shared.Models.ClientSite.MyStoreAndBusiness.ProductPackageUserModels>
+@using NSCSC.Shared.Helpers
+@using NSCSC.Shared
+@{
+    Layout = null;
+}
+<div class="ongoing list-item-product">
+    @if (Model != null && Model.Any())
+    {
+        foreach (var item in Model)
+        {
+            if (item.ProductType == (int)Commons.EProductType.Product)
+            {
+                <div class="row divOnGoing item-product" style="margin-left:0px; margin-right:0px;">
+                    <div class="col-md-3 col-sm-4 col-xs-12 text-center">
+                        <div class="clsImage" style="width:100%">
+                            <a href="javascript:void(0)">
+                                <img src="@item.Image" alt="..." class="width-height-200" />
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-9 col-sm-9 col-xs-12  reset-padding-left-right">
+                        <div class="clsContent">
+                            <h3 class="product-name text-uppercase">@item.ItemName - @item.PeriodName</h3>
+                            <h4 class="product-date">
+                                <span>@item.sExpiryDate</span>
+                            </h4>
+                            <h4>@item.sIsUnlimitedUnit</h4>
+                            <h4>@item.sIsUnlimitedAccount</h4>
+                            <h4 style="line-height:20px;">
+                                @if (item.ListFunction != null && item.ListFunction.Any())
+                                {
+                                    @: <strong>Functions: </strong>
+                                    @item.sFunctions
+                                }
+                            </h4>
+
+                            @if (item.ListComposite != null && item.ListComposite.Any())
+                            {
+                                <div class="divComposite" style="float:left; width:50%">
+                                    <h4>
+                                        <span class="fontBold">
+                                            Composite
+                                        </span>
+                                    </h4>
+                                    @foreach (var itemComposite in item.ListComposite)
+                                    {
+                                        <h5>@itemComposite.Quantity x @itemComposite.ItemName</h5>
+                                    }
+                                </div>
+                            }
+
+                            @if (item.ListAddition != null && item.ListAddition.Any())
+                            {
+                                <div class="divAddition" style="width:50%;float:left">
+                                    <h4>
+                                        <strong>
+                                            Addition
+                                        </strong>
+                                    </h4>
+                                    @foreach (var itemAddition in item.ListAddition)
+                                    {
+                                        <h5>@itemAddition.Quantity x @itemAddition.ItemName</h5>
+                                    }
+                                </div>
+                            }
+                            <div style="clear:both"></div>
+                            <h4 class="action btn-action-product">
+                                <a href="javascript:void(0)" class="btn text-uppercase btn-view-detail text-white"
+                                   onclick="ViewDetail('@item.AssetID','@item.TabId')">View Detail</a>
+                                @if (item.ApplyExtend)
+                                {
+                                    @*<a href="@Url.ActionEncoded("Extend","MyStoreAndBusiness",new { Id=item.ItemID, AssetID = item.AssetID })"
+            class="btn text-uppercase btn-cyan text-white">Extend</a>*@
+                                    <a href="javascript:void(0);" class="btn text-uppercase btn-cyan text-white" id="btn-extend-@item.AssetID"
+                                       onclick="ShowModalProductExtend('#div-content-product-extend', '@item.ItemID', '@item.AssetID')">Extend</a>
+                                }
+                                @if (!item.IsFree)
+                                {
+                                    @*<a href="@Url.ActionEncoded("BuyingAdditionsStoreBusiness", "OurProducts", new { AssetID = item.AssetID })"
+                                       class="btn text-uppercase btn-cyan text-white">Buy Additions</a>*@
+                                    <a href="javascript:void(0);" class="btn text-uppercase btn-cyan text-white" id="btn-buy-additions-@item.AssetID"
+                                       onclick="ShowModalProductBuyAdditions('#div-content-product-buy-additions', '@item.AssetID')">Buy Additions</a>
+                                }
+
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (item.ProductType == (int)Commons.EProductType.Package)
+            {
+                <div class="row divOnGoing item-product" style="margin-left:0px; margin-right:0px;">
+                    <div class="col-md-3 col-sm-4 col-xs-12 text-center">
+                        <div class="clsImage" style="width:100%">
+                            <a href="javascript:void(0)">
+                                <img src="@item.Image" alt="..." class="width-height-200" />
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-9 col-sm-9 col-xs-12  reset-padding-left-right">
+                        <div class="clsContent">
+                            <h3 class="product-name text-uppercase">@item.ItemName - @item.PeriodName</h3>
+                            <h4>@item.sIsUnlimitedAccount</h4>
+                            @if (item.ListProduct != null && item.ListProduct.Any())
+                            {
+                                <div class="divProductPackage">
+                                    @foreach (var itemProduct in item.ListProduct)
+                                    {
+                                        <div class="row" style="margin-bottom:15px;">
+                                            <div class="col-md-3 col-sm-3 col-xs-12 text-center">
+                                                <img src="@itemProduct.Image" alt="..." width="70" height="70" style="vertical-align:top" />
+                                            </div>
+                                            <div class="col-md-5 col-ms-5 col-xs-12">
+                                                <h4>@itemProduct.ItemName <i class="fa fa-info-circle text-primary" style="cursor:pointer" data-toggle="modal" data-target="#modalfunctionInfo_@itemProduct.AssetID"></i></h4>
+                                            </div>
+                                            <div class="col-md-4 col-sm-4 col-xs-12">
+                                                <h4 class="product-date">
+                                                    <span>
+                                                        @Html.Raw(itemProduct.sExpiryDate)
+                                                    </span>
+                                                </h4>
+                                            </div>
+                                        </div>
+
+                                        @Html.Partial("_ModalFunctionInfo", itemProduct)
+                                    }
+                                </div>
+                            }
+
+                            @if (item.ListComposite != null && item.ListComposite.Any())
+                            {
+                                <div class="divComposite" style="float:left;width:50%">
+                                    <h4>
+                                        <span class="fontBold">
+                                            Composite
+                                        </span>
+                                    </h4>
+                                    @foreach (var itemComposite in item.ListComposite)
+                                    {
+                                        <h5>@itemComposite.Quantity x @itemComposite.ItemName</h5>
+                                    }
+                                </div>
+                            }
+
+                            @if (item.ListAddition != null && item.ListAddition.Any())
+                            {
+                                <div class="divAddition" style="width:50%;float:left">
+                                    <h4>
+                                        <strong>
+                                            Addition
+                                        </strong>
+                                    </h4>
+                                    @foreach (var itemAddition in item.ListAddition)
+                                    {
+                                        <h5>@itemAddition.Quantity x @itemAddition.ItemName</h5>
+                                    }
+                                </div>
+                            }
+                            <div style="clear:both"></div>
+                            <h4 class="action">
+                                <a href="javascript:void(0)" class="btn text-uppercase btn-view-detail text-white"
+                                   onclick="ViewDetail('@item.AssetID',@item.TabId)">View Detail</a>
+                                @if (item.ApplyExtend)
+                                {
+                                    @*<a href="@Url.ActionEncoded("Extend","MyStoreAndBusiness",new { Id=item.ItemID, AssetID = item.AssetID })"
+            class="btn text-uppercase btn-cyan text-white">Extend</a>*@
+                                    <a href="javascript:void(0);" class="btn text-uppercase btn-cyan text-white" id="btn-extend-@item.AssetID"
+                                       onclick="ShowModalProductExtend('#div-content-product-extend', '@item.ItemID', '@item.AssetID')">Extend</a>
+                                }
+                                @if (!item.IsFree)
+                                {
+                                    @*<a href="@Url.ActionEncoded("BuyingAdditionsStoreBusiness", "OurProducts", new { AssetID = item.AssetID })"
+                                       class="btn text-uppercase btn-cyan text-white">Buy Additions</a>*@
+                                    <a href="javascript:void(0);" class="btn text-uppercase btn-cyan text-white" id="btn-buy-additions-@item.AssetID"
+                                       onclick="ShowModalProductBuyAdditions('#div-content-product-buy-additions', '@item.AssetID')">Buy Additions</a>
+                                }
+
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    }
+</div>

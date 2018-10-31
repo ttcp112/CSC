@@ -1,0 +1,674 @@
+﻿@model NSCSC.Shared.Models.OurProducts.Product.ProductDetailViewModels
+@using NSCSC.Shared
+@using NSCSC.Shared.Helpers
+
+@{
+    var productname = "";
+    if (!string.IsNullOrEmpty(Model.ProductDetail.Name))
+    {
+        productname = Model.ProductDetail.Name;
+    }
+    ViewBag.Title = "Product - " + productname;
+}
+<div class="title_left">
+    @*@Html.Partial("~/Views/Shared/_breadcrumb.cshtml",
+        new Dictionary<string, string> { { "A", "PRODUCT DETAIL" }, { "B", "HOME/OUR PRODUCTS/" + Model.ProductDetail.Name.ToUpper() + "/PRODUCT LIST" },
+                                    { "C", "" + Model.ProductDetail.Name.ToUpper() + "" } })*@
+    <div class="container">
+        @*<div class="col-sm-12 col-xs-12 col-md-12" style="margin-top:-25px;float:right">*@
+            <h3>
+                @productname.ToUpper()
+                <small class="breadcrum">
+                    <a href="@Url.Action("Index", "Home")">home</a>
+                    @if (Model.ProductDetail != null)
+                    {
+                        <i class='fa fa-caret-right'></i>
+                        <a href="@Url.Action("Index", "OurProducts", new { ProductType = "Products", CategoryID = Model.ProductDetail.CategoryId })">@Model.Name.ToLower()</a>
+                        <i class='fa fa-caret-right'></i>
+                        <a href="@Url.Action("Products", "OurProducts", new { CategoryID = Model.ProductDetail.CategoryId })">products list</a>
+                        <i class='fa fa-caret-right'></i>
+                        <span>@productname.ToLower()</span>
+                    }
+                </small>
+            </h3>
+        @*</div>*@
+        <div class="clearfix"></div>
+    </div>
+</div>
+@using (@Html.BeginForm("AddToCartOfProduct", "OurProducts", FormMethod.Post, new
+{
+    @class = "",
+    @id = "form-product",
+    @enctype = "multipart/form-data"
+}))
+{
+    @Html.HiddenFor(model => model.ProductDetail.ID)
+    @Html.HiddenFor(model => model.ProductDetail.Name)
+    @Html.HiddenFor(model => model.ProductDetail.ProductType)
+
+    @Html.HiddenFor(model => model.ProductDetail.NumberOfAccount)
+    @Html.HiddenFor(model => model.ProductDetail.NumOfStore)
+    @Html.HiddenFor(model => model.ProductDetail.AmountOfUnit)
+
+    @Html.HiddenFor(model => model.ProductDetail.AdditionType)
+    @Html.HiddenFor(model => model.ProductDetail.ImageURL)
+
+    @Html.HiddenFor(model => model.ProductDetail.Period, new { @id = "hidPeriod" })
+    @Html.HiddenFor(model => model.ProductDetail.PeriodType, new { @id = "hidPeriodType" })
+    @Html.HiddenFor(model => model.ProductDetail.Price, new { @id = "hidPrice" })
+
+    @Html.HiddenFor(model => model.ProductDetail.PromotionID)
+    @Html.HiddenFor(model => model.ProductDetail.PromotionName)
+    @Html.HiddenFor(model => model.ProductDetail.PromotionAmount)
+    @Html.HiddenFor(model => model.ProductDetail.IsApplyPromotion)
+
+    @Html.HiddenFor(model => model.ProductDetail.DiscountID)
+    @Html.HiddenFor(model => model.ProductDetail.DiscountName)
+    @Html.HiddenFor(model => model.ProductDetail.DiscountAmount)
+    @Html.HiddenFor(model => model.ProductDetail.DiscountValue)
+    @Html.HiddenFor(model => model.ProductDetail.DiscountType)
+
+    @Html.HiddenFor(model => model.ProductDetail.Description)
+    @Html.HiddenFor(model => model.ProductDetail.ItemGroup)
+    @Html.HiddenFor(model => model.ProductDetail.IsDelete)
+
+    @Html.HiddenFor(model => model.ProductDetail.CategoryId)
+
+    <div class="row form-horizontal form-label-left listItemYourCart">
+        @*Product*@
+        <div class="form-group itemProduct">
+            <div class="col-md-2 col-sm-2 col-xs-12">
+                <div class="form-group text-center imageProduct">
+                    <img id="upload-preview" class="" src="@Model.ProductDetail.ImageURL" height="110" width="150" />
+                </div>
+            </div>
+            <div class="col-md-10 col-sm-10 col-xs-12">
+                <div class="form-group infoProduct">
+                    @*Header*@
+                    <div class="col-md-12 col-sm-12 col-xs-12 ">
+                        <div class="col-md-4 col-sm-4 col-xs-4" style="padding-left:0px;">
+                            <div class="header">
+                                <label class="fontBold text-danger">@Model.ProductDetail.Name</label>
+                            </div>
+                            @*Composite*@
+                            @if (Model.ProductDetail.ListComposite != null && Model.ProductDetail.ListComposite.Count > 0)
+                            {
+                                <i class="fa fa-circle" style="font-size:8px;"></i> <span class="text-success">Composite</span>
+                            }&nbsp; &nbsp;
+                            @if (Model.ProductDetail.ListComposite != null && Model.ProductDetail.ListComposite.Count > 0)
+                            {
+                                for (int k = 0; k < Model.ProductDetail.ListComposite.Count; k++)
+                                {
+                                    <div class="col-md-12 col-sm-12 col-xs-12 pading-top-bottom">
+                                        @Model.ProductDetail.ListComposite[k].Quantity x @Model.ProductDetail.ListComposite[k].ProductName
+                                        @Html.HiddenFor(ss => ss.ProductDetail.ListComposite[k].ProductID)
+                                        @Html.HiddenFor(ss => ss.ProductDetail.ListComposite[k].ProductType)
+                                        @Html.HiddenFor(ss => ss.ProductDetail.ListComposite[k].Quantity)
+                                    </div>
+                                }
+                                 @*foreach (var itemComposite in Model.ProductDetail.ListComposite)
+                                {
+                                    <div class="col-md-12 col-sm-12 col-xs-12 pading-top-bottom">
+
+                                        @itemComposite.Quantity x @itemComposite.ProductName
+                                    </div>
+                                }*@
+                            }
+                        </div>
+                         <div class="col-md-3 col-sm-3 col-xs-3">
+
+                         </div>
+                        <div class="col-md-5 col-sm-5 col-xs-5 total">
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                Product Price:
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-6 text-right text-bold">
+                                @Model.ProductDetail.CurrencySymbol<span id="lblPrice">@Model.ProductDetail.Price.ToString("n2")</span>
+                            </div><br /><br />
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                Addition(s) Price:
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-6 text-right text-bold">
+                               @Model.ProductDetail.CurrencySymbol<span id="lblAdditonPrice">@Model.ProductDetail.AdditionPrice.ToString("n2")</span>
+                            </div><br /><br />
+                            <div class="col-md-6 col-sm-6 col-xs-6 fontUppercase text-bold text-total">
+                                Total
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-6 text-right fontBold text-price">
+                               @Model.ProductDetail.CurrencySymbol<span id="lblTotalPrice"></span>
+                            </div>                        
+                        </div>  
+                       
+                    </div>
+                    @*Content*@
+                    @*<div class="col-md-12 col-sm-12 col-xs-12 content">
+                       
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12 fontBold" style="padding:10px 0 10px 0;">
+                                @if (Model.ProductDetail.ListComposite != null && Model.ProductDetail.ListComposite.Count > 0)
+                                {
+                                    <i class="fa fa-circle" style="font-size:8px;"></i> <span class="text-success">Composite</span>
+                                }&nbsp; &nbsp;
+                            </div>
+                        </div>
+                        <div class="col-md-7 col-sm-7 col-xs-7" style="padding-left:0px;">
+                            @if (Model.ProductDetail.ListComposite != null && Model.ProductDetail.ListComposite.Count > 0)
+                            {
+                                for (int k = 0; k < Model.ProductDetail.ListComposite.Count; k++)
+                                {
+                                    <div class="col-md-12 col-sm-12 col-xs-12 pading-top-bottom">
+                                        @Model.ProductDetail.ListComposite[k].Quantity x @Model.ProductDetail.ListComposite[k].ProductName
+                                        @Html.HiddenFor(ss => ss.ProductDetail.ListComposite[k].ProductID)
+                                        @Html.HiddenFor(ss => ss.ProductDetail.ListComposite[k].ProductType)
+                                        @Html.HiddenFor(ss => ss.ProductDetail.ListComposite[k].Quantity)
+                                    </div>
+                                }
+                                foreach (var itemComposite in Model.ProductDetail.ListComposite)
+                                    {
+                                        <div class="col-md-12 col-sm-12 col-xs-12 pading-top-bottom">
+
+                                            @itemComposite.Quantity x @itemComposite.ProductName
+                                        </div>
+                                    }
+                            }
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-3 text-right">
+                            <div class="col-md-12 col-sm-12 col-xs-12 pading-top-bottom">
+                                Addition(s) Price:
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-sm-2 col-xs-2 text-right">
+                            <div class="col-md-12 col-sm-12 col-xs-12 text-right fontBold pading-top-bottom" style="font-size:20px; color:darkred;">
+                                @Model.ProductDetail.CurrencySymbol<span id="lblAdditonPrice">@Model.ProductDetail.AdditionPrice.ToString("n2")</span>
+                            </div>
+                        </div>
+
+                        <div class="row pading-top-bottom" style="font-size:30px; color:darkred;">
+                            <div class="col-md-offset-7 col-md-2 col-sm-2 col-xs-2 fontUppercase">
+                                Total:
+                            </div>
+                            <div class="col-md-3 col-sm-3 col-xs-3 text-right fontBold">
+                                @Model.ProductDetail.CurrencySymbol<span id="lblTotalPrice"></span>
+                            </div>
+                        </div>
+                    </div>*@
+                </div>
+            </div>
+        </div>
+
+        @*Period Time*@
+        <div class="form-group itemProduct pading-top-bottom">
+            <div class="row infoProduct" style="padding-bottom:10px;">
+                <div class="col-md-12 col-sm-12 col-xs-12 pading-top-bottom" style="font-size:15px;">
+                    <div class="col-md-12 col-sm-12 col-xs-2">
+                        Please select the period for this item
+                    </div>
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="col-md-8 col-sm-8 col-xs-8 fontBold text-left" style="padding-left:0px;">
+                        Period time
+                        &nbsp;&nbsp;
+                        @if (Model.ProductDetail.ListPrice.Where(x => !x.IsExtend).ToList().Count() > 1)
+                        {
+                            <a href="javascript:void(0);" class="btn btn-default" id="btn-period-time" data-backdrop="static"
+                               data-toggle="modal" data-target="#bs-modal-pricing-list">
+                                <span id="lblPeriodTime">@Model.ProductDetail.PeriodTime</span> &nbsp;&nbsp; <i class="fa fa-angle-down"></i>
+                            </a>
+                        }
+                        else
+                        {
+                            <button disabled class="btn btn-default">
+                                <span id="lblPeriodTime">@Model.ProductDetail.PeriodTime</span> &nbsp;&nbsp; @*<i class="fa fa-angle-down"></i>*@
+                            </button>
+                        }
+                    </div>
+                    @*<div class="col-md-2 col-sm-2 col-xs-2 fontBold">
+                        Product Price:
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-xs-2 text-right fontBold">
+                        @Model.ProductDetail.CurrencySymbol<span id="lblPeriodTimePrice">@Model.ProductDetail.Price.ToString("n2")</span>
+                    </div>*@
+                </div>
+            </div>
+        </div>
+
+        @*Addition*@
+        <div class="form-group itemProduct">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="row infoProduct" style="padding-bottom:10px;">
+                    <div class="col-md-12 col-sm-12 col-xs-12 pading-top-bottom" style="font-size:15px;">
+                        <div class="col-md-12 col-sm-12 col-xs-2 fontBold" style="padding-left:0px;">
+                            Additions <br />
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12 space-padding-left">
+                        <div class="col-md-8 col-sm-8 col-xs-8 space-padding-left">
+                            @*Do you want to buy additions for this item?
+                            &nbsp;&nbsp;*@
+                            <!--
+                                <a href="javascript:void(0)"
+                                   class="btn btn-success btn-xs fontUppercase" id="btn-buy-addition"
+                                   @*data-backdrop="static" data-toggle="modal" data-target="#bs-modal-buying-addition-product"*@
+                                   onclick="ShowModalBuyingAddition()">
+                                    buy additions
+                                </a>
+                            -->
+                            @*test*@
+                            <a href="@Url.Action("BuyingAdditon", new { id = Model.ProductDetail.ID})"
+                               class="btn btn-success btn-xs fontUppercase">buy additions</a>
+                        </div>
+                        @*<div class="col-md-2 col-sm-2 col-xs-2  text-right fontBold">
+                                Additions Price:
+                            </div>
+                            <div class="col-md-2 col-sm-2 col-xs-2 text-right fontBold" style="font-size:20px; color:darkred;">
+                                @Model.ProductDetail.CurrencySymbol<span id="lblListAdditonPrice">@Model.ProductDetail.AdditionPrice.ToString("n2")</span>
+                            </div>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+        @if (Model.ProductDetail.ListBuyingAddition != null && Model.ProductDetail.ListBuyingAddition.Count > 0)
+        {
+            <div class="form-group">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <table id="datatable-responsive-list-addition"
+                           class="table table-striped dt-responsive nowrap table table-striped jambo_table bulk_action"
+                           cellspacing="0" style="width:100%;">
+                        <thead style="background-color:#f9f9f9;">
+                            <tr>
+                                <th class="text-center">Type</th>
+                                <th class="text-center">Item Name</th>
+                                <th class="text-center">Quantity</th>
+                                <th class="text-center">Applied On</th>
+                                <th class="text-center">Period</th>
+                                <th class="text-center">Price</th>
+                                <th class="text-center">Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody id="div-addition-of-product">
+
+                            @foreach (var itemAddition in Model.ProductDetail.ListBuyingAddition)
+                            {
+                                <tr class="ng-addition-price" id="tr_add_price_@itemAddition.OffSet" data-value="@itemAddition.OffSet"
+                                    style="@string.Format("display:{0}", !itemAddition.IsDelete ? "table-row" : "none");">
+                                    <td class="text-center">@itemAddition.AdditionTypeName</td>
+                                    <td class="">@itemAddition.ProductName</td>
+                                    <td class="text-center">@itemAddition.Quantity</td>
+                                    <td class="text-center">
+                                        @{if (itemAddition.AdditionType == (byte)Commons.EAdditionType.Hardware || itemAddition.AdditionType == (byte)Commons.EAdditionType.Service || itemAddition.AdditionType == (byte)Commons.EAdditionType.Function)
+                                            {
+                                                @Html.Raw("");
+                                            }
+                                            else
+                                            {
+                                                @itemAddition.AppliedOn
+                                            }
+                                        }
+                                    </td>
+                                    <td class="text-center">@itemAddition.PeriodTime</td>
+                                    <td class="text-right">@Model.ProductDetail.CurrencySymbol@itemAddition.Price.ToString("n2")</td>
+                                    <td class="text-center">
+                                        <a href="javascript:void(0)" class="" onclick="DeleteAddition('@itemAddition.OffSet'); return false;">
+                                            <i class="fa fa-trash" style="color:red; font-size:22px;"></i>
+                                        </a>
+                                        @*set value*@
+                                        @*for Product*@
+                                        @Html.HiddenFor(item => item.ProductDetail.ListBuyingAddition[itemAddition.OffSet].ID)
+                                        @Html.HiddenFor(item => item.ProductDetail.ListBuyingAddition[itemAddition.OffSet].AppliedOn)
+                                        @*for Addition*@
+                                        @Html.HiddenFor(item => item.ProductDetail.ListBuyingAddition[itemAddition.OffSet].AdditionType)
+                                        @Html.HiddenFor(item => item.ProductDetail.ListBuyingAddition[itemAddition.OffSet].AdditionTypeName)
+                                        @Html.HiddenFor(item => item.ProductDetail.ListBuyingAddition[itemAddition.OffSet].OffSet)
+                                        @Html.HiddenFor(item => item.ProductDetail.ListBuyingAddition[itemAddition.OffSet].Period)
+                                        @Html.HiddenFor(item => item.ProductDetail.ListBuyingAddition[itemAddition.OffSet].PeriodTime)
+                                        @Html.HiddenFor(item => item.ProductDetail.ListBuyingAddition[itemAddition.OffSet].PeriodType)
+                                        @Html.HiddenFor(item => item.ProductDetail.ListBuyingAddition[itemAddition.OffSet].Price)
+                                        @Html.HiddenFor(item => item.ProductDetail.ListBuyingAddition[itemAddition.OffSet].ProductID)
+                                        @Html.HiddenFor(item => item.ProductDetail.ListBuyingAddition[itemAddition.OffSet].ProductName)
+                                        @Html.HiddenFor(item => item.ProductDetail.ListBuyingAddition[itemAddition.OffSet].ProductType)
+                                        @Html.HiddenFor(item => item.ProductDetail.ListBuyingAddition[itemAddition.OffSet].Quantity)
+                                        @Html.HiddenFor(item => item.ProductDetail.ListBuyingAddition[itemAddition.OffSet].Total, new { id = "hidTotalAdditionItem" })
+                                        @Html.HiddenFor(item => item.ProductDetail.ListBuyingAddition[itemAddition.OffSet].IsDelete, new { id = "hidIsDelete" })
+                                    </td>
+                                </tr>
+                                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+                                            }
+                                            @*Cancel | Add to Cart*@
+                                            <div class="row">
+                                                <div class="col-md-12 col-sm-12 col-xs-12 text-right">
+                                                    <a href="@Url.Action("Products","OurProducts",new { CategoryID = Model.ProductDetail.CategoryId })" class="btn btn-default fontUppercase">cancel</a>
+                                                    @*<a href="javascript:void(0)" class="btn btn-primary fontUppercase" data-toggle="modal"
+                                                       data-backdrop="static" data-target="#bs-modal-on-quantity">Add to Cart</a>*@
+                                                    <a class="btn btn-primary fontUppercase" onclick="SubmitForm('#form-product')">Add to Cart</a>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+
+    <!--modal Pricing List-->
+                                            <div class="modal fade" id="bs-modal-pricing-list" tabindex="-1" role="dialog" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header" style="background-color:#f2f2f2;">
+                                                            <button type="button" class="close" data-dismiss="modal">
+                                                                <span aria-hidden="true">×</span>
+                                                            </button>
+                                                            <h4 class="modal-title fontUppercase text-left">@Model.ProductDetail.Name | <span style="color:darkred;">Pricing List</span></h4>
+                                                        </div>
+                                                        <div class="modal-body" style="padding:0px;">
+                                                            <table id="tbl-pricing-list" class="table-format-client">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <td class="" style="width:70%;"><span class="fontBold fontUppercase">period</span></td>
+                                                                        <td class="text-right fontBold"><span class="fontBold fontUppercase">price</span></td>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @if (Model.ProductDetail.ListPrice != null && Model.ProductDetail.ListPrice.Count > 0)
+                                                                    {
+                                                                        foreach (var item in Model.ProductDetail.ListPrice.Where(w => !w.IsExtend).OrderBy(o => o.PeriodType).ThenBy(o => o.Period).ThenBy(o => o.Price).ToList())
+                                                                        {
+                                                                            var NamePeriodType = "";
+                                                                            if (item.PeriodType != (int)Commons.EPeriodType.OneTime)
+                                                                            {
+                                                                                NamePeriodType = item.Period + " ";
+                                                                            }
+                                                                            NamePeriodType += item.NamePeriodType;
+                                                                            <tr data-name="@NamePeriodType" data-price="@item.Price.ToString("n2")"
+                                                                                data-period="@item.Period" data-periodtype="@item.PeriodType">
+                                                                                <td>
+                                                                                    <input type="radio" class="flat" value="@item.Price"
+                                                                                           name="itemPeriodTime"
+                                                                                           @string.Format("{0}", item.IsActive ? "checked" : "") />
+                                                                                    &nbsp;@NamePeriodType
+                                                                                </td>
+                                                                                <td class="text-right">@Model.ProductDetail.CurrencySymbol@item.Price.ToString("n2")</td>
+                                                                            </tr>
+                                                                        }
+                                                                    }
+                                                                </tbody>
+                                                            </table>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+    <!--end modal Pricing List -->
+
+      <!--Confirmation-->
+                                            <div class="modal fade" id="bs-modal-on-quantity" tabindex="-1" role="dialog" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title fontUppercase">Confirmation</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-group">
+                                                                <label class="control-label">Choose the quantity for the product/package that you want to buy</label>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="control-label text-danger">
+                                                                    *Please note that all composite and additions of the product/package
+                                                                    will also be multipled by the quantity
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="txt-quantity" class="control-label">Quantity:</label>
+                                                                @Html.TextBoxFor(model => model.ProductDetail.Quantity, new
+                                                           {
+                                                               @class = "form-control",
+                                                               @id = "txt-quantity",
+                                                               @autocomplete = "off"
+                                                           })
+                                                            </div>
+                                                            <div class="form-group text-right">
+                                                                <span class="label label-danger" id="lblMsg"></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer" style="border:none;">
+                                                            <a class="btn btn-success" data-dismiss="modal">Close</a>
+                                                            <a class="btn btn-primary" onclick="SubmitForm('#form-product')">Confirm</a>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+    <!--modal Buying Addition-->
+                                            <div class="modal fade" id="bs-modal-buying-addition-product" tabindex="-1" role="dialog" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header" style="background-color:#f2f2f2;">
+                                                            <button type="button" class="close" data-dismiss="modal">
+                                                                <span aria-hidden="true">×</span>
+                                                            </button>
+                                                            <h4 class="modal-title fontUppercase text-left">BUYING ADDITIONS</h4>
+                                                        </div>
+                                                        <div class="modal-body" style="padding:0px;" id="divBuyingAddition">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+    <!--end modal Buying Addition -->
+                                            }
+
+<script type="text/javascript">
+
+    var displayLength = 200;
+    var _tableAddition = null;
+    var _settingsOptionTableAddition = {
+        "columnDefs": [
+               { "orderable": false, "targets": [6] },
+               { "width": "15%", "targets": [] },
+               { "width": "10%", "targets": [2, 4, 5, 6] },
+        ],
+        "order": [
+            [0, 'asc'],
+            [1, 'asc']
+        ],
+        "autoWidth": false,
+        "displayLength": displayLength,
+        "bInfo": false,
+        "searching": false,
+        "lengthChange": false,
+        "paging": false,
+    };
+    var countItem = 0;
+    $(document).ready(function (e) {
+        countItem = document.getElementsByClassName('ng-addition-price').length;
+        hideTable();
+        init_ICheck();
+
+        $("#AppliedOnDdl").select2({
+            placeholder: "Please choose applied"
+        });
+
+        _tableAddition = $('#datatable-responsive-list-addition').DataTable($.extend(true, {}, _settingsOptionTableAddition));
+
+        //============
+        var Price = parseFloat('@Model.ProductDetail.Price');
+        CalTotalPrice(Price);
+
+        /*===============*/
+        //$("#bs-modal-on-quantity").on('show.bs.modal', function (event) {
+        //    $('#txt-quantity').val(1);
+        //    $('#lblMsg').html('');
+        //});
+
+        /*===============*/
+        //$("#bs-modal-buying-addition-product").on('show.bs.modal', function (event) {
+        //    alert('a');
+        //    CallModalBuyingAddition('#divBuyingAddition');
+        //});
+
+        // If it has 1 period => disabled Modal Pricing List
+        if( @Model.ProductDetail.ListPrice.Count() == 1 ){
+            $("#btn-period-time").prop('disabled', true);
+            $("#btn-period-time").attr('disabled', 'disabled');
+        }
+
+    });
+
+    /*Function*/
+
+    /* ICHECK */
+    function init_ICheck() {
+        //if ($("input.flat")[0]) {
+        //    $(document).ready(function () {
+        //        $('input.flat').iCheck({
+        //            checkboxClass: 'icheckbox_flat-green',
+        //            radioClass: 'iradio_flat-green'
+        //        });
+        //    });
+        //}
+    };
+    /* END ICHECK */
+  
+    $('#tbl-pricing-list tr').click(function (event) {
+        var row = $(this);
+        var _radio = row.find('input[type="radio"]');
+        _radio.prop('checked', true);
+
+        var sPrice = row.data('price');
+        $('#lblPeriodTime').html(row.data('name'));
+        $('#lblPeriodTimePrice').html(sPrice);
+        $('#lblPrice').html(sPrice);
+        //=================
+        $('#hidPeriod').val(row.data('period'));
+        $('#hidPeriodType').val(row.data('periodtype'));
+        $('#hidPrice').val(ReplaceNumber(sPrice));
+
+        //==============
+        var Price = parseFloat(ReplaceNumber(sPrice));
+        CalTotalPrice(Price);
+        //========
+        //$('input[name="itemPeriodTime"]').iCheck({
+        //    radioClass: 'iradio_flat-green'
+        //})
+    });
+
+    function CalTotalPrice(price) {
+        var _AdditionPrice = 0;
+        $.each($('.ng-addition-price:visible'), function () {
+            var total = parseFloat($(this).find('#hidTotalAdditionItem').val());
+            _AdditionPrice += total;
+        });
+        $('#lblAdditonPrice').html(NumberFormatCurrency(_AdditionPrice, 2));
+        $('#lblListAdditonPrice').html(NumberFormatCurrency(_AdditionPrice, 2));
+        var Total = price +_AdditionPrice;
+        $('#lblTotalPrice').html(NumberFormatCurrency(Total, 2));
+    }
+
+    @*function CallModalBuyingAddition(ele) {
+        $('.se-pre-con').show();
+        $.ajax({
+            type: "GET",
+            url: CreateAbsoluteUrl("CallModalBuyingAddition"),
+            traditional: true,
+            data: {
+                ProductID: '@Model.ProductDetail.ID',
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                $('.se-pre-con').hide();
+                $(ele).html(data);
+                GetListAdditionForProduct('0', '#listItemAddition');
+            },
+        });
+    }*@
+
+    //function CloseModalBuyingAddition() {
+    //    $('#bs-modal-buying-addition-product').modal('hide');
+    //}
+
+    function DeleteAddition(OffSet) {
+        var tr = $('#tr_add_price_' + OffSet);
+        $(tr).find('input#hidIsDelete').val(true);
+        $(tr).hide();
+        //==========
+        var Price =  parseFloat($('#lblPrice').html());
+        CalTotalPrice(Price);
+        if (countItem >0)
+            countItem--;
+        else
+            countItem = 0;
+        hideTable();
+    }
+    function hideTable()
+    {
+        if (countItem == 0)
+            $('#datatable-responsive-list-addition').hide();
+        else
+            $('#datatable-responsive-list-addition').show();
+    }
+    //function ShowModalBuyingAddition() {
+    //    var modal = $("#bs-modal-buying-addition-product");
+    //    $(modal).modal({
+    //        //keyboard: false,
+    //        show: true,
+    //        backdrop: 'static'
+    //    });
+    //    CallModalBuyingAddition('#divBuyingAddition');
+    //}
+
+    $("#form-product").submit(function (e) {
+        var isSubmit = $(this).valid();
+        var Qty = $('#txt-quantity').val();
+        if (Qty == '') {
+            $('#lblMsg').html('[Quantity] can\'t empty !!!');
+            $('#txt-quantity').focus();
+            isSubmit = false;
+        }
+        else if (!$.isNumeric(Qty)) {
+            $('#lblMsg').html('[Quantity] is a number !!!');
+            $('#txt-quantity').focus();
+            isSubmit = false;
+        }
+        else if (Qty <= 0) {
+            $('#lblMsg').html('Please enter [Quantity] greater than to 0. !!!');
+            $('#txt-quantity').focus();
+            isSubmit = false;
+        }
+        if (isSubmit) {
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: "POST",
+                data: new FormData(this),
+                processData: false,
+                contentType: false,
+                dataType: "html",
+                success: function (data) {
+                    data = JSON.parse(data);
+                    //=========
+                    var countItemCart = data.TotalQuantity;//data.ListItems.length;
+                    //$('#bs-modal-on-quantity').modal('hide');
+                    createOrUpdateOrder('@Model.ProductDetail.CusId', data.ID, countItemCart);
+                    getOrder('@Model.ProductDetail.CusId');
+                    //=========
+                    window.location.assign('@Url.EncodedActionLink("Products","OurProducts",new { CategoryID = Model.ProductDetail.CategoryId })');
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $('#lblMsg').html(jqXHR.statusText);
+                    if (jqXHR.status == 400) {
+                        deleteOrder();
+                    }
+                },
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+            });
+        }
+        e.preventDefault();
+    });
+
+</script>

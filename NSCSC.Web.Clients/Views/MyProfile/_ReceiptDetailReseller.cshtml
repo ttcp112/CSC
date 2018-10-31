@@ -1,0 +1,490 @@
+﻿@model  NSCSC.Shared.Models.ClientSite.MyProfile.OrderDetailModels
+@using NSCSC.Shared
+<style>
+    .itemShowOnHistory {
+        /*color: #CC1018;*/
+        font-size: 14px;
+    }
+
+    .paddingTop30 {
+        border-top: 1px dashed #e0e0e0;
+        padding-top: 30px;
+    }
+</style>
+
+@*header*@
+<div class="row">
+    <div class=" col-md-12 col-sm-12 col-xs-12 text-center">
+        <div class="form-group" style="font-size: 20px;">
+            RECEIPT <span class="modal-title font-bold">@Model.ReceiptNo</span>
+        </div>
+        <div class="form-group">
+            <hr style="border:0.5px solid #e0e0e2; width:100px; margin-top:0px; margin-bottom:0px;" />
+        </div>
+        <div class="form-group" style="font-size:17px">
+            Date: @Model.PaidTime.ToString(Commons.FormatDateTime)
+        </div>
+        <div class="form-group" style="font-size:17px">
+            Paid by: @Html.Raw(Model.sPaidByMethod)
+        </div>
+    </div>
+</div>
+
+@*Description*@
+<div class="form-group">
+    <div class="col-md-12 col-sm-12 col-xs-12" style="padding-left:0px; padding-right:0px;">
+        @if (!string.IsNullOrEmpty(Model.Description))
+        {
+            @Html.TextAreaFor(model => model.Description,
+            new {
+                   @class = "Note",
+                   @style = "resize:none; width:100%; height:100px; padding:5px; border:1px solid #e6e6e6; font-style: italic; font-size:15px;",
+                   @placeholder = "Note",
+                   @readonly = true
+               })
+        }
+    </div>
+</div>
+
+@*list item*@
+<div class="receipt-detail-reseller-desktop">
+    <div class="table-responsive" style="overflow-x:hidden;">
+        <div class="box-body form-group" style="text-align:center; padding-bottom:30px;">
+            <table id="datatable-responsive" class="tbCustomer table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action">
+                <thead>
+                    <tr style="background-color:#D9E0E8; color:#000;">
+                        <td colspan="2">Item</td>
+                        <td>Period</td>
+                        <td>Qty</td>
+                        <td class="text-right">Discount</td>
+                        <td class="text-right">Price</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.ListItems != null && Model.ListItems.Any())
+                    {
+                        var _num = 0;
+                        foreach (var item in Model.ListItems)
+                        {
+                            @Html.Hidden(string.Format("Item[{0}].OffSet", _num), item.OffSet)
+
+                            if (item.ProductType == (int)Commons.EProductType.Product)
+                            {
+                                <tr class="paddingTop30 RefurnComfin" data-productId="@item.ProductID">
+                                    @if (item.IsShowCheckRefurn)
+                                    {
+
+                                        <td style="width:50px;padding-right:10px;">
+                                            @if (item.IsRefund)
+                                            {
+                                                <label class="label label-success">Refunded</label>
+                                            }
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
+                                    <td class="text-left"><span class="itemShowOnHistory">@item.ProductName</span></td>
+                                    <td class="text-center">@item.PeriodName</td>
+                                    <td>x @item.Quantity</td>
+                                    <td class="text-right">@Model.CurrencySymbol@item.DiscountAmount.ToString("N2")</td>
+                                    <td class="text-right">@Model.CurrencySymbol@item.Price.ToString("N2")</td>
+                                </tr>
+                                if (item.ListComposite != null && item.ListComposite.Any())
+                                {
+                                    <tr>
+                                        <td></td>
+                                        <td class="text-left font-bold colorCush2 paddingLeftCustomer">Composite</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    foreach (var itemComposite in item.ListComposite)
+                                    {
+                                        <tr>
+                                            <td></td>
+                                            <td class="text-left font-bold paddingLeftCustomer">@itemComposite.ProductName</td>
+                                            <td></td>
+                                            <td>x @itemComposite.Quantity</td>
+                                            <td></td>
+                                            <td class="text-right"></td>
+                                        </tr>
+                                    }
+                                }
+
+                                // List Additions(optional)
+                                if (item.ListItem != null && item.ListItem.Any())
+                                {
+                                    <tr>
+                                        <td></td>
+                                        <td class="text-left font-bold colorCush2 paddingLeftCustomer">Additions</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    foreach (var itemAddition in item.ListItem)
+                                    {
+                                        <tr class="RefurnComfin" data-productId="@itemAddition.ProductID">
+                                            <td style="width:50px;padding-right:10px;">
+                                                @if (itemAddition.IsRefund)
+                                                {
+                                                    <label class="label label-success">Refunded</label>
+                                                }
+                                            </td>
+                                            <td class="text-left font-bold paddingLeftCustomer">@itemAddition.ProductName</td>
+                                            <td class="text-center">@itemAddition.PeriodName</td>
+                                            <td>x @itemAddition.Quantity</td>
+                                            <td class="text-right">@Model.CurrencySymbol@itemAddition.DiscountAmount.ToString("N2")</td>
+                                            <td class="text-right">@Model.CurrencySymbol@itemAddition.Price.ToString("N2")</td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                            else if (item.ProductType == (int)Commons.EProductType.Package)
+                            {
+                                <tr class="paddingTop30 RefurnComfin" data-productId="@item.ProductID">
+                                    <td style="width:50px;padding-right:10px;">
+                                        @if (item.IsRefund)
+                                        {
+                                            <label class="label label-success">Refunded</label>
+                                        }
+                                    </td>
+                                    <td class="text-left"><span class="itemShowOnHistory">@item.ProductName</span></td>
+                                    <td class="text-center">@item.PeriodName</td>
+                                    <td>x @item.Quantity</td>
+                                    <td class="text-right">@Model.CurrencySymbol@item.DiscountAmount.ToString("N2")</td>
+                                    <td class="text-right">@Model.CurrencySymbol@item.Price.ToString("N2")</td>
+                                </tr>
+
+                                if (item.ListComposite != null && item.ListComposite.Any())
+                                {
+                                    //List Products in Package
+                                    var lstProductsComposite = item.ListComposite.Where(w => w.ProductType == (int)Commons.EProductType.Product).ToList();
+                                    if (lstProductsComposite != null && lstProductsComposite.Any())
+                                    {
+                                        foreach (var itemProduct in lstProductsComposite)
+                                        {
+                                            <tr>
+                                                <td></td>
+                                                <td class="text-left font-bold colorCush3">@itemProduct.ProductName</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        }
+                                    }
+
+                                    // List Additions in Package
+                                    var lstAdditionsComposite = item.ListComposite.Where(w => w.ProductType == (int)Commons.EProductType.Addition).ToList();
+                                    if (lstAdditionsComposite != null && lstAdditionsComposite.Any())
+                                    {
+                                        <tr>
+                                            <td></td>
+                                            <td class="text-left font-bold colorCush2 paddingLeftCustomer">Composite</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        foreach (var composite in lstAdditionsComposite)
+                                        {
+                                            <tr>
+                                                <td></td>
+                                                <td class="text-left font-bold paddingLeftCustomer">@composite.ProductName</td>
+                                                <td></td>
+                                                <td>x @composite.Quantity</td>
+                                                <td></td>
+                                                <td class="text-right"></td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+
+                                // List Additions(optional)
+                                if (item.ListItem != null && item.ListItem.Any())
+                                {
+                                    <tr>
+                                        <td></td>
+                                        <td class="text-left font-bold colorCush2 paddingLeftCustomer">Additions</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    foreach (var addition in item.ListItem)
+                                    {
+                                        <tr class="RefurnComfin" data-productId="@addition.ProductID">
+                                            <td style="width:50px;padding-right:10px;">
+                                                @if (addition.IsRefund)
+                                                {
+                                                    <label class="label label-success">Refunded</label>
+                                                }
+                                            </td>
+                                            <td class="text-left font-bold paddingLeftCustomer">@addition.ProductName</td>
+                                            <td class="text-center">@addition.PeriodName</td>
+                                            <td>x @addition.Quantity</td>
+                                            <td class="text-right">@Model.CurrencySymbol@addition.DiscountAmount.ToString("N2")</td>
+                                            <td class="text-right">@Model.CurrencySymbol@addition.Price.ToString("N2")</td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                            else if (item.ProductType == (int)Commons.EProductType.Addition)
+                            {
+                                <tr class="paddingTop30 RefurnComfin" data-productId="@item.ProductID">
+                                    <td style="width:50px;padding-right:10px;">
+                                        @if (item.IsRefund)
+                                        {
+                                            <label class="label label-success">Refunded</label>
+                                        }
+                                    </td>
+                                    <td class="text-left"><span class="itemShowOnHistory">@item.ProductName</span></td>
+                                    <td class="text-center">@item.PeriodName</td>
+                                    <td>x @item.Quantity</td>
+                                    <td class="text-right">@Model.CurrencySymbol@item.DiscountAmount.ToString("N2")</td>
+                                    <td class="text-right">@Model.CurrencySymbol@item.Price.ToString("N2")</td>
+                                </tr>
+                            }
+                        }
+                        _num++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="receipt-detail-reseller-mobile">
+    <div class="table-responsive" style="overflow-x:hidden;">
+        <div class="box-body form-group" style="text-align:center; padding-bottom:30px;">
+            <table id="datatable-responsive" class="tbCustomer">
+                @*<thead>
+                        <tr style="background-color:#D9E0E8; color:#000;">
+                            <td colspan="2">Item</td>
+                            <td>Period</td>
+                            <td>Qty</td>
+                            <td class="text-right">Discount</td>
+                            <td class="text-right">Price</td>
+                        </tr>
+                    </thead>*@
+                <tbody>
+                    @if (Model.ListItems != null && Model.ListItems.Any())
+                    {
+                        var _num = 0;
+                        foreach (var item in Model.ListItems)
+                        {
+                            @Html.Hidden(string.Format("Item[{0}].OffSet", _num), item.OffSet)
+
+                            if (item.ProductType == (int)Commons.EProductType.Product)
+                            {
+                                <tr class="RefurnComfin" data-productId="@item.ProductID">
+                                    @if (item.IsShowCheckRefurn)
+                                    {
+
+                                        <td style="width:50px;padding-right:10px;">
+                                            @if (item.IsRefund)
+                                            {
+                                                <label class="label label-success">Refunded</label>
+                                            }
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
+                                </tr>
+                                <tr>
+                                    <td class="text-left"><span class="itemShowOnHistory" style="font-weight:bolder">@item.ProductName</span><strong></strong></td>
+                                    <td><span style="font-weight:bolder">Qty:</span> x @item.Quantity</td>
+                                </tr>
+                                <tr><td class="text-left"><span style="font-weight:bolder">Period:</span>@item.PeriodName</td></tr>
+                                <tr><td class="text-left"><span style="font-weight:bolder">Discount:</span>@Model.CurrencySymbol@item.DiscountAmount.ToString("N2")</td></tr>
+                                <tr><td class="text-left"><span style="font-weight:bolder">Price:</span>@Model.CurrencySymbol@item.Price.ToString("N2")</td></tr>
+
+                                if (item.ListComposite != null && item.ListComposite.Any())
+                                {
+                                    <tr class="item-child-1">
+                                        <td class="text-left font-bold colorCush2 paddingLeftCustomer" style="font-weight:bolder">Composite</td>
+                                        <td></td>
+                                    </tr>
+                                    foreach (var itemComposite in item.ListComposite)
+                                    {
+                                        <tr class="item-child-1">
+                                            <td class="text-left font-bold paddingLeftCustomer">@itemComposite.ProductName</td>
+                                            <td><span style="font-weight:bolder">Qty:</span> x @itemComposite.Quantity</td>
+                                        </tr>
+                                    }
+                                }
+                                // List Additions(optional)
+                                if (item.ListItem != null && item.ListItem.Any())
+                                {
+                                    <tr class="item-child-1">
+                                        <td class="text-left font-bold colorCush2 paddingLeftCustomer" style="font-weight:bolder">Additions</td>
+                                        <td></td>
+                                    </tr>
+                                    foreach (var itemAddition in item.ListItem)
+                                    {
+                                        if (itemAddition.IsRefund)
+                                        {
+                                            <tr class="RefurnComfin item-child-1" data-productId="@itemAddition.ProductID">
+                                                <td style="width:50px;padding-right:10px;">
+                                                    <label class="label label-success">Refunded</label>
+                                                </td>
+                                            </tr>
+                                        }
+                                        <tr class="item-child-1">
+                                            <td class="text-left font-bold paddingLeftCustomer" style="font-weight:bolder">@itemAddition.ProductName</td>
+                                            <td><span style="font-weight:bolder">Qty:</span> x @itemAddition.Quantity</td>
+                                        </tr>
+                                        <tr class="item-child-1"><td class="text-left font-bold paddingLeftCustomer"><span style="font-weight:bolder">Period:</span>@itemAddition.PeriodName</td></tr>
+                                        <tr class="item-child-1"><td class="text-left font-bold paddingLeftCustomer"><span style="font-weight:bolder">Discount:</span>@Model.CurrencySymbol@itemAddition.DiscountAmount.ToString("N2")</td></tr>
+                                        <tr class="item-child-1"><td class="text-left font-bold paddingLeftCustomer"><span style="font-weight:bolder">Price:</span>@Model.CurrencySymbol@itemAddition.Price.ToString("N2")</td> </tr>
+                                    }
+                                }
+                            }
+                            else if (item.ProductType == (int)Commons.EProductType.Package)
+                            {
+                                if (item.IsRefund)
+                                {
+                                    <tr class="RefurnComfin" data-productId="@item.ProductID">
+                                        <td style="width:50px;padding-right:10px;">
+                                            <label class="label label-success">Refunded</label>
+                                        </td>
+                                    </tr>
+                                }
+                                <tr>
+                                    <td class="text-left"><span class="itemShowOnHistory" style="font-weight:bolder">@item.ProductName</span></td>
+                                    <td><span style="font-weight:bolder">Qty:</span> x @item.Quantity</td>
+                                </tr>
+                                <tr><td class="text-left"><span style="font-weight:bolder">Period:</span>@item.PeriodName</td></tr>
+                                <tr><td class="text-left"><span style="font-weight:bolder">Discount:</span>@Model.CurrencySymbol@item.DiscountAmount.ToString("N2")</td></tr>
+                                <tr><td class="text-left"><span style="font-weight:bolder">Price:</span>@Model.CurrencySymbol@item.Price.ToString("N2")</td></tr>
+
+                                if (item.ListComposite != null && item.ListComposite.Any())
+                                {
+                                    //List Products in Package
+                                    var lstProductsComposite = item.ListComposite.Where(w => w.ProductType == (int)Commons.EProductType.Product).ToList();
+                                    if (lstProductsComposite != null && lstProductsComposite.Any())
+                                    {
+                                        foreach (var itemProduct in lstProductsComposite)
+                                        {
+                                            <tr class="item-child-1">
+                                                <td class="text-left font-bold colorCush3" style="font-weight:bolder">@itemProduct.ProductName</td>
+                                                <td></td>
+                                            </tr>
+                                        }
+                                    }
+                                    // List Additions in Package
+                                    var lstAdditionsComposite = item.ListComposite.Where(w => w.ProductType == (int)Commons.EProductType.Addition).ToList();
+                                    if (lstAdditionsComposite != null && lstAdditionsComposite.Any())
+                                    {
+                                        <tr class="item-child-1">
+                                            <td class="text-left font-bold colorCush2 paddingLeftCustomer" style="font-weight:bolder">Composite</td>
+                                            <td></td>
+                                        </tr>
+                                        foreach (var composite in lstAdditionsComposite)
+                                        {
+                                            <tr class="item-child-1">
+                                                <td class="text-left font-bold paddingLeftCustomer" style="font-weight:bolder">@composite.ProductName</td>
+                                                <td><span style="font-weight:bolder">Qty:</span> x @composite.Quantity</td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+                                // List Additions(optional)
+                                if (item.ListItem != null && item.ListItem.Any())
+                                {
+                                    <tr class="item-child-1">
+                                        <td class="text-left font-bold colorCush2 paddingLeftCustomer" style="font-weight:bolder">Additions</td>
+                                    </tr>
+                                    foreach (var addition in item.ListItem)
+                                    {
+                                        if (addition.IsRefund)
+                                        {
+                                            <tr class="RefurnComfin item-child-1" data-productId="@addition.ProductID">
+                                                <td style="width:50px;padding-right:10px;">
+                                                    <label class="label label-success">Refunded</label>
+                                                </td>
+                                            </tr>
+                                        }
+                                        <tr class="item-child-1">
+                                            <td class="text-left font-bold paddingLeftCustomer" style="font-weight:bolder">@addition.ProductName</td>
+                                            <td><span style="font-weight:bolder">Qty:</span> x @addition.Quantity</td>
+                                        </tr>
+                                        <tr class="item-child-1"><td class="text-left font-bold paddingLeftCustomer"><span style="font-weight:bolder">Period:</span>@addition.PeriodName</td></tr>
+                                        <tr class="item-child-1"><td class="text-left font-bold paddingLeftCustomer"><span style="font-weight:bolder">Discount:</span>@Model.CurrencySymbol@addition.DiscountAmount.ToString("N2")</td></tr>
+                                        <tr class="item-child-1"><td class="text-left font-bold paddingLeftCustomer"><span style="font-weight:bolder">Price:</span>@Model.CurrencySymbol@addition.Price.ToString("N2")</td></tr>
+                                    }
+                                }
+                            }
+                            else if (item.ProductType == (int)Commons.EProductType.Addition)
+                            {
+                                if (item.IsRefund)
+                                {
+                                    <tr class="RefurnComfin" data-productId="@item.ProductID">
+                                        <td style="width:50px;padding-right:10px;">
+                                            <label class="label label-success">Refunded</label>
+                                        </td>
+                                    </tr>
+                                }
+                                <tr>
+                                    <td class="text-left"><span class="itemShowOnHistory" style="font-weight:bolder">@item.ProductName</span></td>
+                                    <td><span style="font-weight:bolder">Qty:</span> x @item.Quantity</td>
+                                </tr>
+                                <tr><td class="text-left"><span style="font-weight:bolder">Period:</span>@item.PeriodName</td></tr>
+                                <tr><td class="text-left"><span style="font-weight:bolder">Discount:</span>@Model.CurrencySymbol@item.DiscountAmount.ToString("N2")</td></tr>
+                                <tr><td class="text-left"><span style="font-weight:bolder">Price:</span>@Model.CurrencySymbol@item.Price.ToString("N2")</td></tr>
+                            }
+                        }
+                        _num++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@*line*@
+<div class="row">
+    <div class="form-group">
+        <hr style="border:0px solid #e0e0e2; margin-top:0px; margin-bottom:0px;" />
+    </div>
+</div>
+
+@*footer*@
+<div class="row" style="font-size:17px">
+    <div class="col-md-12 col-sm-12 col-xs-12 text-right">
+        <div class="form-group">
+            SubTotal: @Model.CurrencySymbol@Model.SubTotal.ToString("N2")
+        </div>
+        <div class="form-group">
+            Discount: @Model.CurrencySymbol@Model.TotalDiscount.ToString("N2")
+        </div>
+        <div class="form-group">
+            Promotion: @Model.CurrencySymbol@Model.TotalPromotion.ToString("N2")
+        </div>
+        <div class="form-group">
+            Tax (@Model.TaxInfo.TaxTypeName - @Model.TaxInfo.TaxPercent%): @Model.CurrencySymbol@Model.Tax.ToString("N2")
+        </div>
+    </div>
+</div>
+
+@*line*@
+<div class="row">
+    <div class="form-group">
+        <hr style="border:0px solid #e0e0e2; margin-top:0px; margin-bottom:0px;" />
+    </div>
+</div>
+
+@*total*@
+<div class="row text-right" style="font-size:30px; margin-bottom:20px;">
+    <span class="modal-title">Total:</span><span style="color:#4d7fc4;"> @Model.CurrencySymbol@Model.Total.ToString("N2")</span>
+</div>
+
+@section Scripts{
+    <script>
+    </script>
+}

@@ -1,0 +1,126 @@
+﻿<div class="row text-inputStore">
+    <div class="col col-sm-12">
+        <h4 style="font-weight:bolder">INPUT STORE</h4>
+    </div>
+    <div class="titles-input">
+        <div class="col col-sm-10">
+            <label style="border: 1px solid #ccc;"></label>
+        </div>
+    </div>
+</div>
+
+<div class="row box-my-profile">
+    <div class="form" id="mainForm">
+        <form class="row" name="persInf" id="data">
+            <fieldset>
+                <div class="inputForm">
+                    <div class="row">
+
+                        <div class="col col-sm-10">
+                            <div class="form-group">
+                                <div><h5 style="font-weight:bolder">Description</h5></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col col-sm-11">
+                            <div class="form-group">
+                                <p style="text-align:justify">
+                                    Store will be attached with your inventory data sale and orthers. It's recommended to set up store for each of your products, Earch product will provide you a number of store (if any). You can use them to create new store or to extend the expiry date of any existing store.
+                                </p>
+                                <p>Store provided when buying product will be expiried when its product expiries.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" row titles">
+                        <div class="col col-sm-11">
+                            <label style="border: 1px solid #ccc;"></label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col col-sm-1">
+                            <h5 style="font-weight:bolder"> Summary </h5>
+                        </div>
+                        <div class="col col-sm-10"><span style="line-height:35px">(Click on the product's name to go straight to that product)  </span> </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col col-sm-10">
+                            <div class="form-group">
+                                <span style="color:#003d99"> NuPOS:</span> Not yet set up any store
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col col-sm-2"></div>
+                        <div class="col col-sm-10 btn-inputStore text-right">
+                            <ul class="list-inline">
+                                @*<li><button class="btn" id="btn-actives" ng-click="event.previous()">PREVIOUS</button></li>*@
+                                <li><button class="btn btn-success" id="btn-actives" ng-click="event.next()">Next</button></li>
+                                <li>
+                                    <button class="btn btn-default" id="btn-delete" ng-click="event.canceled()">
+                                        &nbsp;CANCEL
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+<div class="row box-my-profile" style="margin-top:20px" ng-repeat="itemProduct in data.ListItems">
+    <div class="clsitem ng-scope">
+        <div class="row itemproduct" style="margin-bottom:7%;margin-right:0;margin-left:0;">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-4 col-sm-4 col-xs-12 itemImages">
+                        <a href="">
+                            <img ng-src="{{itemProduct.ImageURL}}" width="150" height="110">
+                        </a>
+                    </div>
+                    <div class="col-md-8 col-sm-8 col-xs-12" style="padding-left:7%">
+                        <div class="row" style="margin-top:15px">
+                            <label class="fontBold title fontUppercase">
+                                <a href="unsafe:javascript:void(0)" class="lblProductName ng-binding" ng-bind="itemProduct.ProductName"></a>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <label class="fontBold title" style="color:#6c6c6c">
+                                Period: <span style="font-weight:normal" ng-bind="itemProduct.PeriodTime" class="ng-binding"></span>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <span class="title ng-binding" style="color:#6c6c6c">
+                                You have {{itemProduct.sNumOfStore}} store(s) to set up in this product
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-4 col-1-remove text-right" ng-if="itemProduct.sNumOfStore !=0">
+                <button type="button" class="btn btn-info" style="font-weight:600" ng-click="event.createOrEditStore(itemProduct.ProductType,data.CustomerDetail.ID,itemProduct.ProductID);"><i class="glyphicon glyphicon-plus"></i> Create/Edit Store</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+       $(".wizard_verticle ul.wizard_steps li a#isDone2::before, #step_no2").css("background-color", "#ccc");
+            $(".wizard_verticle ul.wizard_steps li a#isDone1::before, #step_no1").removeClass("fa fa-check");
+            $(".wizard_verticle ul.wizard_steps li a#isDone2::before, #step_no2").css("top", "auto");
+            $("a#isDone2").css("top", "auto");
+            $(".wizard_verticle ul.wizard_steps li a#isDone2_wizard_verticle::before, #step_no2").css("background-color", "#ccc");
+            $(".wizard_verticle ul.wizard_steps li a#isDone1_wizard_verticle::before, #step_no1").removeClass("fa fa-check");
+            $(".wizard_verticle ul.wizard_steps li a#isDone2_wizard_verticle::before, #step_no2").css("top", "auto");
+</script>

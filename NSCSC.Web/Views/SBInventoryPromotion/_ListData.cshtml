@@ -1,0 +1,190 @@
+﻿@model List<NSCSC.Shared.Models.PromotionModels>
+@using NSCSC.Shared
+<div class="table-responsive">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>Promotions</h2>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action" cellspacing="0" style="width:100%;">
+                <thead style="background-color:#34495e; color:#fff;">
+                    <tr>
+                        <th style="text-align:center;">Name</th>
+                        <th style="text-align:center;">Priority</th>
+                        <th style="text-align:center;">Period</th>
+                        <th style="text-align:center;">Status</th>
+                        <th style="text-align:center;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        for (int i = 0; i < Model.Count; i++)
+                        {
+                            string styleRow = "row-evenItem";
+                            if (i % 2 == 0)
+                            {
+                                styleRow = "row-oddItem";
+                            }
+                            var item = Model[i];
+                            <tr class="@styleRow">
+                                <td style="color:#34495e; font-weight:bold;">&nbsp;&nbsp;@item.Name</td>
+                                <td style="text-align:center;">
+                                    @item.Priority
+                                </td>
+                                <td style="text-align:center;">@item.ApplyFrom.ToString(Commons.FormatDate) - @item.ApplyTo.ToString(Commons.FormatDate)</td>
+                                <td style="text-align:center;">
+                                    @if (item.IsActive)
+                                    {
+                                        <span class="label label-success">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="label label-danger">Inactive</span>
+                                    }
+                                </td>
+                                <td style="text-align:center;">
+                                    <a href="javascript:void(0)"
+                                       onclick="ShowView('@Url.Action("View", "SBInventoryPromotion", new { id = @item.ID })')"
+                                       class="btn btn-primary btn-xs view details"><i class="fa fa-eye"></i>&nbsp;View</a>&nbsp;&nbsp;
+
+                                    <a href="javascript:void(0)"
+                                       onclick="ShowView('@Url.Action("Edit", "SBInventoryPromotion", new { id = @item.ID })')"
+                                       class="btn btn-info btn-xs edit details action-class"><i class="fa fa-edit"></i>&nbsp;Edit</a> &nbsp; &nbsp;
+                                    @*<a href="javascript:void(0)"
+                                        onclick="ShowView('@Url.Action("Delete", "SBInventoryPromotion", new { id = @item.ID })')"
+                                        class="btn btn-danger btn-xs delete details"><i class="fa fa-trash-o"></i>&nbsp;Delete</a>*@
+
+                                    <a href="javascript:void(0)"
+                                       onclick="ShowModalDelete('.modal-delete', '@item.ID')"
+                                       class="btn btn-danger btn-xs delete details action-class"><i class="fa fa-trash-o"></i>&nbsp;Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@Html.Partial("~/Views/Shared/_popupDelete.cshtml",
+                        new Dictionary<string, string> { { "A", "Promotions" }, { "B", "This promotion already has transaction. Cannot delete this one." } })
+<script type="text/javascript">
+
+    function ShowView(url) {
+        ShowViewOrEdit(url);
+        return false;
+    }
+
+    function ShowviewConfirm(ProductId) {
+        $("[id=modalConfirmDelete]").modal('show');
+        $('[id=ProductId]').val(ProductId);
+    }
+
+    function CloseModal() {
+        $("[id=modalConfirmDelete]").modal('hide');
+        $('input').val('');
+        $('[id=lblError]').text('');
+        $('textarea').val('');
+    }
+
+    function SubmitPinCode() {
+        var PinCode = $('[id=txtPinCode]').val();
+        var Reason = $('[id=txtReason]').val();
+        var Id = $('[id=ProductId]').val();
+        $.ajax({
+            url: '@Url.Action("DeletePromotion", "SBInventoryPromotion")',
+            type: 'post',
+            data: { PinCode: PinCode, Reason: Reason, Id: Id},
+            dataType: 'json',
+            success: function (data) {
+                var _data = data;
+                if (_data.IsPinCode && _data.Status == 400) {
+                    $('[id=lblError]').text(_data.Message);
+                    $('[id=txtPinCode]').focus();
+                } else if (!_data.IsPinCode && _data.Status == 400) {
+                    $('[id=lblError]').text(_data.Message);
+                } else {
+                    $(".se-pre-con").hide();
+                    CloseModal();
+                    Search();
+                }
+            },
+            beforeSend: function () {
+                $(".se-pre-con").show();
+            },
+            complete: function () {
+                $(".se-pre-con").hide();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(errorThrown + "-" + jqXHR.status + "-" + textStatus);
+                $(".se-pre-con").hide();
+            },
+        });
+    }
+
+    $(document).ready(function () {
+        var handleDataTableButtons = function () {
+            if ($("#datatable-buttons").length) {
+                $("#datatable-buttons").DataTable({
+
+                    dom: "Bfrtip",
+                    responsive: true
+                });
+            }
+        };
+
+        TableManageButtons = function () {
+            "use strict";
+            return {
+                init: function () {
+                    handleDataTableButtons();
+                }
+            };
+        }();
+
+        $('#datatable').dataTable();
+        $('#datatable-keytable').DataTable({
+            keys: true
+        });
+
+        $('#datatable-responsive').DataTable({
+            "columnDefs": [
+                { "orderable": false, "targets": 4 },
+                { "width": "10%", "targets": 0 },
+                { "width": "5%", "targets": 1 },
+                { "width": "15%", "targets": 2 },
+                { "width": "5%", "targets": 3 },
+                { "width": "6%", "targets": 4 }
+            ],
+            "order": [
+                [0, 'asc'],
+                [1, 'asc'],
+                [2, 'asc'],
+                [3, 'asc']
+            ],
+            "displayLength": 25,
+
+        });
+
+        var table = $('#datatable-fixed-header').DataTable({
+            fixedHeader: true
+        });
+
+        TableManageButtons.init();
+        
+        /* check permission */
+        @{
+            var userSession = Session["User"] as NSCSC.Shared.Models.UserSession;
+            if (userSession != null)
+            {
+                var tmpAction = userSession.ListPermission.Where(o => o.Code == (int)@NSCSC.Shared.Commons.EModuleCode.Sand_Inv_Promotions).Select(o => o.IsAction).FirstOrDefault();
+                if (tmpAction == false)
+                {
+                     <text>$('.action-class').hide();</text>
+                }
+            }
+        }
+    });
+</script>

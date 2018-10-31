@@ -1,0 +1,93 @@
+﻿@model NSCSC.Shared.Models.SandBox.Inventory.Product.ProductDetailModels
+@using NSCSC.Shared
+
+@if (Model != null && Model.ClientListProduct != null && Model.ClientListProduct.Count > 0)
+{
+    for (int i = 0; i < Model.ClientListProduct.Count; i++)
+    {
+        var item = Model.ClientListProduct[i];
+        <tr class="ItemClient ItemClient_@item.OffSet" data-id="@item.ProductID" data-name="@item.ProductName"
+            data-status="@item.Status" data-offset="@item.OffSet" style="cursor:pointer">
+            <td class="text-center">
+                <input class="chkItem" type="checkbox" checked="@item.IsSelect" data-id="@item.ProductID" id="chkIsSelect_@item.OffSet" />
+            </td>
+            <td class="nameSearch">
+                @item.ProductName
+
+                @Html.Hidden(string.Format("ClientListProduct[{0}].OffSet", item.OffSet), item.OffSet)
+                @Html.Hidden(string.Format("ClientListProduct[{0}].ProductID", item.OffSet), item.ProductID)
+                @Html.Hidden(string.Format("ClientListProduct[{0}].ProductName", item.OffSet), item.ProductName)
+                @Html.Hidden(string.Format("ClientListProduct[{0}].Status", item.OffSet), item.Status)
+                @Html.Hidden(string.Format("ClientListProduct[{0}].ProductType", item.OffSet), item.ProductType, new { @id = "hidProductType" })
+                @Html.Hidden(string.Format("ClientListProduct[{0}].AdditionType", item.OffSet), item.AdditionType, new { @id = "hidAdditionType" })
+                @Html.Hidden(string.Format("ClientListProduct[{0}].CategoryName", item.OffSet), item.CategoryName, new { @id = "hidCategoryName" })
+                @Html.Hidden(string.Format("ClientListProduct[{0}].TypeName", item.OffSet), item.TypeName, new { @id = "hidTypeName" })
+            </td>
+            @*<td>
+                    @item.CategoryName
+                </td>*@
+            <td>@item.TypeName</td>
+            <td class="text-center">
+                <div class="input-group">
+                    @*<input type="number" class="form-control text-center keyNumber" min="1"  aria-label="Text input with checkbox"
+                            id="txtQuantity_@item.OffSet-@item.ProductType" value="@item.Quantity" autocomplete="off" />*@
+                    @Html.TextBox("txtQuantity_" + @item.OffSet + "-" + @item.ProductType, @item.Quantity, new
+                       {
+                           @class = "form-control text-center keyNumber",
+                           @aria_label = "Text input with checkbox",
+                           @type = "number",
+                           //@min = 1,
+                           @autocomplete = "off",
+                           //@maxlength = 2
+                       })
+                    @if (item.ProductType == (byte)Commons.EProductType.Product)
+                    {
+                        <span class="input-group-addon ContainerUnlimited" style="background-color:transparent;">
+                            <input type="checkbox" aria-label="Checkbox for following text input" class="chkUnlimitedItem "
+                                    @string.Format("{0}", @item.IsUnlimited ? "checked" : "") data-id="@item.ProductID" id="chkIsUnlimited_@item.OffSet" /> Unlimited
+                        </span>
+                    }
+                </div>
+                <br/>
+                @Html.ValidationMessage("txtQuantity_" + @item.OffSet + "-" + @item.ProductType, new { @class = "label label-danger" })
+            </td>
+            <td class="text-center">
+                <div class="input-group">
+                    <input class="form-control text-center keyNumber" type="number" min="0" value="@item.Sequence" id="txtSequence_@item.OffSet-@item.ProductType" autocomplete="off">
+                </div>
+            </td>
+        </tr>
+    }
+}
+@*<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>*@    
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('.ContainerUnlimited').click(function (event) {
+            if (event.target.type !== 'checkbox') {
+                $(':checkbox', this).trigger('click');
+            }
+        });
+        $('.ItemClient').click(function (event) {
+            if (event.target.type != 'checkbox' && event.target.type != "text" && event.target.className !== "input-group-addon ContainerUnlimited" && event.target.type != 'number') {             
+                $('.chkItem',this).trigger('click');
+            }
+        });
+
+        /****** key number ***/
+        KeyNumberCheck();
+
+        /*
+        $('.trCompositeHardware td').click(function (event) {
+            if (event.target.type !== 'checkbox') {
+                $(':checkbox', this).trigger('click');
+            }
+        });*/
+    });
+
+    // Disable input Quantity when checked Unlimited checkbox
+    $(".chkUnlimitedItem").click(function (event) {
+        $(this).parent().parent().find("input[type=number]").attr('disabled', event.target.checked);
+    })
+</script>

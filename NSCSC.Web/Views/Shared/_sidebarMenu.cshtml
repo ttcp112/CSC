@@ -1,0 +1,116 @@
+﻿@using NSCSC.Web.App_Start
+@{
+    var user = Session["User"] as NSCSC.Shared.Models.UserSession;
+    var _modules = NuAuthAttribute._ListMenuUserModule;
+}
+
+
+<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+    <div class="menu_section">
+        <h3>&nbsp;</h3>
+        @{
+            <ul class="nav side-menu">
+                <li id="SandBoxId">
+                    <a><i class="fa fa-shopping-cart"></i> SandBox <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                        <li id="@NSCSC.Shared.Commons.EModuleCode.Sand_Employees.ToString("d")" class="LstChildSandBox countLiInMenu"><a href="@Url.Action("Index", "SBEmployee", new { area = "" })">Employees</a></li>
+                        <li id="InventoryId" class="LstChildSandBox">
+                            <a>Inventory <span class="fa fa-chevron-down"></span></a>
+                            <ul class="nav child_menu">
+                                <li id="@NSCSC.Shared.Commons.EModuleCode.Sand_Inv_Categories.ToString("d")" class="LstChildInventory countLiInMenu"><a href="@Url.Action("Index", "SBInventoryCategories", new { area = "" })">Categories</a></li>
+                                <li id="@NSCSC.Shared.Commons.EModuleCode.Sand_Inv_Products.ToString("d")" class="LstChildInventory countLiInMenu"><a href="@Url.Action("Index", "SBInventoryProducts", new { area = "" })">Products</a></li>
+                                <li id="@NSCSC.Shared.Commons.EModuleCode.Sand_Inv_Packages.ToString("d")" class="LstChildInventory countLiInMenu"><a href="@Url.Action("Index", "SBInventoryPackage", new { area = "" })">Packages</a></li>
+                                <li id="@NSCSC.Shared.Commons.EModuleCode.Sand_Inv_Additions.ToString("d")" class="LstChildInventory countLiInMenu"><a href="@Url.Action("Index", "SBInventoryAddition", new { area = "" })">Additions</a></li>
+                                <li id="@NSCSC.Shared.Commons.EModuleCode.Sand_Inv_Promotions.ToString("d")" class="LstChildInventory countLiInMenu"><a href="@Url.Action("Index", "SBInventoryPromotion", new { area = "" })">Promotions</a></li>
+                                <li id="@NSCSC.Shared.Commons.EModuleCode.Sand_Inv_Discount.ToString("d")" class="LstChildInventory countLiInMenu"><a href="@Url.Action("Index", "SBInventoryDiscount", new { area = "" })">Discounts</a></li>
+                            </ul>
+                        </li>
+                     
+                    </ul>
+                </li>
+
+                <li id="CRMId">
+                    <a><i class="fa fa-users"></i> CRM <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                        <li id="@NSCSC.Shared.Commons.EModuleCode.CRM_Customers.ToString("d")" class="LstChildCRM countLiInMenu"><a href="@Url.Action("Index", "CRMCustomers", new { area = "" })">Customers</a></li>
+                        @*<li id="@NSCSC.Shared.Commons.EModuleCode.CRM_OrderReceiptMana.ToString("d")" class="LstChildCRM countLiInMenu"><a href="@Url.Action("Index", "CRMOrderReceiptManagement", new { area = "" })">Order Receipt Management</a></li>*@
+                        <li id="@NSCSC.Shared.Commons.EModuleCode.CRM_LiscenseKeyMana.ToString("d")" class="LstChildCRM countLiInMenu"><a href="@Url.Action("Index", "CRMLicenseKeyManagement", new { area = "" })">License Key Management</a></li>
+                        @*<li id="@NSCSC.Shared.Commons.EModuleCode.CRM_Support.ToString("d")" class="LstChildCRM countLiInMenu"><a href="@Url.Action("Index", "CRMSupport", new { area = "" })">Support</a></li>*@
+                    </ul>
+                </li>
+
+                <li id="SettingsId">
+                    <a><i class="fa fa-cogs"></i>  Settings  <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                        <li id="@NSCSC.Shared.Commons.EModuleCode.Set_Tax.ToString("d")" class="LstChildSettings countLiInMenu"><a href="@Url.Action("Index", "STax", new { area = "" })">Tax</a></li>
+                        <li id="@NSCSC.Shared.Commons.EModuleCode.Set_Prefix.ToString("d")" class="LstChildSettings countLiInMenu"><a href="@Url.Action("Index", "SPrefixSettings", new { area = "" })">Prefix Settings</a></li>
+                        <li id="@NSCSC.Shared.Commons.EModuleCode.Set_Permission.ToString("d")" class="LstChildSettings countLiInMenu"><a href="@Url.Action("Index", "SPermissions", new { area = "" })">Permissions</a></li>
+                        <li id="@NSCSC.Shared.Commons.EModuleCode.Set_PaymentMethod.ToString("d")" class="LstChildSettings countLiInMenu"><a href="@Url.Action("Index", "SPaymentMethods", new { area = "" })">Payment Methods</a></li>
+                        <li id="@NSCSC.Shared.Commons.EModuleCode.Set_Currency.ToString("d")" class="LstChildSettings countLiInMenu"><a href="@Url.Action("Index", "SCurrency", new { area = "" })">Currency</a></li>
+                    </ul>
+                </li>
+
+                <li id="ManagementToolsId">
+                    <a><i class="fa fa-cubes"></i>Management Tools<span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                        <li id="@NSCSC.Shared.Commons.EModuleCode.Mana_Feedback.ToString("d")" class="LstChildManagementTools countLiInMenu"><a href="@Url.Action("Index", "MFeesbacks", new { area = "" })">Feedbacks Management</a></li>
+                      
+                    </ul>
+                </li>
+            </ul>
+
+        }
+    </div>
+</div>
+
+<script>
+    var sPage = "";
+    
+
+    $(document).ready(function () {
+        var array = @Html.Raw(Json.Encode(_modules));       
+        if (array.length > 0) {
+            $(".countLiInMenu").each(function (index, element) {
+                var IdName = $(this).attr('id');
+                var IndexOf = array.indexOf(IdName);
+                if (IndexOf != -1) {                  
+                    $('#' + IdName).show();                    
+                }
+                else {
+                    $('#'+IdName).remove();
+                }
+            });
+        }
+        var count = $('.LstChildInventory').length;
+        if (count == 0) {
+            $('#InventoryId').remove();
+        }
+
+        var count = $('.LstChildSandBox').length;
+        if (count == 0) {
+            $('#SandBoxId').remove();
+        }
+
+        var count = $('.LstChildMerchantAccessControl').length;
+        if (count == 0) {
+            $('#CRMMerchantAccessControl').remove();
+        }
+
+        var count = $('.LstChildCRM').length;
+        if (count == 0) {
+            $('#CRMId').remove();
+        }
+
+        var count = $('.LstChildSettings').length;
+        
+        if (count == 0) {
+            $('#SettingsId').remove();
+        }
+        var count = $('.LstChildManagementTools').length;
+        if (count == 0) {
+            $('#ManagementToolsId').remove();
+        }        
+    });
+
+</script>
+

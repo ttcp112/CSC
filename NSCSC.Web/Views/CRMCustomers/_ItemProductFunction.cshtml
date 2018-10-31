@@ -1,0 +1,50 @@
+﻿@model NSCSC.Shared.Models.CRM.Customers.CustomerBaseModels
+@using NSCSC.Shared
+@{
+    var _ID = Model.CustomerDetail.ID;
+}
+<div class="se-pre-con"></div>
+@if (Model.ProductManagement.ListFunction != null && Model.ProductManagement.ListFunction.Count > 0)
+{
+    int index = 0;
+    foreach (var item in Model.ProductManagement.ListFunction)
+    {
+        <tr>
+            <td>@item.FunctionName</td>
+            <td>@item.LicenseKey</td>
+            <td>@item.ParentLicenseKey</td>
+            <td>@item.sActivateTime</td>
+            <td>@item.sExpiryDate</td>
+            <td>@item.Status</td>
+            <td>
+                @if (item.Status.Equals("Activated"))
+                {
+                    <a href="javascript:void(0)" class="btn btn-xs btn-danger"
+                       onclick="ChangeStatusFunction('block', '@index', '@item.AssetFunctionID','@_ID')">
+                        <i class="fa fa-check"></i>&nbsp;Inactivate
+                    </a>
+                    <a href="javascript:void(0)" class="btn btn-xs btn-danger"
+                        onclick="ChangeBlockFunction('block', '@index', '@item.AssetFunctionID','@_ID')">
+                        <i class="fa fa-lock"></i>&nbsp;Block
+                    </a>
+                }
+                else if (item.Status.Equals("Inactivated"))
+                {
+                    <a href="javascript:void(0)" class="btn btn-xs btn-danger"
+                       onclick="ChangeBlockFunction('block', '@index', '@item.AssetFunctionID','@_ID')">
+                        <i class="fa fa-lock"></i>&nbsp;Block
+                    </a>
+                }
+                else if (item.Status.Equals("Blocked"))
+                {
+                    <a href="javascript:void(0)" class="btn btn-xs btn-primary"
+                           onclick="ChangeBlockFunction('block', '@index', '@item.AssetFunctionID','@_ID')">
+                            <i class="fa fa-unlock"></i>&nbsp;Unblock 
+                        </a>
+                }
+            </td>
+        </tr>
+
+        index++;
+    }
+}

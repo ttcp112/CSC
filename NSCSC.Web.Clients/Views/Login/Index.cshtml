@@ -1,0 +1,109 @@
+﻿@model NSCSC.Shared.Models.AccountLoginRequest
+@{
+    ViewBag.Title = "Sign In";
+}
+<style>
+   
+    .fa-times:before {
+        content: '\00d7';
+        cursor:pointer;
+    }
+   
+</style>
+<div class="title_left">
+    @*@Html.Partial("~/Views/Shared/_breadcrumb.cshtml",
+                        new Dictionary<string, string> { { "A", "SIGN IN" }, { "B", "HOME" }, { "C", "SIGN IN" } })*@
+    <div class="container">
+            <h3>
+                <small class="breadcrum">
+                    @*<i class='fa fa-caret-right'></i>*@<span>sign in</span>
+                </small>
+            </h3>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<div class="header-login">
+    SIGN IN TO CONTINUE
+</div>
+<div class="background-login">
+    <div class="login_wrapper">
+        @using (Html.BeginForm(new { @returnUrl = @Model.ReturnUrl }))
+        {
+        <div class="form-group has-feedback">
+            <label style="float:left">Email</label>
+            <span class="clearable">
+                @Html.TextBoxFor(model => model.Email,
+            new
+            {
+                @type = "email",
+                @class = "form-control input-login has-feedback-left",
+                @required = "required",
+                @autocomplete = "off"
+            })
+                <i class="clearable__clear">&times;</i>
+            </span>
+
+        </div>
+
+        <div class="form-group has-feedback">
+            <label style="float:left">Password</label>
+            <span class="clearable2">
+                @Html.PasswordFor(model => model.Password,
+                        new
+                        {
+                            @type = "password",
+                            @class = "form-control input-login",
+                            @required = "required",
+                            @autocomplete = "off"
+                        })
+                <i class="clearable__clear">&times;</i>
+            </span>
+        </div>
+            <div class="checkbox text-left" style="margin-left:-15px;">
+                <label>
+                    @Html.CheckBoxFor(model => model.RememberMe, new { @class = "flat", @check = "true" })
+                    Remember me
+                </label>
+                <a class="login-desktop" style="float:right; margin-right:10px" href="@Url.Action("ForgotPassword")">Forgot password?</a>
+            </div>
+
+            <div class="row text-center" style="margin:20px 0">
+                <button type="submit" class="btn btn-default submit btn-login-user">SIGN IN</button>
+                @Html.ValidationSummary()
+                <a class="login-mobile" style="margin-top:20px" href="@Url.Action("ForgotPassword")">Forgot password</a>
+            </div>
+            <div class="row text-center signup-mobile">
+                Don't have an account? <a href="@Url.Action("Index", "SignUp")">Sign Up</a>
+            </div>
+        }
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/custom.min.js")"></script>
+<script>
+    $(".clearable").each(function () {
+        var $inp = $(this).find("input[type='email']"),
+            $cle = $(this).find(".clearable__clear");
+        $cle.toggle(!!$inp.val());
+        $inp.on("input", function () {
+            $cle.toggle(!!this.value);
+        });
+
+        $cle.on("touchstart click", function (e) {
+            e.preventDefault();
+            $inp.val("").trigger("input");
+        });
+    });
+    $(".clearable2").each(function () {
+        var $inp = $(this).find("input[type='password']"),
+            $cle = $(this).find(".clearable__clear");
+
+        $inp.on("input", function () {
+            $cle.toggle(!!this.value);
+        });
+
+        $cle.on("touchstart click", function (e) {
+            e.preventDefault();
+            $inp.val("").trigger("input");
+        });
+    });
+</script>

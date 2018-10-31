@@ -1,0 +1,66 @@
+﻿
+@model NSCSC.Shared.Models.Settings.PrefixSettings.PrefixSettingsTextModels
+@using NSCSC.Shared
+@{
+    Html.EnableUnobtrusiveJavaScript(true);
+    var _ID = Model.ID;
+    var user = Session["User"] as NSCSC.Shared.Models.UserSession;
+    var _isAction = false;
+    if (user != null)
+    {
+        _isAction = user.ListPermission.Where(o => o.Code == (int)@NSCSC.Shared.Commons.EModuleCode.Set_Prefix).Select(o => o.IsAction == true).FirstOrDefault();
+    }
+}
+@if (!string.IsNullOrEmpty(_ID))
+{
+    @Html.Hidden("ID", Model.ID)
+    @Html.Hidden("IDReceiptPrefix", Model.IDReceiptPrefix)
+    @Html.Hidden("IDOrderPrefix", Model.IDOrderPrefix)
+    @Html.Hidden("IDStartNumber", Model.IDStartNumber)
+}
+
+<div class="row form-horizontal form-label-left" style="margin-bottom:15px;">
+    @* Receipt Prefix*@
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12">Receipt Prefix</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            @Html.TextBoxFor(model => model.ReceiptPrefix, new { @id = "txtReceiptPrefix", @class = "form-control", placeholder = "Receipt prefix" })
+            @Html.ValidationMessageFor(model => model.ReceiptPrefix, null, new { @class = "label" })
+        </div>
+    </div>
+    @* Order Prefix *@
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12">Order Prefix</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            @Html.TextBoxFor(model => model.OrderPrefix, new { @id = "txtOrderPrefix", @class = "form-control", placeholder = "Order prefix" })
+            @Html.ValidationMessageFor(model => model.OrderPrefix, null, new { @class = "label" })
+        </div>
+    </div>
+    @* Starting Number *@
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12">Start Number</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+
+            @Html.TextBoxFor(model => model.StartNumber, new { @id = "txtStartNumber", @class = "form-control keyNumber", @type = "Number", @min = '0'})
+            @Html.ValidationMessageFor(model => model.StartNumber, null, new { @class = "label" })
+        </div>
+    </div>
+    <div class="form-group">@Html.ValidationMessageFor(model => model.Name, null, new { @class = "label" })</div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var isAction = @Html.Raw(Json.Encode(_isAction));
+        if (isAction == false) {
+            $("#txtReceiptPrefix").prop("disabled", true);
+            $("#txtOrderPrefix").prop("disabled", true);
+            $("#txtStartNumber").prop("disabled", true);
+            $(".action-class").hide();
+        }
+
+        /****** key number ***/
+        KeyNumberCheck();
+    });
+</script>
+
+

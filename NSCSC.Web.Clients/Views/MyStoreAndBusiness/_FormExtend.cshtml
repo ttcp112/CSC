@@ -1,0 +1,331 @@
+﻿@{
+    Html.EnableUnobtrusiveJavaScript(true);
+    ViewBag.Title = "My Store and Business|Extend";
+    var IsProduct = Model.IsProduct;
+}
+@using NSCSC.Shared
+@model NSCSC.Shared.Models.ClientSite.MyStoreAndBusiness.ProductPackageUserModels
+<div class="se-pre-con" style="display: none;"></div>
+<div class="">
+    @*<div class="page-title">*@
+        <div class="title_left">
+            <div class="container">
+                @*<div class="col-sm-12 col-xs-12 col-md-12" style="margin-top:-25px;float:right">*@
+                    <h3>
+                        MY STORE & BUSINESS
+                        <small class="breadcrum">
+                            <a href="@Url.Action("Index", "Home")">home</a>
+                            <i class='fa fa-caret-right'></i>
+                            <span>extend</span>
+                        </small>
+                    </h3>
+                @*</div>*@
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="x_content" style="margin-top:10px;">
+            <div class="row">
+                <div class="col-md-2 col-sm-2 col-xs-12">
+                    <label style="font-size:17px;font-weight:bold">Applied on</label>
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    @*@Html.DropDownListFor(model => model.ProductID,
+                    new SelectList(Model.ListItemProduct.OrderBy(s => s.Text), "Value", "Text", Model.ProductID), null,
+                    new
+                    {
+                        @class = "form-control select",
+                        @id = "drAppliedOn",
+                        @style = "width : 100%;",
+                    })*@
+                                @*<select class="select" id="drAppliedOn" style="width:100%">
+                        <option>NuPOS Standard</option>
+                    </select>*@
+
+
+                    @Html.DropDownList("drAppliedOn",
+                      new SelectList(Model.ListItemProduct.OrderBy(s => s.Text), "Value", "Text", ViewBag.AssetIdExtendAppliedOn), null,
+                      new
+                      {
+                          @class = "form-control select",
+                          @id = "drAppliedOn",
+                          @style = "width : 100%;",
+                    })
+
+                </div>
+            </div>
+
+            <div class="row" style="margin-top:15px;">
+                <div class="col-md-3 col-sm-3 col-xs-12">
+                    @if (!string.IsNullOrEmpty(Model.Image))
+                    {
+                        <img src="@Model.Image" alt="..." width="100" height="100" />
+                    }
+                </div>
+                <div class="col-md-9 col-sm-9 col-xs-12">
+                    <h3>
+                        <span style="color:darkred">@Model.ItemName</span>
+                    </h3>
+                    <h4 style="font-size:15px">
+                        @{
+                            string PeriodName = "None";
+                            switch (Model.PeriodType)
+                            {
+                                case (int)Commons.EPeriodType.Day:
+                                    PeriodName = "Day";
+                                    break;
+                                case (int)Commons.EPeriodType.Month:
+                                    PeriodName = "Month";
+                                    break;
+                                case (int)Commons.EPeriodType.Year:
+                                    PeriodName = "Year";
+                                    break;
+                                case (int)Commons.EPeriodType.OneTime:
+                                    PeriodName = "One Time";
+                                    break;
+                            }
+                            if (Model.PeriodType != (int)Commons.EPeriodType.OneTime)
+                            {
+                                PeriodName = Model.Period + " " + PeriodName;
+                                if (Model.Period > 1)
+                                {
+                                    PeriodName += "s";
+                                }
+                            }
+                        }
+                        Period: @PeriodName &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        Expired Date:
+                        @Html.Raw(string.Format("<span style='color:#e54609'>{0}</span>", Model.ExpiryDate.HasValue ? Model.ExpiryDate.Value.ToString(Commons.FormatDateTime) : "Not yet activated"))
+                    </h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <h3 style="color:darkred">Extend Price List</h3>
+                    <hr />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <table id="datatable-responsive-list-devicesmanagement"
+                           class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action"
+                           cellspacing="0" style="width:100%;">
+                        <tbody id="list-item-hardwares-and-services">
+                            @if (Model.ListPrices != null && Model.ListPrices.Any())
+                            {
+                                foreach (var itemPrice in Model.ListPrices)
+                                {
+                                    var _PeriodName = itemPrice.PeriodName;
+                                    if (itemPrice.PeriodType != (byte)Commons.EPeriodType.OneTime)
+                                    {
+                                        _PeriodName = itemPrice.Period + " " + _PeriodName;
+                                        if (itemPrice.Period > 1)
+                                        {
+                                            _PeriodName += "s";
+                                        }
+                                    }
+                                    <tr>
+                                        <td>
+                                            <input type="hidden" class="classAssetID" value="@Model.AssetID" />
+                                            <input type="hidden" class="classPeriod" value="@itemPrice.Period" />
+                                            <input type="hidden" class="classPeriodType" value="@itemPrice.PeriodType" />
+                                            <input type="hidden" class="classPrice" value="@itemPrice.Price" />
+                                            <input type="radio" name="rdextend" class="flat clsCheckedExtendPrice" checked="@itemPrice.IsSelected" onchange="GetDataExtendPrice('@Model.AssetID', '@itemPrice.Period', '@itemPrice.PeriodType', '@itemPrice.Price')" />
+                                        @*<input type="radio" name="radio" class="flat clsCheckedExtendPrice" @itemPrice.IsSelected onclick="fnClickRadioExtendPrice('@itemPrice.PeriodType','@itemPrice.Period')" />*@
+                                        </td>
+                                        <td>Extend</td>
+                                        <td>@_PeriodName</td>
+                                        <td>with</td>
+                                        <td>@itemPrice.CurrencySymbol@itemPrice.Price.ToString("#,0.00")</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row" @*style="text-align:right"*@>
+                <div class="col-md-12 col-sm-12 col-xs-12" style="text-align:right">
+                    <a href="@Url.Action("Index","MyStoreAndBusiness")" class="btn btn-danger" > CANCEL </a>
+                    @*<a href="javascript:void(0)" class="btn btn-info" data-toggle="modal" data-target="#modalExtendConfirmation">CHECK OUT</a>*@
+                    @*<a href="javascript:void(0)" class="btn btn-info" onclick="CheckOutItem('@Model.ItemID', '@Model.AssetID')">CHECK OUT</a>*@
+                    <a href="javascript:void(0)" class="btn btn-primary" onclick="ExtendProductStoreBusiness();">ADD TO CART</a>
+                </div>
+            </div>
+        </div>
+    @*</div>*@
+</div>
+<div id="modalExtendConfirmation" class="modal fade modalExtendConfirmation" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="padding:20px 15px;background-color: #f9f9f9">
+                <h4 class="modal-title" id="myModalLabel2" style="text-align: left; font-weight:bolder">Extend Confirmation</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <h3>You have just extended @Model.ItemName for more <span class="lblPeriod"></span> <span class="lblPeriodName"></span> NuPOS A will be expired after 17/01/2019 - 08:00</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12" style="text-align:center;">
+                        <a href="@Url.Action("Index", "YourCart")" class="btn btn-info">OK</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalwarningcheckout" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="padding:20px 15px;background-color: #f9f9f9">
+                <h4 class="modal-title" id="mymodalcheckout" style="text-align: center; font-weight:bolder">Warning</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <h5>Unable to extend this product. Your Cart currently contains items. Please remove those items or check out your cart before extending this product.</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Dismiss</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    @if(IsProduct)
+        {
+        <text>
+    $("#drAppliedOn").prop('disabled', 'disabled');
+    </text>
+
+        } else {
+        <text>
+    $("#drAppliedOn").removeAttr('disabled ');
+    </text>
+        }
+    $(document).ready(function () {
+        $("#drAppliedOn").select2({
+            placeholder: 'Choose Product...'
+        });
+        $('input.flat').iCheck({
+            checkboxClass: 'icheckbox_flat-green',
+            radioClass: 'iradio_flat-green'
+        });
+
+        //$('.clsCheckedExtendPrice').on("ifChecked", function (event) {
+        //    $(event.target).trigger('click');
+        //});
+
+        $('.clsCheckedExtendPrice').on('ifClicked', function (event) {
+            $(event.target).trigger('change');
+        });
+    });
+
+    function fnClickRadioExtendPrice(periodType, period)
+    {
+        @if(!Model.ExpiryDate.HasValue)
+        {
+            <text>$('.lblPeriod').html(period);</text>
+        }
+
+    }
+
+    var _assetidExtend = $('.classAssetID').first().val();
+    var _periodExtend = $('.classPeriod').first().val();
+    var _periodTypeExtend = $('.classPeriodType').first().val();
+    var _priceExtend = $('.classPrice').first().val();
+    var _productAppliOnExtend = "";
+
+    function GetDataExtendPrice(AssetId, Period, PeriodType, Price) {
+        //debugger;
+        _assetidExtend = AssetId;
+        _periodExtend = Period;
+        _periodTypeExtend = PeriodType;
+        _priceExtend = Price;
+    }
+
+
+    function CheckOutItem(Id, AssetID) {
+        _productAppliOnExtend = $('#drAppliedOn').val();
+        var quan = $('#countItemCart').html();
+        if (quan > 0) {
+            $('#modalwarningcheckout').modal('show');
+        }
+        else {
+            $.ajax({
+                url: CreateAbsoluteUrl('CheckOutItem'),
+                type: "POST",
+                data: { AssetId: _assetidExtend, Period: _periodExtend, PeriodType: _periodTypeExtend, Price: _priceExtend, ProductAppliOn: _productAppliOnExtend },
+                dataType: 'html',
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+                success: function (data) {
+                    data = JSON.parse(data);
+                        createOrUpdateOrder(data.CusId, data.OrderId, data.Qty);
+                        getOrder(data.CusId);
+                        window.location.assign(BaseUrl + 'YourCart/CheckOut?StepType=1&&ItemID=' + Id + '&&AssetID=' + AssetID + '');
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    //alert(jqXHR.statusText);
+                    $('.se-pre-con').hide();
+                }
+            });
+        }
+    }
+
+    function ExtendProductStoreBusiness() {
+        _productAppliOnExtend = $('#drAppliedOn').val();
+        if (_productAppliOnExtend != null && _productAppliOnExtend != "") {
+            var ProductExtendModel = {
+                AssetID: _productAppliOnExtend,
+                Period: _periodExtend,
+                PeriodType: _periodTypeExtend,
+                Price: _priceExtend
+            };
+             $.ajax({
+                url: '@Url.Action("ExtendProductStoreBusiness", "OurProducts")',
+                type: "POST",
+                traditional: true,
+                data: JSON.stringify(ProductExtendModel),
+                dataType: "html",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    data = JSON.parse(data);
+                    //=========
+                    console.log(data);
+                    var countItemCart = data.TotalQuantity;
+                    createOrUpdateOrder(data.CusId, data.ID, countItemCart);
+                    getOrder(data.CusId);
+                    //=========
+                    // Redirect to page YourCart
+                    window.location.assign('@Url.Action("Index", "YourCart")');
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $('#lblMsg').html(jqXHR.statusText);
+                    if (jqXHR.status == 400) {
+                        deleteOrder();
+                    }
+                },
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+            });
+        }
+    }
+</script>

@@ -1,0 +1,13 @@
+﻿@{
+    Layout = null;
+}
+@model NSCSC.Shared.Models.CRM.Customers.MerchantModels
+@if(Model != null && Model.ListStore != null && Model.ListStore.Count > 0)
+{
+    for(var i = 0; i < Model.ListStore.Count; i++)
+    {
+        var item = Model.ListStore[i];
+        <tr data-id="@item.ID">
+        </tr>
+    }
+}

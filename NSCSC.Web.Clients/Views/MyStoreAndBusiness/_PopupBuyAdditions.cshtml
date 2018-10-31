@@ -1,0 +1,203 @@
+﻿@model NSCSC.Shared.Models.OurProducts.Package.PackageDetailViewModels
+@using NSCSC.Shared.Helpers
+@using NSCSC.Shared
+
+@using (@Html.BeginForm("AddToCartBuyingAdditionsStoreBusiness", "OurProducts", FormMethod.Post, new
+{
+    @class = "form-horizontal",
+    @id = "form-buying-additions-product",
+    @enctype = "multipart/form-data"
+}))
+{
+    @Html.HiddenFor(model => model.PackageDetail.ID)
+    @Html.HiddenFor(model => model.PackageDetail.Name)
+    @Html.HiddenFor(model => model.PackageDetail.ItemID)
+
+    if (Model.ListApplyAdditionProduct != null && Model.ListApplyAdditionProduct.Any())
+    {
+        for (int i = 0; i < Model.ListApplyAdditionProduct.Count; i++)
+        {
+            var item = Model.ListApplyAdditionProduct[0];
+            @Html.Hidden(string.Format("ListApplyAdditionProduct[{0}].ProductId", i), item.ProductId)
+            @Html.Hidden(string.Format("ListApplyAdditionProduct[{0}].ProductName", i), item.ProductName)
+            @Html.Hidden(string.Format("ListApplyAdditionProduct[{0}].ProductCateId", i), item.ProductCateId)
+        }
+    }
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <h3 class="text-uppercase font-bold">
+            Buy Addition
+        </h3>
+    </div>
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <p>Please select the desired items in below list</p>
+        <p>
+            Filter by Type of Additions
+            <span class="btn-action-add-to-card">
+                @Html.DropDownList("AdditionType", new SelectList(@ViewBag.ListAdditionType, "Value", "Text"),
+                new {
+                   @id = "select-addition-type",
+                   @class = "form-control",
+                   @style = "width:130px;"
+               })
+            </span>
+        </p>
+    </div>
+    <!--list item-->
+    <div class="col-md-12 col-sm-12 col-xs-12" id="div-container-list-item">
+        <table class="table table-custom-buy-addition">
+            <thead>
+                <tr>
+                    <td style="width:1%;"></td>
+                    <td style="width:59%;"></td>
+                    <td style="width:25%;" class="text-center">Period</td>
+                    <td style="width:15%;" class="text-center">Price</td>
+                </tr>
+            </thead>
+            <tbody id="list-item-buy-additions"></tbody>
+        </table>
+    </div>
+    <!--list item for mobile-->
+    <div class="col-md-12 col-sm-12 col-xs-12" id="div-container-list-item-mobile">
+        <table class="table table-custom-buy-addition">
+            <thead>
+                <tr class="hidden">
+                    <td style="width:1%;"></td>
+                    <td style="width:59%;"></td>
+                    <td style="width:25%;" class="text-center">Period</td>
+                    <td style="width:15%;" class="text-center">Price</td>
+                </tr>
+            </thead>            
+            <tbody id="list-item-buy-additions-mobile">
+               
+            </tbody>
+        </table>
+    </div>
+    <!--end list item-->
+    <!-- Action -->
+    <div class=" col-md-offset-6 col-md-6 col-sm-6 col-xs-12">
+        <div class="form-group">
+            <ul class="header-buttons list-inline btn-popup-buy-add">
+                <li>
+                    <a href="javascript:void(0);" class="btn btn-cyan text-uppercase" style="width: 150px;" id="btn-actives"
+                       onclick="SubmitForm('#form-buying-additions-product')">Add to Cart</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" class="btn text-cyan bg-white" data-dismiss="modal">
+                        Cancel
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!--Msg Error-->
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="form-group text-center">
+            <span class="label label-danger" id="ltrErrorAddToCart"></span>
+        </div>
+    </div>
+</div>
+}
+
+<script type="text/javascript">
+    var ListApplyAdditionProduct = [];
+
+    $(document).ready(function () {
+        $("#select-addition-type").select2({
+            placeholder: 'Please choose Type of Additions',
+            dropdownParent: $("#modal-buy-addition") //enable search in select2
+        });
+        //------
+        setTimeout(function () {
+            var countListApplyAdditionProduct = '@Model.ListApplyAdditionProduct.Count()';
+            for (var j = 0; j < countListApplyAdditionProduct; j++) {
+                var ProductApplyAdditionPackage = {
+                    ProductName: $('input[name="ListApplyAdditionProduct[' + j + '][\'ProductName\']"]').val(),
+                    ProductId: $('input[name="ListApplyAdditionProduct[' + j + '][\'ProductId\']"]').val(),
+                    ProductCateId: $('input[name="ListApplyAdditionProduct[' + j + '][\'ProductCateId\']"]').val()
+                };
+                ListApplyAdditionProduct.push(ProductApplyAdditionPackage);
+            }
+            //-----
+            GetListAdditionsForProduct('0', '#list-item-buy-additions');
+            GetListAdditionsForProduct('0', '#list-item-buy-additions-mobile');
+            
+        }, 500);
+    });
+
+    $("#select-addition-type").change(function () {
+        var additionType = this.value;
+        GetListAdditionsForProduct(additionType, '#list-item-buy-additions');
+        GetListAdditionsForProduct(additionType, '#list-item-buy-additions-mobile');
+    });
+
+    function GetListAdditionsForProduct(additionType, elemnetFillData) {
+        var data = {
+            AdditionType: additionType,
+            ListApplyAdditionProduct: ListApplyAdditionProduct
+        };
+        $('.se-pre-con').show();
+        $.ajax({
+            type: "POST",
+            url: CreateAbsoluteUrl("GetListAdditionsForProduct"),
+            traditional: true,
+            data: JSON.stringify(data),
+            dataType: "html",
+            contentType: "application/json; charset=utf-8",
+            beforeSend: function () {
+                $(elemnetFillData).html('');
+            },
+            error: function (e) {
+                $('.se-pre-con').hide();
+            },
+            success: function (data) {
+                $(elemnetFillData).html(data);
+                ResizeModal('#div-container-list-item', 250);
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            }
+        });
+    }
+
+    $("#form-buying-additions-product").submit(function (e) {
+        $('#ltrErrorAddToCart').html('');
+        var isSubmit = $(this).valid();
+        var numberOfChecked = $('input[class="chkAdditionSelected"]:checked').length;
+        if (numberOfChecked === 0) {
+            $('#ltrErrorAddToCart').html('Please choose addition for product.');
+            isSubmit = false;
+        }
+        if (isSubmit) {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: "POST",
+                data: new FormData(this),
+                processData: false,
+                contentType: false,
+                dataType: "html",
+                success: function (data) {
+                    data = JSON.parse(data);
+                    //=========
+                    var countItemCart = data.TotalQuantity;//data.ListItems.length;
+                    createOrUpdateOrder('@Model.PackageDetail.CusId', data.ID, countItemCart);
+                    getOrder();
+                    //=========
+                    window.location.assign('@Url.Action("Cart", "YourCart")');
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $('#ltrErrorAddToCart').html(jqXHR.statusText);
+                },
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                }
+            });
+        }
+        e.preventDefault();
+    });
+
+</script>

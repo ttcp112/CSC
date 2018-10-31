@@ -1,0 +1,239 @@
+﻿@model NSCSC.Shared.Models.Settings.Permissions.RoleDetailDTO
+@{
+    
+    var _ID = Model.ID;
+}
+@Html.HiddenFor(model => model.ID)
+@if (!string.IsNullOrEmpty(_ID))
+{
+}
+
+<div class="row form-horizontal form-label-left" style="margin-bottom:15px;">
+    @*Role Name*@
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Role Name</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @placeholder = "Role Name", @autocomplete = "off" })
+            @Html.ValidationMessageFor(model => model.Name, null, new { @class = "label" })
+        </div>
+    </div>    
+
+    @* Active*@
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 fontLighter">Active</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <label>@Html.CheckBoxFor(model => model.IsActive, new { @class = "js-switch-chk" })</label>
+        </div>
+    </div>
+
+    @* Description*@
+    @*<div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 fontLighter">Description</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            @Html.TextAreaFor(model => model.Description, new { @class = "form-control", @placeholder = "Description", @autocomplete = "off" })
+            @Html.ValidationMessageFor(model => model.Description, null, new { @class = "label" })
+        </div>
+    </div>*@
+
+    @*Level*@
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Level</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            @Html.TextBoxFor(model => model.Level,
+            new
+            {
+                @class = "form-control keyNumber",
+                @autocomplete = "off",
+                @type = "number",
+                @min = '1',
+            })
+            @Html.ValidationMessageFor(model => model.Level, null, new { @class = "label" })
+        </div>
+    </div>
+
+    @* List Modules *@
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight">Role Details</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            @if (Model.ListPermission != null)
+            {
+                @Html.Partial("_ListPermission", Model)
+            }
+        </div>
+    </div>
+    
+</div>
+
+<script src="@Url.Content("~/build/js/customInput.js")"></script>
+<script type="text/javascript"> 
+    $(document).ready(function (e) {
+
+        /****** key number ***/
+        KeyNumberCheck();
+    });
+
+    function ToogleChild(e, type) {
+        console.log('ToogleChild');
+        var checked = $(e).prop('checked');
+        var id = $(e).attr('id');
+        var parentClass = $(e).attr('data-parent');
+        if (parentClass != null) {
+            var Parentlength = $("input[data-parent=" + parentClass + "]").length;
+            var ChildLength = $("input[data-parent=" + parentClass + "]:checkbox:checked").length;
+            var level = parentClass.substring(0, 1);
+            var dataId = parentClass.substring(2, parentClass.length).replace(type, '');
+            var ParentcheckAll = $("input[data-id=" + ((level - 1) + '' + dataId + type) + "]");
+            if (Parentlength == ChildLength) {
+                $(ParentcheckAll).prop('checked', true);
+                ToogleChild(ParentcheckAll, type);
+            } else {
+                $(ParentcheckAll).prop('checked', false);
+                ToogleChild(ParentcheckAll, type);
+            }
+            //=====
+            var substr = id.slice(0, id.length - type.length);
+            if (type == "IsAction") {
+                //Uncheck Action -> Uncheck View
+                if (checked == true) {
+                    var chkIsView = $('.table-actions').find('#' + substr + 'IsView');
+                    $(chkIsView).prop('checked', checked);
+                }
+                //var chkIsActive = $('.table-actions').find('#' + substr + 'IsActive');
+                //$(chkIsActive).prop('checked', checked);
+            }
+            else if (type == "IsView") {
+                //var chkIsIsAction = $('.table-actions').find('#' + substr + 'IsAction');
+                //var chkIsActive = $('.table-actions').find('#' + substr + 'IsActive');
+                //var ParentcheckAllIsActive = $("input[data-id=" + (level + '' + dataId + 'IsActive') + "]");
+                //if ($(e).prop('checked') && $(chkIsIsAction).prop('checked')) {
+                //    $(chkIsActive).prop('checked', true);
+                //    $(ParentcheckAllIsActive).prop('checked', true);
+                //}
+                //else {
+                //    $(chkIsActive).prop('checked', false);
+                //    $(ParentcheckAllIsActive).prop('checked', false);
+                //}
+
+                //Trongntn update code 06-06-2017 
+                if (!checked) {
+                    var chkIsAction = $('.table-actions').find('#' + substr + 'IsAction');
+                    $(chkIsAction).prop('checked', checked);
+                }
+            }
+        }
+    }
+
+    //ToogleParent
+    function ToogleParent(e, type) {
+        console.log('ToogleParent');
+        var checked = $(e).prop('checked');
+        var id = $(e).attr('id');
+        var parentClass = $(e).attr('data-parent');
+        if (parentClass != null) {
+            var substr = id.slice(0, id.length - type.length);
+            var Parentlength = $("input[data-parent=" + parentClass + "]").length;
+            var ChildLength = $("input[data-parent=" + parentClass + "]:checkbox:checked").length;
+            var level = parentClass.substring(0, 1);
+            var dataId = parentClass.substring(2, parentClass.length).replace(type, '');
+            var ParentcheckAll = $("input[data-id=" + ((level - 1) + '' + dataId + type) + "]");
+            if (Parentlength == ChildLength) {
+                $(ParentcheckAll).prop('checked', true);
+            } else {
+                $(ParentcheckAll).prop('checked', false);
+            }
+            CheckAll(e, type);
+            if (type == "IsAction") {
+                //Uncheck Action -> Uncheck View
+                if (checked == true) {
+                    var chkIsView = $('.table-actions').find('#' + substr + 'IsView');
+                    $(chkIsView).prop('checked', checked);
+                    //var chkIsActive = $('.table-actions').find('#' + substr + 'IsActive');
+                    //$(chkIsActive).prop('checked', checked);
+                    //========
+
+                    if (level != "0") {
+                        var _dataId = chkIsView.attr('data-id').substring(1, chkIsView.attr('data-id').length);
+                        var ParentcheckAllIsView = $("input[data-id=" + (level + '' + _dataId) + "]");
+                        CheckAll(ParentcheckAllIsView, 'IsView');
+
+                        //var ParentcheckAllIsActive = $("input[data-id=" + (level + '' + _dataId) + "]");
+                        //CheckAll(ParentcheckAllIsActive, 'IsActive');
+                    }
+                    else {
+                        var ParentcheckAllIsView = $("input[data-id=" + (level + '' + dataId + 'IsView') + "]");
+                        CheckAll(ParentcheckAllIsView, 'IsView');
+
+                        //var ParentcheckAllIsActive = $("input[data-id=" + (level + '' + dataId + 'IsActive') + "]");
+                        //CheckAll(ParentcheckAllIsActive, 'IsActive');
+                    }
+                }
+            }
+            else if (type == "IsView") {
+                //var chkIsIsAction = $('.table-actions').find('#' + substr + 'IsAction');
+                //var chkIsActive = $('.table-actions').find('#' + substr + 'IsActive');
+                //var ParentcheckAllIsActive = $("input[data-id=" + (level + '' + dataId + 'IsActive') + "]");
+                //console.log(ParentcheckAllIsActive);
+                //if ($(e).prop('checked') && $(chkIsIsAction).prop('checked')) {
+                //    $(chkIsActive).prop('checked', true);
+                //    $(ParentcheckAllIsActive).prop('checked', true);
+                //}
+                //else {
+                //    $(chkIsActive).prop('checked', false);
+                //    $(ParentcheckAllIsActive).prop('checked', false);
+                //}
+                //CheckAll(ParentcheckAllIsActive, 'IsActive');
+
+                //Trongntn update code 06-06-2017 
+                if (!checked) {
+                    var chkIsAction = $('.table-actions').find('#' + substr + 'IsAction');
+                    $(chkIsAction).prop('checked', checked);
+                    if (level != "0") {
+                        var _dataId = chkIsAction.attr('data-id').substring(1, chkIsAction.attr('data-id').length);
+                        var ParentcheckAllchkIsAction = $("input[data-id=" + (level + '' + _dataId) + "]");
+                        CheckAll(ParentcheckAllchkIsAction, 'IsAction');
+                    }
+                    else {
+                        var ParentcheckAllchkIsAction = $("input[data-id=" + (level + '' + dataId + 'IsView') + "]");
+                        CheckAll(ParentcheckAllchkIsAction, 'IsAction');
+                    }
+                }
+            }
+        }
+    }
+
+    function CheckAll(e, type) {
+        var checked = $(e).prop('checked');
+        var id = $(e).attr('id');
+        if (id != undefined) {
+            var substr = id.slice(0, id.length - type.length);
+            $("input[id^=" + substr + "]").each(function () {
+                var childID = $(this).attr('id');
+                if (childID != id && childID.indexOf(type) >= 0) {
+                    $(this).prop('checked', checked);
+                }
+            });
+        }
+    }
+
+    function TickCheckBox(td) {
+        var tr = $(td).parents('tr:first');;
+        $(tr).find('input[type=checkbox]').prop('checked', !$(tr).find('input[type=checkbox]').prop('checked'))
+        var length = $('.chkRole').length;
+        var countSelected = $('.chkRole:checkbox:checked').length;
+        if (length == countSelected) {
+            $('#chkStoreAll').prop('checked', true);
+        } else {
+            $('#chkStoreAll').prop('checked', false);
+        }
+    }
+
+    function TickItemCheckBox() {
+        var length = $('.chkRole').length;
+        var countSelected = $('.chkRole:checkbox:checked').length;
+        if (length == countSelected) {
+            $('#chkStoreAll').prop('checked', true);
+        } else {
+            $('#chkStoreAll').prop('checked', false);
+        }
+    }
+</script>

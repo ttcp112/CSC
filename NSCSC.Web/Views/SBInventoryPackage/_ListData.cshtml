@@ -1,0 +1,100 @@
+﻿@model NSCSC.Shared.Models.Sandbox.Inventory.Product.ProductViewModels
+<div class="table-responsive">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>Packages</h2>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action" cellspacing="0" style="width:100%;">
+                <thead style="background-color:#34495e; color:#fff;">
+                    <tr>
+                        <th style="text-align:center;">Package Name</th>
+                        <th style="text-align:center;">Products</th>
+                        <th style="text-align:center;">Status</th>
+                        <th style="text-align:center;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.ListItem != null)
+                    {
+                        for (int i = 0; i < Model.ListItem.Count; i++)
+                        {
+                            string styleRow = "row-evenItem";
+                            if (i % 2 == 0)
+                            {
+                                styleRow = "row-oddItem";
+                            }
+                            var item = Model.ListItem[i];
+                            <tr class="@styleRow">
+                                <td style="color:#34495e; font-weight:bold;">&nbsp;&nbsp;@item.Name</td>
+                                <td style="font-size:12px;">
+                                    @Html.Raw(item.CategoryName)
+                                </td>
+                                <td style="text-align:center;">
+                                    @if (item.IsActive)
+                                    {
+                                        <span class="label label-success">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="label label-danger">Inactive</span>
+                                    }
+                                </td>
+                                <td style="text-align:center;">
+                                    <a href="javascript:void(0)"
+                                       onclick="ShowView('@Url.Action("View", "SBInventoryPackage", new { id = @item.ID })')"
+                                       class="btn btn-primary btn-xs view details"><i class="fa fa-eye"></i>&nbsp;View</a>
+                                    
+                                    <a href="javascript:void(0)"
+                                       onclick="ShowView('@Url.Action("Edit", "SBInventoryPackage", new { id = @item.ID })')"
+                                       class="btn btn-info btn-xs edit details action-class"><i class="fa fa-edit"></i>&nbsp;Edit</a>
+                                    <a href="javascript:void(0)"
+                                       @*onclick="ShowView('@Url.Action("Delete", "SBInventoryPackage", new { id = @item.ID })')"*@
+                                       onclick="ShowModalDelete('.modal-delete', '@item.ID')"
+                                       class="btn btn-danger btn-xs delete details action-class"><i class="fa fa-trash-o"></i>&nbsp;Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("~/Views/Shared/_popupDelete.cshtml",
+                        new Dictionary<string, string> { { "A", "Packages" }, { "B", "This package already has transaction. Cannot delete this one." } })
+
+<script type="text/javascript">
+
+    function ShowView(url) {
+        ShowViewOrEdit(url);
+        return false;
+    }
+
+    $(document).ready(function () {
+        $('#datatable-responsive').DataTable({
+            "columnDefs": [
+                { "orderable": false, "targets": [1, 3] },
+                { "width": "60%", "targets": 1 },
+                { "width": "5%", "targets": [2, 3] },
+            ],
+            "order": [[0, 'asc']],
+            "displayLength": 25,
+        });
+
+        /* check permission */
+        @{
+            var userSession = Session["User"] as NSCSC.Shared.Models.UserSession;
+            if (userSession != null)
+            {
+                var tmpAction = userSession.ListPermission.Where(o => o.Code == (int)@NSCSC.Shared.Commons.EModuleCode.Sand_Inv_Packages).Select(o => o.IsAction).FirstOrDefault();
+                if (tmpAction == false)
+                {
+                     <text>$('.action-class').hide();</text>
+                }
+            }
+        }
+    });
+</script>

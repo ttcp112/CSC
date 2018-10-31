@@ -1,0 +1,573 @@
+﻿@*@model NSCSC.Shared.Models.ClientSite.MyStoreAndBusiness.MyStoreAndBusinessViewModels*@
+@model NSCSC.Shared.Models.ClientSite.YourCart.InputStoreViewModels
+@using NSCSC.Shared
+@{
+    ViewBag.Title = "Input Store Info";
+}
+@using (@Html.BeginForm("#", "YourCart", FormMethod.Post, new
+{
+    @class = "form-horizontal",
+    @id = "form-input-store",
+    @enctype = "multipart/form-data"
+}))
+{
+    @Html.HiddenFor(model => model.ID)
+    @Html.HiddenFor(model => model.OrderProductDetailID)
+    @Html.HiddenFor(model => model.NumOfStore, new { @id = "hidNumOfStore" })
+
+    <div class="form-group" style="padding:15px 0;">
+        <div class="col-md-8 col-sm-8 col-xs-12">
+            @if (Model.NumOfStore >= 1 || Model.NumOfStore == -1)
+            {
+                <a class="btn btn-warning" style="width:200px;" href="javascript:void(0)" data-toggle="modal" data-backdrop="static"
+                   data-target="#bs-modal-add-store" id="btnaddmorestore">Add More Store</a>
+            }
+            else
+            {
+                <a class="btn btn-warning hidden" style="width:200px;" href="javascript:void(0)" data-toggle="modal" data-backdrop="static"
+                   data-target="#bs-modal-add-store" id="btnaddmorestore">Add More Store</a>
+            }
+
+        </div>
+        <div class="col-md-4 col-sm-4 col-xs-12  text-right">
+            <a class="btn btn-warning fontUppercase" style="width:150px;" href="@Url.Action("CheckOut")">cancel</a>
+            @*<a class="btn btn-success fontUppercase" style="width:150px;" href="javascript:void(0)" onclick="SubmitForm('#form-input-store')">submit</a>*@
+
+            <button type="button" class="btn btn-primary fontUppercase" onclick="SubmitForm('#form-input-store')">submit</button>
+        </div>
+    </div>
+
+    @*item store*@
+    <div class="" id="divStoreAuto">
+        @if (Model.ListStore != null && Model.ListStore.Count > 0)
+        {
+            @Html.Partial("_ItemStoreTemp", Model)
+        }
+    </div>
+
+    @*Msg Error*@
+    <div class="form-group">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            @Html.Raw(Html.ValidationMessage("MsgInputStoreInfo", new { @class = "label label-danger" }))
+        </div>
+    </div>
+}
+<!--select store-->
+@if (Model.ListStoreSelect != null && Model.ListStoreSelect.Count > 0)
+{
+    <div class="modal fade" id="bs-modal-select-store" tabindex="-1" role="dialog" aria-hidden="true">
+        <div id="fullStore" class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title fontUppercase" id="myModalLabel2">Select Store</h4>
+                </div>
+                <div class="modal-body" style="padding:0px;">
+                    <table id="select-store">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th class="fontUppercase">Store Name</th>
+                                <th class="fontUppercase">Address</th>
+                                <th class="fontUppercase">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.ListStoreSelect != null && Model.ListStoreSelect.Count > 0)
+                            {
+                                int i=0;
+                                foreach (var item in Model.ListStoreSelect.Where(x=>x.StoreType==(int)Commons.EStoreType.FnB))
+                                {
+                                    <tr id="Store_@item.StoreType@i" class="enumStore_@item.StoreType">
+                                        <td>
+                                            <input type="radio" class="flatSlectStore" name="SlectStore" checked value="@item.ID" />
+                                        </td>
+                                        <td>@item.Name</td>
+                                        <td>@item.Address</td>
+                                        <td>@item.sStatus</td>
+                                    </tr>
+                                    i++;
+                                }
+                                i=0;
+                                foreach (var item in Model.ListStoreSelect.Where(x=>x.StoreType==(int)Commons.EStoreType.Beauty))
+                                {
+                                    <tr id="Store_@item.StoreType@i" class="enumStore_@item.StoreType">
+                                        <td>
+                                            <input type="radio" class="flatSlectStore" name="SlectStore" checked value="@item.ID" />
+                                        </td>
+                                        <td>@item.Name</td>
+                                        <td>@item.Address</td>
+                                        <td>@item.sStatus</td>
+                                    </tr>
+                                    i++;
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer" style="border:none;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary fontUppercase" onclick="SelectStoreInfo('#bs-modal-select-store')">Select</button>
+                </div>
+
+            </div>
+        </div>
+        <div id="halfStore" class="modal-dialog" style="display:none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title fontUppercase" id="myModalLabel2">Notification</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <span>Currently you don't have any existing store to select. Please create new store.</span>
+                    </div>
+                </div>
+                <div class="modal-footer" style="border:none;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="modal fade" id="bs-modal-select-store" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title fontUppercase" id="myModalLabel2">Notification</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <span>Currently you don't have any existing store to select. Please create new store.</span>
+                    </div>
+                </div>
+                <div class="modal-footer" style="border:none;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>                   
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+<!--add store-->
+<div class="modal fade" id="bs-modal-add-store" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title fontUppercase">Add Store</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="control-label">Choose the number of store(s) that you want to setup</label>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" style="color:#61bd3a;">Remaining store(s) can setup: <span id="lblNumOfStore">@Model.sNumOfStore</span></label>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Quantity:</label>
+                    <input type="text" class="form-control" id="txt-quantity">
+                </div>
+                <div class="form-group text-right">
+                    <span class="label label-danger" id="lblMsg"></span>
+                </div>
+            </div>
+            <div class="modal-footer" style="border:none;">
+                <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary " @*@string.Format("{0}", Model.NumOfStore == 0 ? "buttonDisabled": "")*@
+                        onclick="InputStoreInfoAddStore('#bs-modal-add-store', '#divStoreAuto')">
+                    Confirm
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!--Warning-->
+<div class="modal fade" id="bs-modal-warning-store" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Warning</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="control-label">You have not set up stores to all products. You can set up them later in My Store/ Business -> Stores.</label>
+                </div>
+            </div>
+            <div class="modal-footer" style="border:none;">
+                <button type="button" class="btn btn-primary fontUppercase" data-dismiss="modal" onclick="SubmitForm('#form-input-store')">dismiss</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+@*End Modal*@
+
+<script type="text/javascript">
+
+    var btnGlobal;
+    var StoreOffSet = -1;
+    $(document).ready(function (e) {
+        init_ICheckSelectStore();
+
+        /*===============*/
+        $("#bs-modal-select-store").on('show.bs.modal', function (event) {
+            btnGlobal = $(event.relatedTarget); // Button that triggered the modal
+            StoreOffSet = btnGlobal.data('offset');
+        });
+
+        /*===============*/
+        $("#bs-modal-add-store").on('show.bs.modal', function (event) {
+            $('#txt-quantity').val(1);
+            $('#lblMsg').html('');
+        });
+        @if(Model.ListStore != null && Model.ListStore.Count == 0)
+        {
+            <text>
+        InputStoreInfoAddStoreDefault('#divStoreAuto', 1);
+            </text>
+        }
+
+    });
+
+    /*Function*/
+
+    function init_ICheckSelectStore() {
+        if ($("input.flatSlectStore")[0]) {
+            $(document).ready(function () {
+                $('input.flatSlectStore').iCheck({
+                    radioClass: 'iradio_flat-blue'
+                });
+            });
+        }
+    };
+
+    $('#select-store tr').click(function (event) {
+        var row = $(this);
+        var _radio = row.find('input[type="radio"]');
+        _radio.prop('checked', true);
+        //========
+        $('input.flatSlectStore').iCheck({
+            radioClass: 'iradio_flat-blue'
+        });
+    });
+
+    function InputStoreInfoAddStoreDefault(ele, _NumberStore)
+    {
+        var _index = $('.ng-store-item').length;
+        $.ajax({
+            type: "GET",
+            url: CreateAbsoluteUrl("InputStoreInfoAddStore"),
+            traditional: true,
+            data: {
+                NumberStore: _NumberStore,
+                ProductID: '@Model.ID',
+                Index: _index
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                $(ele).append(data);
+                //=============
+                var _hidNumOfStore = parseInt($('#hidNumOfStore').val());
+                if (_hidNumOfStore != -1) {
+                    //_hidNumOfStore -= 1;
+                    _hidNumOfStore -= _NumberStore;
+                    $('#hidNumOfStore').val(_hidNumOfStore);
+                    $('[id=lblNumOfStore]').text(_hidNumOfStore);
+                    if (_hidNumOfStore == 0) {
+                        $('[id=btnaddmorestore]').addClass('hidden');
+                    }
+                }
+            },
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            },
+        });
+    }
+
+    //add Store
+    function InputStoreInfoAddStore(_modal, ele) {
+        var _NumberStore = $('#txt-quantity').val();
+        if (_NumberStore == '') {
+            $('#lblMsg').html('[Quantity] can\'t empty !!!');
+            $('#txt-quantity').focus();
+            return false;
+        }
+        else if (!$.isNumeric(_NumberStore)) {
+            $('#lblMsg').html('[Quantity] is a number');
+            $('#txt-quantity').focus();
+            return false;
+        }
+        else if (_NumberStore <= 0) {
+            $('#lblMsg').html('Please enter [Quantity] greater than to 0.');
+            $('#txt-quantity').focus();
+            return false;
+        }
+
+        var hidNumOfStore = parseInt($('#hidNumOfStore').val());
+        if (hidNumOfStore != -1) {
+            if (_NumberStore > hidNumOfStore) {
+                $('#lblMsg').html('Unable to input number of stores to set up more than remaining store(s).');
+                $('#txt-quantity').focus();
+                return false;
+            }
+            //hidNumOfStore = hidNumOfStore - _NumberStore;
+            //$('#hidNumOfStore').val(hidNumOfStore);
+        }
+        //==========
+        //var _index = $('.ng-store-item:visible').length;
+        var _index = $('.ng-store-item').length;
+        $.ajax({
+            type: "GET",
+            url: CreateAbsoluteUrl("InputStoreInfoAddStore"),
+            traditional: true,
+            data: {
+                NumberStore: _NumberStore,
+                ProductID: '@Model.ID',
+                Index: _index
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                $(_modal).modal('hide');
+                $(ele).append(data);
+                //=============
+                var _hidNumOfStore = parseInt($('#hidNumOfStore').val());
+
+                if (_hidNumOfStore != -1) {
+                    //_hidNumOfStore -= 1;
+                    _hidNumOfStore -= _NumberStore;
+                    $('#hidNumOfStore').val(_hidNumOfStore);
+                    $('[id=lblNumOfStore]').text(_hidNumOfStore);
+                    if (_hidNumOfStore == 0)
+                    {
+                        $('[id=btnaddmorestore]').addClass('hidden');
+                    }
+                }
+            },
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            },
+        });
+    }
+     var _TimeZone = "";
+    function GetTimeZones(id) {
+        var _Country = $('#txtStoreCountry' + id).val();
+        $.ajax({
+                    type: "GET",
+                    url: "@Url.Action("GetTimeZones", "YourCart")",
+                    traditional: true,
+                    data: {
+                        _Country: _Country,
+                        index: id
+                    },
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "html",
+                    success: function (data) {
+                        $('#TimeZones_' + id).html(data);
+                        if ($('#radExistingStore' + id).is(':checked')) {
+                            $("#txtStoreTimeZone" + id).prop("disabled", true);
+                            $("#txtStoreTimeZone" + id).val(_TimeZone).trigger("change");
+                            _TimeZone = "";
+                        }
+                    },
+                    beforeSend: function () {
+                        $('.se-pre-con').show();
+                    },
+                    complete: function () {
+                        $('.se-pre-con').hide();
+                    },
+            });
+    };
+    function SelectStoreInfo(_modal) {
+        var _storeId = $(_modal).find("input[name='SlectStore']:checked").val();
+        if (_storeId !=undefined && _storeId != '') {
+            $.ajax({
+                type: "GET",
+                url: CreateAbsoluteUrl("GetDetailStoreToJSon"),
+                traditional: true,
+                data: { StoreId: _storeId },
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (data) {
+                    $(_modal).modal('hide');
+                    data = JSON.parse(data);
+                    //=========
+                    _TimeZone = data.TimeZone;
+                    if (data.ImageURL == '')
+                        data.ImageURL = '/images/dummy/store.jpg';
+                    $("#lblStoreName-" + StoreOffSet).html(data.Name);
+                    $("#hidStoreName" + StoreOffSet).val(data.Name);
+                    $("#txtStoreStoreName" + StoreOffSet).val(data.Name);
+                    $("#txtStoreCountry" + StoreOffSet).val(data.Country).trigger("change");
+                    $("#txtStoreEmail" + StoreOffSet).val(data.Email);
+                    $("#txtStoreCity" + StoreOffSet).val(data.City);
+                    $("#txtStorePhone" + StoreOffSet).val(data.Phone);
+                    $("#txtStoreZipCode" + StoreOffSet).val(data.ZipCode);
+                    $("#txtStoreStreet" + StoreOffSet).val(data.Street);
+                    $("#txtStoreTaxCode" + StoreOffSet).val(data.GSTRegNo);
+                    $("#txtStoreIndustry" + StoreOffSet).val(data.StoreType).trigger("change");
+                    //$("#txtStoreTimeZone" + StoreOffSet).val(data.TimeZone);
+                    $("#upload-preview-create-store-" + StoreOffSet).attr("src", data.ImageURL);
+                    $("#hidImageURL" + StoreOffSet).val(data.ImageURL);
+                    $("#hidStoreID" + StoreOffSet).val(data.ID);
+
+                    $("#hidIsTempName" + StoreOffSet).val(data.Name);
+                    $("#hidIsTempEmail" + StoreOffSet).val(data.Email);
+                    $("#hidIsTempCity" + StoreOffSet).val(data.City);
+                    $("#hidIsTempGSTRegNo" + StoreOffSet).val(data.GSTRegNo);
+                    $("#hidIsTempPhone" + StoreOffSet).val(data.Phone);
+                    $("#hidIsTempStreet" + StoreOffSet).val(data.Street);
+                    $("#hidIsTempZipCode" + StoreOffSet).val(data.ZipCode);
+                    $("#hidIsTempCounTry" + StoreOffSet).val(data.Country);
+                    $("#hidIsTempTimeZone" + StoreOffSet).val(data.TimeZone);
+                    $("#hidIndustry" + StoreOffSet).val(data.StoreType);
+
+                    if ($('#chkActive' + StoreOffSet).is(':checked')) { } else {
+                        $('#chkActive' + StoreOffSet).iCheck('check');
+                    }
+
+                    StoreOffSet = -1;
+                },
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+            });
+        }
+    }
+
+    function DeleteStore(OffSet) {
+        var div = $('#divStoreTemp-' + OffSet);
+        $(div).find('#hidIsDelete' + OffSet).val(true);
+        $(div).hide();
+        $(div).addClass('IsHide');
+        //==========
+        var hidNumOfStore = parseInt($('#hidNumOfStore').val());
+        if (hidNumOfStore != -1) {
+            hidNumOfStore += 1;
+            $('#hidNumOfStore').val(hidNumOfStore);
+            $('[id=lblNumOfStore]').text(hidNumOfStore);
+            if (hidNumOfStore > 0) {
+                $('[id=btnaddmorestore]').removeClass('hidden');
+            }
+        }
+    }
+
+    $("#form-input-store").submit(function (e) {
+        var isSubmit = $(this).valid();
+        var count = $(".ng-store-item").length;
+        for (var i = 0; i < count; i++){
+            if (!$('#divStoreTemp-' + i).hasClass('IsHide')) {
+                if ($('#radExistingStore' + i).prop('checked')) {
+                    if ($("#txtStoreEmail" + i).val() == '' || $("#txtStorePhone" + i).val() == '') {
+                        alert('Please choose store information');
+                        isSubmit = false;
+                        break;
+                    }
+                }
+            }
+        }
+        if (isSubmit) {
+            $.ajax({
+                url: CreateAbsoluteUrl("CreateStoreInfoTemp"),
+                type: "POST",
+                data: new FormData(this),
+                processData: false,
+                contentType: false,
+                dataType: "html",
+                success: function (data) {
+                    data = JSON.parse(data);
+                    var countItemCart = data.ListItems.length;
+                    createOrUpdateOrder('@Model.CusId', data.ID, countItemCart);
+                    getOrder();
+                    window.location.assign(CreateAbsoluteUrl('CheckOut'));
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    //$("#tabStore").html(jqXHR.responseText);
+                    //alert(jqXHR.responseText);
+                    $("#divStoreAuto").html(jqXHR.responseText);
+                },
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+            });
+        }
+        @*var isSubmit = $(this).valid();
+        if (isSubmit) {
+            $.ajax({
+                url: CreateAbsoluteUrl("CreateStoreInfoTemp"),
+                type: "POST",
+                data: new FormData(this),
+                processData: false,
+                contentType: false,
+                dataType: "html",
+                success: function (data) {
+                    data = JSON.parse(data);
+                    var countItemCart = data.ListItems.length;
+                    createOrUpdateOrder('@Model.CusId', data.ID, countItemCart);
+                    getOrder();
+                    window.location.assign(CreateAbsoluteUrl('CheckOut'));
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    //$("#tabStore").html(jqXHR.responseText);
+                    //alert(jqXHR.responseText);
+                    ///$("#divStoreAuto").html(jqXHR.responseText);
+                },
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+            });
+        }
+        e.preventDefault();*@
+       e.preventDefault();
+    });
+    function changeIndustry(type, index) {
+        if (type == '@Commons.EType.NuPOS.ToString("d")' || type == '@Commons.EType.NuKiosk.ToString("d")' || type == '@Commons.EType.NuDisplay.ToString("d")') {
+            $('#txtStoreIndustry' + index).val('@Commons.EStoreType.FnB.ToString("d")').trigger("change");
+            $('#hidIndustry' + index).val('@Commons.EStoreType.FnB.ToString("d")');
+            $("#txtStoreIndustry" + index).prop("disabled", true);
+            Istrue = "1";
+        } else if (type == '@Commons.EType.POZZ.ToString("d")' || type == '@Commons.EType.POZZ_Display.ToString("d")' || type == '@Commons.EType.POZZ_Kiosk.ToString("d")') {
+            $('#txtStoreIndustry' + index).val(@Commons.EStoreType.Beauty.ToString("d")).trigger("change");
+            $("#txtStoreIndustry" + index).prop("disabled", true);
+            $('#hidIndustry' + index).val('@Commons.EStoreType.Beauty.ToString("d")');
+            Istrue = "1";
+        } else if (type == '@Commons.EType.POinS_Link_App.ToString("d")') {
+            $('#txtStoreIndustry' + index).val('@Commons.EStoreType.FnB.ToString("d")').trigger("change");
+            if ($('.IsCheckCreate' + index).is(":checked"))
+                $("#txtStoreIndustry" + index).prop("disabled", false);
+            else
+                $("#txtStoreIndustry" + index).prop("disabled", true);
+            Istrue = "0";
+        }
+    }
+    function ReverseData(index) {
+        if ('@ViewBag.CountryDefault' != "")
+            $("#txtStoreCountry" + index).val("@ViewBag.CountryDefault").trigger("change");
+        $("#txtStoreStoreName" + index).val("");
+        $("#txtStoreEmail" + index).val("");
+        $("#txtStoreCity" + index).val("");
+        $("#txtStorePhone" + index).val("");
+        $("#txtStoreZipCode" + index).val("");
+        $("#txtStoreStreet" + index).val("");
+        $("#txtStoreTaxCode" + index).val("");
+    }
+</script>

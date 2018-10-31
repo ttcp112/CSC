@@ -1,0 +1,98 @@
+﻿@model List<NSCSC.Shared.Models.ClientSite.OurProDucts.OurProDuctsModel>
+    @{
+        ViewBag.Title = "Start Your Free Trial";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+@{ 
+    var _CusId = Model != null && Model.Count > 0 ? Model.FirstOrDefault().CusId : "0";
+}
+    <div class="title_left">
+        <div class="container">
+            @*<div class="col-sm-12 col-xs-12 col-md-12" style="margin-top:-25px;float:right">*@
+            <h3>
+                START YOUR FREE TRIAL
+                <small class="breadcrum">
+                    <a href="@Url.Action("Index", "Home")">home</a>
+                    <i class='fa fa-caret-right'></i>
+                    <span>Start Your Free Trial</span>
+                </small>
+            </h3>
+        </div>
+        <div class="clearfix"></div>
+        @*</div>*@
+    </div>
+    <div class="form-horizontal form-label-left listItemYourCart">
+        <div class="form-group itemProduct pading-top-bottom">
+            <div class="row infoProduct" style="padding-bottom:10px;">
+                <div class="col-md-12 col-sm-12 col-xs-12" style="font-size:15px; padding: 3px 15px 20px 15px;">
+                    <div class="col-md-12 col-sm-12 col-xs-2">
+                        Please select one product that you want to start free trial
+                    </div>
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+
+                    <div id="category">
+                        @foreach (var item in Model)
+                        {
+                        <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+                            <a href="javascript:void(0)" onclick="CheckoutFreeTrial('@item.ID','@item.CategoryId'); return false;">
+                                <div class="form-group text-center imageProduct">
+                                    @if (string.IsNullOrEmpty(item.ImageURL))
+                                    {
+                                        <img class="img-cate" src="~/images/dummy/product.jpg" />
+                                    }
+                                    else
+                                    {
+                                        <img class="img-cate" src="@item.ImageURL" />
+                                    }
+                                </div>
+                                <div class="form-group">
+                                    @item.Name
+                                </div>
+                            </a>
+
+                        </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function CheckoutFreeTrial(Id, CateID) {
+            $.ajax({
+                type: "GET",
+                url: CreateAbsoluteUrl("AddToCartOfProductFreeTrial"),
+                traditional: true,
+                data: {
+                    Id: Id,
+                    CateID: CateID
+                },
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (data) {
+                    data = JSON.parse(data);
+                    //=========
+                    var countItemCart = data.TotalQuantity;//data.ListItems.length;
+                    createOrUpdateOrder('@_CusId', data.ID, countItemCart);
+                    getOrder('@_CusId');
+                    //=========
+                    // Redirect to page category of item
+                    window.location.assign('@Url.Action("Index", "YourCart")');
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(jqXHR.statusText)
+                   // $('#lblMsg').html(jqXHR.statusText);
+                    //if (jqXHR.status == 400) {
+                    //    deleteOrder();
+                    //}
+                },
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+            });
+        }
+    </script>

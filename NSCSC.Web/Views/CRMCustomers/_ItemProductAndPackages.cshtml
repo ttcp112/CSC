@@ -1,0 +1,80 @@
+﻿@model NSCSC.Shared.Models.CRM.Customers.CustomerBaseModels
+@using NSCSC.Shared
+@{
+    var _ID = Model.CustomerDetail.ID;
+}
+
+@if (Model.ProductManagement.ListProductPackage != null && Model.ProductManagement.ListProductPackage.Count > 0)
+{
+    foreach (var item in Model.ProductManagement.ListProductPackage)
+    {
+        <tr>
+            <td>@item.ItemName</td>
+            <td>@item.sType</td>
+            <td>@item.BoughtTime.Value.ToString(Commons.FormatDateTime)</td>
+            <td>@item.sActivateTime</td>
+            <td>@item.sExpiryDate</td>
+            <td>@item.ReceiptNo</td>
+            <td>@item.Status</td>
+            <td>
+                @if (item.Status.Equals(Commons.EStatusAccountFunction.Active.ToString()))
+                {
+                    if (item.PeriodType != (byte)Commons.EPeriodType.OneTime)
+                    {
+                        if (item.ExpiryDate != null && item.ExpiryDate.Value.ToString("dd/MM/yyyy") != Commons.MinDate.ToString("dd/MM/yyyy") && item.ActivateTime != null)
+                        {
+                            <a href="javascript:void(0)" class="btn btn-xs btn-info" data-toggle="modal"
+                               data-backdrop="static" onclick="ShowExtendProductPackageMana('@item.AssetID','@item.ItemID')">
+                                <i class="fa fa-edit"></i>&nbsp;Extend
+                            </a>
+                        }
+                    }
+                    <a href="javascript:void(0)" class="btn btn-xs btn-success" data-toggle="modal"
+                       data-backdrop="static" onclick="ShowDetailProductPackageMana('@item.AssetID','@_ID')">
+                        <i class="fa fa-pie-chart"></i>&nbsp;Detail
+                    </a>
+                                        <a href="javascript:void(0)" class="btn btn-xs btn-danger"
+                                           onclick="ChangeStatusProductPackage('active', '0', '@item.AssetID','@_ID')"><i class="fa fa-check"></i>&nbsp;Inactive</a>
+                }
+                else if (item.Status.Equals(Commons.EStatusAccountFunction.Inactive.ToString()))
+                {
+                    if (item.PeriodType != (byte)Commons.EPeriodType.OneTime)
+                    {
+                        if (item.ExpiryDate != null && item.ExpiryDate.Value.ToString("dd/MM/yyyy") != Commons.MinDate.ToString("dd/MM/yyyy") && item.ActivateTime != null)
+                        {
+                            <a href="javascript:void(0)" class="btn btn-xs btn-info" data-toggle="modal"
+                               data-backdrop="static" onclick="ShowExtendProductPackageMana('@item.AssetID','@item.ItemID')">
+                                <i class="fa fa-edit"></i>&nbsp;Extend
+                            </a>
+                        }
+                    }
+                    <a href="javascript:void(0)" class="btn btn-xs btn-success" data-toggle="modal"
+                       data-backdrop="static" onclick="ShowDetailProductPackageMana('@item.AssetID','@_ID')">
+                        <i class="fa fa-pie-chart"></i>&nbsp;Detail
+                    </a>
+                                        <a href="javascript:void(0)" class="btn btn-xs btn-primary" onclick="ChangeStatusProductPackage('active', '0', '@item.AssetID','@_ID')">
+                                            <i class="fa fa-check"></i>&nbsp;Active
+                                        </a>
+                }
+                else if (item.Status.Equals(Commons.EStatusAccountFunction.Expired.ToString()))
+                {
+                    if (item.PeriodType != (byte)Commons.EPeriodType.OneTime)
+                    {
+                        if (item.ExpiryDate != null && item.ExpiryDate.Value.ToString("dd/MM/yyyy") != Commons.MinDate.ToString("dd/MM/yyyy") && item.ActivateTime != null)
+                        {
+                            <a href="javascript:void(0)" class="btn btn-xs btn-info" data-toggle="modal"
+                               data-backdrop="static" onclick="ShowExtendProductPackageMana('@item.AssetID','@item.ItemID')">
+                                <i class="fa fa-edit"></i>&nbsp;Extend
+                            </a>
+                        }
+                    }
+                    <a href="javascript:void(0)" class="btn btn-xs btn-success" data-toggle="modal"
+                       data-backdrop="static" onclick="ShowDetailProductPackageMana('@item.AssetID','@_ID')">
+                        <i class="fa fa-pie-chart"></i>&nbsp;Detail
+                    </a>
+                }
+            </td>
+        </tr>
+
+    }
+}

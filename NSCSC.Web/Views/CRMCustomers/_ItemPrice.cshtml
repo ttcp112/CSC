@@ -1,0 +1,33 @@
+﻿@using NSCSC.Shared
+@model NSCSC.Shared.Models.SandBox.Inventory.Product.ProductPriceModels
+
+<tr class="ng-Price_@Model.ProductOffSet" id="tr_add_price_@Model.OffSet" data-value="@Model.OffSet"
+    style="@string.Format("display:{0}", Model.Status != (int)Commons.EStatus.Deleted ? "table-row" : "none");">
+    <td class="" style="text-align: left">
+        @if (Model.PeriodType != (int)Commons.EPeriodType.OneTime)
+        {
+            <span id="lblperiod_@Model.OffSet">@Model.Period</span>
+        }
+        else if(Model.PeriodType == (int)Commons.EPeriodType.OneTime)
+        {
+            <span hidden id="lblperiod_@Model.OffSet">@Model.Period</span>
+        }
+        <span id="lblnameperiodtype_@Model.OffSet">@Model.NamePeriodType</span>
+    </td>
+    <td class="text-center">@Html.Raw(ViewBag.CurrencySymbol)<span id="lblprice_@Model.OffSet">@Model.Price.ToString("#,0.00")</span></td>   
+    <td class="text-center">
+        @*<a href="javascript:void(0)" class="btn btn-danger btn-xs delete details" onclick="DeletePrice('@Model.OffSet'); return false;">
+            <i class="fa fa-trash-o"></i>
+        </a>*@
+        @Html.CheckBox(string.Format("CustomerDetail.ListProduct[{0}].ListPrice[{1}].IsActive", Model.ProductOffSet, Model.OffSet), Model.IsActive, new { @class = "", @onClick = "CheckBoxForChildProduct(this, " + Model.OffSet + ")" })
+
+        @Html.Hidden(string.Format("CustomerDetail.ListProduct[{0}].ListPrice[{1}].ID", Model.ProductOffSet, Model.OffSet), Model.ID)
+        @Html.Hidden(string.Format("CustomerDetail.ListProduct[{0}].ListPrice[{1}].OffSet", Model.ProductOffSet, Model.OffSet), Model.OffSet)
+        @Html.Hidden(string.Format("CustomerDetail.ListProduct[{0}].ListPrice[{1}].PeriodType", Model.ProductOffSet, Model.OffSet), Model.PeriodType, new { })
+        @Html.Hidden(string.Format("CustomerDetail.ListProduct[{0}].ListPrice[{1}].Period", Model.ProductOffSet, Model.OffSet), Model.Period, new { })
+        @Html.Hidden(string.Format("CustomerDetail.ListProduct[{0}].ListPrice[{1}].Price", Model.ProductOffSet, Model.OffSet), Model.Price, new { })
+        @Html.Hidden(string.Format("CustomerDetail.ListProduct[{0}].ListPrice[{1}].Status", Model.ProductOffSet, Model.OffSet), Model.Status, new { @class = "PriceStatus" })
+        @Html.Hidden(string.Format("CustomerDetail.ListProduct[{0}].ListPrice[{1}].NamePeriodType", Model.ProductOffSet, Model.OffSet), Model.NamePeriodType, new { })
+        @*@Html.Hidden(string.Format("CustomerDetail.ListProduct[{0}].ListPrice[{1}].IsActive", Model.ProductOffSet, Model.OffSet), Model.IsActive, new { @class = "PriceSelect" })*@
+    </td>
+</tr>

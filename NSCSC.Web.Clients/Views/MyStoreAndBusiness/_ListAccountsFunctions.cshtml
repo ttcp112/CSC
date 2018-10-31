@@ -1,0 +1,543 @@
+﻿@model NSCSC.Shared.Models.ClientSite.MyStoreAndBusiness.MyStoreAndBusinessViewModels
+@using NSCSC.Shared
+@{
+    ViewBag.Title = "Accounts and Functions";
+    Html.EnableUnobtrusiveJavaScript(true);
+}
+
+@*Accounts*@
+<div id="table-account-desktop">
+    
+    <div class="table-responsive" style="overflow-x:hidden; padding:10px 30px;">
+        <div class="x_panel">
+            <div class="x_title">
+                <h3 class="text-uppercase font-size-15 font-bold">Accounts</h3>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content box-datatable-js" style="padding:10px 0;">
+                <table id="datatable-responsive-list-account-update" class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action" role="grid" aria-describedby="example_info" cellspacing="0" style="width:100%;">
+                    <thead style="background-color:#D9E0E8; color:#000;">
+                        <tr class="hidden">
+                            <th class="text-center">License Key</th>
+                            <th class="text-center">Type</th>
+                            <th>Account</th>
+                            <th class="text-center">Activated Time</th>
+                            <th class="text-center">Expiry Date</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @if (Model.ListAccount != null)
+                        {
+                            for (int i = 0; i < Model.ListAccount.Count; i++)
+                            {
+                                var item = Model.ListAccount[i];
+                                string styleRow = "row-evenItem";
+                                if (i % 2 == 0)
+                                {
+                                    styleRow = "row-oddItem";
+                                }
+                                <tr class="@styleRow">
+                                    <td>@item.LicenseKey</td>
+                                    <td class="text-center">@string.Format("{0}", item.sProductType)</td>
+                                    <td>@item.Account</td>
+                                    <td>@item.sActivateTime</td>
+                                    <td class="text-center">
+                                        @if (item.IsSupperAdmin)
+                                        {@: Never
+                                        }
+                                        else
+                                        {@item.sExpiryDate}
+                                    </td>
+                                    <td class="text-center">
+                                        @if (item.IsSupperAdmin)
+                                        {@: Active
+                                        }
+                                        else
+                                        {@item.Status}
+                                    </td>
+                                    <td class="text-center">
+                                        @if (item.Status == Commons.EStatusAccountFunction.Active.ToString())
+                                        {
+                                            <a href="javascript:void(0)" class="btn btn-inactive"
+                                               onclick="ChangeStatusAccountFuction('#tabAccountFuction','account','@item.AssetAccountID')" style="padding:1px 6px">
+                                                Inactive
+                                            </a>
+                                        }
+                                        else if (item.Status == Commons.EStatusAccountFunction.Inactive.ToString())
+                                        {
+                                            <a class="btn btn-active" href="javascript:void(0)"
+                                               onclick="ChangeStatusAccountFuction('#tabAccountFuction','account','@item.AssetAccountID')" style="padding:1px 6px">
+                                                Active
+                                            </a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div id="table-account-mobile">
+    
+    <div class="table-responsive" style="overflow-x:hidden; padding:10px 30px;">
+        <div class="x_panel">
+            <div class="x_title">
+                <h3 class="text-uppercase font-size-15 font-bold">Accounts</h3>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content box-datatable-js" style="padding:10px 0;">
+                <table id="datatable-responsive-list-account-update-mobile" class="table" role="grid" aria-describedby="example_info" cellspacing="0" style="width:100%;">
+                    <tbody>
+                        @if (Model.ListAccount != null)
+                        {
+                            for (int i = 0; i < Model.ListAccount.Count; i++)
+                            {
+                                var item = Model.ListAccount[i];
+                                string styleRow = "row-evenItem";
+                                if (i % 2 == 0)
+                                {
+                                    styleRow = "row-oddItem";
+                                }
+                        <tr class="@styleRow">
+                            <td><span style="text-align:left;font-weight:bold">License Key: </span>@item.LicenseKey</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="@styleRow">
+                            <td><span style="text-align:left;font-weight:bold">Type: </span>@string.Format("{0}", item.sProductType)</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="@styleRow">
+                            <td><span style="text-align:left;font-weight:bold">Account: </span>@item.Account</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="@styleRow">
+                            <td><span style="text-align:left;font-weight:bold">Activated Time: </span>@item.sActivateTime</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="@styleRow">
+                            <td class="text-left">
+                                <span style="text-align:left;font-weight:bold">Expiry Date: </span>
+                                @if (item.IsSupperAdmin)
+                                {@: Never
+                                }
+                                else
+                                {@item.sExpiryDate}
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="@styleRow">
+                            <td class="text-left">
+                                <span style="text-align:left;font-weight:bold">Status: </span>
+                                @if (item.IsSupperAdmin)
+                                {@: Active
+                                }
+                                else
+                                {@item.Status}
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="@styleRow" style="border-bottom: 1px solid #ddd">
+                            <td class="text-left">
+                                <span style="text-align:left;font-weight:bold">Action: </span>
+                                @if (item.Status == Commons.EStatusAccountFunction.Active.ToString())
+                                {
+                                    <a href="javascript:void(0)" class="btn btn-inactive"
+                                       onclick="ChangeStatusAccountFuction('#tabAccountFuction','account','@item.AssetAccountID')" style="padding:1px 6px">
+                                        Inactive
+                                    </a>
+                                }
+                                else if (item.Status == Commons.EStatusAccountFunction.Inactive.ToString())
+                                {
+                                    <a class="btn btn-active" href="javascript:void(0)"
+                                       onclick="ChangeStatusAccountFuction('#tabAccountFuction','account','@item.AssetAccountID')" style="padding:1px 6px">
+                                        Active
+                                    </a>
+                                }
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@*Functions*@
+<div id="table-function-desktop">
+    
+    <div class="x_panel">
+        <div class="x_content">
+            <div class="table-responsive table-function-desktop" style="overflow-x:hidden; padding:10px 30px;">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h3 class="text-uppercase font-size-15 font-bold">Functions</h3>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content box-datatable-js" style="padding:10px 0;">
+                        <table id="datatable-responsive-list-function-update" class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action" role="grid" aria-describedby="example_info" cellspacing="0" style="width:100%;">
+                            <thead style="background-color:#D9E0E8; color:#000;">
+                                <tr>
+                                    <th class="text-center">License Key</th>
+                                    <th>Function</th>
+                                    <th class="text-center">Activated Time</th>
+                                    <th class="text-center">Expiry Date</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.ListFunction != null)
+                                {
+                                    for (int i = 0; i < Model.ListFunction.Count; i++)
+                                    {
+                                        var item = Model.ListFunction[i];
+                                        string styleRow = "row-evenItem";
+                                        if (i % 2 == 0)
+                                        {
+                                            styleRow = "row-oddItem";
+                                        }
+                                        <tr class="@styleRow">
+                                            <td class="text-center">@item.LicenseKey</td>
+                                            <td>@item.FunctionName</td>
+                                            <td class="text-center">@item.sActivateTime</td>
+                                            <td class="text-center">@item.sExpiryDate</td>
+                                            <td class="text-center">@item.Status</td>
+                                            <td class="text-center">
+                                                @if (item.Status == Commons.EStatusAccountFunction.Active.ToString())
+                                                {
+                                                    <a href="javascript:void(0)" class="btn btn-inactive"
+                                                       onclick="ChangeStatusAccountFuction('#tabAccountFuction','function','@item.AssetFunctionID')">
+                                                        Inactive
+                                                    </a>
+                                                }
+                                                @if (item.Status == Commons.EStatusAccountFunction.Inactive.ToString())
+                                                {
+                                                    <a href="javascript:void(0)" class="btn btn-active"
+                                                       onclick="ChangeStatusAccountFuction('#tabAccountFuction','function','@item.AssetFunctionID')">
+                                                        Active
+                                                    </a>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="table-function-mobile">
+    
+    <div class="x_panel">
+        <div class="x_content">
+            <div class="table-responsive table-function-desktop" style="overflow-x:hidden; padding:10px 30px;">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h3 class="text-uppercase font-size-15 font-bold">Functions</h3>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content box-datatable-js" style="padding:10px 0;">
+                        <table id="datatable-responsive-list-function-update-mobile" class="table" role="grid" aria-describedby="example_info" cellspacing="0" style="width:100%;">
+                            <thead style="background-color:#D9E0E8; color:#000;">
+                                <tr class="hidden">
+                                    <th class="text-center">License Key</th>
+                                    <th>Function</th>
+                                    <th class="text-center">Activated Time</th>
+                                    <th class="text-center">Expiry Date</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.ListFunction != null)
+                                {
+                                    for (int i = 0; i < Model.ListFunction.Count; i++)
+                                    {
+                                        var item = Model.ListFunction[i];
+                                        string styleRow = "row-evenItem";
+                                        if (i % 2 == 0)
+                                        {
+                                            styleRow = "row-oddItem";
+                                        }
+                                <tr class="@styleRow">
+                                    <td class="text-left"><span style="text-align:left;font-weight:bold">License Key: </span>@item.LicenseKey</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr class="@styleRow">
+                                    <td><span style="text-align:left;font-weight:bold">Function: </span>@item.FunctionName</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr class="@styleRow">
+                                    <td class="text-left"><span style="text-align:left;font-weight:bold">Activated Time: </span>@item.sActivateTime</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr class="@styleRow">
+                                    <td class="text-left"><span style="text-align:left;font-weight:bold">Expiry Date: </span>@item.sExpiryDate</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr class="@styleRow">
+                                    <td class="text-left"><span style="text-align:left;font-weight:bold">Status: </span>@item.Status</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr class="@styleRow" style="border-bottom: 1px solid #ddd">
+                                    <td class="text-left">
+                                        <span style="text-align:left;font-weight:bold">Action: </span>
+                                        @if (item.Status == Commons.EStatusAccountFunction.Active.ToString())
+                                        {
+                                            <a href="javascript:void(0)" class="btn btn-inactive"
+                                               onclick="ChangeStatusAccountFuction('#tabAccountFuction','function','@item.AssetFunctionID')">
+                                                Inactive
+                                            </a>
+                                        }
+                                        @if (item.Status == Commons.EStatusAccountFunction.Inactive.ToString())
+                                        {
+                                            <a href="javascript:void(0)" class="btn btn-active"
+                                               onclick="ChangeStatusAccountFuction('#tabAccountFuction','function','@item.AssetFunctionID')">
+                                                Active
+                                            </a>
+                                        }
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                        
+                                        }
+                                        }
+                                    </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var displayLength = 25;
+    //=============Account
+    var _tableAccount = null;   
+    var _settingsOptionTableAccount = {
+        "columnDefs": [
+            { "orderable": false, "targets": [1, 2, 5, 6] },
+            { "width": "10%", "targets": [1, 4, 5, 6] },
+        ],
+        "order": [
+            [0, "desc"],
+        ],
+        "responsive": true,
+        "autoWidth": true,
+        "searching": true,
+        //"info": false,
+        "lengthChange": true,
+        "paging": true,
+        "displayLength": displayLength,
+        "sPaginationType": "numbers",//hide Pre|Next on row footer
+        "ordering": true, //hide Order on row header
+    };
+    ///for mobile    
+    var _tableAccountmobile = null;
+    var _settingsOptionTableAccountmobile = {
+        "columnDefs": [
+            {
+                "targets": [1],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [2],
+                "visible": false
+            },
+            {
+                "targets": [3],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [4],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [5],
+                "visible": false
+            },
+            {
+                "targets": [6],
+                "visible": false,
+                "searchable": false
+            },
+        ],
+        "searching": true,
+        "bInfo": false,
+        "ordering": false,
+        "paging": false,
+        "lengthChange": false,
+    };    //=============Function
+    var _tableFunction = null;
+   
+    var _settingsOptionTableFunction = {
+        "columnDefs": [
+            { "orderable": false, "targets": [1, 4, 5] },
+            { "width": "10%", "targets": [4, 5] },
+        ],
+        "order": [
+            [0, "desc"],
+        ],
+        "responsive": true,
+        "autoWidth": true,
+        "searching": true,
+        //"info": false,
+        "lengthChange": true,
+        "paging": true,
+        "displayLength": displayLength,
+        "sPaginationType": "numbers",//hide Pre|Next on row footer
+        "ordering": false, //hide Order on row header
+    };
+
+    /// function for mobile
+    var _tableFunctionmobile = null;
+    var _settingsOptionTableFunctionmobile = {
+        "columnDefs": [
+            {
+                "targets": [1],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [2],
+                "visible": false
+            },
+            {
+                "targets": [3],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [4],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [5],
+                "visible": false,
+                "searchable": false
+            },
+        ],
+        "searching": true,
+        "bInfo": false,
+        "ordering": false,
+        "paging": false,
+        "lengthChange": false,
+    };
+
+    $(document).ready(function (e) {
+
+        _tableAccount = $('#datatable-responsive-list-account-update').DataTable($.extend(true, {}, _settingsOptionTableAccount));
+        _tableFunction = $('#datatable-responsive-list-function-update').DataTable($.extend(true, {}, _settingsOptionTableFunction));
+
+        _tableAccountmobile = $('#datatable-responsive-list-account-update-mobile').DataTable($.extend(true, {}, _settingsOptionTableAccountmobile));
+        _tableFunctionmobile = $('#datatable-responsive-list-function-update-mobile').DataTable($.extend(true, {}, _settingsOptionTableFunctionmobile));
+    });
+
+    /*Function*/
+    function ChangeStatusAccountFuction(ele, _type, _ID) {
+        $.ajax({
+            type: "GET",
+            url: CreateAbsoluteUrl("ChangeStatusAccountFuction"),
+            traditional: true,
+            data: {
+                type: _type,
+                ID: _ID
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                GetListAccountFunction(ele);
+                // GetListAccountFunction('#tabAccountFuction');
+            },
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            },
+        });
+    }
+
+</script>

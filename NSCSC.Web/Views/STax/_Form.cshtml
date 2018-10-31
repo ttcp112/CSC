@@ -1,0 +1,524 @@
+﻿
+@model NSCSC.Shared.Models.Settings.Tax.TaxModels
+@using NSCSC.Shared
+@{
+    Html.EnableUnobtrusiveJavaScript(true);
+    var _ID = Model.Id;
+    var _Class = Model.IsAllItem ? "hidden" : "";
+}
+@if (!string.IsNullOrEmpty(_ID))
+{
+    @Html.Hidden("Id", Model.Id)
+}
+
+<div class="row form-horizontal form-label-left" style="margin-bottom:15px;">
+
+    @* Name*@
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12">Tax Name</label>
+        <div class="col-md-4 col-sm-4 col-xs-12">
+            @Html.TextBoxFor(model => model.TaxName, new { @id = "txtName", @class = "form-control", placeholder = "Name", autocomplete = "off" })
+            @Html.ValidationMessageFor(model => model.TaxName, null, new { @class = "label" })
+        </div>
+        <label class="col-md-1 control-label">Active</label>
+        <div class="col-md-2">
+            <label>@Html.CheckBoxFor(model => model.IsActive, new { @id = "IsActive", @class = "js-switch-chk" })</label>
+        </div>
+    </div>
+    @*Type *@
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12">Type</label>
+        <div class="col-md-4 col-sm-4 col-xs-12">
+            <div>
+                @Html.DropDownListFor(model => model.TaxType,
+                new SelectList(Model.ListType, "Value", "Text", Model.TaxType), null,
+                new
+                {
+                    @class = "form-control select2_multiple ",
+                    @id = "ddlType",
+                    @style = "width:100%;"
+                })
+            </div>
+            @Html.ValidationMessageFor(model => model.TaxType, null, new { @class = "label" })
+        </div>
+        <label class="control-label col-md-1 col-sm-1 col-xs-12">Percent</label>
+        <div class="col-md-2 col-sm-2 col-xs-12">
+            <div class="input-group">
+                @Html.TextBoxFor(model => model.TaxPercent, new { @id = "txtName", @class = "form-control keyNumber", data_type = "float", autocomplete = "off", type = "number", min = "0" })
+                <span class="input-group-btn">
+                    <label class="btn btn-primary" style="cursor:text">%</label>
+                </span>
+            </div>
+            @Html.ValidationMessageFor(model => model.TaxPercent, null, new { @class = "label" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12">Applicable Items</label>
+        <div class="col-md-10 col-sm-10 col-xs-12 topDotBorder"></div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 col-sm-2 col-xs-12 control-label">Total: </label>
+        <div class="col-md-10 col-sm-10 col-xs-12" id="txtTotal">@String.Format("{0}",Model.IsAllItem ? Model.TotalAllItem : Model.TotalSpecipicItem) items</div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 col-sm-2 col-xs-12 control-label">
+        </label>
+        <div class="col-md-10 col-sm-10 col-xs-12">
+            @Html.RadioButtonFor(model => model.IsAllItem, "true", new { @class = "flat radAllItems", @name = "radAllItems" }) All items
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 col-sm-2 col-xs-12 control-label">
+        </label>
+        <div class="col-md-10 col-sm-10 col-xs-12">
+            @Html.RadioButtonFor(model => model.IsAllItem, "false", new { @class = "flat radSpecificItems", @name = "radSpecificItems" }) Specific items
+        </div>
+    </div>
+
+    <div id="divItems" class="@_Class">
+        <div class="form-group" style="border-bottom:0px;">
+            <label class="col-md-2 col-sm-2 col-xs-12"></label>
+            <div for="" class="col-md-2 col-sm-2 col-xs-12">
+                <a id="btn-add-more-tab" href="javascript:void(0)" class="btn btn-primary btn-sm a-fnb" style="font-size:15px;"
+                   data-toggle="modal" data-target="#modal-choose-items" data-whatever="@Model.offset"
+                   @*data-toggle="modal" data-backdrop="static" data-target=".bs-example-modal-lg-categories" col-md-offset-1 col-md-1 col-sm-12 col-xs-12 *@>
+                    <i class="fa fa-plus-square" style="font-size:14px;"></i>
+                    <span>Add New</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="form-group" style="height:500px;overflow-y:auto">
+            <label class="col-md-2 col-sm-2 col-xs-12"></label>
+            <div class="col-md-10 col-sm-10 col-xs-12">
+                <table class="table center-content table-item-products-vession-9999">
+                    <thead>
+                        <tr style="background-color:#34495e; color:#fff;">
+                            <th width="30%">Item Code</th>
+                            <th width="50%">Item Name</th>
+                            <th width="10%"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="body-dishes">
+                        @if (Model.ListProduct != null && Model.ListProduct.Count > 0)
+                        {
+                            @Html.Partial("_ProductsItem", Model)
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    @*-----Applicable Items-------*@
+    <div class="form-group">
+        @*<label class="control-label col-md-2 col-sm-2 col-xs-12">Applicable Items</label>
+        <div class="col-md-4 col-sm-4 col-xs-12">
+
+
+            @Html.TextBoxFor(model => model.ItemDetail, new
+       {
+           @class = "form-control txtItemForProduct",
+           @placeholder = "Select Items",
+           @readonly = "readonly",
+           @id = "txtApplicableItems_" + Model.offset + "",
+           @onfocus = "ShowModalAddProduct('@Model.offset')"
+       })
+            @Html.ValidationMessageFor(model => model.ItemDetail, null, new { @class = "label" })
+
+        </div>*@
+        <!-- Modal Add Item-->
+        <div class="modal fade" id="modalItems" tabindex="-1" role="dialog" aria-labelledby="modalItemLabel" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="overflow:auto;">
+                    <div class="modal-header">
+                        <h4 class="modal-title" style="font-weight:bold;">Add Specific Items</h4>
+                    </div>
+                    <div class="modal-body scroll" id="popupSpending">
+                        <div class="form-group-sm" style="overflow: auto; height: 500px;">
+                            <table class="table center-content">
+                                <thead>
+                                    <tr style="background-color:#34495e; color:#fff;">
+                                        <th width="30%">Item Code</th>
+                                        <th width="50%">Item Name</th>
+                                        <th width="10%"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="body-dishes">
+                                    @if (Model.ListProduct != null && Model.ListProduct.Count > 0)
+                                    {
+                                        @Html.Partial("_ProductsItem", Model)
+                                    }
+                                    <tr id="a">
+                                        <td colspan="4" style="padding-top:12px; text-align:left">
+                                            <a href="#" data-toggle="modal" data-target="#modal-choose-items" data-whatever="@Model.offset" class="a-fnb" style="font-size:14px; color:#34495e;">
+                                                <i class="fa fa-plus"></i>
+                                                <span>Add more</span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <span></span>
+                        <button class="btn btn-default" onclick="PasteHtml($(this).parents('.modal-content:first').find('table > tbody'));" data-dismiss="modal">Cancel</button>
+                        <button id="btn-save-dish" type="button" class="btn btn-beauty bg-fnb" data-dismiss="modal" onclick="SetProductNameTax('@Model.offset')">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*-----Applicable Items-------*@
+    @*<div class="form-group">
+            <div class="productsitems">
+                <div class="table-responsive1" style="width:80%; margin-left:5%">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><b>Applicable Items</b></h2>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                            <a href="javascript:void(0)" class="btn btn-success" id="btn-actives" data-whatever="@Model.offset" onclick="ShowModalAddProduct('@Model.offset')"><i class="fa fa-plus"></i>&nbsp;Add New</a>
+                        </div>
+                        <div class="x_content">
+                            <table id="datatable-responsive1" class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action" cellspacing="0" style="width:100%;">
+                                <thead style="background-color:#34495e; color:#fff;">
+                                    <tr>
+                                        <th style="text-align:center;"> Items</th>
+                                        <th style="text-align:center;"> Type </th>
+                                        <th style="text-align:center; "> Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="a">
+
+                                    @if (@Model.ListProduct != null || @Model.ListProduct.Count > 0)
+                                    {
+                                        @Html.Partial("_ProductsItem", Model)
+                                    }
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                        @Html.ValidationMessage("itemdetail", new { @class = "col-md-offset-2 col-md-10 label" })
+                    </div>
+                </div>
+            </div>
+        </div>*@
+</div>
+
+
+<!-- Modal Add Item-->
+<div class="modal fade second" id="modal-choose-items" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" style="font-weight:bold;">Add Specific Items</h4>
+            </div>
+            <div class="modal-body scroll">
+                <div class="form-group">
+                    <div class="col-md-12 col-xs-12">
+                        <div class="input-group">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn bg-fnb" id="btnItemType">Product</button>
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="javascript:void(0)" onclick="FilterProduct(@Commons.EProductType.Addition.ToString("d"),'')">Addition</a></li>
+                                    <li><a href="javascript:void(0)" onclick="FilterProduct(@Commons.EProductType.Package.ToString("d"),'')">Package</a></li>
+                                    <li><a href="javascript:void(0)" onclick="FilterProduct(@Commons.EProductType.Product.ToString("d"),'')">Product</a></li>
+                                </ul>
+                            </div>
+                            <input type="text" class="form-control col-md-10" placeholder="Search Name" onkeypress="HandleKeyPress(event)" id="txtSearchSpending" />
+                            <div class="input-group-btn">
+                                <button type="button" onclick="SearchItem(this); return false;" class="btn bg-fnb">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tbl-choose-items" class="form-group-sm" style="overflow: auto; height: 500px;">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button id="lick" onclick="AddItems(this)" type="button" class="btn btn-beauty bg-fnb" data-whatever="@Model.offset">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="@Url.Content("~/build/js/customInput.js")"></script>
+<script>
+
+    var listItem=[];
+    var btnGlobal;
+    var HtmlCloned = null;
+    var totalAllItem = '@Model.TotalAllItem';
+    var totalSpecificItem = '@Model.TotalSpecipicItem';
+    //=========================================
+    var _tableTax = null;
+    var _settingsOptionTableTax = {
+        "columnDefs": [
+            { "orderable": false, "targets": 2 },
+            { "width": "8%", "targets": 2 },
+        ],
+        "order": [[0, 'asc']],
+        "autoWidth": false,
+        "displayLength": 25,
+        "pagingType": "full_numbers",
+        "searching": true,
+        "lengthChange": true,
+        "bInfo": false
+
+    };
+    //======================================
+    $(document).ready(function () {
+        //
+        $("#ddlType").select2({
+            placeholder: "Please choose Type",
+            //allowClear: true
+        });
+        //
+        //_tableTax = $('#datatable-responsive1').DataTable($.extend(true, {}, _settingsOptionTableTax));
+
+        HtmlCloned = $('#modalItems table tbody#body-dishes').html();
+
+        /* check key number */
+        KeyNumberCheck();
+       // $('.table-item-products-vession-9999').DataTable($.extend(true, {}, _settingsOptionTableTax));
+
+        $('.radAllItems').on("ifClicked", function () {
+            $("[id=divItems]").addClass('hidden');
+            $('[id=txtTotal]').text(totalAllItem + " items")
+        });
+        $('.radSpecificItems').on("ifClicked", function () {
+            $("[id=divItems]").removeClass('hidden');
+            $('[id=txtTotal]').text(totalSpecificItem + " items")
+
+        })
+    });
+    //===============================Show popup choose item product=================
+    function ShowModalAddProduct(event) {
+        var contentWidth = ($("html").width() - $(".main-sidebar").width()) / 2;
+        var marginLeft = (contentWidth - 450) + $(".main-sidebar").width();
+        $("#modalItems").modal({
+            keyboard: false,
+            show: true,
+        });
+        //var OffSet = event;
+        //listItem = [];
+        //$('.productName_' + OffSet + ':visible').each(function (index, value) {
+        //    listItem.push($(this).attr('data-id'));
+        //});
+    }
+
+    //==============================Default Product Type=============================
+    $("#modal-choose-items").on('shown.bs.modal', function (event) {
+        btnGlobal = $(event.relatedTarget);
+        var OffSet = btnGlobal.data('whatever');
+        listItem = [];
+        $('.productName_' + OffSet + ':visible').each(function (index, value) {
+            listItem.push($(this).attr('data-id'));
+        });
+        $('#txtSearchSpending').val('');
+        $("#tbl-choose-items").html('');
+    });
+
+    $("#modal-choose-items").on('shown.bs.modal', function (event) {
+        btnGlobal = $(event.relatedTarget);
+        var OffSet = btnGlobal.data('whatever');
+        listItem = [];
+        $('.productName_' + OffSet + ':visible').each(function (index, value) {
+            listItem.push($(this).attr('data-id'));
+        });
+        console.log(listItem);
+        btnGlobal = $(event.relatedTarget); // Button that triggered the modal
+        FilterProduct(1, "");
+    });
+    //==============================Choose Product Type==============================
+    function FilterProduct(val, type) {
+        if (val === 1) {
+            ItemType = '@NSCSC.Shared.Commons.EProductType.Product.ToString("d")';
+            $("#btnItemType" + type + "").text("Product");
+        }
+        else if(val === 2) {
+            ItemType = '@NSCSC.Shared.Commons.EProductType.Addition.ToString("d")';
+            $("#btnItemType" + type + "").text("Addition");
+        }
+        else {
+            ItemType = '@NSCSC.Shared.Commons.EProductType.Package.ToString("d")';
+            $("#btnItemType" + type + "").text("Package");
+        }
+
+            LoadItemsChoose("#tbl-choose-items");
+    }
+    //=============Load Product Items===========================
+    function LoadItemsChoose(container) {
+        $('.se-pre-con').show();
+        $.ajax({
+            url: '@Url.Action("LoadItems", "STax")',
+            type: 'get',
+            data: {
+                ItemType: ItemType
+            },
+            dataType: 'html',
+            traditional: true,
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            error: function (e) {
+            },
+            success: function (data) {
+                $('.se-pre-con').hide();
+                $(container).html(data);
+                $('.SpecificItems').each(function (index, value) {
+                    var dataId = $(this).attr('data-id');
+                    if (listItem.indexOf(dataId) != -1) {
+                        console.log(dataId)
+                        $(this).addClass('hide');//.hide();
+                    }
+                });
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            }
+        });
+    }
+    //=========================Delete Item Product=================================================
+    function TickCheckBox(td) {
+        var tr = $(td).parents('tr:first');
+        $(tr).find('input[type=checkbox]').prop('checked', !$(tr).find('input[type=checkbox]').prop('checked'))
+    }
+    //===============================Add Items Product===========================================
+    function AddItems(btn) {
+        //var groupOffSet = $(btnGlobal).parents('tr:last').find('input[name*="OffSet"]').val();
+       // var currentItemOffset = $(btnGlobal).parents('table:first > tbody').find('tr').length - 1;
+        var currentItemOffset = $(".table-item-products-vession-9999").find('tr').length - 1;
+        
+        //var currentItemOffset = $("#a tr").length;
+        //var _temp = $("#a .odd .dataTables_empty").length;
+        //if (_temp == 1)
+        //    currentItemOffset = 0;
+
+        var trs = $(btn).parents('.modal').find('.modal-body table tbody tr');
+        var data = [];
+        for (var i = 0; i < trs.length; i++) {
+            var tr = trs[i];
+            var ischeck = $(tr).find('td input[type="checkbox"]').prop('checked');
+            //if ($(tr).find('td input[type="checkbox"]').prop('checked')) {
+            if (ischeck)
+                {
+                var ID = $(tr).attr('data-id');
+                var Code = $(tr).find('td #hidCode').val();
+                var ProductName = $(tr).find('td #hidName').val();
+                var ItemType = parseInt($(tr).find('td #hidItemType').val());
+
+                var ItemDTO = {
+                    ID: ID,
+                    Code: Code,
+                    Name: ProductName,
+                    ProductType: ItemType,
+                }
+                data.push(ItemDTO);
+            }
+        }
+        var TaxElement = {
+            LstProduct: data,
+            //currentgroupOffSet: groupOffSet,
+            currentItemOffset: currentItemOffset
+        }
+        if (data.length > 0) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("AddItems", "STax")',
+                traditional: true,
+                data: JSON.stringify(TaxElement),
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+                success: function (data) {
+                    $('.se-pre-con').hide();
+                    //$(btnGlobal).parents('tr:first').before(data);
+                   // $("#a").before(data);
+                  //  $(".table-item-products-vession-9999").DataTable().destroy();
+                    $(".table-item-products-vession-9999 tbody").append(data);
+                 //   $(".table-item-products-vession-9999").DataTable($.extend(true, {}, _settingsOptionTableTax));
+                    $(btn).parents('.modal:first').modal('hide');
+                    totalSpecificItem = parseInt(totalSpecificItem) + parseInt(TaxElement.LstProduct.length);
+                    $('[id=txtTotal]').text(totalSpecificItem + " items")
+                    //_tableTax.destroy();
+                    //$("#a").append(data);
+                    //_tableTax = $("#datatable-responsive1").DataTable($.extend(true, {}, _settingsOptionTableTax));
+
+                }
+            });
+        }
+    }
+    //=================================Search Item Product=========================================
+    function SearchItem(btn) {
+        var keySearch = $(btn).parents('div.form-group:first').find('input').val().toLowerCase();
+        var trs = $(btn).parents('.modal-body:first').find('tbody tr');
+        if (keySearch != '') {
+            for (var i = 0; i < trs.length; i++) {
+                if (!$(trs[i]).hasClass('hide')) {
+                    var name = $.trim($(trs[i]).find('td:last').text().toLowerCase());
+                    if (name.indexOf(keySearch) != -1) {
+                        if ($(trs[i]).css('display') == 'none')
+                            $(trs[i]).css('display', 'table-row');
+
+                    }
+                    else
+                        if ($(trs[i]).css('display') == 'table-row')
+                            $(trs[i]).css('display', 'none');
+                }
+            }
+        }
+        else {
+            $(trs).each(function (e) {
+                if (!$(this).hasClass('hide')) {
+                    if ($(this).css('display') == 'none')
+                        $(this).css('display', 'table-row');
+                }
+            });
+        }
+    }
+    //==================Delete Products Items========================
+    function DeleteItems(btn) {
+        var tr = $(btn).parents('tr:first');
+        $(tr).find('input.DishStatus').val(9);
+        $(tr).css('display', 'none');
+        totalSpecificItem = totalSpecificItem - 1;
+        $('[id=txtTotal]').text(totalSpecificItem + " items")
+    }
+    //==================Save Products Items
+    function SetProductNameTax(offSet) {
+        var productName = "";
+        $('.productName_' + offSet + ':visible').each(function (index, value) {
+            productName += $(this).attr('data-value') + ","
+        });
+        $("#txtApplicableItems_" + offSet).val(productName);
+
+        HtmlCloned = $('#modalItems table tbody#body-dishes').html();
+    }
+    //===================Cancel Popup
+    function PasteHtml(container) {
+        $(container).html(HtmlCloned);
+    }
+</script>

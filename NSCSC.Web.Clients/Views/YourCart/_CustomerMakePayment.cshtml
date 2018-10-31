@@ -1,0 +1,216 @@
+﻿
+<link href="~/Content/inputInformation.css" rel="stylesheet" />
+<div class="se-pre-con" style="display: none;"></div>
+<div>
+
+    <div class="checkout">
+        <div class="title-checkout">
+            <h3>CHECKOUT</h3>
+        </div>
+        <div class="row box-my-profile" id="customer-information-checkout">
+            <div class="col-md-12 col-sm-12 col-xs-12 reset-padding-left-right" style="margin-bottom:20px">
+                <div class="x_title" style="font-weight:bolder">
+                    Customer Information
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 col-sm-3 col-xs-12">
+                    <img id="imagepreview" ng-src="{{data.CustomerDetail.ImageURL}}" class="border-radius-img  width-height-200" />
+                </div>
+                <div class="col-md-9 col-sm-9 col-xs-12">
+                    <div class="customer-infor">
+                        <p class="" style="font-weight:bold; font-size:18px;">
+                            Name:{{data.CustomerDetail.Name}}
+                        </p>
+                        <p>
+                            Email: {{data.CustomerDetail.Email}}
+                        </p>
+                        <p>Merchant: {{data.MerchantDetail.Name}}</p>
+                        <p>Address:{{data.MerchantDetail.Street}} </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row box-my-profile" id="checkout" style="margin-top:10px">
+            <div class="order-summary">
+                <div class="col-md-12 col-sm-12 col-xs-12 reset-padding-left-right" style="margin-bottom:20px">
+                    <div class="x_title" style="font-weight:bolder">
+                        Order Summary
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 col-sm-3 col-xs-5">
+                        <label>Number of Items:</label>
+                    </div>
+                    <div class="col-md-9 col-sm-9 col-xs-7">
+                        <div class="">
+                            <ul>
+                                <li ng-repeat="itemProduct in data.ListItems">{{itemProduct.Quantity}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3 col-sm-3 col-xs-5">
+                        <label>Sub Total:</label>
+                    </div>
+                    <div class="col-md-9 col-sm-9 col-xs-7">
+                        <div class="">
+                            <label ng-bind="data.SubTotal |currency :'SDG': 0"> </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3 col-sm-3 col-xs-5">
+                        <label>Discount:</label>
+                    </div>
+                    <div class="col-md-9 col-sm-9 col-xs-7">
+                        <div class="">
+                            <label class="" ng-bind="data.DiscountOnTotalCart |currency :'SDG': 0"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3 col-sm-3 col-xs-5">
+                        <label>Promotion:</label>
+                    </div>
+                    <div class="col-md-9 col-sm-9 col-xs-7">
+                        <div class="">
+                            <label class="" ng-bind="data.TotalPromotion |currency :'SDG': 0"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3 col-sm-3 col-xs-5">
+                        <label>Tax <span ng-bind="data.sTaxName"></span></label>
+                    </div>
+                    <div class="col-md-9 col-sm-9 col-xs-7">
+                        <div class="">
+                            <label class="" ng-bind="data.Tax |currency :'SDG'"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3 col-sm-3 col-xs-5">
+                        <label>Total Order: </label>
+                    </div>
+                    <div class="col-md-9 col-sm-9 col-xs-7">
+                        <div class="">
+                            <label class="" style="color:#337ab7;font-size:20px; font-weight:bold" ng-bind="data.Total |currency :'SDG': 0"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-4">
+                        <label class="checkout-line" style="border: 1px solid #ccc;"></label>
+                    </div>
+                </div>
+                @*
+                  <div class="row">
+                      <div class="col-md-12 col-sm-12 col-xs-12">
+                          <div class="x_content" style="font-weight:bolder">
+                              <ul>
+                                  <li>
+                                      Your payment is complete. Please check your email as well will send confirmation to you. Thanks for your interest with our products and service!
+                                  </li>
+                                  <li id="check-content">
+                                      Your receipt is <span style="color:#337ab7">OR20aaa</span>.You can check this receipt at <span style="color:#5cb85c">History Receipts.</span>
+                                  </li>
+                              </ul>
+                          </div>
+                      </div>
+                  </div>
+
+                <div class="row">
+                      <div class="col-md-12 col-sm-12 col-xs-12 text-right">
+                          <ul class="list-inline">
+                              <li><button class="btn btn-success btn-checkout" id="btn-finish" ng-click="event.finish()">FINISH</button></li>
+                          </ul>
+                      </div>
+                  </div>*@
+            </div>
+        </div>
+        <div class="row box-my-profile" id="customer-information-checkout" style="margin-top:10px">
+            <span style="color:red">Select your card to make payment</span>
+            <div ng-repeat="itemPayment in data.LstPayment">
+                <div class="col-lg-2" ng-repeat="itemPaymentChil in itemPayment.ListChild" ng-click="choosePayment(itemPaymentChil.ID)" style="cursor:pointer">
+                    <img src="{{itemPaymentChil.ImageURL}}" id="img_{{itemPaymentChil.ID}}" class="imgpayment" style="width:150px; height:100px" />
+                    <span id="span_{{itemPaymentChil.ID}}" class="checkpayment" style="position: absolute;bottom: 15px;right: 12px; color:#40765C"></span>
+                    <span>{{itemPaymentChil.Name}}</span>
+                </div>
+            </div>
+        </div>
+
+        @*<div class="row box-my-profile" id="customer-information-checkout" style="margin-top:10px">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12" style="margin-bottom:20px">
+                    <div class="x_title" style="font-weight:bolder">
+                        <ul>
+                            <li>Is there anything make your inconverience? Please give us yoe feedback here. They will be very valuable forus to make our service better.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12" style="margin-bottom:20px">
+                    <div class="form-group">
+                        <label class="label-note-feelback">
+                            <textarea id="note-feelback" ng-model="orderdata.notefeelback" name="note" class="form-control" type="text" placeholder="Please not your feelback here"></textarea>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12 text-right">
+                    <div class="form-group">
+                        <ul class="list-inline">
+                            <li id="btn-submit-checkout"><button class="btn btn-primary btn-checkout" id="btn-actives" ng-click="event.submit()">SUBMIT</button></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>*@
+        <div class="row" style="margin-top:15px">
+            <div class="col col-sm-2"></div>
+            <div class="col col-sm-10 btn-inputStore text-right">
+                <ul class="list-inline btn-customer-make-payment">
+                    <li><button class="btn" id="btn-actives" ng-click="event.previous()">PREVIOUS</button></li>
+                    <li><button class="btn btn-success" id="btn-actives" ng-click="event.makepayment()">MAKE PAYMENT</button></li>
+                    <li>
+                        <button class="btn btn-default" id="btn-delete" ng-click="event.canceled()">
+                            &nbsp;CANCEL
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    </div>
+
+<script src="~/Scripts/app/InputInformationCtrl.js"></script>
+<script src="~/Scripts/app/customerCheckoutCtrl.js"></script>
+<script>
+    $(".wizard_horizontal ul.wizard_steps li a#isDone1::before, #step_no1").addClass("fa fa-check");
+    $(".wizard_horizontal ul.wizard_steps li a#isDone2::before, #step_no2").css("background-color", "#28acf7");
+    $(".wizard_horizontal ul.wizard_steps li a#isDone1::before, #step_no1").css("line-height", "22px");
+    $(".wizard_horizontal ul.wizard_steps li a#isDone2::before, #step_no2").css("line-height", "22px");
+    $("a#isDone2").css("top", "8px");
+    $(".wizard_horizontal ul.wizard_steps li a#isDone2::before").css("height", "0px!important");
+    $(".wizard_horizontal ul.wizard_steps li a::before").css("background", "none!important");
+    $(".wizard_verticle ul.wizard_steps li a#isDone1_wizard_verticle::before, #step_no1").addClass("fa fa-check");
+    $(".wizard_verticle ul.wizard_steps li a#isDone2_wizard_verticle::before, #step_no2").css("background-color", "#28acf7");
+    //$(".wizard_verticle ul.wizard_steps li a#isDone1_wizard_verticle::before, #step_no1").css("line-height", "22px");
+    $(".wizard_verticle ul.wizard_steps li a#isDone2_wizard_verticle::before, #step_no2").css("line-height", "22px");
+</script>
+
+

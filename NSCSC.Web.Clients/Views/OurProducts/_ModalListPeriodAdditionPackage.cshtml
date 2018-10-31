@@ -1,0 +1,101 @@
+﻿@model NSCSC.Shared.Models.ClientSite.OurProDucts.OurProDuctsModel
+@using NSCSC.Shared
+<!--modal Pricing List-->
+<div id="modalListPeriodAdditionPackage_@Model.ID" class="modal fade" tabindex="-1" role="dialog" data-keyboard="false" @*data-backdrop="static"*@>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#f2f2f2;">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title fontUppercase text-left">@Model.Name | <span style="color:darkred;">Pricing List</span></h4>
+            </div>
+            <div class="modal-body" style="padding:0px;">
+                <table id="tbl-pricing-list_@Model.ID" class="table-format-client tbl-pricing-list">
+                    <thead>
+                        <tr>
+                            <td class="text-left" style="width:70%;"><span class="fontBold fontUppercase">period</span></td>
+                            <td class="text-right fontBold"><span class="fontBold fontUppercase">price</span></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.ListPrice != null && Model.ListPrice.Any())
+                        {
+                            foreach (var item in Model.ListPrice.OrderBy(o => o.PeriodType).ThenBy(oo => oo.Period).ToList())
+                            {
+                                @*Period Time != One Time*@
+                                string itmName = "";
+                                if (item.PeriodType != (byte)Commons.EPeriodType.OneTime)
+                                {
+                                    itmName = item.Period + " " + item.NamePeriodType;
+                                }
+                                else
+                                {
+                                    itmName = item.NamePeriodType;
+                                }
+                                <tr data-name="@itmName" data-price="@item.Price.ToString("n2")" data-period="@item.Period" data-periodtype="@item.PeriodType">
+                                    <td class="text-left">
+                                        <input type="radio" class="flat" value="@item.Price" name="itemPeriodTime_@Model.ID"/>
+                                        &nbsp;
+                                        @itmName
+                                    </td>
+                                    <td class="text-right">@Model.CurrencySymbol@item.Price.ToString("n2")</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--end modal Pricing List -->
+
+<script>
+    $(document).ready(function (e) {
+        init_ICheck();
+        // Set Period time default
+        $('#tbl-pricing-list_@Model.ID tr[data-name="@Model.PeriodTime"]').find('input[type="radio"]').prop('checked', true);
+
+    });
+
+    /* ICHECK */
+    function init_ICheck() {
+        if ($("input.flat")[0]) {
+            $(document).ready(function () {
+                $('input.flat').iCheck({
+                    checkboxClass: 'icheckbox_flat-green',
+                    radioClass: 'iradio_flat-blue'
+                });
+            });
+        }
+    };
+    /* END ICHECK */
+
+    $('#tbl-pricing-list_@Model.ID tr').click(function (event) {
+        var row = $(this);
+        var _radio = row.find('input[type="radio"]');
+        _radio.prop('checked', true);
+
+        $('#lblPeriodTime_@Model.ID').html(row.data('name'));
+        $('#lblPeriodTimePrice_@Model.ID').html(row.data('price'));
+
+        var hidPrice = parseFloat(row.find('input[type="radio"]').val());
+
+        $('.hidAdditionPeriod_@Model.ID').val(row.data('period'));
+        $('.hidAdditionPeriodType_@Model.ID').val(row.data('periodtype'));
+        $('.hidAdditionPrice_@Model.ID').val(hidPrice);
+
+        //========
+        $('input[name="itemPeriodTime_@Model.ID"]').iCheck({
+            radioClass: 'iradio_flat-blue'
+        });
+    });
+
+    // If it has 1 period => disabled Modal Pricing List
+    if( @Model.ListPrice.Count() == 1 ){
+        $("#btn-period-time_@Model.ID").prop('disabled', true);
+        $("#btn-period-time_@Model.ID").attr('disabled', 'disabled');
+    }
+</script>

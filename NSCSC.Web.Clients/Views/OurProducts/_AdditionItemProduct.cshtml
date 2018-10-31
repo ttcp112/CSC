@@ -1,0 +1,61 @@
+﻿@model NSCSC.Shared.Models.OurProducts.Addition.AdditionDetailViewModels
+@using NSCSC.Shared
+
+@if (Model.ListProductApply != null && Model.ListProductApply.Count > 0)
+{
+    foreach (var item in Model.ListProductApply)
+    {
+        @Html.Hidden((string.Format("ListProductApply[{0}].IsSelect", item.OffSet)), item.IsSelect, new { @id= "hidIsSelect" , @value = "false" })
+        @Html.Hidden((string.Format("ListProductApply[{0}].ProductID", item.OffSet)), item.ProductID)
+        @Html.Hidden((string.Format("ListProductApply[{0}].ProductName", item.OffSet)), item.ProductName)
+        @Html.Hidden((string.Format("ListProductApply[{0}].AssetID", item.OffSet)), item.AssetID)
+
+        @Html.Hidden((string.Format("ListProductApply[{0}].ParentID", item.OffSet)), item.ParentID)
+        @Html.Hidden((string.Format("ListProductApply[{0}].ParentProductID", item.OffSet)), item.ParentProductID)
+        @Html.Hidden((string.Format("ListProductApply[{0}].ParentProductName", item.OffSet)), item.ParentProductName)
+
+        @Html.Hidden((string.Format("ListProductApply[{0}].Period", item.OffSet)), item.Period)
+        @Html.Hidden((string.Format("ListProductApply[{0}].PeriodType", item.OffSet)), item.PeriodType)
+        @Html.Hidden((string.Format("ListProductApply[{0}].Price", item.OffSet)), item.Price)
+        @Html.Hidden((string.Format("ListProductApply[{0}].ProductType", item.OffSet)), item.ProductType)
+
+        if (!string.IsNullOrEmpty(item.Days))
+        {
+            <div class="col-md-12 col-sm-12 col-xs-12" style="padding:10px 0;">
+                <div class="col-md-2 col-sm-2 col-xs-2 fontBold text-left" style="padding-left:0px;">
+                    <input type="radio" class="flatPrice" name="PeriodPrice" id="radProductAppliedPeriod" />
+                    &nbsp;&nbsp;Or in
+                </div>
+                <div class="col-md-3 col-sm-3 col-xs-3">
+                    @item.Days
+                    @*<span class="fontBold">@item.ProductName</span>*@
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-2  text-right">
+                    with price at
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-2 text-right fontBold">
+                    @item.CurrencySymbol@item.Price.ToString("N2")
+                </div>
+            </div>
+        }
+    }
+}
+
+<script>
+    $(document).ready(function (e) {
+        if ($("input.flatPrice")[0]) {
+            $(document).ready(function () {
+                $('input.flatPrice').iCheck({
+                    checkboxClass: 'icheckbox_flat-green',
+                    radioClass: 'iradio_flat-green'
+                });
+            });
+        }
+    });
+
+    $("#radProductAppliedPeriod").on("ifChanged", function () {
+        $('#hidIsSelect').val($(this).is(':checked'));
+        //alert($(this).is(':checked'));
+    });
+
+</script>

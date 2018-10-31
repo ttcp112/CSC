@@ -1,0 +1,158 @@
+﻿@model NSCSC.Shared.Models.OurProducts.Addition.AdditionDetailViewModels
+@using NSCSC.Shared
+
+@if (Model.ListProductApply != null && Model.ListProductApply.Any())
+{
+    if (Model.TypeProductApply == (byte)Commons.EProductType.Product)
+    {
+        foreach (var item in Model.ListProductApply)
+        {
+            <tr data-name="@item.ProductName">
+                <td class="text-left">
+                    <input type="radio" class="flatProductApplied" name="sel-pro-pack-item" id="@item.ProductID" />
+                    &nbsp;<span class="fontBold">@item.ProductName</span>
+                    <input class="hidAssetID" value="@item.AssetID" type="hidden" />
+                    <input class="hidProductID" value="@item.ProductID" type="hidden" />
+                    <input class="hidProductName" value="@item.ProductName" type="hidden" />
+                    <input class="hidProductType" value="@item.ProductType" type="hidden" />
+                    <input class="hidBoughtTime" value="@item.BoughtTime" type="hidden" />
+                    <input class="hidExpiredTime" value="@string.Format("{0}", item.ExpiredTime.HasValue ? item.ExpiredTime.Value.ToString():"")" type="hidden" />
+                    @*Recommend Price*@
+                    <input class="hidPrice" value="@item.Price" type="hidden" />
+                    <input class="hidPeriod" value="@item.Period" type="hidden" />
+                    <input class="hidPeriodType" value="@item.PeriodType" type="hidden" />
+
+                </td>
+                <td class="text-center">@item.BoughtTime.ToString(Commons.FormatDate)</td>
+                <td class="text-right">@item.sExpiredTime</td>
+            </tr>
+        }
+    }
+    else if (Model.TypeProductApply == (byte)Commons.EProductType.Package)
+    {
+        foreach (var item in Model.ListProductApply)
+        {
+            if (item.ListProduct != null && item.ListProduct.Any())
+            {
+                <tr>
+                    <td class="text-left fontBold">
+                        <span class="fontBold">@item.ProductName</span>
+                    </td>
+                    <td class="text-center">
+                        @item.BoughtTime.ToString(Commons.FormatDate)
+                    </td>
+                    <td class="text-right"></td>
+                </tr>
+
+                foreach (var itemProduct in item.ListProduct)
+                {
+                    <tr>
+                        <td class="text-left" style="padding-left:30px;">
+                            <input type="radio" class="flatProductApplied" name="sel-pro-pack-item" id="@itemProduct.ProductID" />
+                            &nbsp;<span class="fontBold">@itemProduct.ProductName </span>
+
+                            <input class="hidProductName" value="@itemProduct.ProductName" type="hidden" />
+                            <input class="hidProductID" value="@itemProduct.ProductID" type="hidden" />
+                            <input class="hidAssetID" value="@itemProduct.AssetID" type="hidden" />
+                            <input class="hidBoughtTime" value="@itemProduct.BoughtTime" type="hidden" />
+                            <input class="hidExpiredTime" value="@string.Format("{0}", itemProduct.ExpiredTime.HasValue ? itemProduct.ExpiredTime.Value.ToString(Commons.FormatDate):"")"
+                                   type="hidden" />
+
+                            <input class="hidParentProductName" value="@item.ProductName" type="hidden" />
+                            <input class="hidParentProductID" value="@item.ProductID" type="hidden" />
+                            <input class="hidParentAssetID" value="@item.AssetID" type="hidden" />
+                            <input class="hidProductType" value="@item.ProductType" type="hidden" />
+
+                            @*Recommend Price*@
+                            <input class="hidPrice" value="@itemProduct.Price" type="hidden" />
+                            <input class="hidPeriod" value="@itemProduct.Period" type="hidden" />
+                            <input class="hidPeriodType" value="@itemProduct.PeriodType" type="hidden" />
+
+                        </td>
+                        <td></td>
+                        <td class="text-right">@itemProduct.sExpiredTime</td>
+                    </tr>
+                }
+            }
+        }
+    }
+}
+
+<script type="text/javascript">
+    $(document).ready(function (e) {
+        init_ICheckProductPackage();
+
+        //$('input').on('ifChanged', function (event) {
+        //    $(event.target).trigger('change');
+        //})
+    });
+
+    $('.flatProductApplied').on('ifClicked', function (event) {
+        $('[id=btnconfirm]').removeAttr('disabled');
+        var row = $(this).closest('tr');
+        SetValueProductApplyAddition(row);
+    })
+
+    function SetValueProductApplyAddition(row) {
+        //=========
+        var ProductID = row.find('input[class="hidProductID"]').val();
+        var ProductName = row.find('input[class="hidProductName"]').val();
+        var AssetID = row.find('input[class="hidAssetID"]').val();
+        var BoughtTime = row.find('input[class="hidBoughtTime"]').val();
+        var ExpiredTime = row.find('input[class="hidExpiredTime"]').val();
+
+        var ParentID = row.find('input[class="hidParentAssetID"]').val();
+        var ParentProductID = row.find('input[class="hidParentProductID"]').val();
+        var ParentProductName = row.find('input[class="hidParentProductName"]').val();
+        var ProductType = row.find('input[class="hidProductType"]').val();
+
+        // Recommend Price
+        var Period = row.find('input[class="hidPeriod"]').val();
+        var PeriodType = row.find('input[class="hidPeriodType"]').val();
+        var Price = row.find('input[class="hidPrice"]').val();
+
+        ProductApplyAdditionModels = {
+            ProductID: ProductID,
+            ProductName: ProductName,
+            AssetID: AssetID,
+            ParentID: ParentID,
+            ParentProductID: ParentProductID,
+            ParentProductName: ParentProductName,
+            ProductType: ProductType,
+            Period: Period,
+            PeriodType: PeriodType,
+            Price: Price,
+            OffSet: 0,
+            BoughtTime: BoughtTime,
+            ExpiredTime: ExpiredTime
+        }
+    }
+
+    function init_ICheckProductPackage() {
+        if ($("input.flatProductApplied")[0]) {
+            $(document).ready(function () {
+                $('input.flatProductApplied').iCheck({
+                    checkboxClass: 'icheckbox_flat-blue',
+                    radioClass: 'iradio_flat-blue'
+                });
+            });
+        }
+    };
+
+    $('#tbl-select-product-package tr').click(function (event) {
+        var row = $(this);
+        var _radio = row.find('input[type="radio"]');
+        if (_radio.length > 0) { //Product | = 0 Package
+            _radio.prop('checked', true);
+            $('[id=btnconfirm]').removeAttr('disabled');
+            //========
+            $('input[name="sel-pro-pack-item"]').iCheck('update');
+            //$('input[name="sel-pro-pack-item"]').iCheck({
+            //    radioClass: 'iradio_flat-blue'
+            //});
+            //=========
+            SetValueProductApplyAddition(row)
+        }
+    });
+
+</script>

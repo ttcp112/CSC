@@ -1,0 +1,1366 @@
+﻿@model NSCSC.Shared.Models.ClientSite.MyProfile.OrderDetailModels
+@using NSCSC.Shared.Helpers
+@using NSCSC.Shared
+@{
+    ViewBag.Title = "Your Cart";
+}
+<div class="title_left">
+    <div class="container">
+        @if (Model.TotalQuantity > 0)
+        {
+            <div class="col-sm-12 col-xs-12 col-md-12" style="margin-top:-10px;">
+                <h3 class="fontUppercase" style="line-height:0px;">
+                    Your Cart
+                    <small style="float:right; line-height:0px; display: @string.Format("{0}", string.IsNullOrEmpty(Model.DiscountTotalBill.DiscountID) ? "block;" : "none;") " id="CouponActionTotalBill">
+                        <i class="fa fa-cut"></i>&nbsp;&nbsp;
+                        <a href="javascript:void(0)" data-toggle="modal" data-backdrop="static"
+                           data-target="#bs-modal-do-you-have-coupon-code" data-productid=""
+                           data-offset="-1">Insert Coupon</a>
+                    </small>
+                    <small style="float:right;  text-transform:capitalize; line-height:0px; display: @string.Format("{0}", string.IsNullOrEmpty(Model.DiscountTotalBill.DiscountID) ? "none;" : "block;") " id="divCouponTotal">
+                        <span>Discount code <strong>@Model.DiscountTotalBill.DiscountDisplay</strong> (@Model.DiscountTotalBill.DiscountValue@Model.DiscountTotalBill.DiscountTypeName)</span>
+                        <a class="fontLighter" href="javascript:void(0)" onclick="RemoveCoupon('','0')">
+                            <i class="fa fa-trash text-danger"></i>
+                        </a>
+                    </small>
+                </h3>
+            </div>
+            <div class="col-sm-12 col-xs-12 col-md-12">
+                <h5 class="fontUppercase" style="font-weight:lighter;">
+                    You have <span id="countItem">@Model.TotalQuantity</span>
+                    @string.Format("{0}", Model.TotalQuantity > 1 ? "items" : "item") in cart
+
+                    <small style="float:right; line-height:25px; font-weight:lighter; display: @string.Format("{0}", string.IsNullOrEmpty(Model.DiscountTotalBill.DiscountID) ? "block;" : "none;") " id="divToDiscount">
+                        To Discount
+                    </small>
+
+                </h5>
+            </div>
+            <div class="clearfix"></div>
+        }
+        else
+        {
+            <div class="col-md-12 col-sm-12 col-xs-120 text-left">
+                <h2 class="yourcard_additem" style="line-height:0px;line-height:15px;">
+                    Your Cart
+                </h2>
+            </div>
+        }
+    </div>
+</div>
+@if (Model.TotalQuantity > 0)
+{
+    using (@Html.BeginForm("GoToCheckOut", "YourCart", FormMethod.Post, new
+    {
+        @class = "",
+        @id = "form-your-cart",
+        @enctype = "multipart/form-data"
+    }))
+    {
+        @Html.HiddenFor(model => model.ID)
+        @Html.HiddenFor(model => model.OrderNo)
+        @Html.HiddenFor(model => model.ReceiptNo)
+        @Html.HiddenFor(model => model.IsFree)
+        //variable double - Calculator
+        @Html.HiddenFor(model => model.SubTotal, new { @id = "hidSubTotal" })
+        @Html.HiddenFor(model => model.TotalDiscount, new { @id = "hidTotalDiscount" })
+        @Html.HiddenFor(model => model.TotalPromotion, new { @id = "hidTotalPromotion" })
+        @Html.HiddenFor(model => model.Tax, new { @id = "hidTax" })
+        @Html.HiddenFor(model => model.Total, new { @id = "hidTotal" })
+        @Html.HiddenFor(model => model.TaxInfo.TaxType, new { @id = "hidTaxType" })
+
+        //variable temp for Discount Total Bill
+        @Html.HiddenFor(model => model.DiscountTotalBill.ID, new { @id = "hidTotalID" })
+        @Html.HiddenFor(model => model.DiscountTotalBill.DiscountID, new { @id = "hidTotalDiscountID" })
+        @Html.HiddenFor(model => model.DiscountTotalBill.DiscountName, new { @id = "hidTotalDiscountName" })
+        @Html.HiddenFor(model => model.DiscountTotalBill.DiscountAmount, new { @id = "hidTotalDiscountAmount" })
+        @Html.HiddenFor(model => model.DiscountTotalBill.DiscountValue, new { @id = "hidTotalDiscountValue" })
+        @Html.HiddenFor(model => model.DiscountTotalBill.DiscountType, new { @id = "hidTotalDiscountType" })
+        @Html.HiddenFor(model => model.DiscountTotalBill.Description, new { @id = "hidTotalDescription" })
+        @Html.HiddenFor(model => model.DiscountTotalBill.DiscountDisplay, new { @id = "hidTotalDiscountDisplay" })
+        @Html.HiddenFor(model => model.DiscountTotalBill.IsDelete, new { @id = "hidTotalDiscountIsDelete" })
+
+
+        <div class="row form-horizontal form-label-left listItemYourCart">
+            @if (Model.ListItems != null && Model.ListItems.Count > 0)
+            {
+                foreach (var item in Model.ListItems)
+                {
+                    //set value
+                    @Html.Hidden(string.Format("ListItems[{0}].OffSet", item.OffSet), item.OffSet, new { @id = "hidOffSet_" + item.OffSet, @class = "clsoffSet" })
+                    @Html.Hidden(string.Format("ListItems[{0}].ID", item.OffSet), item.ID, new { @id = "hidID_" + item.OffSet })
+                    @Html.Hidden(string.Format("ListItems[{0}].ProductID", item.OffSet), item.ProductID, new { @id = "hidProductID_" + item.OffSet })
+                    @Html.Hidden(string.Format("ListItems[{0}].ProductName", item.OffSet), item.ProductName, new { @id = "hidProductName_" + item.OffSet })
+                    @Html.Hidden(string.Format("ListItems[{0}].ProductType", item.OffSet), item.ProductType, new { @id = "hidProductType_" + item.OffSet })
+                    @Html.Hidden(string.Format("ListItems[{0}].AdditionType", item.OffSet), item.AdditionType, new { @id = "hidAdditionType_" + item.OffSet })
+                    @Html.Hidden(string.Format("ListItems[{0}].ImageURL", item.OffSet), item.ImageURL, new { @id = "hidImageURL_" + item.OffSet })
+                    @Html.Hidden(string.Format("ListItems[{0}].Period", item.OffSet), item.Period, new { @id = "hidPeriod_" + item.OffSet })
+                    @Html.Hidden(string.Format("ListItems[{0}].PeriodType", item.OffSet), item.PeriodType, new { @id = "hidPeriodType_" + item.OffSet })
+                    // Extend product
+                    @Html.Hidden(string.Format("ListItems[{0}].IsExtend", item.OffSet), item.IsExtend, new { @id = "hidIsExtend_" + item.OffSet })
+                    //Price
+                    @Html.Hidden(string.Format("ListItems[{0}].Price", item.OffSet), item.Price, new { @id = "hidPrice_" + item.OffSet })
+                    @Html.Hidden(string.Format("ListItems[{0}].TotalPrice", item.OffSet), item.TotalPrice, new { @id = "hidTotalPrice_" + item.OffSet })
+                    //Promotion
+                    @Html.Hidden(string.Format("ListItems[{0}].PromotionID", item.OffSet), item.PromotionID, new { @id = "hidPromotionID_" + item.OffSet })
+                    @Html.Hidden(string.Format("ListItems[{0}].PromotionName", item.OffSet), item.PromotionName, new { @id = "hidPromotionName_" + item.OffSet })
+                    @Html.Hidden(string.Format("ListItems[{0}].PromotionAmount", item.OffSet), item.PromotionAmount, new { @id = "hidPromotionAmount_" + item.OffSet })
+                    @Html.Hidden(string.Format("ListItems[{0}].IsApplyPromotion", item.OffSet), item.IsApplyPromotion, new { @id = "hidIsApplyPromotion_" + item.OffSet })
+                    //DiscountID for Item
+                    @Html.Hidden(string.Format("ListItems[{0}].DiscountID", item.OffSet), item.DiscountID, new { @id = "hidDiscountID_" + item.OffSet })
+                    @Html.Hidden(string.Format("ListItems[{0}].DiscountName", item.OffSet), item.DiscountName, new { @id = "hidDiscountName_" + item.OffSet })
+                    @Html.Hidden(string.Format("ListItems[{0}].DiscountAmount", item.OffSet), item.DiscountAmount, new { @id = "hidDiscountAmount_" + item.OffSet })
+                    @Html.Hidden(string.Format("ListItems[{0}].DiscountValue", item.OffSet), item.DiscountValue, new { @id = "hidDiscountValue_" + item.OffSet })
+                    @Html.Hidden(string.Format("ListItems[{0}].DiscountType", item.OffSet), item.DiscountType, new { @id = "hidDiscountType_" + item.OffSet })
+                    @Html.Hidden(string.Format("ListItems[{0}].DiscountDisplay", item.OffSet), item.DiscountDisplay, new { @id = "hidDiscountDisplay_" + item.OffSet, @class = "discountDisplayforOffset" })
+
+                    //variable temp for Discount Code
+                    @Html.Hidden(string.Format("ListItems[{0}].Description", item.OffSet), item.Description, new { @id = "hidDescription_" + item.OffSet, @class = "descriptionforoffset" })
+
+                    @Html.Hidden(string.Format("ListItems[{0}].ItemGroup", item.OffSet), item.ItemGroup, new { @id = "hidItemGroup_" + item.OffSet })
+                    @Html.Hidden(string.Format("ListItems[{0}].NumOfStore", item.OffSet), item.NumOfStore, new { @id = "hidNumOfStore_" + item.OffSet })
+                    @Html.Hidden(string.Format("ListItems[{0}].IsDelete", item.OffSet), item.IsDelete, new { @id = "hidIsDelete_" + item.OffSet })
+                    @Html.Hidden(string.Format("ListItems[{0}].NumOfAccount", item.OffSet), item.NumOfAccount, new { @id = "hidNumOfAccount_" + item.OffSet })
+                    @Html.Hidden(string.Format("ListItems[{0}].IsFullFunction", item.OffSet), item.IsFullFunction, new { @id = "hidIsFullFunction_" + item.OffSet })
+                    @Html.Hidden(string.Format("ListItems[{0}].AmountOfUnit", item.OffSet), item.AmountOfUnit, new { @id = "hidAmountOfUnit_" + item.OffSet })
+                    @Html.Hidden(string.Format("ListItems[{0}].ListAdditionApply", item.OffSet), item.ListAdditionApply, new { @id = "hidAmountOfUnit_" + item.OffSet })
+                    @Html.Hidden(string.Format("ListItems[{0}].Quantity", item.OffSet), item.Quantity, new { @id = "txtQuantity_" + item.OffSet })
+
+                    if (item.ProductType == (byte)Commons.EProductType.Product)
+                    {
+                        @*Product*@
+                        <div class="form-group itemProduct" id="divProduct_@item.OffSet" data-offset="@item.OffSet">
+                            <div class="col-md-2 col-sm-2 col-xs-12">
+                                <div class="form-group text-center imageProduct">
+                                    <img id="upload-preview" class="" src="@item.ImageURL" height="110" width="150" />
+                                </div>
+                            </div>
+                            <div class="col-md-10 col-sm-10 col-xs-12">
+                                <div class="form-group infoProduct">
+                                    @if (item.IsExtend)
+                                    {
+                                        @*Header*@
+                                        <div class="col-md-12 col-sm-12 col-xs-12 header">
+                                            <div class="col-md-8 col-sm-8 col-xs-8" style="padding-left:0px;">
+                                                <label class="fontBold text-danger">
+                                                    Extend for @item.ProductName
+                                                    @if (item.ListAdditionApply != null && item.ListAdditionApply.Any())
+                                                    {
+                                                        var infoPackage = item.ListAdditionApply.FirstOrDefault();
+                                                        if (infoPackage != null && !string.IsNullOrEmpty(infoPackage.ParentName))
+                                                        {
+                                                            @Html.Raw(" in package " + infoPackage.ParentName);
+                                                        }
+                                                    }
+                                                </label>
+                                                <br />
+                                                <label style="font-size:15px; line-height:17px">@item.CurrencySymbol@item.Price.ToString("N2")</label>
+                                            </div>
+                                            @*<div class="col-md-3 col-sm-3 col-xs-3 text-right">
+                                                    <label>@item.CurrencySymbol@item.TotalPrice.ToString("N2")</label>
+                                                </div>*@
+                                            <div class="col-md-2 col-sm-2 col-xs-2">
+                                                @*Quantity*@
+                                                @*<div class="input-group">
+                                                                            <span class="input-group-btn">
+                                                                                <!--<button class="btn btn-secondary subtract" type="button" onclick="AddOrSubtractYourCart('sub', '#txtQuantity_@item.OffSet', this, @item.OffSet)">-</button>-->
+
+                                                                                <button class="btn btn-secondary subtract" type="button" onclick="UpdateProductQty('sub', '#txtQuantity_@item.OffSet', this,'@item.OffSet')">-</button>
+                                                                            </span>
+                                                                            @Html.TextBox(string.Format("ListItems[{0}].Quantity", item.OffSet), item.Quantity,
+                                                         new
+                                                         {
+                                                             @value = item.Quantity,
+                                                             @id = "txtQuantity_" + item.OffSet,
+                                                             @placeholder = "0",
+                                                             @class = "form-control text-center inputChange"
+                                                         })
+                                                        <span class="input-group-btn">
+                                                            <!--<button class="btn btn-secondary add" type="button" onclick="AddOrSubtractYourCart('add', '#txtQuantity_@item.OffSet', this, @item.OffSet)">+</button>-->                                                    <button class="btn btn-secondary add" type="button" onclick="UpdateProductQty('add', '#txtQuantity_@item.OffSet', this,'@item.OffSet')">+</button>
+
+                                                        </span>
+                                                    </div>*@
+                                            </div>
+                                            <div class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                                <label>@item.CurrencySymbol<span id="lblTotalItem-@item.OffSet">@item.SubTotal.ToString("N2")</span></label>
+                                            </div>
+                                        </div>
+                                        @*Content*@
+                                        <div class="row col-md-12 col-sm-12 col-xs-12 content">
+                                            <div class="col-md-10 col-sm-10 col-xs-12">
+                                                <div class="row">
+                                                    <label class="col-md-12 col-sm-12 col-xs-12 fontLighter"><span class="fontBold">Extend Period:</span> @item.PeriodName</label>
+                                                </div>
+                                                <div class="colorDoYou">
+                                                    <a class="fontLighter" href="javascript:void(0)" data-toggle="modal" data-backdrop="static"
+                                                       data-target="#bs-modal-do-you-have-coupon-code" data-productid="@item.ProductID"
+                                                       data-offset="@item.OffSet" data-orderdetail="@item.ID" id="CouponAction-@item.OffSet"
+                                                       style="display: @string.Format("{0}", string.IsNullOrEmpty(item.DiscountID) ? "block" : "none")">
+                                                        Do you have Coupon Code?
+                                                    </a>
+                                                    <div id="divCouponInfor-@item.OffSet"
+                                                         style="display: @string.Format("{0}", string.IsNullOrEmpty(item.DiscountID) ? "none" : "block")">
+                                                        <span id="title-@item.OffSet">
+                                                            Discount code <strong>@item.DiscountDisplay</strong> (@item.DiscountValue @item.DiscountTypeName)
+                                                        </span>
+                                                        <a class="fontLighter" href="javascript:void(0)" onclick="RemoveCoupon(@item.OffSet,'1')">
+                                                            <i class="fa fa-times text-danger"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2 col-sm-2 col-xs-12 remove text-right" style="padding-right:0px;">
+                                                <a href="javascript:void(0);" class="btn" onclick="RemoveProduct(@item.OffSet)" style="margin-right:-15px;"><i class="fa fa-trash"></i> Remove</a>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        @*Header*@
+                                        <div class="col-md-12 col-sm-12 col-xs-12 header">
+                                            <div class="col-md-8 col-sm-8 col-xs-8" style="padding-left:0px;">
+                                                <label class="fontBold text-danger">@item.ProductName</label>
+                                                <br />
+                                                <label style="font-size:15px; line-height:17px">@item.CurrencySymbol@item.Price.ToString("N2")</label>
+                                            </div>
+                                            @*<div class="col-md-3 col-sm-3 col-xs-3 text-right">
+                                                    <label>@item.CurrencySymbol@item.TotalPrice.ToString("N2")</label>
+                                                </div>*@
+                                            <div class="col-md-2 col-sm-2 col-xs-2">
+                                                @*Quantity*@
+                                                @*<div class="input-group">
+                                                                            <span class="input-group-btn">
+                                                                                <!--<button class="btn btn-secondary subtract" type="button" onclick="AddOrSubtractYourCart('sub', '#txtQuantity_@item.OffSet', this, @item.OffSet)">-</button>-->
+
+                                                                                <button class="btn btn-secondary subtract" type="button" onclick="UpdateProductQty('sub', '#txtQuantity_@item.OffSet', this,'@item.OffSet')">-</button>
+                                                                            </span>
+                                                                            @Html.TextBox(string.Format("ListItems[{0}].Quantity", item.OffSet), item.Quantity,
+                                                         new
+                                                         {
+                                                             @value = item.Quantity,
+                                                             @id = "txtQuantity_" + item.OffSet,
+                                                             @placeholder = "0",
+                                                             @class = "form-control text-center inputChange"
+                                                         })
+                                                        <span class="input-group-btn">
+                                                            <!--<button class="btn btn-secondary add" type="button" onclick="AddOrSubtractYourCart('add', '#txtQuantity_@item.OffSet', this, @item.OffSet)">+</button>-->                                                    <button class="btn btn-secondary add" type="button" onclick="UpdateProductQty('add', '#txtQuantity_@item.OffSet', this,'@item.OffSet')">+</button>
+
+                                                        </span>
+                                                    </div>*@
+                                            </div>
+                                            <div class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                                <label>@item.CurrencySymbol<span id="lblTotalItem-@item.OffSet">@item.SubTotal.ToString("N2")</span></label>
+                                            </div>
+                                        </div>
+                                        @*Content*@
+                                        <div class="col-md-12 col-sm-12 col-xs-12 content">
+                                            <div class="row">
+                                                <label class="col-md-12 col-sm-12 col-xs-12 fontLighter"><span class="fontBold">Period:</span> @item.PeriodName</label>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-md-12 col-sm-12 col-xs-12 fontLighter">@item.sAmountOfUnit</label>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-md-12 col-sm-12 col-xs-12 fontLighter text-success">@item.sNumOfAccount</label>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-md-12 col-sm-12 col-xs-12 fontLighter"><span class="fontBold">Functions:</span> @item.sFunction</label>
+                                            </div>
+                                            <div class="row listItem">
+                                                <div class="col-md-5 col-sm-5 col-xs-12">
+
+                                                    @if (item.ListComposite != null && item.ListComposite.Count > 0)
+                                                    {
+                                                        <div class="col-md-12 col-sm-12 col-xs-12 fontBold" style="padding:10px 0 10px 0;">
+                                                            <i class="fa fa-circle" style="font-size:10px;"></i> <span class="text-success">Composite</span>&nbsp;&nbsp;
+                                                        </div>
+                                                        foreach (var itemComposite in item.ListComposite)
+                                                        {
+                                                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                                                @itemComposite.Quantity x @itemComposite.ProductName
+                                                            </div>
+                                                        }
+                                                    }
+                                                </div>
+                                                @if (!Model.IsFree)
+                                                {
+                                                    <div class="col-md-5 col-sm-5 col-xs-12">
+                                                        <div class="col-md-12 col-sm-12 col-xs-12 fontBold" style="padding:10px 0 10px 0;">
+                                                            <i class="fa fa-circle" style="font-size:10px;"></i> <span class="text-success">Additional</span>&nbsp;&nbsp;
+                                                            <a class="btn btn-success btn-xs" href="@Url.ActionEncoded("EditAdditionsProductPackage", "OurProducts", new { @AssetID = item.ID })">Add/Edit</a>
+                                                        </div>
+                                                        @if (item.ListAdditional != null && item.ListAdditional.Count > 0)
+                                                        {
+                                                            foreach (var itemAdditional in item.ListAdditional)
+                                                            {
+                                                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                                                    @itemAdditional.Quantity x @itemAdditional.ProductName
+                                                                </div>
+                                                            }
+                                                        }
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="col-md-5 col-sm-5 col-xs-12">
+                                                    </div>
+                                                }
+
+                                                        <div class="col-md-2 col-sm-2 col-xs-12 remove text-right">
+                                                            <a href="javascript:void(0);" class="btn" onclick="RemoveProduct(@item.OffSet)"><i class="fa fa-trash"></i> Remove</a>
+                                                        </div>
+                                                    </div>
+                                            <div class="colorDoYou">
+                                                <a class="fontLighter" href="javascript:void(0)" data-toggle="modal" data-backdrop="static"
+                                                   data-target="#bs-modal-do-you-have-coupon-code" data-productid="@item.ProductID"
+                                                   data-offset="@item.OffSet" data-orderdetail="@item.ID" id="CouponAction-@item.OffSet"
+                                                   style="display: @string.Format("{0}", string.IsNullOrEmpty(item.DiscountID) ? "block" : "none")">
+                                                    Do you have Coupon Code?
+                                                </a>
+
+                                                <div id="divCouponInfor-@item.OffSet"
+                                                     style="display: @string.Format("{0}", string.IsNullOrEmpty(item.DiscountID) ? "none" : "block")">
+                                                    <span id="title-@item.OffSet">
+                                                        Discount code <strong>@item.DiscountDisplay</strong> (@item.DiscountValue@item.DiscountTypeName)
+                                                    </span>
+                                                    <a class="fontLighter" href="javascript:void(0)" onclick="RemoveCoupon(@item.OffSet,'1')">
+                                                        <i class="fa fa-times text-danger"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else if (item.ProductType == (byte)Commons.EProductType.Package)
+                    {
+                        @*Package*@
+                        <div class="form-group itemProduct" id="divProduct_@item.OffSet" data-offset="@item.OffSet">
+                            <div class="col-md-2 col-sm-2 col-xs-12">
+                                <div class="form-group text-center imageProduct">
+                                    <img id="upload-preview" class="" src="@item.ImageURL" height="110" width="150" />
+                                </div>
+                            </div>
+                            <div class="col-md-10 col-sm-10 col-xs-12">
+                                <div class="form-group infoProduct">
+                                    @*Header*@
+                                    <div class="col-md-12 col-sm-12 col-xs-12 header">
+                                        <div class="col-md-8 col-sm-8 col-xs-8" style="padding-left:0px;">
+                                            <label class="fontBold text-danger">@item.ProductName</label>
+                                            <br />
+                                            <label style="font-size:15px; line-height:17px">@item.CurrencySymbol@item.Price.ToString("N2")</label>
+                                        </div>
+                                        @*<div class="col-md-3 col-sm-3 col-xs-3 text-right">
+                                                <label>@item.CurrencySymbol@item.TotalPrice.ToString("N2")</label>
+                                            </div>*@
+                                        <div class="col-md-2 col-sm-2 col-xs-2">
+                                            @*quantity*@
+                                            @*<div class="input-group">
+                                                                   <span class="input-group-btn">
+                                                                       <!--<button class="btn btn-secondary subtract" type="button" onclick="AddOrSubtractYourCart('sub', '#txtQuantity_@item.OffSet', this, @item.OffSet)">-</button>-->
+                                                                       <button class="btn btn-secondary subtract" type="button" onclick="UpdateProductQty('sub', '#txtQuantity_@item.OffSet', this,'@item.OffSet')">-</button>
+                                                                   </span>
+                                                                   @Html.TextBox(string.Format("ListItems[{0}].Quantity", item.OffSet), item.Quantity,
+                                                new
+                                                {
+                                                    @value = item.Quantity,
+                                                    @id = "txtQuantity_" + item.OffSet,
+                                                    @placeholder = "0",
+                                                    @class = "form-control text-center inputChange"
+                                                })
+                                                                   <span class="input-group-btn">
+                                                                       <!--<button class="btn btn-secondary add" type="button" onclick="AddOrSubtractYourCart('add', '#txtQuantity_@item.OffSet', this, @item.OffSet)">+</button>-->
+
+                                                                       <button class="btn btn-secondary add" type="button" onclick="UpdateProductQty('add', '#txtQuantity_@item.OffSet', this,'@item.OffSet')">+</button>
+
+                                                                   </span>
+                                                               </div>*@
+                                        </div>
+                                        <div class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                            <label>@item.CurrencySymbol<span id="lblTotalItem-@item.OffSet">@item.SubTotal.ToString("N2")</span></label>
+                                        </div>
+                                    </div>
+                                    @*Content*@
+                                    <div class="col-md-12 col-sm-12 col-xs-12 content">
+                                        <div class="row">
+                                            <label class="col-md-12 col-sm-12 col-xs-12 fontLighter"><span class="fontBold">Period:</span> @item.PeriodName</label>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-md-12 col-sm-12 col-xs-12 fontLighter text-success">@item.sNumOfAccount</label>
+                                        </div>
+                                        @*list product*@
+                                        @if (item.ListProductOfPackage != null && item.ListProductOfPackage.Count > 0)
+                                        {
+                                            foreach (var itemProduct in item.ListProductOfPackage)
+                                            {
+                                                <div class="row" style="padding-top:5px;">
+                                                    <div class="col-md-1 col-sm-1 col-xs-12 text-center">
+                                                        <img id="upload-preview" class="" src="@itemProduct.ImageURL" height="50" width="50" />
+                                                    </div>
+                                                    <div class="col-md-11 col-sm-11 col-xs-12" style="line-height:50px;">
+                                                        <label>@itemProduct.ProductName</label>
+                                                        &nbsp;&nbsp;<a href="javascript:void(0)" data-toggle="modal"
+                                                                       data-target="#bs-modal-advanced-information-@itemProduct.ProductID-@itemProduct.OffSet">
+                                                            <i class="fa fa-info-circle text-info"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+
+                                                <!--modal Advanced Information for Package-->
+                                                <div class="modal fade"
+                                                     id="bs-modal-advanced-information-@itemProduct.ProductID-@itemProduct.OffSet"
+                                                     tabindex="-1" role="dialog" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal">
+                                                                    <span aria-hidden="true">×</span>
+                                                                </button>
+                                                                <h4 class="modal-title">Advanced Information</h4>
+                                                            </div>
+                                                            <div class="modal-body" style="padding:0px;">
+                                                                <table id="select-store">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th style="background-color:#fff !important;">
+                                                                                <span class="fontBold text-success-02">@itemProduct.sAmountOfUnit</span>
+                                                                            </th>
+                                                                        </tr>
+                                                                        @if (itemProduct.ListFunction != null && itemProduct.ListFunction.Count > 0)
+                                                                        {
+                                                                            <tr>
+                                                                                <td><span class="fontBold">List of functions</span></td>
+                                                                            </tr>
+                                                                        }
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        @if (itemProduct.ListFunction != null && itemProduct.ListFunction.Count > 0)
+                                                                        {
+                                                                            foreach (var itemFunc in itemProduct.ListFunction)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td>@itemFunc.Name</td>
+                                                                                </tr>
+                                                                            }
+                                                                        }
+                                                                    </tbody>
+                                                                </table>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!--end modal Advanced Information for Package-->
+                                            }
+                                        }
+                                        @*End list product*@
+                                        <div class="row listItem">
+                                            <div class="col-md-5 col-sm-5 col-xs-12">
+
+                                                @if (item.ListComposite != null && item.ListComposite.Count > 0)
+                                                {
+                                                    <div class="col-md-12 col-sm-12 col-xs-12 fontBold" style="padding:10px 0 10px 0;">
+                                                        <i class="fa fa-circle" style="font-size:10px;"></i> <span class="text-success">Composite</span>&nbsp;&nbsp;
+                                                    </div>
+                                                    foreach (var itemComposite in item.ListComposite)
+                                                    {
+                                                        <div class="col-md-12 col-sm-12 col-xs-12">
+                                                            @itemComposite.Quantity x @itemComposite.ProductName
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+                                            <div class="col-md-5 col-sm-5 col-xs-12">
+                                                <div class="col-md-12 col-sm-12 col-xs-12 fontBold" style="padding:10px 0 10px 0;">
+                                                    <i class="fa fa-circle" style="font-size:10px;"></i> <span class="text-success">Additional</span>&nbsp;&nbsp;
+                                                    <a class="btn btn-success btn-xs" href="@Url.ActionEncoded("EditAdditionsProductPackage", "OurProducts", new { @AssetID = item.ID })">Add/Edit</a>
+                                                </div>
+                                                @if (item.ListAdditional != null && item.ListAdditional.Count > 0)
+                                                {
+                                                    foreach (var itemAdditional in item.ListAdditional)
+                                                    {
+                                                        <div class="col-md-12 col-sm-12 col-xs-12">
+                                                            @itemAdditional.Quantity x @itemAdditional.ProductName
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+                                            <div class="col-md-2 col-sm-2 col-xs-12 remove text-right">
+                                                <a href="javascript:void(0);" class="btn" onclick="RemoveProduct(@item.OffSet)">
+                                                    <i class="fa fa-trash"></i> Remove
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="colorDoYou">
+                                            <a class="fontLighter" href="javascript:void(0)" data-toggle="modal" data-backdrop="static"
+                                               data-target="#bs-modal-do-you-have-coupon-code" data-productid="@item.ProductID"
+                                               data-offset="@item.OffSet" data-orderdetail="@item.ID" id="CouponAction-@item.OffSet"
+                                               style="display: @string.Format("{0}", string.IsNullOrEmpty(item.DiscountID) ? "block" : "none")">
+                                                Do you have Coupon Code?
+                                            </a>
+
+                                            <div id="divCouponInfor-@item.OffSet"
+                                                 style="display: @string.Format("{0}", string.IsNullOrEmpty(item.DiscountID) ? "none" : "block")">
+                                                <span id="title-@item.OffSet">
+                                                    Discount code <strong>@item.DiscountDisplay</strong> (@item.DiscountValue@item.DiscountTypeName)
+                                                </span>
+                                                <a class="fontLighter" href="javascript:void(0)" onclick="RemoveCoupon(@item.OffSet,'1')">
+                                                    <i class="fa fa-times text-danger"></i>
+                                                </a>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else if (item.ProductType == (byte)Commons.EProductType.Addition)
+                    {
+                        @*Additional*@
+                        <div class="form-group itemProduct" id="divProduct_@item.OffSet" data-offset="@item.OffSet">
+                            <div class="col-md-2 col-sm-2 col-xs-12">
+                                <div class="form-group text-center imageProduct">
+                                    <img id="upload-preview" class="" src="@item.ImageURL" height="110" width="150" />
+                                </div>
+                            </div>
+                            <div class="col-md-10 col-sm-10 col-xs-12">
+                                <div class="form-group infoProduct">
+                                    @*Header*@
+                                    <div class="col-md-12 col-sm-12 col-xs-12 header">
+                                        <div class="col-md-8 col-sm-8 col-xs-8" style="padding-left:0px;">
+                                            <label class="fontBold text-danger">@item.ProductName</label>
+                                            <br />
+                                            <label style="font-size:15px; line-height:17px">@item.CurrencySymbol@item.Price.ToString("N2")</label>
+                                        </div>
+                                        @*<div class="col-md-3 col-sm-3 col-xs-3 text-right">
+                                                <label>@item.CurrencySymbol@item.TotalPrice.ToString("N2")</label>
+                                            </div>*@
+                                        <div class="col-md-2 col-sm-2 col-xs-2">
+                                            @*quantity*@
+                                            @*<div class="input-group">
+                                                                   <span class="input-group-btn">
+                                                                       <!--<button class="btn btn-secondary subtract" type="button" onclick="AddOrSubtractYourCart('sub', '#txtQuantity_@item.OffSet', this, @item.OffSet)">-</button>-->
+
+                                                                       <button class="btn btn-secondary subtract" type="button" onclick="UpdateProductQty('sub', '#txtQuantity_@item.OffSet', this,'@item.OffSet')">-</button>
+
+                                                                   </span>
+                                                                   @Html.TextBox(string.Format("ListItems[{0}].Quantity", item.OffSet), item.Quantity,
+                                                new
+                                                {
+                                                    @value = item.Quantity,
+                                                    @id = "txtQuantity_" + item.OffSet,
+                                                    @placeholder = "0",
+                                                    @class = "form-control text-center inputChange"
+                                                })
+                                                                   <span class="input-group-btn">
+                                                                       <!--<button class="btn btn-secondary add" type="button" onclick="AddOrSubtractYourCart('add', '#txtQuantity_@item.OffSet', this, @item.OffSet)">+</button>-->
+                                                                       <button class="btn btn-secondary add" type="button" onclick="UpdateProductQty('add', '#txtQuantity_@item.OffSet', this,'@item.OffSet')">+</button>
+
+                                                                   </span>
+                                                               </div>*@
+                                        </div>
+                                        <div class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                            <label>@item.CurrencySymbol<span id="lblTotalItem-@item.OffSet">@item.SubTotal.ToString("N2")</span></label>
+                                        </div>
+                                    </div>
+                                    @*Content*@
+                                    <div class="row col-md-12 col-sm-12 col-xs-12 content">
+                                        <div class="col-md-10 col-sm-10 col-xs-12">
+                                            <div class="row">
+                                                <label class="col-md-12 col-sm-12 col-xs-12 fontLighter"><span class="fontBold">Period:</span> @item.PeriodName</label>
+                                            </div>
+
+                                            @if (item.AdditionType == (byte)Commons.EAdditionType.Account || item.AdditionType == (byte)Commons.EAdditionType.Location || item.AdditionType == (byte)Commons.EAdditionType.Software)
+                                            {
+                                                <div class="row">
+                                                    <label class="col-md-12 col-sm-12 col-xs-12 fontLighter">
+                                                        <span class="fontBold">Applied On:</span>
+                                                        @Html.Raw(item.AppliedOn)
+                                                    </label>
+                                                </div>
+                                            }
+
+                                            @if (item.AdditionType == (byte)Commons.EAdditionType.Function)
+                                            {
+                                                <div class="row">
+                                                    <label class="col-md-12 col-sm-12 col-xs-12 fontLighter"><span class="fontBold">Applicable On:</span> @item.ApplicableOn</label>
+                                                </div>
+                                                <div class="row">
+                                                    <label class="col-md-12 col-sm-12 col-xs-12 fontLighter"><span class="fontBold">Functions:</span> @item.sFunction</label>
+                                                </div>
+                                            }
+
+                                            <div class="colorDoYou">
+                                                <a class="fontLighter" href="javascript:void(0)" data-toggle="modal" data-backdrop="static"
+                                                   data-target="#bs-modal-do-you-have-coupon-code" data-productid="@item.ProductID"
+                                                   data-offset="@item.OffSet" data-orderdetail="@item.ID" id="CouponAction-@item.OffSet"
+                                                   style="display: @string.Format("{0}", string.IsNullOrEmpty(item.DiscountID) ? "block" : "none")">
+                                                    Do you have Coupon Code?
+                                                </a>
+                                                <div id="divCouponInfor-@item.OffSet"
+                                                     style="display: @string.Format("{0}", string.IsNullOrEmpty(item.DiscountID) ? "none" : "block")">
+                                                    <span id="title-@item.OffSet">
+                                                        Discount code <strong>@item.DiscountDisplay</strong> (@item.DiscountValue @item.DiscountTypeName)
+                                                    </span>
+                                                    <a class="fontLighter" href="javascript:void(0)" onclick="RemoveCoupon(@item.OffSet,'1')">
+                                                        <i class="fa fa-times text-danger"></i>
+                                                    </a>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 col-sm-2 col-xs-12 remove text-right" style="padding-right:0px;">
+                                            <a href="javascript:void(0);" class="btn" onclick="RemoveProduct(@item.OffSet)" style="margin-right:-15px;"><i class="fa fa-trash"></i> Remove</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            }
+
+            @*Note - Cart Total*@
+            <div class="row" id="cart-info">
+                <div class="col-md-8 col-sm-8 col-xs-12" id="notes">
+                    <div class="col-md-12 col-sm-12 col-xs-12 fontUppercase fontBold" style="padding:20px 0;">
+                        notes
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12" style="padding-left:0;">
+                        @Html.TextAreaFor(model => model.Description, new { @class = "form-control text-area-no-resize", @placeholder = "Text your notes at here..." })
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-12 fontUppercase" id="cart">
+                    @*Sub Total*@
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12 fontBold" style="padding:20px 0;">
+                            cart total
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12" style="padding:10px 0;">
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                sub total
+                            </div>
+                            <div class="col-md-4 col-sm-4 col-xs-12 text-right">
+                                @Model.CurrencySymbol<span id="lblSubTotal">@Model.SubTotal.ToString("N2")</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    @*@if (!string.IsNullOrEmpty(Model.DiscountTotalBill.DiscountID))
+                        {
+                                   <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12" style="padding:10px 0;">
+                                    <div class="col-md-8 col-sm-8 col-xs-12" style="text-transform:capitalize;">
+                                        Discount on total cart
+                                    </div>
+                                    <div class="col-md-4 col-sm-4 col-xs-12 text-right">
+                                        @Model.CurrencySymbol<span id="lblDiscountOnTotal">@Model.DiscountOnTotalCart.ToString("N2")</span>
+                                    </div>
+                                </div>
+                            </div>
+                        }*@
+
+                    @*Discount*@
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12" style="padding:10px 0;">
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                discount
+                            </div>
+                            <div class="col-md-4 col-sm-4 col-xs-12 text-right">
+                                @Model.CurrencySymbol<span id="lblTotalDiscount">@Model.TotalDiscount.ToString("N2")</span>
+                            </div>
+                        </div>
+                    </div>
+                    @*Promotion*@
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12" style="padding:10px 0;">
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                Promotion
+                            </div>
+                            <div class="col-md-4 col-sm-4 col-xs-12 text-right">
+                                @Model.CurrencySymbol<span id="lblTotalPromotion">@Model.TotalPromotion.ToString("N2")</span>
+                            </div>
+                        </div>
+                    </div>
+                    @*Taxes*@
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12" style="padding:10px 0;">
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                Tax (<span style="text-transform:capitalize;">@Model.sTaxName</span>: @Model.sTaxValue%)
+                            </div>
+                            <div class="col-md-4 col-sm-4 col-xs-12 text-right">
+                                @Model.CurrencySymbol<span id="lblTax">@Model.Tax.ToString("N2")</span>
+                            </div>
+                        </div>
+                    </div>
+                    @*Total*@
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12" style="border-top:1px solid #c7c7c7; padding:10px 0;">
+                            <div class="col-md-5 col-sm-5 col-xs-12">
+                                total
+                            </div>
+                            <div class="col-md-7 col-sm-7 col-xs-12 text-right fontBold" id="total">
+                                @Model.CurrencySymbol<span id="lblTotal">@Model.Total.ToString("N2")</span>
+                            </div>
+                        </div>
+                    </div>
+                    @*Button*@
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12 text-right">
+                            @*<button id="Update_Cart" class="btn btn-success fontUppercase" onclick="SubmitFormYourCart('#form-your-cart','update')">update cart</button>*@
+                            <button id="CheckOut" class="btn btn-info fontUppercase" type="button" onclick="SubmitFormYourCart('#form-your-cart', 'checkout')">check out</button>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12 text-right">
+                            <span id="lblResult" class="label label-danger" style="text-transform:capitalize;font-size: 10px;"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+@if (Model.TotalQuantity < 1)
+{
+    <div class="se-pre-con"></div>
+    <div class="row form-horizontal form-label-left" style="margin-top:100px;padding:50px 0 50px 0;background-color:#f6f7f8">
+        <div class="form-group">
+            <div class="col-md-3 col-sm-2 col-xs-1"></div>
+            <div class="col-md-6 col-sm-8 col-xs-10 text-center">
+                <h4 class="yourcard_additem" style="line-height:0px;">
+                    YOU HAVE NO ITEM IN CART
+                </h4>
+            </div>
+            <div class="col-md-3 col-sm-2 col-xs-1"></div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3 col-sm-2 col-xs-1"></div>
+            <div class="col-md-6 col-sm-8 col-xs-10 text-center">
+                <h4 class="yourcard_additem" style="line-height:0px;">
+                    @*<a href=" javascript:void(0)" onclick="StartYourBusiness('@Url.Action("StartYourBusiness", "Home")')" class="btn btn-group-sm" style="padding:9.5px 55.5px; background-color:#fdd835; color:#4a4a4a; font-weight:bolder; font-size:14px; border:1px solid transparent;border-radius:4px">SHOP NOW</a>*@
+                    <a href="@Url.Action("StartYourBusiness", "Home")" class="btn btn-group-sm" style="padding:9.5px 55.5px; background-color:#fdd835; color:#4a4a4a; font-weight:bolder; font-size:14px; border:1px solid transparent;border-radius:4px">SHOP NOW</a>
+                </h4>
+            </div>
+            <div class="col-md-3 col-sm-2 col-xs-1"></div>
+        </div>
+    </div>
+}
+<!--modal Do you have Coupon Code-->
+<div class="modal fade" id="bs-modal-do-you-have-coupon-code" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title fontUppercase">Do you have Coupon Code</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="txt-coupon-code" class="control-label">Coupon Code:</label>
+                    <input type="text" class="form-control" id="txt-coupon-code">
+                </div>
+                <div class="form-group">
+                    <span class="label label-danger" id="lblMsgCoupon" style="white-space:inherit;padding-left:0.2em !important"></span>
+                </div>
+            </div>
+            <div class="modal-footer" style="border:none;">
+                <button type="button" class="btn btn-primary fontUppercase" id="btnApplyCouponCode"
+                        onclick="CallCouponCode('#bs-modal-do-you-have-coupon-code')">
+                    Apply
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--end modal Do you have Coupon Code-->
+<style>
+    .imageProduct img {
+        max-width: 100%;
+    }
+</style>
+<script type="text/javascript">
+
+    var btnGlobal;
+    var _ProductID;
+    var _OffSet;
+    var _IsCreateOrder = '@ViewBag.IsCreateOrder';
+    var _OrderDetailID;
+    $(document).ready(function (e) {
+
+        if (_IsCreateOrder.toLowerCase() === "false" && '@Model.TotalQuantity' !=="0")
+        {
+            createOrUpdateOrder('@Model.CusId', '@Model.ID', '@Model.TotalQuantity');
+        }
+        var order = getOrder('@Model.CusId');
+        if (order != undefined) {
+            $('#countItem').html(order.Qty);
+        }
+        /*===============*/
+        $("#bs-modal-do-you-have-coupon-code").on('show.bs.modal', function (event) {
+            // Cache the elements first
+            var $CouponCode = $('#txt-coupon-code');
+            var $btnApplyCouponCode = $('#btnApplyCouponCode');
+            // Set the onkeyup events
+            $btnApplyCouponCode.prop('disabled', true);
+            $CouponCode.on('keyup paste', checkStatus);
+            // Set the event handler
+            function checkStatus() {
+                setTimeout(function () {
+                    var status = ($.trim($CouponCode.val()) === '');
+                    $btnApplyCouponCode.prop('disabled', status);
+                }, 100);
+            }
+            //=========================
+            btnGlobal = $(event.relatedTarget); // Button that triggered the modal
+            _ProductID = btnGlobal.data('productid');
+            _OffSet = btnGlobal.data('offset');
+            _OrderDetailID = btnGlobal.data('orderdetail');
+            if (_ProductID == '') { //Total Bill
+                var _lengthItem = $('.itemProduct:visible').length;
+                if (_lengthItem == 0) {
+                    $(this).modal(hide);
+                }
+            }
+            $('#txt-coupon-code').val('');
+            $('#lblMsgCoupon').html('');
+        });
+        $('#Update_Cart').prop("disabled", true);
+        CountItemYourCart = '@string.Format("{0}", Model.ListItems != null ? Model.TotalQuantity.ToString():"0")';
+        if (CountItemYourCart == 0) {
+            $('#CheckOut').attr('disabled', 'disabled');
+        }
+
+        $.each($('.itemProduct:visible'), function () {
+            var OffSet = $(this).data('offset');
+            var _Quantity = $(this).find('#txtQuantity_' + OffSet).val();
+            if (_Quantity == 1) {
+                $(this).find('.subtract').addClass('buttonDisabled');
+            }
+        });
+
+        $(".inputChange").keydown(function (event) {
+            var _this = this;
+            // Allow only backspace and delete
+            if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9) {
+                // let it happen, don't do anything
+                setTimeout(function () {
+                    var _value = $(_this).val();
+                    if (_value == 0) {
+                        alert('Cannot select quantity of an item as 0. Please reselect quantity or remove the item.');
+                        $(_this).val('0');
+                    }
+                    GetSubTotal();
+                }, 1);
+            }
+            else {
+                // Ensure that it is a number and stop the keypress
+                if ((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105)) {
+                    event.preventDefault();
+                } else {
+                    setTimeout(function () {
+                        var _value = $(_this).val();
+                        if (_value == 0) {
+                            alert('Cannot select quantity of an item as 0. Please reselect quantity or remove the item.');
+                            $(_this).val('0');
+                        }
+                        GetSubTotal();
+                    }, 1);
+                }
+            }
+        });
+
+
+    });
+
+    //<!--Functions -->
+
+    function ConditionForDiscount(offset, type) {
+        //sending by Thuan
+        //for item: if (discountType == $) discountValue 0 - <= subtotal (price * quantity)
+        //for total: if (discountType == $) discountValue(totalDiscount - BillDiscount) 0 - <= sum( subtotal item) (price * quantity)
+        if (type == 0) { //Discount Total
+            var totalDiscountID = $('#hidTotalDiscountID').val();
+            if (totalDiscountID != '') {
+                var subtotal = 0;
+                $.each($('.itemProduct:visible'), function () {
+                    var OffSet = $(this).data('offset');
+                    var _Price = $('#hidPrice_' + OffSet).val();
+                    var _Quantity = $(this).find('#txtQuantity_' + OffSet).val();
+                    subtotal += (_Price * _Quantity);
+                });
+                var totalDiscount = parseFloat($('#hidTotalDiscount').val());
+                var billDiscount = parseFloat($('#hidTotalDiscountValue').val());
+                var disValue = totalDiscount - billDiscount;
+                //alert(subtotal + '|' + disValue);
+                if (disValue < 0 || disValue > subtotal) {
+                    alert('The discount has been removed because its amount is larger than total amount of your cart.');
+                    RemoveCoupon('', '0');
+                }
+            }
+        } else {//Discount Item
+            var disId = $('#hidDiscountID_' + offset).val();
+            var disType = $('#hidDiscountType_' + offset).val();
+            if (disId != '' && disType == '@Commons.EValueType.Currency.ToString("d")') {
+                var disValue = parseFloat($('#hidDiscountValue_' + offset).val());
+                var price = parseFloat($('#hidPrice_' + offset).val());
+                var quantity = parseInt($('#txtQuantity_' + offset).val());
+                var subtotal = price * quantity;
+                if (disValue < 0 || disValue > subtotal) {
+                    alert('The discount has been removed because its amount is larger than amount of this item.');
+                    RemoveCoupon(offset, '1')
+                }
+            }
+            //Call //Discount Total
+            ConditionForDiscount(-1, 0);
+        }
+    }
+
+    function AddOrSubtractYourCart(_type, txtInput, _this, offset) {
+        var value = $(txtInput).val();
+        if (value == '')
+            value = 0;
+        if (_type == 'add') { //add
+            value++;
+            $(_this).parent().parent('.input-group').find('.subtract').removeClass('buttonDisabled');
+        } else if (_type == 'sub') {//subtract
+            if (value == 0) {
+                value = 0;
+            } else {
+                value--;
+                if (value == 1) {
+                    $(_this).addClass('buttonDisabled');
+                }
+            }
+        }
+        $(txtInput).val(value);
+        //Update
+        GetSubTotal();
+
+        ConditionForDiscount(offset, 1);
+    }
+
+    var _SubTotal = 0;
+    var _TotalDiscount = 0;
+    var _TotalPromotion = 0;
+    var _Tax = 0;
+
+    function GetSubTotal() {
+        _SubTotal = 0;
+        var qty = 0;
+        $.each($('.itemProduct:visible'), function () {
+            var OffSet = $(this).data('offset');
+            //var _Price = parseFloat($('#hidPrice_' + OffSet).val());
+            var _Price = parseFloat($('#hidTotalPrice_' + OffSet).val());
+            var _Quantity = parseInt($(this).find('#txtQuantity_' + OffSet).val());
+            var _TotalItem = (_Price * _Quantity);
+            $('#lblTotalItem-' + OffSet).html(NumberFormatCurrency(_TotalItem, 2));
+            _SubTotal += _TotalItem;
+            qty += _Quantity;
+        });
+
+        $('#countItemCart').html(qty);
+        $('#countItem').html(qty);
+
+        if (_SubTotal <= 0) {
+            $('#CheckOut').attr('disabled', 'disabled');
+            return false;
+        } else {
+            $('#CheckOut').removeAttr('disabled');
+        }
+        //_SubTotal = NumberFormatCurrency(_SubTotal, 2);
+        $('#lblSubTotal').html(NumberFormatCurrency(_SubTotal, 2));
+
+        var TotalDiscount = $('#hidTotalDiscount').val();
+        _TotalDiscount = TotalDiscount;
+        $('#lblTotalDiscount').html(NumberFormatCurrency(TotalDiscount, 2));
+
+        var TotalPromotion = $('#hidTotalPromotion').val();
+        _TotalPromotion = TotalPromotion;
+        $('#lblTotalPromotion').html(NumberFormatCurrency(TotalPromotion, 2));
+
+        var Tax = $('#hidTax').val();
+        _Tax = Tax;
+        $('#lblTax').html(NumberFormatCurrency(Tax, 2));
+
+        GetTotal();
+    }
+
+    function GetTotal() {
+        var taxType = $('#hidTaxType').val();
+        //alert((taxType == '@Commons.ETaxType.AddOn.ToString("d")' ? _Tax : 0));
+        var Total = _SubTotal - parseFloat(_TotalDiscount)
+                                - parseFloat(_TotalPromotion)
+                                + (taxType == '@Commons.ETaxType.AddOn.ToString("d")' ? parseFloat(_Tax) : 0);
+        $('#lblTotal').html(NumberFormatCurrency(Total, 2));
+    }
+
+    function CallCouponCode(_modal) {
+        var totalItem = $('.discountDisplayforOffset').length;
+        var totalHaveDiscountCode = 0;
+
+        var _DiscountCode = $(_modal).find("#txt-coupon-code").val();
+        var flag = true;
+        if (_DiscountCode == '' || _DiscountCode === undefined) {
+            $("#lblMsgCoupon").html('Please enter coupon code for product');
+            $("#txt-coupon-code").focus();
+            flag = false;
+            return false;
+        }
+
+        $('.descriptionforoffset').each(function () {
+            var tempDiscountCode = $(this).val();
+            if (tempDiscountCode === _DiscountCode) {
+                $("#lblMsgCoupon").html('This discount code can be applied on only 1 item. Please try with another code');
+                $("#txt-coupon-code").focus();
+                flag = false;
+                return false;
+            }
+        });
+
+        $(".discountDisplayforOffset").each(function () {
+            var discountCode = $(this).val();
+            if (discountCode !== "") {
+                totalHaveDiscountCode++;
+            }
+        });
+        if (totalItem === totalHaveDiscountCode) {
+            $("#lblMsgCoupon").html('Unable to add discount for total bill. All items in your cart have already been applied discounts.');
+            $("#txt-coupon-code").focus();
+            flag = false;
+            return false;
+        }
+
+
+        var ProductID = _ProductID;
+        var OffSet = _OffSet;
+        if (ProductID === "")
+        {
+            var totalNotDiscount = 0;
+            $('.clsoffSet').each(function () {
+                var _offSet = $(this).val();
+                var disCountCode = $('[id=hidDiscountDisplay_' + _offSet + '').val();
+                if (disCountCode === "" && _offSet != OffSet) {
+                    var price = parseFloat($('#hidPrice_' + _offSet).val());
+                    var quantity = parseInt($('#txtQuantity_' + _offSet).val());
+                    totalNotDiscount = parseFloat(totalNotDiscount) + (price * quantity);
+                }
+            });
+            if (parseFloat(totalNotDiscount) == 0)
+            {
+                
+                $("#lblMsgCoupon").html('The discount for total cart has been removed because its amount is larger than total amount of your cart.');
+                $("#txt-coupon-code").focus();
+                flag = false;
+                return false;
+            }
+        } else {
+            var price = parseFloat($('#hidPrice_' + OffSet).val());
+            var quantity = parseInt($('#txtQuantity_' + OffSet).val());
+            var totalNotDiscount = price * quantity;
+            if (parseFloat(totalNotDiscount) == 0) {
+                $("#lblMsgCoupon").html('The discount has been removed because its amount is larger than amount of this item.');
+                $("#txt-coupon-code").focus();
+                flag = false;
+                return false;
+            }
+        }
+
+        if (flag)
+        {
+            $('.se-pre-con').show();
+            $.ajax({
+                type: "GET",
+                url: CreateAbsoluteUrl("CouponCode"),
+                traditional: true,
+                data: {
+                    DiscountCode: _DiscountCode,
+                    ProductID: ProductID,
+                    OrderDetailID: _OrderDetailID
+                },
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (data) {
+                    $('.se-pre-con').hide();
+                    $(_modal).modal('hide');
+                    data = JSON.parse(data);
+                    if (ProductID != '') {
+                        $('#hidDiscountID_' + OffSet).val(data.ID);
+                        $('#hidDiscountName_' + OffSet).val(data.Name);
+                        $('#hidDiscountAmount_' + OffSet).val(data.Value);
+                        $('#hidDiscountValue_' + OffSet).val(data.Value);
+                        $('#hidDiscountType_' + OffSet).val(data.ValueType);
+                        $('#hidDescription_' + OffSet).val(_DiscountCode);
+                    } else {
+                        $('#hidTotalDiscountID').val(data.ID);
+                        $('#hidTotalDiscountName').val(data.Name);
+                        $('#hidTotalDiscountAmount').val(data.Value);
+                        $('#hidTotalDiscountValue').val(data.Value);
+                        $('#hidTotalDiscountType').val(data.ValueType);
+                        $('#hidTotalDescription').val(_DiscountCode);
+                        $('#hidTotalDiscountIsDelete').val(false);
+                    }
+                    $('#Update_Cart').prop("disabled", false);
+                    //===============
+                    var _DiscountDisplayTotal = $("[id=hidTotalDiscountDisplay]").val();
+
+                    if (_DiscountDisplayTotal !== "") {
+                        if (totalHaveDiscountCode == totalItem - 1) {
+                            alert('The discount for total cart has been removed. All items in your cart have already been applied discounts.');
+                            $('#hidTotalDiscountIsDelete').val(true);
+                            $('#divCouponTotal').hide();
+                            $('#CouponActionTotalBill').show();
+                            $('#divToDiscount').show();
+                        }
+                    } else {
+                        if (ProductID === "")
+                        {
+                            var disValueTotal = parseFloat(data.Value);// parseFloat($('#hidTotalDiscountValue').val());
+                            var totalNotDiscount = 0;
+                            $('.clsoffSet').each(function () {
+                                var _offSet = $(this).val();
+                                var disCountCode = $('[id=hidDiscountDisplay_' + _offSet + '').val();
+                                if (disCountCode === "" && _offSet != OffSet) {
+                                    var price = parseFloat($('#hidPrice_' + _offSet).val());
+                                    var quantity = parseInt($('#txtQuantity_' + _offSet).val());
+                                    totalNotDiscount = parseFloat(totalNotDiscount) + (price * quantity);
+                                }
+                            });
+                            if ((parseFloat(disValueTotal) > parseFloat(totalNotDiscount) && data.ValueType !=0) || parseFloat(disValueTotal) < 0) {
+                                alert('The discount for total cart has been removed because its amount is larger than total amount of your cart.');
+                                RemoveCoupon("", '0');// remove discount total not offset
+                            }
+                        }
+                    }
+
+                    SubmitFormYourCart('#form-your-cart', 'update');
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $('.se-pre-con').hide();
+                    $("#lblMsgCoupon").html(jqXHR.statusText);
+                },
+                //beforeSend: function () {
+                //    $('.se-pre-con').show();
+                //},
+                //complete: function () {
+                //    $('.se-pre-con').hide();
+                //},
+            });
+        }
+    }
+
+    function RemoveCoupon(offset, typeCoupon) {
+        if (typeCoupon == '1') {
+            $('#hidDiscountID_' + offset).val('');
+            $('#hidDiscountName_' + offset).val('');
+            $('#hidDiscountAmount_' + offset).val('');
+            $('#hidDiscountValue_' + offset).val('');
+            $('#hidDiscountType_' + offset).val('');
+            $('#hidDescription_' + offset).val('');
+            $('#divCouponInfor-' + offset).hide();
+            $('#CouponAction-' + offset).show();
+        } else {
+            //$('#hidTotalDiscountID').val('');
+            $('#hidTotalDiscountIsDelete').val(true);
+            //$('#hidTotalDiscountName').val('');
+            //$('#hidTotalDiscountAmount').val('');
+            //$('#hidTotalDiscountValue').val('');
+            //$('#hidTotalDiscountType').val('');
+            //$('#hidTotalDescription').val('');
+            $('#divCouponTotal').hide();
+            $('#CouponActionTotalBill').show();
+            $('#divToDiscount').show();
+        }
+
+        SubmitFormYourCart('#form-your-cart', 'update');
+    }
+
+    function RemoveProduct(OffSet) {
+        var div = $('#divProduct_' + OffSet);
+        $(div).hide();
+        $('#hidIsDelete_' + OffSet).val(true);
+        $('#Update_Cart').prop("disabled", false);
+
+        var totalItem = $('.discountDisplayforOffset').length - 1;
+        var totalHaveDiscountCode = 0;
+        var _typeDiscount = $('#hidTotalDiscountType').val();
+        $(".discountDisplayforOffset").each(function () {
+            var discountCode = $(this).val();
+            if (discountCode !== "") {
+                totalHaveDiscountCode++;
+            }
+        });
+        var _DiscountDisplayTotal = $("[id=hidTotalDiscountDisplay]").val();
+        if (_DiscountDisplayTotal !== "") {
+            if (totalHaveDiscountCode == totalItem) {
+                alert('The discount for total cart has been removed. All items in your cart have already been applied discounts.');
+                $('#hidTotalDiscountIsDelete').val(true);
+                $('#divCouponTotal').hide();
+                $('#CouponActionTotalBill').show();
+                $('#divToDiscount').show();
+            }
+        }
+
+        var disValueTotal = parseFloat($('#hidTotalDiscountValue').val());
+        var disCountCodeTatal = $("[id=hidTotalDiscountDisplay]").val();
+        var totalNotDiscount = 0;
+        if (disCountCodeTatal !== "") {
+            $('.clsoffSet').each(function () {
+                var _offSet = $(this).val();
+                var disCountCode = $('[id=hidDiscountDisplay_' + _offSet + '').val();
+                if (disCountCode === "" && _offSet != OffSet) {
+                    var price = parseFloat($('#hidPrice_' + _offSet).val());
+                    var quantity = parseInt($('#txtQuantity_' + _offSet).val());
+                    totalNotDiscount = parseFloat(totalNotDiscount) + (price * quantity);
+                }
+            });
+            if ((parseFloat(disValueTotal) > parseFloat(totalNotDiscount) && _typeDiscount != "0") || parseFloat(disValueTotal) < 0) {
+                alert('The discount for total cart has been removed because its amount is larger than total amount of your cart.');
+                RemoveCoupon("", '0');// remove discount total not offset
+            }
+        }
+        //GetSubTotal();
+
+        //var _lengthItem = $('.itemProduct:visible').length;
+        //$('#countItemCart').html(_lengthItem);
+        //$('#countItem').html(_lengthItem);
+        //===============
+        SubmitFormYourCart('#form-your-cart', 'update');
+    }
+    function UpdateProductQty(_type, txtInput, _this,_offset) {
+
+        var value = $(txtInput).val();
+        if (value == '')
+            value = 0;
+        if (_type == 'add') { //add
+            value++;
+            $(_this).parent().parent('.input-group').find('.subtract').removeClass('buttonDisabled');
+        } else if (_type == 'sub') {//subtract
+            if (value == 0) {
+                value = 0;
+            } else {
+                value--;
+                if (value == 1) {
+                    $(_this).addClass('buttonDisabled');
+                }
+            }
+        }
+        $(txtInput).val(value);
+        //item
+        var _discountTypeForOffset = $('[id=hidDiscountType_' + _offset + ']').val();
+        if (_discountTypeForOffset === "1")
+        {
+            var disValue = parseFloat($('#hidDiscountValue_' + _offset).val());
+            if (disValue !== NaN) {
+                var price = parseFloat($('#hidPrice_' + _offset).val());
+                var quantity = parseInt($('#txtQuantity_' + _offset).val());
+                var subtotal = price * quantity;
+                if (disValue < 0 || disValue > subtotal) {
+                    alert('The discount has been removed because its amount is larger than amount of this item.');
+                    RemoveCoupon(_offset, '1')
+                }
+            }
+        }
+        //total
+        var disCountType = $('[id=hidTotalDiscountType]').val();
+        if (disCountType === "1")// discount type is value
+        {
+            var disValueTotal = parseFloat($('#hidTotalDiscountValue').val());
+            var disCountCodeTatal = $("[id=hidTotalDiscountDisplay]").val();
+            var totalNotDiscount = 0;
+            if (disCountCodeTatal !== "") {
+                $('.clsoffSet').each(function () {
+                    var _offSet = $(this).val();
+                    var disCountCode = $('[id=hidDiscountDisplay_' + _offSet + '').val();
+                    if (disCountCode === "") {
+                        var price = parseFloat($('#hidPrice_' + _offSet).val());
+                        var quantity = parseInt($('#txtQuantity_' + _offSet).val());
+                        totalNotDiscount = parseFloat(totalNotDiscount) + (price * quantity);
+                    }
+                });
+
+                if (parseFloat(disValueTotal) > parseFloat(totalNotDiscount) || parseFloat(disValueTotal) < 0) {
+                    alert('The discount has been removed because its amount is larger than total amount of your cart.');
+                    RemoveCoupon(_offset, '0')
+                }
+            }
+        }
+        SubmitFormYourCart('#form-your-cart', 'update');
+    }
+
+    var typeSubmit = '';
+    function SubmitFormYourCart(form, _type) {
+        typeSubmit = _type;
+        $(form).submit();
+    }
+
+    $("#form-your-cart").submit(function (e) {
+        var _url = '';
+        if (typeSubmit == 'update') {
+            _url = CreateAbsoluteUrl('UpdateYourCart');
+        } else {
+            _url = CreateAbsoluteUrl('GoToCheckOut');
+        }
+        var isSubmit = $(this).valid();
+
+        if (isSubmit) {
+            $.ajax({
+                //url: $(this).attr('action'),
+                url: _url,
+                type: "POST",
+                data: new FormData(this),
+                processData: false,
+                contentType: false,
+                dataType: "html",
+                success: function (data) {
+                    var IS_JSON = true;
+                    try {
+                        data = $.parseJSON(data);
+                    }
+                    catch (err) {
+                        IS_JSON = false;
+                    }
+                    if (IS_JSON) {
+                        var countItemCart = data.TotalQuantity;//data.ListItems.length;
+                        $('#bs-modal-on-quantity').modal('hide');
+                        if (countItemCart == 0) {
+                            //deleteOrder();
+                            deleteOrderPay(data.ID)
+                        } else {
+                            createOrUpdateOrder('@Model.CusId', data.ID, countItemCart);
+                        }
+
+                        // getOrder();
+                        getOrder('@Model.CusId');
+                        if (typeSubmit == 'update') {
+                            //window.location.assign(CreateAbsoluteUrl('Index'));
+                            location.reload();
+                        } else {
+                            window.location.assign(CreateAbsoluteUrl('CheckOut'));
+                        }
+
+                    } else { //Login
+                        window.location.assign(BaseUrl + 'login');
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $('#lblResult').html(jqXHR.statusText);
+                    if (jqXHR.status == 400) {
+                        deleteOrder();
+                    }
+                },
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+            });
+        }
+        e.preventDefault();
+    });
+
+</script>

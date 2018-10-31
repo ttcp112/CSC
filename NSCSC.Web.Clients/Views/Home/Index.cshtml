@@ -1,0 +1,203 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+@model NSCSC.Shared.Models.OverView.OverViewModels
+@using NSCSC.Shared
+<link href="@Url.Content("~/Content/homeoverview.css")" rel="stylesheet" />
+<link href="~/vendors/jquery.bxslider/jquery.bxslider.min.css" rel="stylesheet" />
+@{ 
+    var isPromotion = Model.ListPromotions != null && Model.ListPromotions.Any();
+}
+<div class="mainhome">
+    @if (isPromotion)
+    {
+        @*<div id="promotions" class="tm_pb_section call_wrapper tm_pb_section_7 tm_pb_with_background tm_section_regular" style="background: url(@Url.Content("~/images/promotions.png")); background-position: center center; background-size: cover !important; height: 450px !important;">*@
+        <div id="promotions" class="tm_pb_section call_wrapper tm_pb_section_7 tm_pb_with_background tm_section_regular"
+             style="background: url(@Url.Content("~/images/promotions.png")); background-position: center center; background-size: cover !important; height: 380px !important; margin-top:50px">
+            @*  <hr class="tm_pb_module tm_pb_space tm_pb_divider_0">*@
+            @*<div class="container">
+                <div class="row tm_pb_row tm_pb_row_0 tm_pb_col_padding_reset">
+                      <hr class="tm_pb_module tm_pb_space tm_pb_divider_0">
+                        <div class="tm_pb_text tm_pb_module tm_pb_bg_layout_light tm_pb_text_align_center  tm_pb_text_0">
+                            <h3 style="color:#FFF">PROMOTIONS</h3>
+                            <hr style="width:8%" />
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+            <div class="mainslider">
+                <div class="slider1">
+                    @if (Model.ListPromotions != null && Model.ListPromotions.Any())
+                    {
+                        foreach (var item in Model.ListPromotions)
+                        {
+                            //var item = Model.ListPromotions[i];
+                            <div class="slide" style="height:350px ">
+                                <div class="slideContent right-div text-center">
+                                    <div style="font-size:26px; ">@Html.Raw(item.Name)</div>
+                                    <h4>From @item.ApplyFrom.ToString(Commons.FormatDate) to @item.ApplyTo.ToString(Commons.FormatDate)</h4>
+                                    <hr style="width:10%;margin-top:0px;" />
+                                    <br />  
+                                    @if (!string.IsNullOrEmpty(@item.Description) && @item.Description.Length > 0)
+                                    {
+                                        <div class="text-left" style="font-size:16px;">
+                                           @Html.Raw(@item.Description)
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="text-left" style="font-size:16px;">
+                                            @item.RuleText
+                                        </div>
+                                    }
+
+                                   
+                                </div>
+                                <div class="left-div">
+                                    @if (string.IsNullOrEmpty(item.ImageURL))
+                                    {
+                                        <img src="@Commons.Image200_200" alt="..." height="325" width="500">
+                                    }
+                                    else
+                                    {
+                                        <img src="@item.ImageURL" alt="..." width="500" height="325">
+                                    }
+                                </div>                                
+                                    @*<div class="slider-link">
+                                            <a class="btn btn-default">NUPOS</a>
+                                        </div>*@
+                                </div>
+                        }
+                       
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+
+    <div id="product" class="tm_pb_section call_wrapper tm_pb_section_7 tm_pb_with_background tm_section_regular">
+      @*  <hr class="tm_pb_module tm_pb_space tm_pb_divider_0">*@
+        <div class="container">
+            <div class="row tm_pb_row tm_pb_row_0 tm_pb_col_padding_reset">
+              @*  <hr class="tm_pb_module tm_pb_space tm_pb_divider_0">*@
+                <div class="tm_pb_column tm_pb_column_4_4  tm_pb_column_0 col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                    <div class="tm_pb_text tm_pb_module tm_pb_bg_layout_light tm_pb_text_align_center  tm_pb_text_0">
+                        <h3>PRODUCTS</h3>
+                        <hr style="width:8%" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="background: url(@Url.Content("~/images/outproduct.png")); background-position: center center; background-size: cover !important; height: 600px !important;">
+            <div class=" row tm_pb_row tm_pb_row_14">
+                <div class="tm_pb_column tm_pb_column_4_4  tm_pb_column_21 col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                    @*<%--<img src="images/ourproduct.png" />--%>*@
+                </div>
+                @*<div id="productNuWeb" class="product" onclick="clickProduct('NuWeb')">
+                </div>
+
+                <div id="productNuKiosk" class="product" onclick="clickProduct('NuKiosk')">
+                </div>
+
+                <div id="productNuPos" class="product" onclick="clickProduct('NuPos')">
+                </div>
+
+                <div id="productNuDisplay" class="product" onclick="clickProduct('NuDisplay')">
+                </div>*@
+            </div>
+        </div>
+    </div>
+
+    <div class="tm_pb_section  tm_pb_section_3 tm_pb_with_background tm_section_regular _marginTopBottom" style="position:relative">
+        <div id="focus3" style="background-image:url(@Url.Content("~/images/culpa.png")); background-size: cover !important;height:450px;width:45%;float:left; position: relative; display: inline-flex; ">
+            <div class="call_wrapper row tm_pb_row tm_pb_row_7" style="margin: auto">
+                <div class="tm_pb_column tm_pb_column_4_4  tm_pb_column_10 col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                    <div id="" class="tm_pb_cta tm_pb_cta_0 tm_pb_promo tm_pb_bg_layout_light tm_pb_text_align_left tm_pb_no_bg tm_pb_module">
+                        <div class="tm_pb_promo_description" id="divNuHome04" style="text-align: left; ">                           
+                            <div id="div3" style="width:80%; margin: auto">
+                                <div style="color: #fff !important; margin: auto; font-size:26px;">@Html.Raw(@Model.LeftTitle)</div>
+                                <br />
+                                <div style="color: #fff; font-size: 16px; margin-bottom: 0px">
+                                   @Html.Raw(@Model.LeftDescription)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="focus4" style="background-image:url(@Url.Content("~/images/focus4.png")); background-size: cover !important;height:450px;width:55%;float:right"></div>
+        <div style="clear:both"></div>
+        <div id="focus5" style="background-color: rgba(255, 255, 255, 0.6); margin-top: -350px">
+            @*<div id="focus5" style="background-image:url(@Url.Content("~/images/focus5.png")); background-size: cover !important; margin-top: -350px">*@
+            <div class="call_wrapper row tm_pb_row tm_pb_row_7">
+                <div class="tm_pb_column tm_pb_column_4_4  tm_pb_column_10 col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                    <div id="" class="tm_pb_cta tm_pb_cta_0 tm_pb_promo tm_pb_bg_layout_light tm_pb_text_align_left tm_pb_no_bg tm_pb_module">
+                        <div class="tm_pb_promo_description" id="divNuHome04">
+                            <div style="color: #333333 !important; font-size:26px;">@Html.Raw(@Model.BusinessTitle)</div>
+                            <br/>
+                            <div style="font-size:16px;">@Html.Raw(@Model.BusinessDescription)</div>
+                            <br />
+                            <div id="div3">
+                                @if (!Model.IsIpSingapore)
+                                {
+                                    <a href="@Url.Action("StartYourFreeTrial", "Home")" class="btn btn-warning">START A FREE TRIAL</a>
+                                    <a href="@Url.Action("StartYourBusiness", "Home")" class="btn btn-info">START YOUR BUSINESS</a>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("StartYourBusiness", "Home")" class="btn btn-info">START YOUR BUSINESS</a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/vendors/jquery.bxslider/jquery.bxslider.js"></script>
+<script type="text/javascript">
+    //=========OnClick Product
+    function clickProduct(page) {
+                                    var href = window.location.pathname;
+                                    //alert(href);
+                                }
+
+    $(document).ready(function ()
+    {
+        $('#Overview').toggleClass('text-color');
+        @if(isPromotion)
+        {
+            <text>
+
+            var slider = $('.slider1').bxSlider({
+                //slideWidth: 1140,
+                speed:500,
+                minSlides: 1,
+                maxSlides: 1,
+                slideMargin: 10,
+                auto: true,
+                touchEnabled: false,
+                hideControlOnEnd: true,
+                infiniteLoop: true,
+                //onSliderLoad: function () {
+                //    $('.bx-pager-link').click(function () {
+                //        var i = $(this).data('slide-index');
+                //        slider.goToSlide(i,null,0);
+                //        //slider.stopAuto();
+                //        //slider.startAuto();
+                //        return false;
+                //    });
+                //}
+        });
+            if ($('.bx-pager-item').length == 1)
+                $(".bx-pager").addClass("display_none");
+            else
+                $(".bx-pager").removeClass("display_none");
+            </text>
+        }
+       
+    });
+</script>

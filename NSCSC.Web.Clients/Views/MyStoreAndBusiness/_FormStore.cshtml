@@ -1,0 +1,104 @@
+﻿@model NSCSC.Shared.Models.ClientSite.MyStoreAndBusiness.MyStoreAndBusinessViewModels
+@{
+    Html.EnableUnobtrusiveJavaScript(true);
+}
+
+<div class="row text-right">
+    <span class="fontUppercase fontBold pull-left" style="font-size:17px;margin-left:30px">
+        <a href="javascript:void(0);" class="fontUppercase" style="@string.Format(Model.IsTabStore.Equals("ongoing") ? "color:#ed5260;text-decoration:none" : "color:#000;text-decoration:none")"
+           onclick="GetListStore('#tabStore', '')">
+            on going
+        </a> |
+        <a href="javascript:void(0);" class="fontUppercase" style="@string.Format(Model.IsTabStore.Equals("expired") ? "color:#ed5260;" : "color:#000;text-decoration:none")"
+           onclick="GetListStore('#tabStore', 'expired')">
+            expired
+        </a>
+    </span>
+    <ul class="header-buttons pull-right list-inline">
+        <li>
+            <a href="javascript:void(0);" class="btn btn-success fontUppercase" id="btn-get-list-product"
+               onclick="GetListProductApplyStore('#tabStore')">
+                add new
+            </a>
+        </li>
+    </ul>
+</div>
+
+<div class="row form-horizontal form-label-left listItemStore">
+
+    @if (Model.ListStore != null && Model.ListStore.Count > 0)
+    {
+        foreach (var item in Model.ListStore)
+        {
+            <div class="form-group itemStore">
+                <div class="col-md-2 col-sm-2 col-xs-12">
+                    <div class="form-group text-center imageStore">
+                        <img id="upload-preview" src="@item.ImageURL" class="" height="110" width="150" />
+                    </div>
+                </div>
+                <div class="col-md-10 col-sm-10 col-xs-12">
+                    <div class="form-group infoStore">
+                        <fieldset class="scheduler-border">
+                            <legend class="scheduler-border fontUppercase">@item.Name</legend>
+                            <div class="col-md-11 col-sm-11 col-xs-12 content">
+                                <div class="row">
+                                    <label class="col-md-12 col-sm-12 col-xs-12 fontLighter">
+                                        <span class="fontBold">Expired Date:</span>
+                                        @item.sExpiredDate
+                                    </label>
+                                </div>
+                                <div class="row">
+                                    <label class="col-md-12 col-sm-12 col-xs-12 fontLighter">
+                                        <span class="fontBold">Status:</span>
+                                        @item.sStatus
+                                    </label>
+                                </div>
+                                <div class="row">
+                                    <label class="col-md-12 col-sm-12 col-xs-12 fontLighter">
+                                        <span class="fontBold">Local HQ Web:</span>
+                                        @item.LocalHQWeb
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-xs-12 view">
+                                <a href="javascript:void(0);" class="btn fontUppercase" onclick="ViewStoreDetail('#tabStore','@item.ID')">view</a>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function (e) {
+    });
+    /*Function*/
+    function ViewStoreDetail(ele, _StoreID) {
+        $.ajax({
+            type: "GET",
+            url: CreateAbsoluteUrl("ViewStoreDetail"),
+            traditional: true,
+            data: { StoreID: _StoreID },
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+            var isLogin = BackToLoginWhenSessionEnd(data);
+                if (isLogin === true) {
+                    window.location = "/Login/Index";
+                }
+                else {
+                 $(ele).html(data);
+                }              
+            },
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            },
+        });
+    }
+</script>
+

@@ -1,0 +1,307 @@
+﻿@model NSCSC.Shared.Models.ClientSite.MyStoreAndBusiness.MyStoreAndBusinessViewModels
+@{
+    ViewBag.Title = "Products";
+    var tabProductAndPackage = Model.TabProductAndPackage;
+}
+<style type="text/css">
+    .menuProductAndPackages ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+    }
+
+        .menuProductAndPackages ul li {
+            float: left;
+        }
+
+            .menuProductAndPackages ul li a {
+                border-right: 1px solid #bbb;
+                padding: 0px 10px 0px 10px !important;
+                text-decoration: none;
+                display: block;
+                text-align: center;
+            }
+
+            .menuProductAndPackages ul li:last-child a {
+                border-right: none;
+            }
+
+    .mainProductAndPackages .active {
+        color: #c4473a;
+    }
+</style>
+
+@*<div class="se-pre-con" style="display: none;"></div>*@
+<div class="mainProductAndPackages">
+    <div class="menuProductAndPackages">
+        <ul>
+            <li>
+                <a href="javascript:void(0)" onclick="LoadPartialView('ONGOING',this)" class="clsOnGoing">ON GOING</a>
+            </li>
+            <li>
+                <a href="javascript:void(0)" onclick="LoadPartialView('EXPIRED',this)" class="clsExpired">EXPIRED</a>
+            </li>
+        </ul>
+    </div>
+    <div class="contentProductAndPackages">
+    </div>
+
+</div>
+
+
+<!--Buy Additions-->
+<div id="modal-buy-addition" class="modal fade modal-buy-addition" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row form-label-left" style="padding:0 30px;" id="div-content-product-buy-additions">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!---Extend -->
+<div id="modal-extend" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row form-label-left" style="padding:0 30px;" id="div-content-product-extend">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+                    @if(tabProductAndPackage == 1)
+        {
+            <text>
+        $('.clsMaterials').click();
+            </text>
+        }
+        @if(tabProductAndPackage == 2)
+        {
+            <text>
+        $('.clsOnGoing').click();
+            </text>
+        }
+        @if(tabProductAndPackage == 3)
+        {
+            <text>
+        $('.clsExpired').click();
+            </text>
+        }
+        $('.clsOnGoing').click();
+    });
+
+     function LoadPartialView(mAction,that) {
+        var url = "";
+        $('.menuProductAndPackages a').removeClass('active');
+        $(that).addClass('active');
+        if (mAction === "MATERIALS"){
+            url = '@Url.Action("MATERIALS", "MyStoreAndBusiness")';
+        } else if (mAction === "ONGOING"){
+            url = '@Url.Action("ONGOING", "MyStoreAndBusiness")';
+        } else {
+            url = '@Url.Action("EXPIRED", "MyStoreAndBusiness")';
+        }
+        $.ajax({
+            type: "POST",
+            url: url,
+            traditional: true,
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            //data: JSON.stringify(SpendingRuleDTO),
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                var isLogin = BackToLoginWhenSessionEnd(data);
+                if (isLogin) {
+                    window.location = "/Login/Index";
+                }
+                else {
+                    $('.contentProductAndPackages').html(data);
+                }
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            },
+            error: function () {
+                $('.se-pre-con').hide();
+            }
+      });
+    }
+
+    function ChangeStatusDevice(DeviceID, AssetID, ProductID){
+        var obj = {
+            DeviceID: DeviceID,
+            AssetID: AssetID,
+            ProductID: ProductID
+        };
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("ChangeStatusDevice", "MyStoreAndBusiness")',
+            traditional: true,
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            data: JSON.stringify(obj),
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                var isLogin = BackToLoginWhenSessionEnd(data);
+                if (isLogin) {
+                    window.location = "/Login/Index";
+                }
+                else {
+                    $('.divtbDevice_' + ProductID + '').html(data);
+                }
+            },
+            complete: function () {
+                setTimeout(function () {
+                    $('.se-pre-con').hide();
+                }, 1000);
+            },
+            error: function () {
+                setTimeout(function () {
+                    $('.se-pre-con').hide();
+                }, 1000);
+            }
+        });
+    }
+
+    function ViewDetail(AssetID, TabID) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("ViewDetail", "MyStoreAndBusiness")',
+            traditional: true,
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            data: JSON.stringify({ AssetID: AssetID, TabId : TabID }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                var isLogin = BackToLoginWhenSessionEnd(data);
+                if (isLogin) {
+                    window.location = "/Login/Index";
+                }
+                else {
+                    $('.contentProductAndPackages').html(data);
+                }
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            },
+            error: function () {
+                $('.se-pre-con').hide();
+            }
+        });
+    }
+
+    function Back(_tabID) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Back", "MyStoreAndBusiness")',
+            traditional: true,
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            data: JSON.stringify({ TabID : _tabID}),
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                var isLogin = BackToLoginWhenSessionEnd(data);
+                if (isLogin) {
+                    window.location = "/Login/Index";
+                }
+                else {
+                    $('.contentProductAndPackages').html(data);
+                }
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            },
+            error: function () {
+                $('.se-pre-con').hide();
+            }
+        });
+    }
+
+    //Popup Extend Price List
+    function ShowModalProductExtend(ele, _Id, _AssetID) {
+        $("#modal-extend").modal({
+            'show': true,
+            'backdrop': 'static'
+        });
+        ViewProductExtend(ele, _Id, _AssetID);
+    }
+
+    function ViewProductExtend(ele, _Id, _AssetID) {
+        $.ajax({
+            type: "GET",
+            url: CreateAbsoluteUrl("CallPopupExtend"),
+            traditional: true,
+            data: { Id: _Id, AssetID: _AssetID },
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                var isLogin = BackToLoginWhenSessionEnd(data);
+                if (isLogin === true) {
+                    window.location = "/Login/Index";
+                }
+                else {
+                    $(ele).html(data);
+                }
+            },
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            },
+        });
+    }
+    //End Popup Extend Price List
+
+    //Popup Buy Additions Price List
+    function ShowModalProductBuyAdditions(ele, _AssetID) {
+        $("#modal-buy-addition").modal({
+            'show': true,
+            'backdrop': 'static'
+        });
+        ViewProductBuyAdditions(ele, _AssetID);
+    }
+
+    function ViewProductBuyAdditions(ele, _AssetID) {
+        $.ajax({
+            type: "GET",
+            url: CreateAbsoluteUrl("CallPopupBuyAdditions"),
+            traditional: true,
+            data: { AssetID: _AssetID },
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                var isLogin = BackToLoginWhenSessionEnd(data);
+                if (isLogin === true) {
+                    window.location = "/Login/Index";
+                }
+                else {
+                    $(ele).html(data);
+                }
+            },
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            },
+        });
+    }
+    //End Popup Buy Additions Price List
+</script>

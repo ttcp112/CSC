@@ -1,0 +1,162 @@
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\NSCSC.Shared.dll.config
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\NSCSC.Shared.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\NSCSC.Shared.pdb
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\ClosedXML.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\DocumentFormat.OpenXml.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\DotNetZip.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\EntityFramework.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\EntityFramework.SqlServer.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\ExcelNumberFormat.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\FastMember.Signed.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\Microsoft.Exchange.WebServices.Auth.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\Microsoft.Exchange.WebServices.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\Microsoft.Web.Infrastructure.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\Microsoft.Win32.Primitives.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\Newtonsoft.Json.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\NLog.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\NSCSC.Data.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\NSLog.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\RestSharp.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\ServiceStack.Client.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\ServiceStack.Common.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\ServiceStack.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\ServiceStack.Interfaces.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\ServiceStack.Text.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.AppContext.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.Console.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.Diagnostics.DiagnosticSource.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.Globalization.Calendars.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.IO.Compression.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.IO.Compression.ZipFile.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.IO.FileSystem.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.IO.FileSystem.Primitives.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.IO.Packaging.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.Net.Http.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.Net.Sockets.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.Runtime.InteropServices.RuntimeInformation.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.Security.Cryptography.Algorithms.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.Security.Cryptography.Encoding.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.Security.Cryptography.Primitives.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.Security.Cryptography.X509Certificates.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.ValueTuple.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.Web.Helpers.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.Web.Mvc.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.Web.Razor.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.Web.WebPages.Deployment.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.Web.WebPages.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.Web.WebPages.Razor.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.Xml.ReaderWriter.dll
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\NSCSC.Data.pdb
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\NSCSC.Data.dll.config
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\ClosedXML.pdb
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\ClosedXML.xml
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\DocumentFormat.OpenXml.xml
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\DotNetZip.xml
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\EntityFramework.xml
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\EntityFramework.SqlServer.xml
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\ExcelNumberFormat.xml
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\Microsoft.Exchange.WebServices.pdb
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\Microsoft.Exchange.WebServices.xml
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\Microsoft.Exchange.WebServices.Auth.pdb
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\Microsoft.Exchange.WebServices.Auth.xml
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\Newtonsoft.Json.xml
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\NLog.xml
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\ServiceStack.xml
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\ServiceStack.Client.xml
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\ServiceStack.Common.xml
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\ServiceStack.Interfaces.xml
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\ServiceStack.Text.xml
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.Diagnostics.DiagnosticSource.xml
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.ValueTuple.xml
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.Web.Helpers.xml
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.Web.Mvc.xml
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.Web.Razor.xml
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.Web.WebPages.xml
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.Web.WebPages.Deployment.xml
+D:\NuWeb.NCSC\NSCSC.Shared\bin\Debug\System.Web.WebPages.Razor.xml
+D:\NuWeb.NCSC\NSCSC.Shared\obj\Debug\NSCSC.Shared.csprojAssemblyReference.cache
+D:\NuWeb.NCSC\NSCSC.Shared\obj\Debug\NSCSC.Shared.csproj.CoreCompileInputs.cache
+D:\NuWeb.NCSC\NSCSC.Shared\obj\Debug\NSCSC.Shared.csproj.CopyComplete
+D:\NuWeb.NCSC\NSCSC.Shared\obj\Debug\NSCSC.Shared.dll
+D:\NuWeb.NCSC\NSCSC.Shared\obj\Debug\NSCSC.Shared.pdb
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\NSCSC.Shared.dll.config
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\NSCSC.Shared.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\NSCSC.Shared.pdb
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\ClosedXML.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\DocumentFormat.OpenXml.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\DotNetZip.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\EntityFramework.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\EntityFramework.SqlServer.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\ExcelNumberFormat.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\FastMember.Signed.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\Microsoft.Exchange.WebServices.Auth.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\Microsoft.Exchange.WebServices.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\Microsoft.Web.Infrastructure.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\Microsoft.Win32.Primitives.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\Newtonsoft.Json.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\NLog.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\NSCSC.Data.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\NSLog.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\RestSharp.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\ServiceStack.Client.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\ServiceStack.Common.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\ServiceStack.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\ServiceStack.Interfaces.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\ServiceStack.Text.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.AppContext.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.Console.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.Diagnostics.DiagnosticSource.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.Globalization.Calendars.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.IO.Compression.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.IO.Compression.ZipFile.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.IO.FileSystem.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.IO.FileSystem.Primitives.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.IO.Packaging.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.Net.Http.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.Net.Sockets.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.Runtime.InteropServices.RuntimeInformation.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.Security.Cryptography.Algorithms.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.Security.Cryptography.Encoding.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.Security.Cryptography.Primitives.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.Security.Cryptography.X509Certificates.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.ValueTuple.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.Web.Helpers.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.Web.Mvc.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.Web.Razor.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.Web.WebPages.Deployment.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.Web.WebPages.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.Web.WebPages.Razor.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.Xml.ReaderWriter.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\NSCSC.Data.pdb
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\NSCSC.Data.dll.config
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\ClosedXML.pdb
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\ClosedXML.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\DocumentFormat.OpenXml.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\DotNetZip.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\EntityFramework.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\EntityFramework.SqlServer.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\ExcelNumberFormat.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\Microsoft.Exchange.WebServices.pdb
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\Microsoft.Exchange.WebServices.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\Microsoft.Exchange.WebServices.Auth.pdb
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\Microsoft.Exchange.WebServices.Auth.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\Newtonsoft.Json.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\NLog.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\ServiceStack.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\ServiceStack.Client.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\ServiceStack.Common.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\ServiceStack.Interfaces.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\ServiceStack.Text.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.Diagnostics.DiagnosticSource.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.ValueTuple.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.Web.Helpers.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.Web.Mvc.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.Web.Razor.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.Web.WebPages.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.Web.WebPages.Deployment.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\bin\Debug\System.Web.WebPages.Razor.xml
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\obj\Debug\NSCSC.Shared.csprojAssemblyReference.cache
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\obj\Debug\NSCSC.Shared.csproj.CoreCompileInputs.cache
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\obj\Debug\NSCSC.Shared.csproj.CopyComplete
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\obj\Debug\NSCSC.Shared.dll
+D:\Work Project\NuWeb.NSCSC\NSCSC.Shared\obj\Debug\NSCSC.Shared.pdb

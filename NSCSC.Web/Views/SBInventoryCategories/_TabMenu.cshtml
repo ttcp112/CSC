@@ -1,0 +1,22 @@
+﻿<ul class="list-inline small-tab-list-buttons">
+    <li>
+        @*<a href="javascript:void(0)"
+            onclick="ShowView('@Url.Action("Index", "SBInventoryCategories")')" id="lnkViewData" class="btn btn-default btn-block menuTab @(Model == "viewdata" ? new HtmlString("active") :
+            new HtmlString(""))"><i class="fa fa-bars"></i>&nbsp;&nbsp;View Data</a>*@
+
+        <a href="@Url.Action("Index", "SBInventoryCategories")" id="lnkViewData" class="btn btn-default btn-block menuTab @(Model == "viewdata" ? new HtmlString("active") :
+           new HtmlString(""))"><i class="fa fa-bars"></i>&nbsp;&nbsp;View Data</a>
+
+    </li>
+    <li>
+        <a href="javascript:void(0)"
+           onclick="ShowView('@Url.Action("Create", "SBInventoryCategories")')" id="lnkCreate" class="btn btn-default btn-block menuTab action-class @(Model == "create" ? new HtmlString("active") :
+                    new HtmlString(""))"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add New</a>
+    </li>
+</ul>
+<script type="text/javascript">
+    function ShowView(url) {
+        ShowViewOrEdit(url);
+        return false;
+    }
+</script>

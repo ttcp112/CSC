@@ -1,0 +1,145 @@
+﻿@*@model List<NSCSC.Shared.Models.OurProducts.Product.BuyingAdditionViewModels>*@
+@model NSCSC.Shared.Models.OurProducts.Package.PackageDetailViewModels
+@if (Model.PackageDetail.ListBuyAdditionPopup != null)
+{
+    foreach (var item in Model.PackageDetail.ListBuyAdditionPopup)
+    {
+        <tr>
+            <td colspan="4" class="font-bold">@item.Name</td>
+        </tr>
+
+        foreach (var itemChild in Model.ListAdditionBuy.Where(x => x.AdditionType == item.ID).ToList())
+        {
+            <tr class="tr-desktop">
+                <td>
+                    @Html.CheckBox(string.Format("ListAdditionBuy[{0}].Selected", itemChild.Index), itemChild.Selected,
+                   new {
+                       @class = "chkAdditionSelected",
+                       @id = "chkAdditionSelected_"+itemChild.Index
+                   })
+                    <!--get value-->
+                    @Html.Hidden(string.Format("ListAdditionBuy[{0}].ItemID", itemChild.Index), itemChild.ItemID)
+                    @Html.Hidden(string.Format("ListAdditionBuy[{0}].ID", itemChild.Index), itemChild.ID, new { @class = "hidID" })
+                    @Html.Hidden(string.Format("ListAdditionBuy[{0}].Index", itemChild.Index), itemChild.Index)
+                    @Html.Hidden(string.Format("ListAdditionBuy[{0}].AdditionType", itemChild.Index), itemChild.AdditionType)
+                    @Html.Hidden(string.Format("ListAdditionBuy[{0}].Quantity", itemChild.Index), itemChild.Quantity, new { @class = "hidQuantity", @id = "hidQuantity_" + itemChild.Index })
+                    @Html.Hidden(string.Format("ListAdditionBuy[{0}].Status", itemChild.Index), itemChild.Status, new { @class = "PriceStatus" })
+                    @Html.Hidden(string.Format("ListAdditionBuy[{0}].IsActive", itemChild.Index), itemChild.IsActive, new { @class = "", @id = "hidIsSelected_" + itemChild.Index })
+                    @Html.Hidden(string.Format("ListAdditionBuy[{0}].ApplyProductId", itemChild.Index), itemChild.ApplyProductId, new { @class = "hidApplyProductId" })
+                    @Html.Hidden(string.Format("ListAdditionBuy[{0}].Name", itemChild.Index), itemChild.Name, new { @class = "hidName", @id = "hidName_" + itemChild.Index })
+                    @Html.Hidden(string.Format("ListAdditionBuy[{0}].Description", itemChild.Index), itemChild.Description, new { @class = "hidDescription", @id = "hidDescription_" + itemChild.Index })
+                    @Html.Hidden(string.Format("ListAdditionBuy[{0}].ImageURL", itemChild.Index), itemChild.ImageURL, new { @class = "hidImageURL", @id = "hidImageURL_" + itemChild.Index })
+                    @Html.Hidden(string.Format("ListAdditionBuy[{0}].AmountOfUnit", itemChild.Index), itemChild.AmountOfUnit, new { @class = "hidAmountOfUnit" })
+
+                    @Html.Hidden(string.Format("ListAdditionBuy[{0}].NamePeriodType", itemChild.Index), itemChild.PeriodTime, new { @id = "hidnameperiodtype_" + itemChild.Index })
+                    <!--set value-->
+                    @Html.Hidden(string.Format("ListAdditionBuy[{0}].PeriodType", itemChild.Index), itemChild.PeriodType, new { @class = "hidPeriodType", @id = "hidPeriodType_" + itemChild.Index })
+                    @Html.Hidden(string.Format("ListAdditionBuy[{0}].Period", itemChild.Index), itemChild.Period, new { @class = "hidPeriod", @id = "hidPeriod_" + itemChild.Index })
+                    @Html.Hidden(string.Format("ListAdditionBuy[{0}].Price", itemChild.Index), itemChild.Price, new { @class = "hidPrice", @id = "hidPrice_" + itemChild.Index })
+
+                </td>
+                <td>@itemChild.Name</td>
+                <td class="text-center">
+                    @Html.DropDownList("sPeriodType",
+                      new SelectList(itemChild.ListPrice, "ID", "NamePeriodType", itemChild.sPeriodType), null,
+                      new
+                      {
+                          @class = "form-control select2_multiple",
+                          @id = "",
+                          @onchange = "onChangePeriod('"+ itemChild.AdditionType + "','" + itemChild.Index + "',this,'"+itemChild.ID+"')"
+                      })
+                </td>
+                <td class="text-right">@itemChild.CurrencySymbol<span id="ltrPrice_@itemChild.Index">@itemChild.Price.ToString("N2")</span></td>
+            </tr>
+            @*---for mobile----*@
+            <tr class="tr-mobile" style="padding: 10px;">
+                    <td>
+                        @Html.CheckBox(string.Format("ListAdditionBuy[{0}].Selected", itemChild.Index), itemChild.Selected,
+                       new {
+                           @class = "chkAdditionSelected",
+                           @id = "chkAdditionSelected_"+itemChild.Index
+                       })
+                        <!--get value-->
+                        @Html.Hidden(string.Format("ListAdditionBuy[{0}].ItemID", itemChild.Index), itemChild.ItemID)
+                        @Html.Hidden(string.Format("ListAdditionBuy[{0}].ID", itemChild.Index), itemChild.ID, new { @class = "hidID" })
+                        @Html.Hidden(string.Format("ListAdditionBuy[{0}].Index", itemChild.Index), itemChild.Index)
+                        @Html.Hidden(string.Format("ListAdditionBuy[{0}].AdditionType", itemChild.Index), itemChild.AdditionType)
+                        @Html.Hidden(string.Format("ListAdditionBuy[{0}].Quantity", itemChild.Index), itemChild.Quantity, new { @class = "hidQuantity", @id = "hidQuantity_" + itemChild.Index })
+                        @Html.Hidden(string.Format("ListAdditionBuy[{0}].Status", itemChild.Index), itemChild.Status, new { @class = "PriceStatus" })
+                        @Html.Hidden(string.Format("ListAdditionBuy[{0}].IsActive", itemChild.Index), itemChild.IsActive, new { @class = "", @id = "hidIsSelected_" + itemChild.Index })
+                        @Html.Hidden(string.Format("ListAdditionBuy[{0}].ApplyProductId", itemChild.Index), itemChild.ApplyProductId, new { @class = "hidApplyProductId" })
+                        @Html.Hidden(string.Format("ListAdditionBuy[{0}].Name", itemChild.Index), itemChild.Name, new { @class = "hidName", @id = "hidName_" + itemChild.Index })
+                        @Html.Hidden(string.Format("ListAdditionBuy[{0}].Description", itemChild.Index), itemChild.Description, new { @class = "hidDescription", @id = "hidDescription_" + itemChild.Index })
+                        @Html.Hidden(string.Format("ListAdditionBuy[{0}].ImageURL", itemChild.Index), itemChild.ImageURL, new { @class = "hidImageURL", @id = "hidImageURL_" + itemChild.Index })
+                        @Html.Hidden(string.Format("ListAdditionBuy[{0}].AmountOfUnit", itemChild.Index), itemChild.AmountOfUnit, new { @class = "hidAmountOfUnit" })
+
+                        @Html.Hidden(string.Format("ListAdditionBuy[{0}].NamePeriodType", itemChild.Index), itemChild.PeriodTime, new { @id = "hidnameperiodtype_" + itemChild.Index })
+                        <!--set value-->
+                        @Html.Hidden(string.Format("ListAdditionBuy[{0}].PeriodType", itemChild.Index), itemChild.PeriodType, new { @class = "hidPeriodType", @id = "hidPeriodType_" + itemChild.Index })
+                        @Html.Hidden(string.Format("ListAdditionBuy[{0}].Period", itemChild.Index), itemChild.Period, new { @class = "hidPeriod", @id = "hidPeriod_" + itemChild.Index })
+                        @Html.Hidden(string.Format("ListAdditionBuy[{0}].Price", itemChild.Index), itemChild.Price, new { @class = "hidPrice", @id = "hidPrice_" + itemChild.Index })
+
+                    </td>
+                    <td style="padding-left:20px;padding-right: 11px;">@itemChild.Name</td>
+                    <td></td>
+                    <td class="text-right">@itemChild.CurrencySymbol<span id="ltrPrice_@itemChild.Index">@itemChild.Price.ToString("N2")</span></td>
+                </tr>
+                <tr class="tr-mobile" style="padding: 10px;">
+                    <td></td>
+                    <td><span class="text-left" style="padding-left:33px">Period</span></td>
+                    <td class="text-center">
+                    </td>
+                    <td class="td-select" style="padding-left:20px; width:220px">
+                        @Html.DropDownList("sPeriodType",
+                         new SelectList(itemChild.ListPrice, "ID", "NamePeriodType", itemChild.sPeriodType), null,
+                         new
+                         {
+                             @class = "form-control select2_multiple",
+                             @id = "",
+                             @onchange = "onChangePeriod('"+ itemChild.AdditionType + "','" + itemChild.Index + "',this,'"+itemChild.ID+"')"
+                         })
+                    </td>
+                </tr>
+            @*-------*@
+                    }
+                }
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".select2_multiple").select2({
+            placeholder: 'Please choose Period',
+            dropdownParent: $("#modal-buy-addition") //enable search in select2
+        });
+    });
+
+    function onChangePeriod(_additionType, _index, _this, _id) {
+        var _periodId = $(_this).find("option:selected").val();
+        //console.log('_additionType: ' + _additionType + '| _index: ' + _index + '| _periodId: ' + _periodId + '| _id: ' + _id);
+        LoadPeriod(_additionType, _index, _periodId, _id);
+    }
+
+    function LoadPeriod(_additionType, _index, _periodId, _id) {
+        $.ajax({
+            url: '@Url.Action("LoadPeriod", "MyStoreAndBusiness")',
+            type: "POST",
+            traditional: true,
+            data: {
+                AdditionType: _additionType,
+                PeriodId: _periodId,
+                Id: _id
+            },
+            dataType: 'json',
+            success: function (obj) {
+                if (obj.ID !== null) {
+                    console.log('Price: ' + obj.Price + '| Period: ' + obj.Period + '| PeriodType: ' + obj.PeriodType);
+                    $('#hidPeriodType_' + _index).val(obj.PeriodType);
+                    $('#hidPeriod_' + _index).val(obj.Period);
+                    $('#hidPrice_' + _index).val(obj.Price);
+                    //-----
+                    $('#ltrPrice_' + _index).html(obj.Price);
+                }
+            }
+        });
+    }
+</script>

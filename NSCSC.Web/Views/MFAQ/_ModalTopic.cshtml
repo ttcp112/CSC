@@ -1,0 +1,34 @@
+﻿@model NSCSC.Shared.Models.ManagementTool.Topics.TopicModel
+
+@*Topics*@
+<div class="row form-horizontal form-label-left" style="margin-bottom:15px;">
+    @* Topic Name*@
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12">Topic Name</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            @Html.TextBoxFor(model => model.Name, new { @id = "txtName", @class = "form-control", placeholder = "Topic Name", autocomplete = "off" })
+            @Html.ValidationMessageFor(model => model.Name, null, new { @class = "label" })
+        </div>
+    </div>
+    @*Status *@
+    <div class="form-group">
+        <label class="col-md-2 control-label">Status</label>
+        <div class="col-md-10">
+            @Html.CheckBoxFor(model => model.IsActive, new { @id = "IsActive" }) Active
+        </div>
+    </div>
+    @* Sequence*@
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12">Description</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+
+            @Html.TextAreaFor(model => model.Description, new { @id = "Description", @class = "form-control", placeholder = "Description" })
+            @Html.ValidationMessageFor(model => model.Description, null, new { @class = "label" })
+        </div>
+    </div>
+</div>>
+
+<script type="text/javascript">
+
+        
+</script>

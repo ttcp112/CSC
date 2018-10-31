@@ -1,0 +1,35 @@
+﻿@model NSCSC.Shared.Models.SandBox.Inventory.Product.ProductDetailModels
+
+@if (Model != null && Model.ClientListDisCate != null && Model.ClientListDisCate.Count > 0)
+{
+    for (int i = 0; i < Model.ClientListDisCate.Count; i++)
+    {
+        var item = Model.ClientListDisCate[i];
+        <tr class="ItemCate cate_@item.OffSet" data-id="@item.Id" data-name="@item.Name" data-status="@item.Status" style="cursor:pointer">
+            <td class="text-center">
+                <input type="checkbox" class="chkCate" checked="@item.IsSelect" data-id="@item.Id" />
+            </td>
+            <td>
+                @item.Name
+                @Html.Hidden(string.Format("ClientListDisCate[{0}].OffSet", item.OffSet), item.OffSet)
+                @Html.Hidden(string.Format("ClientListDisCate[{0}].Id", item.OffSet), item.Id)
+                @Html.Hidden(string.Format("ClientListDisCate[{0}].Name", item.OffSet), item.Name)
+                @Html.Hidden(string.Format("ClientListDisCate[{0}].Status", item.OffSet), item.Status)
+            </td>
+            <td class="text-center">@item.Status</td>
+        </tr>
+    }
+}
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('.ItemCate').click(function (event) {
+            if (event.target.type !== 'checkbox' && event.target.type !== "number") {
+                $(':checkbox', this).trigger('click');
+            }
+        });
+
+    })
+
+</script>

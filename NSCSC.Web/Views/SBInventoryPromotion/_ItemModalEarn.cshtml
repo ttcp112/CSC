@@ -1,0 +1,41 @@
+﻿@model NSCSC.Shared.Models.EarnRuleModels
+
+@if (Model != null && Model.ListProduct != null && Model.ListProduct.Count > 0)
+{
+    for (int i = 0; i < Model.ListProduct.Count; i++)
+    {
+        <tr data-id="@Model.ListProduct[i].ID" class="productNameEarn_@Model.OffSet" data-value="@Model.ListProduct[i].Name">
+            <td>
+                @Model.ListProduct[i].Code
+            </td>
+            <td>
+                @Model.ListProduct[i].Name
+
+                @Html.Hidden(string.Format("ListEarnRule[{0}].ListProduct[{1}].Name",
+                   Model.OffSet, Model.ListProduct[i].OffSet), Model.ListProduct[i].Name)
+
+                @Html.Hidden(string.Format("ListEarnRule[{0}].ListProduct[{1}].OffSet",
+                   Model.OffSet, Model.ListProduct[i].OffSet), Model.ListProduct[i].OffSet)
+
+                @Html.Hidden(string.Format("ListEarnRule[{0}].ListProduct[{1}].Code",
+                   Model.OffSet, Model.ListProduct[i].OffSet), Model.ListProduct[i].Code)
+
+                @Html.Hidden(string.Format("ListEarnRule[{0}].ListProduct[{1}].ID",
+                   Model.OffSet, Model.ListProduct[i].OffSet), Model.ListProduct[i].ID)
+
+                @Html.Hidden(string.Format("ListEarnRule[{0}].ListProduct[{1}].ProductType",
+                   Model.OffSet, Model.ListProduct[i].OffSet), Model.ListProduct[i].ProductType)
+
+                @Html.Hidden(string.Format("ListEarnRule[{0}].ListProduct[{1}].Status",
+                   Model.OffSet, Model.ListProduct[i].OffSet), Model.ListProduct[i].Status,
+                   new { @class = "ItemStatus" })
+            </td>
+            <!--Button Delete Item-->
+            <td width="50px">
+                <a href="javascript:void(0)" onclick="DeleteItems(this); return false;">
+                    <i class="glyphicon glyphicon-minus-sign" style="font-size: 25px; color: red; padding: 5px 0px; "></i>
+                </a>
+            </td>
+        </tr>
+    }
+}

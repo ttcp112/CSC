@@ -1,0 +1,98 @@
+﻿@model NSCSC.Shared.Models.CRM.Customers.StoreDetailModels
+@using NSCSC.Shared
+@{
+    Layout = null;
+}
+
+@if (Model.ListProductApply != null && Model.ListProductApply.Count > 0)
+{
+    foreach (var _itemProductApply in Model.ListProductApply)
+    {     
+        <tr id="txtCheck_@_itemProductApply.OffSet" class="ItemClient" style="cursor:pointer">
+            @*@Html.Hidden(string.Format("ListProductApply[{0}].OffSet", _itemProductApply.OffSet), _itemProductApply.OffSet, new { @id = "hidOffset" + _itemProductApply.OffSet })
+            @Html.Hidden(string.Format("ListProductApply[{0}].AssetID", _itemProductApply.OffSet), _itemProductApply.AssetID, new { @id = "hidAssetID" + _itemProductApply.OffSet })
+            @Html.Hidden(string.Format("ListProductApply[{0}].IsApply", _itemProductApply.OffSet), _itemProductApply.IsApply, new { @id = "hidIsApply" + _itemProductApply.OffSet })
+            @Html.Hidden(string.Format("ListProductApply[{0}].ProductName", _itemProductApply.OffSet), _itemProductApply.ProductName)
+            @Html.Hidden(string.Format("ListProductApply[{0}].ActiveTime", _itemProductApply.OffSet), _itemProductApply.ActiveTime)
+            @Html.Hidden(string.Format("ListProductApply[{0}].ExpiredTime", _itemProductApply.OffSet), _itemProductApply.ExpiredTime)*@
+            <td class="text-center col1">
+                <input type="checkbox" aria-label="Checkbox for following text input" class="chkItem " id="checkinput_@_itemProductApply.OffSet" value="@_itemProductApply.OffSet"
+                       @string.Format("{0}", @_itemProductApply.IsApply ? "checked" : "") />
+            </td>
+            <td class="col2">@_itemProductApply.ProductName</td>
+            <td class="col3">@Html.Raw(string.Format("{0}",_itemProductApply.ActiveTime.HasValue? _itemProductApply.ActiveTime.Value.ToString(Commons.FormatDateTime):"")) </td>
+            <td class="col3">@Html.Raw(string.Format("{0}", _itemProductApply.ExpiredTime.HasValue ? _itemProductApply.ExpiredTime.Value.Date == Commons.MaxDate.Date ? "Never" : _itemProductApply.ExpiredTime.Value.ToString(Commons.FormatDateTime) : ""))</td>
+        </tr>
+    }
+}
+<script>
+    $('.ItemClient').click(function (event) {
+        if (event.target.type != 'checkbox') {
+            mode = 0;
+            $('.chkItem', this).trigger('click');      
+        }       
+    });
+     var _Count ='@Model.ListProductApply.Count';
+    function CountProductApply() {
+
+        var s = 0;
+        for (var i = 0; i < _Count; i++) {
+            if ($("#checkinput_" + i).is(':checked'))
+                s++;
+        }
+        var _product = "";
+        if (s == 0)
+            _product = "0 Product";
+        else
+            if (s == 1)
+                _product = "1 Product";
+            else
+                _product = s + " Product(s)";
+        $("#Product").html(_product);
+        if (s == _Count) {
+            if ($("#CheckAll").is(':checked')) { }
+            else {
+                $("#CheckAll").trigger("click");
+            }
+        } else {
+            if(mode ==0)
+            $("#CheckAll").removeAttr("checked");
+        }
+    }
+    @if (Model.ListProductApply != null && Model.ListProductApply.Count > 0)
+    {
+        foreach (var item in Model.ListProductApply)
+        {
+            <text>
+            $("#checkinput_"+@item.OffSet).click(function () {
+                if ($(this).is(':checked')) {
+                    $("#hidIsApply"+@item.OffSet).val(true);
+                } else {
+                    $("#hidIsApply"+@item.OffSet).val(false);
+                }
+                CountProductApply();            
+            })
+            </text>
+        }
+    }
+            var mode = 0;
+            $(document).ready(function () {
+                CountProductApply();
+            });
+            $("#CheckAll").click(function () {
+                mode = 1;
+                for (var i = 0; i < _Count; i++) {
+                    if ($(this).is(':checked')) {
+                        if ($("#checkinput_" + i).is(':checked')) {
+                        } else {
+                            $("#checkinput_" + i).trigger("click");
+                        }
+                    } else {
+                        if ($("#checkinput_" + i).is(':checked')) {
+                            $("#checkinput_" + i).trigger("click");
+                        } else {
+                        }
+                    }
+                }
+            });
+</script>

@@ -1,0 +1,472 @@
+﻿
+.note-error, .has-error {
+    color: red;
+    font-weight: lighter;
+    font-size: smaller
+}
+    .has-error{
+        margin-bottom:20px;
+        font-weight:lighter!important;
+        font-size:14px;
+    }
+    .div.btn-inputInfo > ul.list-inline > li > button {
+        border-radius: 1px !important;
+    }
+
+.form-group > label {
+    font-weight: normal !important;
+}
+
+.font-bold {
+    font-weight: bolder !important;
+}
+@media screen and (max-width:767px)
+{
+    .breadcrum > i {      
+        font-size: 14px;        
+    }
+    .breadcrum > a {       
+        font-size: 14px;
+    }
+    .breadcrum > span {     
+        font-size: 12px;
+    }
+    .font-size-14{
+        font-size:14px!important;
+    }
+    .wizard_verticle ul.wizard_steps li a .step_no {
+        width: 20px !important;
+        height: 20px !important;
+    }
+    #wizard_verticle > .wizard_steps {
+        margin-top: 10px;
+        margin-left: -20px;
+    }
+    .inputForm > .row > .col > .form-group > label{
+        width:100%!important;
+    }
+}
+@media only screen and (min-width:320px) and (max-width:359px) {
+    .btn-inputStore > ul.list-inline {
+        padding-right: 10px;
+    }
+    div.btn-inputInfo > ul.list-inline > li {
+        margin: auto 1px auto 55px;
+        padding: 3px;
+    }
+
+        div.btn-inputInfo > ul.list-inline > li > button {
+            width: 50px !important;
+        }
+
+    div.btn-inputStore > ul.list-inline > li > button {
+        margin: 10px 50px 5px 50px;
+        width: 120px;
+    }
+}
+
+@media only screen and (min-width:360px) and (max-width:374px) {
+    .btn-inputStore > ul.list-inline {
+        padding-right: 20px;
+    }
+    div.btn-inputInfo > ul.list-inline > li {
+        margin: auto 15px auto 80px;
+        padding: 3px;
+    }
+
+    div.btn-inputStore > ul.list-inline > li > button {
+        margin: 10px 50px 5px 50px;
+        width: 150px;
+    }
+}
+
+@media only screen and (min-width:375px)and (max-width:410px) {
+    .btn-inputStore > ul.list-inline {
+        padding-right: 10px;
+    }
+    div.btn-inputInfo > ul.list-inline > li {
+        margin: auto auto auto 80px;
+        padding: 3px;
+    }
+
+    .yourcard-content {
+        margin: auto auto auto auto;
+    }
+
+    div.btn-inputStore > ul.list-inline > li > button {
+        margin: 10px 50px 5px 50px;
+        width: 160px;
+    }
+}
+
+@media only screen and (min-width:411px)and (max-width:413px) {
+    .btn-inputStore > ul.list-inline {
+        padding-right: 30px;
+    }
+    div.btn-inputInfo > ul.list-inline > li {
+        margin: auto 0px auto 100px;
+        padding: 3px;
+    }
+
+    .yourcard-content {
+        margin: auto 0px auto 15px;
+    }
+
+    div.btn-inputStore > ul.list-inline > li > button {
+        margin: 10px 50px 5px 50px;
+        width: 170px;
+    }
+    .box-my-profile {
+        margin-left: -30px;
+    }
+}
+
+@media only screen and (min-width:320px) and (max-width:767px) {
+    #customer-information-checkout > div.col-sm-12, .order-summary > div.col-sm-12 {
+        left: 0px !important;
+    }
+    #check-content {
+        margin-top: 20px;
+    }
+    .title-head {
+        margin: auto 0px 20px 20px;
+    }
+
+    div#mainFormmerchant > div.text-inputStore > div.col-sm-12 {
+        left: 37px;
+    }
+
+    #data label {
+        width: 100%;
+    }
+
+    .titles-input > div > label {
+        width: 80%;
+        margin-left: 35px;
+    }
+
+    /*.form {
+        margin: 0px 30px 20px 30px;
+    }*/
+
+    .inputForm {
+        margin: 10px 20px 20px 20px;
+    }
+
+    .col-sm-5 {
+        margin-right: 40px !important;
+    }
+
+    .col-sm-12 {
+        left: 60px;
+    }
+
+    div#checkout > div.order-summary > div.row > div.col-sm-12, #customer-information-checkout > div.row > div.col-sm-12 {
+        left: -20px !important;
+    }
+
+        #customer-information-checkout > div.row > div.col-sm-12 > div.form-group {
+            margin-left: 30px;
+        }
+
+            #customer-information-checkout > div.row > div.col-sm-12 > div.form-group > label {
+                width: 100%;
+            }
+
+    .font-bold {
+        margin-left: 33px;
+    }
+
+    .line {
+        margin: 0px 0px 30px 33px;
+        width: 70% !important;
+        border: 1px solid #ccc;
+    }
+
+    .wizard_horizontal ul.wizard_steps li a::before {
+        height: 4px;
+    }
+
+    .fr-address {
+        margin: auto auto -1px auto;
+    }
+
+    div.btn-inputInfo > ul.list-inline > li > button {
+        width: 180px !important;
+    }
+
+    #step-verticel {
+        display: block !important;
+        margin: auto auto auto 10px;
+    }
+
+    #step-horizontal {
+        display: none !important;
+    }
+
+    .wizard_verticle ul.wizard_steps li a:first-child {
+        margin-top: auto !important;
+    }
+
+    #step-verticel > .step_text_mobile {
+        margin-top: 10px !important;
+    }
+
+    .text-Mer-mobile {
+        margin: auto auto auto 30px !important;
+    }
+
+    .text-Store-mobile {
+        margin: 65px auto auto 30px !important
+    }
+}
+
+
+@media only screen and (min-width:414px) and (max-width:767px) {
+    .btn-inputStore > ul.list-inline {
+        padding-right:30px;
+    }
+    .box-my-profile {
+        margin-left: -40px;
+    }
+    div.btn-inputInfo > ul.list-inline > li {
+        margin: auto 15px auto 100px;
+        padding: 3px;
+    }
+
+    .yourcard-content {
+        margin: auto 0px auto 25px;
+    }
+
+    div.btn-inputStore > ul.list-inline > li > button {
+        margin: 10px 50px 5px 50px;
+        width: 160px;
+    }
+}
+
+@media only screen and (min-width:768px)and (max-width:1023px) {
+    .form {
+        margin: 20px 30px 20px 0px;
+        padding: 0 0 0 100px;
+    }
+
+    .yourcard-content {
+        margin: auto 30px auto 0px;
+    }
+
+    div.btn-inputInfo > ul.list-inline > li > button {
+        width: 80px !important;
+    }
+
+    #mainFormmerchant {
+        margin: auto auto auto 30px;
+    }
+
+    .inputForm > div > div > div > label {
+        width: 90% !important;
+    }
+
+    .line {
+        margin: 10px 30px 30px 0px;
+        width: 80% !important;
+        border: 1px solid #ccc;
+    }
+
+    .titles {
+        margin-bottom: 10px;
+    }
+
+    .btn-inputStore > ul > li > button {
+        width: 120px;
+    }
+
+    .btn-inputStore > ul.list-inline {
+        margin-right: 50px;
+    }
+}
+
+@media only screen and (min-width:1024px)and (max-width:1200px) {
+    .yourcard-content {
+        margin: auto 30px auto auto;
+    }
+
+    #data label {
+        width: 100%;
+    }
+
+    .form {
+        margin: 20px 30px 20px 0px;
+        padding: 0 0 0 100px;
+    }
+
+    .inputForm {
+        margin: 20px 20px 20px 20px;
+    }
+
+    .col-sm-5 {
+        margin-right: 40px !important;
+    }
+
+    .col-sm-12 {
+        left: 60px;
+    }
+
+    .line {
+        margin: 10px 0px 30px 0px;
+        width: 87% !important;
+        border: 1px solid #ccc;
+    }
+
+    .wizard_horizontal ul.wizard_steps li a::before {
+        height: 4px;
+    }
+
+
+    /* For landscape layouts only */
+    div.btn-inputInfo > ul.list-inline > li > button {
+        width: 130px !important;
+    }
+
+    .btn-inputStore > ul > li > button {
+        width: 150px;
+    }
+
+    .btn-inputStore > ul.list-inline {
+        margin-right: 70px;
+    }
+}
+
+@media only screen and (min-width: 1201px) {
+    .text-inputStore > div > h4 {
+        margin-left: 20px;
+    }
+
+    .yourcard-content {
+        margin: auto 30px auto 20px;
+    }
+
+    #data label {
+        width: 100%;
+    }
+
+    .form {
+        margin: 20px 30px 20px 30px;
+        padding: 0 0 0 100px;
+    }
+
+    .inputForm {
+        margin: 20px 20px 20px 20px;
+    }
+
+    .col-sm-5 {
+        margin-right: 40px !important;
+    }
+
+    .col-sm-12 {
+        left: 60px;
+    }
+
+    .line {
+        margin: 10px 0px 30px 0px;
+        width: 87% !important;
+        border: 1px solid #ccc;
+    }
+
+    .wizard_horizontal ul.wizard_steps li a::before {
+        height: 3px;
+    }
+
+    div.btn-inputInfo > ul.list-inline > li > button {
+        width: 180px !important;
+    }
+
+    .btn-inputStore > ul > li > button {
+        width: 180px;
+    }
+
+    .btn-inputStore > ul.list-inline {
+        margin-right: 70px;
+    }
+}
+
+@media only screen and (min-width:768px) {
+    .inputForm > .row > .col-sm-5 > .form-group > label{
+        width:100%;
+    }
+    .customer-infor {
+        margin: 40px auto auto 50px;
+    }
+
+    div#customer-information-checkout > div.row > div.col-md-3 > #imagepreview {
+    }
+
+    #checkout > div.row > div.col-md-3 > label {
+        margin-left: 60px !important;
+    }
+
+    .title-head {
+        margin-left: 50px;
+    }
+
+    #step-verticel {
+        display: none !important;
+        margin: auto auto auto 10px;
+    }
+
+    #step-horizontal {
+        display: block !important;
+    }
+
+    .order-summary {
+        margin: auto 20px auto 20px;
+    }
+
+    #customer-information-checkout > div.col-sm-12 {
+        left: 0px !important;
+    }
+
+    .order-summary > div.col-sm-12, div.row > div.col-sm-12 {
+        left: 0px !important;
+    }
+
+    .x_content {
+        margin-left: -25px;
+    }
+
+    .checkout-line {
+        width: 100%;
+        margin: 20px auto 20px auto;
+    }
+
+    .btn-checkout {
+        width: 200px;
+    }
+
+    #check-content {
+        margin-top: 20px;
+    }
+
+    .title-checkout {
+        margin-left: -10px;
+    }
+
+    #btn-submit-checkout {
+        margin-right: 20px;
+    }
+
+    #note-feelback {
+        width: 100%;
+        height: 50px;
+        resize: none;
+    }
+
+    .label-note-feelback {
+        width: 90%;
+        margin: 10px 20px 10px 45px;
+    }
+
+    div.btn-inputInfo > .list-inline > li {
+        padding-left: 0px !important;
+        padding-right: 0px !important
+    }
+}

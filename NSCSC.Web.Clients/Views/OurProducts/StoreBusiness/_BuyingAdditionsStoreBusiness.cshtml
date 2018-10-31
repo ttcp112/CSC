@@ -1,0 +1,390 @@
+﻿@using NSCSC.Shared.Helpers
+@using NSCSC.Shared
+@model NSCSC.Shared.Models.OurProducts.Package.PackageDetailViewModels
+<div class="se-pre-con" style="display: none;"></div>
+<div class="title_left">
+    <div class="container">
+        <h3>
+            @*@Html.Raw("BUYING ADDITIONS")*@
+            <small class="breadcrum">
+                <a href="@Url.Action("Index", "Home")">home</a>
+                @if (Model.PackageDetail != null)
+                {
+                    @*Product*@
+                if (Model.PackageDetail.ProductType == (byte)Commons.EProductType.Product)
+                {
+                    if (!string.IsNullOrEmpty(ViewBag.CategoryID) && !string.IsNullOrEmpty(ViewBag.CategoryName))
+                    {
+                        <i class='fa fa-caret-right'></i>
+                            <a href="@Url.ActionEncoded("Index", "OurProducts", new { ProductType = "Products", CategoryID = ViewBag.CategoryID })">@ViewBag.CategoryName.ToLower()</a>
+                            <i class='fa fa-caret-right'></i>
+                            <a href="@Url.ActionEncoded("Products", "OurProducts", new { CategoryID = ViewBag.CategoryID })">products list</a>
+                    }
+                    <i class='fa fa-caret-right'></i>
+                        <a href="@Url.ActionEncoded("ProductPackageDetail", "OurProducts", new { id = Model.PackageDetail.ID })">@Model.PackageDetail.Name.ToLower()</a>
+                }
+                @*Package*@
+                else if (Model.PackageDetail.ProductType == (byte)Commons.EProductType.Package)
+                {
+                    <i class='fa fa-caret-right'></i>
+                        <a href="@Url.ActionEncoded("Index", "OurProducts", new { ProductType ="Packages"})">packages</a>
+                        <i class='fa fa-caret-right'></i>
+                        <a href="@Url.ActionEncoded("Packages", "OurProducts")">packages list</a>
+                        <i class='fa fa-caret-right'></i>
+                        <a href="@Url.ActionEncoded("ProductPackageDetail", "OurProducts", new { id = Model.PackageDetail.ID })">@Model.PackageDetail.Name.ToLower()</a>
+                }
+                <i class='fa fa-caret-right'></i>
+                    <span>buying additions</span>
+                }
+            </small>
+        </h3>
+
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+
+@using (@Html.BeginForm("AddToCartBuyingAdditionsStoreBusiness", "OurProducts", FormMethod.Post, new
+{
+    @class = "",
+    @id = "form-buying-additions-store-business",
+    @enctype = "multipart/form-data"
+}))
+{
+    @Html.HiddenFor(model => model.PackageDetail.ID)
+    @Html.HiddenFor(model => model.PackageDetail.Name)
+    @Html.HiddenFor(model => model.PackageDetail.ItemID)
+
+    <div class="form-horizontal form-label-left listItemYourCart">
+        <div class="form-group">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <table id="datatable-responsive-list-addition"
+                       class="table table-striped nowrap table table-striped jambo_table bulk_action"
+                       cellspacing="0" style="width:100%;">
+                    <thead style="background-color:#f9f9f9;">
+                        <tr>
+                            <th>Type</th>
+                            <th>Item Name</th>
+                            <th>Quantity</th>
+                            <th>Applied On</th>
+                            <th>Period</th>
+                            <th>Amount</th>
+                            <th class="text-center">Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.ListAdditionBuy != null && Model.ListAdditionBuy.Any())
+                        {
+                            foreach (var itemAddition in Model.ListAdditionBuy)
+                            {
+                                @Html.Partial("StoreBusiness/_ItemAdditionStoreBusiness", itemAddition)
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="form-group itemProduct">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="row infoProduct" style="padding-bottom:10px;">
+                    <div class="col-md-10 col-sm-10 col-xs-10 text-right fontBold">
+                        Total Addition Price:
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-xs-2 text-right fontBold">
+                        @Model.CurrencySymbol<span id="lblTotalAdditionPrice">0.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group itemProduct pading-top-bottom">
+            <div class="row infoProduct" style="padding-bottom:10px;">
+                <div class="col-md-12 col-sm-12 col-xs-12 pading-top-bottom" style="font-size:15px;">
+                    <div class="col-md-12 col-sm-12 col-xs-2">
+                        Please select the desired items in below list
+                    </div>
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="col-md-12 col-sm-12 col-xs-12 text-left" style="padding-left:0px;">
+                        Filter by Type of Additions
+                        &nbsp;&nbsp;
+                       @Html.DropDownList("AdditionType", new SelectList(@ViewBag.ListAdditionType, "Value", "Text"), new { id = "ddlAdditionType", style = "width:130px;" })
+                    </div>
+
+                    @for (int i = 0; i < Model.ListApplyAdditionProduct.Count(); i++)
+                    {
+                        @Html.Hidden(string.Format("ListApplyAdditionProduct[{0}].ProductId", i), Model.ListApplyAdditionProduct[i].ProductId)
+
+                        @*@Html.Hidden("ListApplyAdditionProduct[" + i + "]['ProductName']", Model.ListApplyAdditionProduct[i].ProductName, new { @id = "applyAdditionProductName_" + i, @class = "applyAdditionProductName" })
+                        @Html.Hidden("ListApplyAdditionProduct[" + i + "]['ProductId']", Model.ListApplyAdditionProduct[i].ProductId, new { @id = "applyAdditionProductId_" + i, @class = "applyAdditionProductId" })
+                        @Html.Hidden("ListApplyAdditionProduct[" + i + "]['ProductCateId']", Model.ListApplyAdditionProduct[i].ProductCateId, new { @id = "applyAdditionProductCateId_" + i, @class = "applyAdditionProductCateId" })*@
+                    }
+                </div>
+            </div>
+        </div>
+
+        @*List Item*@
+        <div id="listAdditionsPackage">
+        </div>
+
+        @*Cancel | Done*@
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12 text-right">
+                <a href="javascript:void(0);" class="btn btn-default fontUppercase" onclick="javascript:history.back()">cancel</a>
+                <a class="btn btn-primary fontUppercase" style="width:180px;" onclick="SubmitForm('#form-buying-additions-store-business')">Done</a>
+            </div>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+
+    var ListApplyAdditionProduct = [];
+    var displayLength = 200;
+    var _tableAddition = null;
+    var _settingsOptionTableAddition = {
+        "columnDefs": [
+               { "orderable": false, "targets": [6] },
+               { "width": "12%", "targets": [] },
+               { "width": "5%", "targets": [2, 3, 4, 5, 6] },
+        ],
+        "order": [
+            [0, 'asc'],
+            [1, 'asc']
+        ],
+        "autoWidth": false,
+        "displayLength": displayLength,
+        "bInfo": false,
+        "searching": false,
+        "lengthChange": false,
+        "paging": false,
+
+        "drawCallback": function () {
+            var api = this.api();
+            updateTotalAdditionsPrice('#datatable-responsive-list-addition', '#lblTotalAdditionPrice');
+        },
+    };
+    var curIndexAddition = 0;
+    $(document).ready(function () {
+        $("#ddlAdditionType").select2({});
+
+        _tableAddition = $('#datatable-responsive-list-addition').DataTable($.extend(true, {}, _settingsOptionTableAddition));
+
+        // Get ListApplyAdditionProduct
+        var countListApplyAdditionProduct = @Model.ListApplyAdditionProduct.Count();
+        for (var j = 0; j < countListApplyAdditionProduct; j++) {
+            var ProductApplyAdditionPackage = {
+                ProductName: $('input[name="ListApplyAdditionProduct[' + j + '][\'ProductName\']"]').val(),
+                ProductId: $('input[name="ListApplyAdditionProduct[' + j + '][\'ProductId\']"]').val(),
+                ProductCateId: $('input[name="ListApplyAdditionProduct[' + j + '][\'ProductCateId\']"]').val()
+            }
+            ListApplyAdditionProduct.push(ProductApplyAdditionPackage);
+        }
+        GetListAdditionsForStoreBusiness('0', '#listAdditionsPackage');
+
+        curIndexAddition = $('#datatable-responsive-list-addition tr.group-itm-addition').length;
+
+    });
+
+    $("#ddlAdditionType").change(function () {
+        var additionType = this.value;
+        GetListAdditionsForStoreBusiness(additionType, '#listAdditionsPackage');
+    });
+
+    function GetListAdditionsForStoreBusiness(additionType, elemnetFillData) {
+        var data = {
+            AdditionType: additionType,
+            ListApplyAdditionProduct: ListApplyAdditionProduct
+        }
+
+        $.ajax({
+            type: "POST",
+            url: CreateAbsoluteUrl("GetListAdditionsForStoreBusiness"),
+            traditional: true,
+            data: JSON.stringify(data),
+            dataType: "html",
+            contentType: "application/json; charset=utf-8",
+            beforeSend: function () {
+                $('.se-pre-con').show();
+                $(elemnetFillData).html('');
+            },
+            error: function (e) {
+
+            },
+            success: function (data) {
+                $(elemnetFillData).html(data);
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            }
+        });
+    }
+
+    /*Add Item Addition*/
+    function AddItemAdditionStoreBusiness(btn, _type, _additionIndex, _applyProductId, _applyProductName, _amountOfUnit) {
+
+        //Get tr first
+        var row = $(btn).parents('tr:first');
+
+        var ID = $(row).find('input#hidAdditionID').val();
+        var AdditionTypeName = $(row).find('input#hidAdditionName').val();
+        var AdditionType = $(row).find('input#hidAdditionType').val();
+        var ItemName = $(row).find('input#hidItemName').val();
+        var Quantity = $(row).find('input#txt_' + _type + _additionIndex + '').val();
+        var Period = $(row).find('input#hidAdditionPeriod').val();
+        var PeriodType = $(row).find('input#hidAdditionPeriodType').val();
+        var Price = parseFloat($(row).find('input#hidAdditionPrice').val());
+        var Description = $(row).find('input#hidAdditionDescription').val();
+        var ImageURL = $(row).find('input#hidAdditionImageURL').val();
+
+        /*==============*/
+        // Check Addition has already bought && isDelete == False
+        // If yes => update quantity
+        // If no => add new row data
+        var addAddition = updateQuantityItemAddition('#datatable-responsive-list-addition', ID, _applyProductId, Period, PeriodType, Quantity);
+
+        if(addAddition == true){
+            /*==============*/
+            var OurProDuctsModel = {
+                Index: curIndexAddition,
+                ID: ID,
+                AdditionTypeName: AdditionTypeName,
+                Name: ItemName,
+                Quantity: Quantity,
+                Code: _applyProductName,
+                Period: Period,
+                PeriodType: PeriodType,
+                Price: Price,
+                ApplyProductId: _applyProductId,
+                AdditionType: AdditionType,
+                Description: Description,
+                ImageURL: ImageURL,
+                AmountOfUnit: _amountOfUnit
+            }
+
+            $.ajax({
+                type: "POST",
+                url: CreateAbsoluteUrl("AddItemAdditionStoreBusiness"),
+                traditional: true,
+                data: JSON.stringify(OurProDuctsModel),
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+                success: function (data) {
+                    _tableAddition.row.add($(data)).draw();
+                    // Reset quantity
+                    $(row).find('input#txt_' + _type + _additionIndex + '').val("1");
+                    curIndexAddition++;
+                }
+            });
+        } else {
+            // Reset quantity
+            $(row).find('input#txt_' + _type + _additionIndex + '').val("1");
+        }
+    }
+
+    function updateQuantityItemAddition(tableAdditionName, idItem, applyProductId, periodItem, periodTypeItem, quantityItem){
+        var add = true;
+        $(tableAdditionName).DataTable().rows({search:'applied'}).every( function ( rowIdx, tableLoop, rowLoop ) {
+            var rowNode = this.node();
+            var tdNode = $(rowNode).find("td:visible.hidGroupVal");
+            if($(tdNode).find("input.hidIsDelete").val() == "False"){
+                // If Item is exist
+                if($(tdNode).find("input.hidID").val() == idItem && $(tdNode).find("input.hidApplyProductId").val() == applyProductId && parseInt($(tdNode).find("input.hidPeriod").val()) == parseInt(periodItem) && parseInt($(tdNode).find("input.hidPeriodType").val()) == parseInt(periodTypeItem)){
+                    // Update quantity Addition
+                    var newQty = parseInt($(tdNode).find("input.hidQuantity").val()) + parseInt(quantityItem);
+                    $(rowNode).find("td:visible.colQty").html(newQty);
+                    $(tdNode).find("input.hidQuantity").val(newQty);
+
+                    // Update amount Addition
+                    var priceAddition = parseFloat($(tdNode).find("input.hidPrice").val());
+                    var amountAddition = updateAmountAddition(newQty, priceAddition);
+                    $(rowNode).find("td:visible.colAmount").html(amountAddition);
+
+                    // Update tableAddition data
+                    $(tableAdditionName).DataTable().destroy();
+                    if( tableAdditionName == '#datatable-responsive-list-addition' ){
+                        _tableAddition = $(tableAdditionName).DataTable($.extend(true, {}, _settingsOptionTableAddition));
+                    } else if (tableAdditionName == '#datatable-responsive-list-addition-main'){
+                        _tableAdditionMain = $(tableAdditionName).DataTable($.extend(true, {}, _settingsOptionTableAdditionMain));
+                    }
+                    // Break
+                    add = false;
+                    return false;
+                } 
+            } 
+        });
+        return add;
+    }
+
+    function updateTotalAdditionsPrice(tableAdditionName, idDivDisplay){
+        var totalAdditionsPrice = 0;
+        $(tableAdditionName).DataTable().rows({search:'applied'}).every( function () {
+            var rowNode = this.node();
+            var tdNode = $(rowNode).find("td:visible.hidGroupVal");
+            if($(tdNode).find("input.hidIsDelete").val() == "False"){
+                var quantity = parseInt($(tdNode).find("input.hidQuantity").val());
+                var price = parseFloat($(tdNode).find("input.hidPrice").val());
+                totalAdditionsPrice += (quantity * price);
+            }
+        });
+        $(idDivDisplay).html(NumberFormatCurrency(totalAdditionsPrice, 2));
+    }
+
+    function DeleteAddition(btn, OffSet) {
+        var tr = $('#tr_add_price_' + OffSet);
+        $(tr).find('input.PriceStatus').val(9);
+        $(tr).find('input#hidIsDelete').val(true);
+        $(tr).hide();
+        updateTotalAdditionsPrice('#datatable-responsive-list-addition', '#lblTotalAdditionPrice');
+    }
+
+    $("#form-buying-additions-store-business").submit(function (e) {
+        var isSubmit = $(this).valid();
+        if (isSubmit) {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: "POST",
+                data: new FormData(this),
+                processData: false,
+                contentType: false,
+                dataType: "html",
+                success: function (data) {
+                    data = JSON.parse(data);
+                    //=========
+                    var countItemCart = data.TotalQuantity;//data.ListItems.length;
+                    createOrUpdateOrder('@Model.PackageDetail.CusId', data.ID, countItemCart);
+                    getOrder();
+                    //=========
+                    window.location.assign('@Url.Action("Index", "YourCart")');
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $('#lblMsg').html(jqXHR.statusText);
+                },
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+            });
+        }
+        e.preventDefault();
+    });
+
+    function updateAmountAddition(quantity, price){
+        var amount = 0;
+        if(quantity > 0 && price > 0){
+            amount = quantity * price;
+        }
+        amount = NumberFormatCurrency(amount, 2);
+        return amount;
+    }
+</script>
+

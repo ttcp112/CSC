@@ -1,0 +1,314 @@
+﻿@model NSCSC.Shared.Models.CRM.Customers.CustomerBaseModels
+@{
+    ViewBag.Title = "Customers - Edit";
+    var clsActive = "active";
+    var clsIn = "in";
+}
+<div role="main" class="right_col">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left" style="padding: 10px 0px;">
+                @Html.Partial("~/Views/Shared/_breadcrumb.cshtml",
+                new Dictionary<string, string> { { "A", "CRM" }, { "B", "Customer" }, { "C", "Customer - Edit" } })
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12 x_panel">
+                    <div class="x_content">
+                        <div class="row text-right">
+                            <ul class="header-buttons pull-right list-inline">
+                                <li><a href="javascript:void(0)" onclick="CloseDetail(); return false;" class="btn btn-danger" id="btn-delete"><i class="fa fa-times"></i>&nbsp;Close</a></li>
+                            </ul>
+                        </div>
+                        <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                                <li role="presentation" class="@string.Format("{0}",Model.IndexTab== 1 ? clsActive : "")" id="content1">
+                                    <a href="#tab_content1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Customer Detail</a>
+                                </li>
+                                <li role="presentation" class="@string.Format("{0}",Model.IndexTab== 2 ? clsActive : "")" id="content2">
+                                    <a href="#tab_content2" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">Merchant & Stores</a>
+                                </li>
+                                <li role="presentation" class="@string.Format("{0}",Model.IndexTab== 3 ? clsActive : "")" id="content3">
+                                    <a href="#tab_content3" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">Products Management</a>
+                                </li>
+                            </ul>
+                            <div id="myTabContent" class="tab-content">
+                                @*Tab customer detail*@
+                                <div role="tabpanel" class="tab-pane fade @string.Format("{0} {1}",Model.IndexTab== 1 ? clsActive : "", Model.IndexTab == 1 ? clsIn : "")" id="tab_content1" aria-labelledby="home-tab">
+                                    <div class="row text-right">
+                                        <ul class="header-buttons pull-right list-inline">
+                                            @*<li>
+                                                <a href="javascript:void(0)" class="btn btn-danger" id="btn-delete" onclick="CloseDetail(); return false;">
+                                                    <i class="fa fa-times"></i>
+                                                    &nbsp;Cancel
+                                                </a>
+                                            </li>*@
+                                            <li>
+                                                <a href="javascript:void(0);" class="btn btn-success" id="btn-edit-save" onclick="SubmitForm('.edit-form-customer-detail')">
+                                                    <i class="fa fa-save"></i>
+                                                    &nbsp;Save
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="box-body">
+                                        @using (@Html.BeginForm("EditCustomerDetail", "CRMCustomers", FormMethod.Post, new
+                                        {
+                                            @class = "form-horizontal edit-form-customer-detail",
+                                            @enctype = "multipart/form-data"
+                                        }))
+                                        {
+                                            @Html.Partial("_FormCustomerDetail", Model)
+                                        }
+                                    </div>
+                                </div>
+
+                                @*Tab Marchant & Stores*@
+                                <div role="tabpanel" class="tab-pane fade @string.Format("{0} {1}",Model.IndexTab== 2 ? clsActive : "", Model.IndexTab == 2 ? clsIn : "")" id="tab_content2" aria-labelledby="profile-tab">
+                                    <div class="row text-right">
+                                        <ul class="header-buttons pull-right list-inline">
+                                            <li>
+                                                <a href="javascript:void(0)" class="btn btn-info" id="btn-edit" onclick="EditMerchantStore(); return false;">
+                                                    <i class="fa fa-edit"></i>
+                                                    &nbsp;Edit
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)" class="btn btn-danger hidden" id="btn-delete" onclick="CloseMechantAndStore(true); return false;">
+                                                    <i class="fa fa-times"></i>
+                                                    &nbsp;Cancel
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0);" class="btn btn-success hidden" id="btn-edit-save" onclick="SubmitForm('.edit-form-merchant-store')">
+                                                    <i class="fa fa-save"></i>
+                                                    &nbsp;Save
+                                                </a>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+                                    <div class="box-body">
+                                        @using (@Html.BeginForm("EditMerchantStore", "CRMCustomers", FormMethod.Post, new
+                                        {
+                                            @class = "form-horizontal edit-form-merchant-store",
+                                            @enctype = "multipart/form-data"
+                                        }))
+                                        {
+                                            @Html.Partial("_FormMerchant", Model)
+                                        }
+                                    </div>
+                                </div>
+
+                                @*Tab Products Management*@
+                                <div role="tabpanel" class="tab-pane fade @string.Format("{0} {1}",Model.IndexTab== 3 ? clsActive : "", Model.IndexTab == 3 ? clsIn : "")" id="tab_content3" aria-labelledby="profile-tab">
+                                    <div class="box-body">
+                                        @using (@Html.BeginForm("EditProductsManagement", "CRMCustomers", FormMethod.Post, new
+                                        {
+                                            @class = "form-horizontal edit-form-products-management",
+                                            @enctype = "multipart/form-data"
+                                        }))
+                                        {
+                                            @Html.Partial("_FormProductsManagement", Model)
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+            @if(Model.CustomerDetail.ID != null)
+    {
+        <text>
+    $("#content2").removeClass("disabled disabledTab");
+    $("#content3").removeClass("disabled disabledTab");
+        </text>
+        }
+        else
+        {
+           <text>
+        $("#content2").addClass("disabled disabledTab");
+        $("#content3").addClass("disabled disabledTab");
+    </text>
+        }
+
+
+
+    $(".edit-form-customer-detail").submit(function (e) {
+        $('.se-pre-con').show();
+        $.ajax({
+            url: $(this).attr('action'),
+            type: "POST",
+            data: new FormData(this),
+            processData: false,
+            contentType: false,
+            success: function () {
+                $('.se-pre-con').hide();
+                CloseDetail();
+                Search();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $('.se-pre-con').hide();
+                $(".detail-view").html(jqXHR.responseText);
+            }
+        });
+        e.preventDefault();
+    });
+
+    $(".edit-form-merchant-store").submit(function (e) {
+        $('.se-pre-con').show();
+        $.ajax({
+            url: $(this).attr('action'),
+            type: "POST",
+            data: new FormData(this),
+            processData: false,
+            contentType: false,
+            success: function (content) {
+                $('.se-pre-con').hide();
+                // $('#myTab li').removeClass('active');
+                $(".detail-view").html(content);
+                //$('#myTab li').removeClass('active');
+                //$('#myTabContent .tab-pane').removeClass("active in");
+                //$('#myTabContent #tab_content2').addClass('active in');
+                //$('[id=content2]').addClass('active');
+                $(".detail-view").show();
+                $(".gridview").css("display", "none");
+
+                CloseMechantAndStore(false);
+               // CloseDetail();
+               // Search();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $('.se-pre-con').hide();
+                $(".detail-view").html(jqXHR.responseText);
+                $('.nav-tabs a[href="#tab_content2"]').tab('show');
+                $("#content2").removeClass("disabled disabledTab");
+                $("#content3").removeClass("disabled disabledTab");
+                $('.merchant input').removeAttr('disabled');
+                $('.merchant #addeditimage').removeAttr('disabled');
+                $('#tab_content2 #btn-edit-save').removeClass('hidden');
+                $('#tab_content2 #btn-delete').removeClass('hidden');
+                $('#tab_content2 #btn-edit').addClass('hidden');
+                $('.merchant #btn-add-more-tab').removeAttr("disabled");
+                $('.merchant .edit-info-store').removeAttr("disabled");
+                $("#txtHomeCountry").removeAttr("disabled");
+            }
+        });
+        e.preventDefault();
+    });
+
+    //$(".edit-form-products-management").submit(function (e) {
+    //    $('.se-pre-con').show();
+    //    $.ajax({
+    //        url: $(this).attr('action'),
+    //        type: "POST",
+    //        data: new FormData(this),
+    //        processData: false,
+    //        contentType: false,
+    //        success: function () {
+    //            $('.se-pre-con').hide();
+    //            CloseDetail();
+    //            Search();
+    //        },
+    //        error: function (jqXHR, textStatus, errorThrown) {
+    //            $('.se-pre-con').hide();
+    //            $(".detail-view").html(jqXHR.responseText);
+    //        }
+    //    });
+    //    e.preventDefault();
+    //});
+    var tempMerchant = {};
+    function EditMerchantStore() {
+        $('.merchant input').removeAttr('disabled');
+        $('.merchant #addeditimage').removeAttr('disabled');
+        $('.merchant #btn-add-more-tab').removeAttr('disabled');
+        $('.merchant .edit-info-store').removeAttr('disabled');
+        $('#tab_content2 #btn-edit-save').removeClass('hidden');
+        $('#tab_content2 #btn-delete').removeClass('hidden');
+        $('#tab_content2 #btn-edit').addClass('hidden');
+        $('#txtHomeCountry').removeAttr('disabled');
+        $('#CreatedDate').attr('disabled','disabled');
+        tempMerchant = {
+            Name: $('.merchant [id=MerchantStore_Name]').val(),
+            Email: $('.merchant [id=MerchantStore_Email]').val(),
+            Phone: $(".merchant [id=txtPhone]").val(),
+            GSTRegNo: $('.merchant [id=txtGSTRegNo]').val(),
+            Country: $('.merchant [id=txtHomeCountry]').val(),
+            ZipCode: $('.merchant [id=txtZipCode]').val(),
+            City: $('.merchant [id=txtCity]').val(),
+            Street: $('.merchant [id=txtStreet]').val()
+        };
+    }
+
+    function CloseMechantAndStore(flag) {
+        $('.merchant input').attr('disabled',"disabled");
+        $('.merchant #addeditimage').attr('disabled', 'disabled');
+        $('.merchant #btn-add-more-tab').attr("disabled", "disabled");
+        $('.merchant .edit-info-store').attr("disabled", "disabled");
+        $('#tab_content2 #btn-edit-save').addClass('hidden');
+        $('#tab_content2 #btn-delete').addClass('hidden');
+        $('#tab_content2 #btn-edit').removeClass('hidden');
+        $('#txtHomeCountry').attr('disabled','disabled');
+        if (flag)
+        {
+            $('.merchant [id=MerchantStore_Name]').val(tempMerchant.Name);
+            $('.merchant [id=MerchantStore_Email]').val(tempMerchant.Email);
+            $(".merchant [id=txtPhone]").val(tempMerchant.Phone);
+            $('.merchant [id=txtGSTRegNo]').val(tempMerchant.GSTRegNo);
+            $('.merchant [id=txtHomeCountry]').val(tempMerchant.Country);
+            $('.merchant [id=txtZipCode]').val(tempMerchant.ZipCode);
+            $('.merchant [id=txtCity]').val(tempMerchant.City);
+            $('.merchant [id=txtStreet]').val(tempMerchant.Street);
+            tempMerchant = {};
+        }
+    }
+
+    $(document).ready(function () {
+        /* mark start for secret info */
+        var email = $("#CustomerDetail_Email").attr('value');
+        email = email.replace(/\s/g, "");
+        email = MarkStart(email, 4, email.length);
+        $("#CustomerDetail_EmailDisplay").attr('value',email);
+
+        var NRIC = $("#CustomerDetail_NRIC").attr('value');
+        NRIC = NRIC.replace(/\s/g, "");
+        NRIC = MarkStart(NRIC, 0, NRIC.length - 4);
+        $("#CustomerDetail_NRICDisplay").attr('value',NRIC);
+
+        var Phone = $("#CustomerDetail_Phone").attr('value');
+        Phone = Phone.replace(/\s/g, "");
+        Phone = MarkStart(Phone, 0, Phone.length - 4);
+        $("#CustomerDetail_PhoneDisplay").attr('value', Phone);
+        $("#txtHomeCountry").select2({
+            placeholder: "Home Country",
+        });
+    });
+
+    $("#CustomerDetail_EmailDisplay").focus(function () {
+        document.getElementById('CustomerDetail_Email').style.display = "block";
+        $("#CustomerDetail_Email").attr("value", "");
+        $("#CustomerDetail_EmailDisplay").attr("value", "");
+        document.getElementById('CustomerDetail_EmailDisplay').style.display = "none";
+        document.getElementById("CustomerDetail_Email").focus();
+    });
+    $("#CustomerDetail_NRICDisplay").focus(function () {
+        document.getElementById('CustomerDetail_NRIC').style.display = "block";
+        $("#CustomerDetail_NRIC").attr("value", "");
+        $("#CustomerDetail_NRICDisplay").attr("value", "");
+        document.getElementById('CustomerDetail_NRICDisplay').style.display = "none";
+        document.getElementById("CustomerDetail_NRIC").focus();
+    });
+    $("#CustomerDetail_PhoneDisplay").focus(function () {
+        document.getElementById('CustomerDetail_Phone').style.display = "block";
+        $("#CustomerDetail_Phone").attr("value", "");
+        $("#CustomerDetail_PhoneDisplay").attr("value", "");
+        document.getElementById('CustomerDetail_PhoneDisplay').style.display = "none";
+        document.getElementById("CustomerDetail_Phone").focus();
+    });
+</script>

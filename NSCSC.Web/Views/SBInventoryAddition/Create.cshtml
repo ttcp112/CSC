@@ -1,0 +1,68 @@
+﻿@model NSCSC.Shared.Models.SandBox.Inventory.Product.ProductDetailModels
+@{
+    ViewBag.Title = "Additions - Add new";
+}
+
+<div role="main" class="right_col">
+    <div class="se-pre-con" style="display: none;"></div>
+    <div class="">
+        <div class="page-title">
+            <div class="title_left" style="padding: 10px 0px;">
+                @Html.Partial("~/Views/Shared/_breadcrumb.cshtml",
+                new Dictionary<string, string> { { "A", "Sand Box" }, { "B", "Inventory" }, { "C", "Additions - Add new" } })
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12 x_panel">
+                    <div class="x_title">
+                        @Html.Partial("_TabMenu", "create")
+                        <div class="clearfix"></div>
+                    </div>
+
+                    <div class="x_content">
+                        <div class="row text-right">
+                            <ul class="header-buttons pull-right list-inline">
+                                <li><a href="@Url.Action("Index", "SBInventoryAddition")" class="btn btn-danger" id="btn-delete"><i class="fa fa-times"></i>&nbsp;Cancel</a></li>
+                                <li><a href="javascript:void(0);" class="btn btn-success" id="btn-actives" onclick="SubmitForm('.create-form')"><i class="fa fa-save"></i>&nbsp;Save</a></li>
+                            </ul>
+                        </div>
+                        <div class="box-body" style="display: block;">
+                            @using (@Html.BeginForm("Create", "SBInventoryAddition", FormMethod.Post, new { @class = "form-horizontal create-form", @enctype = "multipart/form-data" }))
+                            {
+                                @Html.Partial("_Form", Model)
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        function SubmitForm(form) {
+            $('#ltrErrorPrice').html('');
+            var isSubmit = true;
+            var count = $(".ng-Price:visible").length;
+            if (count == 0) {
+                $('#ltrErrorPrice').html("Price least at one item for addition");
+                isSubmit = false;
+            } /*else {
+                var isStatus = CheckStatusActiveForProduct('.ng-Price:visible', '');
+                if (!isStatus) {
+                    isSubmit = false;
+                    $('#ltrErrorPrice').html("Please active least at one item price for addition");
+                }
+            }*/
+            if (isSubmit) {
+                $(form).submit();
+            }
+        }
+
+        $(document).ready(function () {
+           
+        });
+    </script>
+}

@@ -1,0 +1,25 @@
+﻿@model NSCSC.Shared.Models.ClientSite.OurProDucts.OurProDuctsModel
+
+<!--modal Pricing List-->
+<div id="modalApplyAdditionPackage_@Model.ID" class="modal fade" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#f2f2f2;">
+                <h4 class="modal-title fontUppercase text-center"><strong>Applied Product</strong></h4>
+            </div>
+            <div class="modal-body" style="padding:10px;">
+                <div class="text-left" style="margin: 10px 0;">Please choose the product in package for the addition to apply on</div>
+                <div class="text-left" style="margin: 10px 0;">
+                    <span style="margin-right:10px;">Product</span>
+                    @Html.DropDownList("ApplyProduct", @Model.ListProductApplicable, new { @class = "ddlApplyProduct", @id = "ddlApplyProduct_" + Model.ID, style = "width:150px;" })
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success fontUppercase" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary fontUppercase btnAddAddition" onclick="ApplyAdditionStoreBusiness('@Model.ID', '@Model.AdditionTypeName', '@Model.Index', '@Model.AmountOfUnit')">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--end modal Pricing List -->
+

@@ -1,0 +1,278 @@
+﻿@model NSCSC.Shared.Models.SandBox.Inventory.Product.ProductDetailModels
+@using NSCSC.Shared
+
+<div role="main" class="right_col">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left" style="padding: 10px 0px;">
+                @Html.Partial("~/Views/Shared/_breadcrumb.cshtml",
+                new Dictionary<string, string> { { "A", "Sand Box" }, { "B", "Inventory" }, { "C", "Package - View Detail" } })
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12 x_panel">
+                    <div class="x_content">
+                        <div class="row text-right">
+                            <ul class="header-buttons pull-right list-inline">
+                                <li><a href="javascript:void(0)" onclick="CloseDetail(); return false;" class="btn btn-danger" id="btn-delete"><i class="fa fa-times"></i>&nbsp;Close</a></li>
+                            </ul>
+                        </div>
+                        <div class="row form-horizontal form-label-left">
+                            <div class="row form-horizontal form-label-left" style="margin-bottom:15px;">
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Package Name </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @Model.Name
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @*Status*@
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12 ">Active</label>
+                                    <div class="col-md-1 col-sm-1 col-xs-12">
+                                        <label>@string.Format("{0}", Model.IsActive ? "Yes" : "No")</label>
+                                    </div>
+                                    @*Sequence*@
+                                    <label class="control-label col-md-1 col-sm-1 col-xs-12 ">Sequence</label>
+                                    <div class="col-md-1 col-sm-1 col-xs-12">
+                                        @Model.Sequence
+                                    </div>
+                                    @*Public*@
+                                    <label class="control-label col-md-1 col-sm-1 col-xs-12 ">Public</label>
+                                    <div class="col-md-1 col-sm-1 col-xs-12">
+                                        <label>@string.Format("{0}", Model.IsPublic ? "Yes" : "No")</label>
+                                    </div>
+                                </div>
+
+                                @*Sale Form - Sale To*@
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12 ">Sale From</label>
+                                    <div class="control-label col-md-2 col-sm-2 col-xs-12">
+                                        @Model.SaleFrom.ToString(Commons.FormatDate)
+                                    </div>
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12 ">To</label>
+                                    <div class="col-md-2 col-sm-2 col-xs-12">
+                                        @Model.SaleTo.ToString(Commons.FormatDate)
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @*Package Code*@
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12  ">Package Code</label>
+                                    <div class="col-md-2 col-sm-2 col-xs-12">
+                                        @Model.Code
+                                    </div>
+                                    @*Image*@
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12  ">Image</label>
+                                    <div class="col-md-1 col-sm-2 col-xs-12">
+                                        @if (!string.IsNullOrEmpty(Model.ImageURL))
+                                        {
+                                            <img id="upload-preview" src="@Model.ImageURL" height="50" width="100" class="" />
+                                        }
+                                        else
+                                        {
+                                            <img id="upload-preview" class="" src="@Commons.Image100_50" height="50" width="100" />
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @*Include Store(s)*@
+                                    <label for="" class="control-label col-md-2 col-sm-2 col-xs-12  ">Include Store(s)</label>
+                                    <div class="col-md-2 col-sm-2 col-xs-12">
+                                        @if (Model.IsUnlimitedIncludeStore)
+                                        {
+                                            @Html.Raw("Unlimited")
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw(Model.IncludeStore)
+                                        }
+                                    </div>
+                                    @*Is extend*@
+                                    <label for="" class="control-label col-md-3 col-sm-3 col-xs-12  ">Is extend</label>
+                                    <div class="col-md-3 col-sm-3 col-xs-12">
+                                        <label>@string.Format("{0}", Model.IsExtend ? "Yes" : "No")</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @*Number of Accounts*@
+                                    <label for="" class="control-label col-md-2 col-sm-2 col-xs-12  ">Number of Accounts</label>
+                                    <div class="col-md-2 col-sm-2 col-xs-12">
+                                        @if (Model.IsUnlimitedNumberOfAccount)
+                                        {
+                                            @Html.Raw("Unlimited")
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw(Model.NumberOfAccount)
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @*Display web url for client*@
+                                    <label for="" class="control-label col-md-2 col-sm-2 col-xs-12  ">Display web url for client</label>
+                                    <div class="col-md-3 col-sm-3 col-xs-12">
+                                        <label>@string.Format("{0}", Model.IsDisplayWeb ? "Yes" : "No")</label>
+                                    </div>
+                                    @*Is intergration*@
+                                    <label for="" class="control-label col-md-2 col-sm-2 col-xs-12  ">Is intergration</label>
+                                    <div class="col-md-3 col-sm-3 col-xs-12">
+                                        <label>@string.Format("{0}", Model.IsIntegrate ? "Yes" : "No")</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @*Include Local Server*@
+                                    <label for="" class="control-label col-md-2 col-sm-2 col-xs-12  ">Include Local Server</label>
+                                    <div class="col-md-3 col-sm-3 col-xs-12">
+                                        <label>@string.Format("{0}", Model.IsIncludeLocalServer ? "Yes" : "No")</label>
+                                    </div>
+                                    @*Include Cloud Server*@
+                                    <label for="" class="control-label col-md-2 col-sm-2 col-xs-12  ">Include Cloud Server</label>
+                                    <div class="col-md-3 col-sm-3 col-xs-12">
+                                        <label>@string.Format("{0}", Model.IsIncludeCloudServer ? "Yes" : "No")</label>
+                                    </div>
+                                </div>
+
+                                @*Description*@
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Description </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @Html.Raw(Model.Description)
+                                    </div>
+                                </div>
+
+                                @*Composite*@
+                                <div class="form-group">
+                                    <label for="" class="col-md-offset-1 col-md-1 col-sm-12 col-xs-12">Composite</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12 topDotBorder">
+                                    </div>
+                                </div>
+                                @if (Model.ListComposite != null && Model.ListComposite.Count > 0)
+                                {
+                                    <div class="form-group">
+                                        <div class="col-md-offset-2 col-md-7 col-sm-12 col-xs-12">
+                                            <table class="table table-bordered table-striped" style="width:100%;">
+                                                <thead style="background-color:#34495e; color:#fff;">
+                                                    <tr>
+                                                        <th class="text-center">Item Name</th>
+                                                        @*<th class="text-center" style="width:15%;">Category</th>*@
+                                                        <th class="text-center" style="width:15%;">Type</th>
+                                                        <th class="text-center" style="width:10%;">Quantity</th>
+                                                        <th class="text-center" style="width:10%;">Sequence</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in Model.ListComposite)
+                                                    {
+                                                        <tr class="">
+                                                            <td>@item.ProductName</td>
+                                                            @*<td class="text-center">
+                                                                @item.CategoryName
+                                                            </td>*@
+                                                            <td class="text-center">
+                                                                @item.TypeName
+                                                            </td>
+                                                            <td class="text-center">
+                                                                @if (item.IsUnlimited)
+                                                                {
+                                                                    @Html.Raw("Unlimited")
+                                                                }
+                                                                else
+                                                                {
+                                                                    @Html.Raw(item.Quantity)
+                                                                }
+                                                            </td>
+                                                            <td class="text-center">@item.Sequence</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                }
+
+                                @*Price Items*@
+                                <div class="form-group">
+                                    <label for="" class="col-md-offset-1 col-md-1 col-sm-12 col-xs-12">Price items</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12 topDotBorder">
+                                    </div>
+                                </div>
+                                @if (Model.ListPrice != null && Model.ListPrice.Count > 0)
+                                {
+                                    <div class="form-group">
+                                        <div class="col-md-offset-2 col-md-7 col-sm-12 col-xs-12">
+                                            <table class="table table-bordered table-striped" style="width:100%;">
+                                                <thead style="background-color:#34495e; color:#fff;">
+                                                    <tr>
+                                                        <th class="text-center" style="width:20%;">Period</th>
+                                                        <th class="text-center" style="width:10%;">Price</th>
+                                                        @*<th class="text-center" style="width:15%;">Active</th>*@
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in Model.ListPrice)
+                                                    {
+                                                        <tr class="">
+                                                            <td>@if (item.PeriodType != (int)Commons.EPeriodType.OneTime) { @Html.Raw(item.Period)} @item.NamePeriodType@if (item.Period > 1){ @Html.Raw('s')}</td>
+                                                            <td class="text-center">
+                                                                @Html.Raw(ViewBag.CurrencySymbol + item.Price.ToString("#,0.00"))
+                                                            </td>
+                                                            @*<td class="text-center">@string.Format("{0}", item.IsActive ? "Yes" : "No")</td>*@
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                }
+
+                                @*Extend price items*@
+                                <div class="form-group">
+                                    <label for="" class="col-md-offset-1 col-md-2 col-sm-12 col-xs-12">Extend price items</label>
+                                    <div class="col-md-5 col-sm-6 col-xs-12 topDotBorder">
+                                    </div>
+                                </div>
+                                @if (Model.ListPriceExtend != null && Model.ListPriceExtend.Count > 0)
+                                {
+                                    <div class="form-group">
+                                        <div class="col-md-offset-2 col-md-7 col-sm-12 col-xs-12">
+                                            <table class="table table-bordered table-striped" style="width:100%;">
+                                                <thead style="background-color:#34495e; color:#fff;">
+                                                    <tr>
+                                                        <th class="text-center" style="width:20%;">Period</th>
+                                                        <th class="text-center" style="width:10%;">Price</th>
+                                                        @*<th class="text-center" style="width:15%;">Active</th>*@
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in Model.ListPriceExtend)
+                                                    {
+                                                        <tr class="">
+                                                            <td>@if (item.PeriodType != (int)Commons.EPeriodType.OneTime)
+                                                            { @Html.Raw(item.Period)} @item.NamePeriodType@if (item.Period > 1)
+                                                            { @Html.Raw('s')}</td>
+                                                            <td class="text-center">
+                                                                @Html.Raw(ViewBag.CurrencySymbol + item.Price.ToString("#,0.00"))
+                                                            </td>
+                                                            @*<td class="text-center">@string.Format("{0}", item.IsActive ? "Yes" : "No")</td>*@
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    }
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

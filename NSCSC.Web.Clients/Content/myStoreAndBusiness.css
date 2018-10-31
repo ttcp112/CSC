@@ -1,0 +1,62 @@
+﻿@media only screen and (min-width:768px)
+{
+    div.table-account-mobile, div.table-function-mobile {
+        display: none;
+    }
+
+    div.table-account-desktop, div.table-function-desktop {
+        display: block;
+    }
+}
+@media only screen and (min-width:1024){
+   
+}
+@media only screen and (min-width:768px)and (max-width:1023px) 
+{
+
+}
+
+@media only screen and (min-width:414px) and (max-width:767px) 
+{
+
+}
+@media only screen and (min-width:320px) and (max-width:767px) 
+{
+    div.table-account-mobile, div.table-function-mobile {
+        display:block;
+    }
+    div.table-account-desktop, div.table-function-desktop {
+        display:none;
+    }
+    div.table-function-mobile > div.x_panel > table#datatable-responsive-list-function-mobile-update > tbody > tr.line-row:first-child {
+        border-bottom: none;
+    }
+    div.table-function-mobile > div.x_panel > table#datatable-responsive-list-function-mobile-update > tbody > tr.line-row {
+        border-bottom: 2px solid #ddd;       
+    }
+    div.table-account-mobile > div.x_panel > table#datatable-responsive-list-account-update > tbody > tr.line-row {
+        border-bottom: 2px solid #ddd;
+    }
+    .row-evenItem {
+        background-color: #f9f9f9;
+    }
+    .row-oddItem{
+        background-color:white;
+    }
+}
+@media only screen and (min-width:411px)and (max-width:413px)
+{
+    
+}
+@media only screen and (min-width:375px)and (max-width:410px) 
+{
+
+}
+@media only screen and (min-width:360px) and (max-width:374px) 
+{
+    
+}
+@media only screen and (min-width:320px) and (max-width:359px)
+{
+
+}

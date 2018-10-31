@@ -1,0 +1,659 @@
+﻿@model NSCSC.Shared.Models.ClientSite.YourCart.InputStoreViewModels
+@using NSCSC.Shared
+@{
+    var _countProductAppli = @ViewBag.CountProduct;
+}
+@if (Model.ListStore != null && Model.ListStore.Count > 0)
+{
+    foreach (var item in Model.ListStore)
+    {
+        <div id="divStoreTemp-@item.Index" class="ng-store-item">
+            @Html.Hidden(string.Format("ListStore[{0}].Index", item.Index), item.Index, new { @id = "hidIndex" + item.Index })
+            @Html.Hidden(string.Format("ListStore[{0}].ID", item.Index), item.ID, new { @id = "hidStoreID" + item.Index })
+            @Html.Hidden(string.Format("ListStore[{0}].StoreIDApply", item.Index), item.StoreIDApply, new { @id = "hidStoreIDApply" + item.Index })
+            @Html.Hidden(string.Format("ListStore[{0}].StoreNameExist", item.Index), item.StoreNameExist, new { @id = "hidStoreName" + item.Index })
+            @Html.Hidden(string.Format("ListStore[{0}].ProductID", item.Index), item.ProductID, new { @id = "hidIsProductID" + item.Index })
+            @Html.Hidden(string.Format("ListStore[{0}].ImageURL", item.Index), item.ImageURL, new { @id = "hidImageURL" + item.Index })
+            @Html.Hidden(string.Format("ListStore[{0}].IsNew", item.Index), item.IsNew, new { @id = "hidIsNew" + item.Index, @value = "true" })
+            @Html.Hidden(string.Format("ListStore[{0}].IsDelete", item.Index), item.IsDelete, new { @id = "hidIsDelete" + item.Index, @value = "false" })
+            @Html.Hidden(string.Format("ListStore[{0}].TempName", item.Index), item.TempName, new { @id = "hidIsTempName" + item.Index })
+            @Html.Hidden(string.Format("ListStore[{0}].TempEmail", item.Index), item.TempEmail, new { @id = "hidIsTempEmail" + item.Index })
+            @Html.Hidden(string.Format("ListStore[{0}].TempCity", item.Index), item.TempCity, new { @id = "hidIsTempCity" + item.Index })
+            @Html.Hidden(string.Format("ListStore[{0}].TempGSTRegNo", item.Index), item.TempGSTRegNo, new { @id = "hidIsTempGSTRegNo" + item.Index })
+            @Html.Hidden(string.Format("ListStore[{0}].TempPhone", item.Index), item.TempPhone, new { @id = "hidIsTempPhone" + item.Index })
+            @Html.Hidden(string.Format("ListStore[{0}].TempStreet", item.Index), item.TempStreet, new { @id = "hidIsTempStreet" + item.Index })
+            @Html.Hidden(string.Format("ListStore[{0}].TempZipCode", item.Index), item.TempZipCode, new { @id = "hidIsTempZipCode" + item.Index })
+            @Html.Hidden(string.Format("ListStore[{0}].TempCounTry", item.Index), item.TempCounTry, new { @id = "hidIsTempCounTry" + item.Index })
+            @Html.Hidden(string.Format("ListStore[{0}].TempTimeZone", item.Index), item.TempTimeZone, new { @id = "hidIsTempTimeZone" + item.Index })
+            @Html.Hidden(string.Format("ListStore[{0}].Industry", item.Index), item.Industry, new { @id = "hidIndustry" + item.Index })
+            @*header*@
+            <div class="" style="padding:5px 0; background-color:#e6e6e6;">
+                <div class="form-group">
+                    <div class="col-md-6 col-sm-2 col-xs-12 fontBold" style="line-height:35px;">
+                        &nbsp;&nbsp;#@(item.Index + 1) [<span id="lblStoreName-@item.Index">@item.Name</span>]
+                    </div>
+                    <div class="col-md-5 col-sm-9 col-xs-12">
+                        Applied On&nbsp;&nbsp;
+                        @Html.DropDownList(string.Format("ListStore[{0}].AssetID", item.Index),
+             new SelectList(@ViewBag.ListApplyProductClient/*item.ListApplyProductClient*/, "Value", "Text", item.AssetID),
+             null,
+             new
+             {
+                 @class = "form-control ddlAppliedOnDdl",
+                 @id = "AppliedOnDdl" + item.Index,
+                 @style = "width:80%;"
+             })
+                    </div>
+                    <div class="col-md-1 col-sm-1 col-xs-12 fontUppercase text-right">
+                        <a href="javascript:void(0);" class="btn btn-default" style="font-size:15px; color:red;"
+                           @*style="border-radius:50%;"*@ onclick="DeleteStore('@item.Index'); return false;">
+                            <i class="fa fa-remove"></i>
+                            @*<i class="fa fa-trash text-danger"></i>*@
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            @*middle*@
+            <div class="form-group" style="padding:20px 0;">
+                <div class="form-group">
+                    <div class="col-md-10 col-sm-10 col-xs-12">
+                        <div class="col-md-6 col-sm-6 col-xs-12" style="line-height:30px;">
+
+                            @*<label>
+                                    @Html.RadioButton(string.Format("ListStore[{0}].IsNew", item.Index), item.IsNew, true,
+                                   item.IsNew ? (object)new
+                                   {
+                                       @checked = "checked",
+                                       @class = "flat radCreateStore" + item.Index + "",
+                                       @name = item.Index,
+                                       @id = ""
+                                   } : new
+                                   {
+                                       @class = "flat radCreateStore" + item.Index + "",
+                                       @name = item.Index,
+                                       @id = ""
+                                   })
+                                </label>  Create New Store&nbsp;&nbsp;
+                                <label>
+                                    @Html.RadioButton(string.Format("ListStore[{0}].IsNew", item.Index), item.IsNew, false,
+                                   !item.IsNew ? (object)new
+                                   {
+                                       @checked = "checked",
+                                       @class = "flat",
+                                       @name = item.Index,
+                                       @id = "radExistingStore" + item.Index
+                                   } : new
+                                   {
+                                       @class = "flat",
+                                       @name = item.Index,
+                                       @id = "radExistingStore" + item.Index
+                                   })
+                                </label>
+                                Choose from Existing Store*@
+
+                            <label>
+                                @Html.RadioButton(string.Format("ListStore[{0}].IsNew", item.Index), item.IsNew, item.IsNew,
+                                new
+                                {
+                                    @checked = "checked",
+                                    @class = "flat choosenewstore radCreateStore IsCheckCreate"+item.Index,
+                                    @data_index = item.Index,
+                                    @name = item.Index,
+                                    @id = "",
+                                    @onclick = "TestFunction(" + item.Index + ")"
+                                })
+                        </label>  Create New Store&nbsp;&nbsp;
+                        <label>
+                                 @Html.RadioButton(string.Format("ListStore[{0}].IsNew", item.Index), item.IsNew, !item.IsNew,
+                                 new
+                                 {
+                                     @class = "flat chooseExistStore",
+                                     @name = item.Index,
+                                     @id = "radExistingStore" + item.Index,
+                                     @onclick = "chooseExistStore(" + item.Index + ")"
+                                 })
+                         </label>
+                            Choose from Existing Store <span id="NameStoreExtend_@item.Index">@if(!item.IsNew && item.Name != null){@Html.Raw(" : ") @item.Name }</span>
+
+                        </div>
+                    </div>
+                    <div class="col-md-1 col-sm-1 col-xs-12" id="idselectstore-@item.Index" style="@string.Format("display: {0}", item.IsNew == true ? "none" : "block")">
+                        <a href="javascript:void(0);" class="btn btn-default" id="btn-select-store-@item.Index" data-backdrop="static"
+                           data-toggle="modal" data-target="#bs-modal-select-store" data-offset="@item.Index" onclick="showStoreSelect(@item.Index)">
+                            Select &nbsp;&nbsp; <i class="fa fa-angle-down"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            @*info*@
+            <div class="form-horizontal form-label-left" style="padding-top:15px;">
+                <div class="form-group">
+                    <div class="col-md-offset-1 col-md-3 col-sm-3 col-xs-12">
+                        <div class="form-group text-center">
+                            <div class="col-md-10 col-sm-10 col-xs-12">
+                                @if (string.IsNullOrEmpty(item.ImageURL))
+                                {
+                                    <img id="upload-preview-create-store-@item.Index" src="/images/dummy/store.jpg" height="200" width="200" class="" />
+                                }
+                                else
+                                {
+                                    <img id="upload-preview-create-store-@item.Index" src="@item.ImageURL" height="200" width="200" class="" />
+                                }
+                                <div class="upload-i-wrapper">
+                                    @Html.TextBox(string.Format("ListStore[{0}].PictureUpload", item.Index), item.PictureUpload, new
+                               {
+                                   @id = "PictureUploadStore" + item.Index,
+                                   @type = "file",
+                                   @onchange = "PreviewImage(this,\"upload-preview-create-store-" + item.Index + "\")",
+                                   @accept = "*.jpg"
+                               })
+                                    <i class="fa fa-camera"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-10 col-sm-10 col-xs-12" style="margin: 5px 5px;">
+                                @*@Html.ValidationMessageFor(model => item.PictureUpload, null, new { @class = "label label-danger" })*@
+                            </div>
+                            <div class="col-md-10 col-sm-10 col-xs-12" style="margin: 5px 5px;">
+                        <label class="chkActive_@item.Index">@Html.CheckBox(string.Format("ListStore[{0}].IsActive", item.Index),item.IsActive, new { @class = "flat", @id = "chkActive"+item.Index })</label> Active
+                    </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        <div class="form-group">
+                            @*Store Name*@
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <div class="row">
+                                    <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Store Name(*)</label>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        @Html.TextBox(string.Format("ListStore[{0}].Name", item.Index), item.Name, new
+                                   {
+                                       @class = "form-control",
+                                       @placeholder = "Store Name",
+                                       @autocomplete = "off",
+                                       @id = "txtStoreStoreName" + item.Index
+                                   })
+                                        @*@Html.ValidationMessageFor(model => item.Name, null, new { @class = "label label-danger" })*@
+                                        @Html.ValidationMessage(string.Format("ListStore[{0}].Name", item.Index), null, new { @class = "label label-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            @*Country*@
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <div class="row">
+                                    <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Country</label>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        @*@Html.DropDownList(string.Format("ListStore[{0}].Industry", item.Index),
+                                            new SelectList(item.ListIndustry, "Value", "Text", item.Industry), null,*@
+                                        @*@Html.TextBox(string.Format("ListStore[{0}].Country", item.Index), item.Country, new*@
+                                        @Html.DropDownList(string.Format("ListStore[{0}].Country", item.Index),
+                                            new SelectList(ViewBag.ListCounTry, "Name", "Name", item.Country), null,
+                                             new
+                                             {
+                                                 @class = "form-control",
+                                                 @placeholder = "Country",
+                                                 @autocomplete = "off",
+                                                 @id = "txtStoreCountry" + item.Index
+                                             })
+                                        @*@Html.ValidationMessage(string.Format("ListStore[{0}].Country", item.Index), null, new { @class = "label label-danger" })*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @*Email*@
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <div class="row">
+                                    <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Email(*)</label>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        @Html.TextBox(string.Format("ListStore[{0}].Email", item.Index), item.Email, new
+                                   {
+                                       @class = "form-control",
+                                       @placeholder = "Email",
+                                       @autocomplete = "off",
+                                       @id = "txtStoreEmail" + item.Index
+                                   })
+                                        @*@Html.ValidationMessageFor(model => item.Email, null, new { @class = "label label-danger" })*@
+                                        @Html.ValidationMessage(string.Format("ListStore[{0}].Email", item.Index), null, new { @class = "label label-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            @*City*@
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <div class="row">
+                                    <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">City</label>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        @Html.TextBox(string.Format("ListStore[{0}].City", item.Index), item.City, new
+                                   {
+                                       @class = "form-control",
+                                       @placeholder = "City",
+                                       @autocomplete = "off",
+                                       @id = "txtStoreCity" + item.Index
+                                   })
+                                        @Html.ValidationMessageFor(model => item.City, null, new { @class = "label label-danger" })
+                                        @*@Html.ValidationMessage(string.Format("ListStore[{0}].City", item.Index), null, new { @class = "label label-danger" })*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @*Phone*@
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <div class="row">
+                                    <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Phone(*)</label>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        @Html.TextBox(string.Format("ListStore[{0}].Phone", item.Index), item.Phone, new
+                                   {
+                                       @class = "form-control",
+                                       @placeholder = "0123456789",
+                                       @autocomplete = "off",
+                                       @id = "txtStorePhone" + item.Index
+                                   })
+                                        @*@Html.ValidationMessageFor(model => item.Phone, null, new { @class = "label label-danger" })*@
+                                        @Html.ValidationMessage(string.Format("ListStore[{0}].Phone", item.Index), null, new { @class = "label label-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            @*Zip Code*@
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <div class="row">
+                                    <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Zip Code</label>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        @Html.TextBox(string.Format("ListStore[{0}].ZipCode", item.Index), item.ZipCode, new
+                                   {
+                                       @class = "form-control",
+                                       @placeholder = "Zip Code",
+                                       @autocomplete = "off",
+                                       @id = "txtStoreZipCode" + item.Index
+                                   })
+                                        @*@Html.ValidationMessage(string.Format("ListStore[{0}].ZipCode", item.Index), null, new { @class = "label label-danger" })*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @*Industry*@
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <div class="row">
+                                    <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Industry(*)</label>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        @Html.DropDownList(string.Format("ListStore[{0}].Industry", item.Index),
+                                             new SelectList(item.ListIndustry, "Value", "Text", item.Industry), null,
+                                              new
+                                              {
+                                                  @class = "form-control select2_multiple ddlStoreIndustry",
+                                                  @id = "txtStoreIndustry" + item.Index,
+                                                  @style = "width:100%;"
+                                              })
+                                        @Html.ValidationMessage(string.Format("ListStore[{0}].Industry", item.Index), null, new { @class = "label label-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            @*Street*@
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <div class="row">
+                                    <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Street</label>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        @Html.TextBox(string.Format("ListStore[{0}].Street", item.Index), item.Street, new
+                                   {
+                                       @class = "form-control",
+                                       @placeholder = "Street",
+                                       @autocomplete = "off",
+                                       @id = "txtStoreStreet" + item.Index
+                                   })
+                                        @*@Html.ValidationMessage(string.Format("ListStore[{0}].Street", item.Index), null, new { @class = "label label-danger" })*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @*Tax Code*@
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <div class="row">
+                                    <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">GST Reg No</label>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        @Html.TextBox(string.Format("ListStore[{0}].GSTRegNo", item.Index), item.GSTRegNo, new
+                                   {
+                                       @class = "form-control",
+                                       @placeholder = "Tax Code",
+                                       @autocomplete = "off",
+                                       @id = "txtStoreTaxCode" + item.Index
+                                   })
+                                        @*@Html.ValidationMessage(string.Format("ListStore[{0}].GSTRegNo", item.Index), null, new { @class = "label label-danger" })*@
+                                    </div>
+                                </div>
+                            </div>
+                            @*Time Zone*@
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <div class="row">
+                                    <label class="col-md-12 col-sm-12 col-xs-12 lineHeight fontLighter">Time Zone</label>
+                                </div>
+                                <div class="row">
+                                    <div id="TimeZones_@item.Index" class="col-md-12 col-sm-12 col-xs-12">
+                                        @Html.DropDownList(string.Format("ListStore[{0}].TimeZone", item.Index),
+                                           new SelectList(item.ListTimeZone, "Value", "Text", item.TimeZone), null, new
+                                           //@Html.TextBox(string.Format("ListStore[{0}].TimeZone", item.Index), item.TimeZone, new
+                                           {
+                                               @class = "form-control",
+                                               @placeholder = "Timezone",
+                                               @autocomplete = "off",
+                                               @id = "txtStoreTimeZone" + item.Index
+                                           })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @* MsgError *@
+            <div class="row" style="padding:10px 0;">
+                <div class="form-group">
+                    @Html.Raw(Html.ValidationMessage("MsgStore" + item.Index, new { @class = "label label-danger" }))
+                    @*@Html.ValidationMessage("MsgStore" + item.Index, new { @class = "label label-danger" })
+
+                        @Html.ValidationMessage(string.Format("MsgStore[{0}]", item.Index), null, new { @class = "label label-danger" })*@
+                </div>
+            </div>
+        </div>
+    }
+}
+@if (Model.ListTypePackage != null && Model.ListTypePackage.Count > 0)
+{
+    foreach (var item in Model.ListTypePackage)
+    {
+        <input type="hidden" id="@item.Value" value="@item.Text" />
+    }
+}
+@Html.HiddenFor(model => model.Type)
+@Html.HiddenFor(model => model.ProductType)
+@*@Html.Partial("_JSforStore", Model)*@
+<script type="text/javascript">
+         @if (Model.ProductType == (int)Commons.EProductType.Package && ViewBag.ListApplyProductClient.Count > 1)
+         {
+        <text>
+             $(".ddlAppliedOnDdl").removeAttr('disabled ');
+        </text>
+
+         } else {
+        <text>
+            $(".ddlAppliedOnDdl").prop('disabled', 'disabled');
+        </text>
+         }
+             var Istrue = "";
+             var type = new Array();
+             var idPackage = "";
+             var _i = @Model.ListStore.FirstOrDefault().Index;
+             if ('@Model.ListTypePackage' != null && '@Model.ListTypePackage.Count' > 0) {
+                 for (var i = _i; i < (@Model.ListStore.Count+_i); i++) {
+                     idPackage = $('#AppliedOnDdl' + i).val();
+                     type.push($('#' + idPackage).val());
+                 }
+             } else
+                 var type = null;
+             var IsdisabledIndustry = true;
+             if ('@ViewBag.IsReturn' == 'IsReturn' || (type != null && @Model.Type.ToString("d") == @Commons.EType.POinS_Link_App.ToString("d")))
+                 IsdisabledIndustry = false;
+             function showStoreSelect(index) {
+                if ('@Model.ListTypePackage' != null && '@Model.ListTypePackage.Count' > 0) {
+                    var _idProduct = $('#AppliedOnDdl' + index).val();
+                    var _typeProduct = $('#' + _idProduct).val();
+                    if (_typeProduct == '@Commons.EType.NuPOS.ToString("d")' || _typeProduct == '@Commons.EType.NuKiosk.ToString("d")' || _typeProduct == '@Commons.EType.NuDisplay.ToString("d")') {
+                        $('#fullStore').show();
+                        $('#halfStore').hide();
+                        $('.enumStore_2').hide();                       
+                        if ($('.enumStore_1').length > 0){
+                            $('.enumStore_1').show();
+                            $('#Store_10').trigger("click");
+                        }else {
+                            $('#fullStore').hide();
+                            $('#halfStore').show();                        
+                        }
+                    } else if (_typeProduct == '@Commons.EType.POZZ.ToString("d")' || _typeProduct == '@Commons.EType.POZZ_Display.ToString("d")' || _typeProduct == '@Commons.EType.POZZ_Kiosk.ToString("d")') {                     
+                        $('#fullStore').show();
+                        $('#halfStore').hide();
+                        $('.enumStore_1').hide();                       
+                        if ($('.enumStore_2').length > 0) {
+                            $('.enumStore_2').show();
+                            $('#Store_20').trigger("click");
+                        }else{
+                            $('#fullStore').hide();
+                            $('#halfStore').show();    
+                        }
+                    } else {
+                        $('#fullStore').show();
+                        $('#halfStore').hide();
+                        $('.enumStore_2').show();
+                        $('.enumStore_1').show();
+                        $('#Store_10').trigger("click");
+                    }
+                }
+
+             }
+    $(document).ready(function (e) {
+        init_ICheck();
+        if (type != null) {
+            for (var i = _i; i < (type.length + _i); i++) {
+                changeIndustry(type[i-_i], i);
+            }
+        }
+        $(".ddlAppliedOnDdl").select2({
+            placeholder: "Please choose applied"
+        });
+        var endItem = '@Model.ListStore.Count()';
+        $(".ddlStoreIndustry").select2({
+            placeholder: "Please choose industry"
+        });
+
+        @if (Model.ListStore != null && Model.ListStore.Count > 0)
+        {
+            foreach (var item in Model.ListStore)
+            {
+                <text>
+
+                $("#txtStoreCountry" + @item.Index).select2({
+                    placeholder: "Please choose the CounTry"
+                });
+                $("#txtStoreTimeZone" + @item.Index).select2({
+                    placeholder: "Time Zone"
+                });
+                $('#hidIndustry' +@item.Index).val($('#txtStoreIndustry' +@item.Index).val());
+                $('#hidIsProductID' + @item.Index).val($('#AppliedOnDdl' + @item.Index).val());
+                var isChange = '@item.IsNew';
+                isChange = isChange.toLowerCase();
+                //alert(isChange);
+                if (isChange == 'true') {
+                    isChange = false;
+                } else {
+                    isChange = true;
+                }
+                //alert(isChange);
+                //$("#btn-select-store-"+@item.Index).prop("disabled", !isChange);
+                @*if (!isChange) {
+                    $("#btn-select-store-" +@item.Index).addClass('buttonDisabled');
+                }
+                else {
+                    $("#btn-select-store-" +@item.Index).removeClass('buttonDisabled');
+                }*@
+                ChangeElementCreateStore(true, isChange, @item.Index);
+                $('#AppliedOnDdl'+@item.Index).change(function () {
+                    idPackage = $('#AppliedOnDdl' +@item.Index).val();
+                    type = $('#' + idPackage).val();
+                    changeIndustry(type, @item.Index);
+                    ReverseData(@item.Index);
+                     $('#hidIsProductID' + @item.Index).val($('#AppliedOnDdl' + @item.Index).val());
+                });
+                </text>
+            }
+        }
+    });
+    /*Function*/
+
+    /* ICHECK */
+    function init_ICheck() {
+        if ($("input.flat")[0]) {
+            $(document).ready(function () {
+                $('input.flat').iCheck({
+                    checkboxClass: 'icheckbox_flat-green',
+                    radioClass: 'iradio_flat-green'
+                });
+            });
+        }
+    };
+    /* END ICHECK */
+    function ChangeElementCreateStore(isload, isChange, index) {
+        if (!isload) {
+            //$("#txtStoreStoreName" + index).val("");
+           // $("#txtStoreCountry" + index).val("");
+            $("#txtStoreEmail" + index).val("");
+            $("#txtStoreCity" + index).val("");
+            $("#txtStorePhone" + index).val("");
+            $("#txtStoreZipCode" + index).val("");
+            $("#txtStoreStreet" + index).val("");
+            $("#txtStoreTaxCode" + index).val("");
+            $("#NameStoreExtend_" + index).html("");
+           // $("#txtStoreTimeZone" + index).val("");
+        }
+
+        if (isChange) {
+        } else {
+            $("#txtStoreStoreName" + index).focus();
+        }
+        //====Disabled
+        $("#PictureUploadStore" + index).prop("disabled", isChange);
+        $("#txtStoreStoreName" + index).prop("disabled", isChange);
+        $("#txtStoreCountry" + index).prop("disabled", isChange);
+        $("#txtStoreEmail" + index).prop("disabled", isChange);
+        $("#txtStoreCity" + index).prop("disabled", isChange);
+        $("#txtStorePhone" + index).prop("disabled", isChange);
+        $("#txtStoreZipCode" + index).prop("disabled", isChange);
+        $("#chkActive" + index).prop("disabled", isChange);
+        $(".chkActive_" + index).find("div").prop("disabled", isChange);
+
+           
+        @if (Model.Type.ToString("d") == Commons.EType.POinS_Link_App.ToString("d")&&(Model.ListTypePackage == null || Model.ListTypePackage.Count == 0))
+        {
+            <text>
+        $("#txtStoreIndustry" + index).prop("disabled", isChange);
+            </text>
+
+         } else {
+            if (Model.ListTypePackage != null && Model.ListTypePackage.Count > 0)
+            {
+                <text>
+                $("#txtStoreIndustry" + index).prop("disabled", IsdisabledIndustry);
+                 </text>
+
+            }
+            else {
+            <text>
+                    $("#txtStoreIndustry" + index).prop("disabled", true);
+                </text>
+            }
+
+         }
+        $("#txtStoreStreet" + index).prop("disabled", isChange);
+        $("#txtStoreTaxCode" + index).prop("disabled", isChange);
+        $("#txtStoreTimeZone" + index).prop("disabled", isChange);
+    }
+
+    function TestFunction(_index) {
+        console.log(_index);
+    }
+
+    $(".radCreateStore").on("ifChanged", function () {
+
+        var index = $(this).data('index');
+                var isChange = false;
+                if ($(this).is(':checked')) {//Create
+                    isChange = false;
+                    _TimeZone = "";
+                    if (Istrue != "1") {
+                        IsdisabledIndustry = false;
+                        Istrue = "1";
+                    }
+                    else
+                        IsdisabledIndustry = true;
+                }
+                else { //Existing
+                    isChange = true;
+                    IsdisabledIndustry = true;
+                }
+                ChangeElementCreateStore(false, isChange,index);
+                $('#hidIsNew'+index).val(!isChange);
+                if (!isChange) {
+                    $('#idselectstore-' + index).hide();
+                }
+                else {
+                    $('#idselectstore-' + index).show();
+                }
+    });
+
+
+    @if (Model.ListStore != null && Model.ListStore.Count > 0)
+    {
+        foreach (var item in Model.ListStore)
+        {
+            <text>
+             @*$(".radCreateStore-@item.Index").on("ifChanged", function () {
+                var isChange = false;
+                if ($(this).is(':checked')) {//Create
+                    isChange = false;
+                    _TimeZone = "";
+                    if (Istrue != "1") {
+                        IsdisabledIndustry = false;
+                        Istrue = "1";
+                    }
+                    else
+                        IsdisabledIndustry = true;
+                }
+                else { //Existing
+                    isChange = true;
+                    IsdisabledIndustry = true;
+                }
+                ChangeElementCreateStore(false, isChange,@item.Index);
+                $('#hidIsNew'+@item.Index).val(!isChange);
+                if (!isChange) {
+                    $('#idselectstore-' + @item.Index).hide();
+                }
+                else {
+                    $('#idselectstore-' + @item.Index).show();
+                }
+            });*@
+            $("#txtStoreCountry" +@item.Index).change(function () {
+                GetTimeZones(@item.Index);
+            });
+            $('#txtStoreIndustry'+@item.Index).change(function () {
+                var _Intrudy = $('#txtStoreIndustry'+@item.Index).val();
+                $('#hidIndustry'+@item.Index).val(_Intrudy);
+            });
+    </text>
+        }
+    }
+
+</script>

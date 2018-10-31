@@ -1,0 +1,317 @@
+﻿@model NSCSC.Shared.Models.OurProducts.OurProductsCategoryModels
+@using NSCSC.Shared.Helpers
+@using NSCSC.Shared
+@{
+    ViewBag.Title = "OUR PRODUCTS";
+    Html.EnableUnobtrusiveJavaScript(true);
+    var Name = "";
+}
+
+<link href="~/vendors/jquery.bxslider/jquery.bxslider.min.css" rel="stylesheet" />
+<div class="title_left">
+    @if (!string.IsNullOrEmpty(Model.Name))
+    {
+        Name = Model.Name;
+    }
+    @*@Html.Partial("~/Views/Shared/_breadcrumb.cshtml",
+        new Dictionary<string, string> { { "A", Model.Name }, { "B", "HOME" }, { "C", "OUR PRODUCTS" } })*@
+    <div class="container">
+        @*<div class="col-sm-12 col-xs-12 col-md-12">*@
+            @if (Model.ProductType == "Products")
+            {
+                <h3>
+                    @*@Name.ToUpper()*@
+                    <small class="breadcrum">
+                        <a href="@Url.Action("Index", "Home")">home</a>
+                        @if (!string.IsNullOrEmpty(Model.Name))
+                        {
+                            <i class='fa fa-caret-right'></i>
+                            <span>@Name.ToLower()</span>
+                        }
+                    </small>
+
+                </h3>
+            }
+            else if (Model.ProductType == "Packages")
+            {
+                <h3>
+                    @*PACKAGES*@
+                    @*@Name*@
+                    <small class="breadcrum">
+                        <a href="@Url.Action("Index", "Home")">home</a>
+                        @if (!string.IsNullOrEmpty(Model.Name))
+                        {
+                            <i class='fa fa-caret-right'></i>
+                            <span>@Name.ToLower()</span>
+                        }
+                    </small>
+
+                </h3>
+            }
+        </div>
+        <div class="clearfix"></div>
+    @*</div>*@
+</div>
+<div class="se-pre-con" style="display: none;"></div>
+<div id="product_cate_container">
+    @if (Model.ProductType == "Packages" && string.IsNullOrEmpty(Model.Name))
+    {
+        <div class="row form-horizontal" style="margin-top:10px;padding:50px 0 50px 0;background-color:#f6f7f8">
+            <div class="form-group">
+                <div class="col-md-3 col-sm-2 col-xs-1"></div>
+                <div class="col-md-6 col-sm-8 col-xs-10 text-center">
+                    <h4 class="yourcard_additem" style="line-height:0px;">
+                        We're sorry. There is no package available at the moment.
+                    </h4>
+                </div>
+                <div class="col-md-3 col-sm-2 col-xs-1"></div>
+            </div>
+        </div>
+    }
+    else
+    {
+    <div class="product_cate_intro">
+        <div class="intro_left">
+            <div class="intro_content">
+                <div class="intro_header">
+                    <div style="min-height: 4em;">
+                        <label class="logo">
+                            <img src="@Model.ImageURL" height="120" />
+                        </label>
+                        <label class="name">
+                            @Model.Name
+                        </label>
+                    </div>
+                    <div class="intro_des">
+                        @Html.Raw(Model.Description)
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="intro_right">
+            <div class="intro_content intro_content_right">
+                @if (!string.IsNullOrEmpty(Model.VideoUrl))
+                {
+                    <h3>Video</h3>
+                    <video width="250" autoplay controls style="max-width: 100%">
+                        <source src="@Model.VideoUrl">
+                    </video>
+                }
+                @if (Model.ProductType == "Products")
+                {
+                    <h3>Product</h3>
+                    <div class="group_btn">
+                        @*@if (Model.IsFreeTrial)
+                        {
+                            <a href="javascript:void(0)" class="btn btn-warning fontUppercase" id="idFreeTrial">Free Trial</a>
+                        }*@
+
+                        <a href="@Url.ActionEncoded("Products", "OurProducts", new { CategoryID = Model.ID })" 
+                           class="btn btn-info fontUppercase">Buy Product</a>
+                    </div>
+                }
+                else if (Model.ProductType == "Packages")
+                {
+                    <h3>Package</h3>
+                    <div class="group_btn">
+                        <a href="@Url.Action("Packages", "OurProducts")" class="btn btn-info fontUppercase">Buy Package</a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    if (Model.ListPromotions != null && Model.ListPromotions.Any())
+    {
+        <div class="product_cate_promotions">
+            <div class="promotion_title" >
+                Promotions
+                <hr />
+            </div>
+            <div class="promotion_content" style="margin-left:-15px;padding-right:15px">
+                <div class="slider1">
+                    @foreach (var item in Model.ListPromotions)
+                    {
+                        <div class="slide" style="background: url(@Url.Content("~/images/promotions.png")); height:405px !important;padding: 30px 15px 0 15px;">
+                            <div class="right-div">
+                                <div class="slideContent text-center">
+                                     <div style="font-size:26px;">@Html.Raw(item.Name)</div>
+                                    <h4 >From @item.ApplyFrom.ToString(Commons.FormatDate) to @item.ApplyTo.ToString(Commons.FormatDate)</h4>
+                                    <hr style="width:10%;margin-top:0px" />
+                                    <br />
+                                     @*<div class="text-left" style="font-size:16px">
+                                        @item.RuleText
+                                    </div>*@
+                                    @if (!string.IsNullOrEmpty(@item.Description) && @item.Description.Length > 0)
+                                    {
+                                        <div class="text-left" style="font-size:16px;">
+                                            @Html.Raw(@item.Description)
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="text-left" style="font-size:16px;"> 
+                                            @item.RuleText
+                                        </div>
+                                    }
+                                </div>
+                                @*<div class="slider-link">
+                                    <a style="font-size:16px;" href="">Read more ... </a>
+                                </div>*@
+                            </div>
+                            <div class="left-div">
+                                <img src="@item.ImageURL" alt="..." width="500" height="325">
+                            </div>
+
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+    }
+</div>
+<style>
+    .product_cate_intro {
+        width: 100%;
+        display: flex;
+    }
+
+        .product_cate_intro .intro_left,
+        .product_cate_intro .intro_right {
+            flex: auto;
+        }
+
+        .product_cate_intro .intro_left {
+            background-color: #ffb717;
+            padding: 5em 1em;
+            width: 60%;
+            max-width: 720px;
+        }
+
+            .product_cate_intro .intro_left .intro_content {
+                background-color: rgba(255, 255, 255, 0.6);
+                padding: 0 1.5em;
+                position: relative;
+                left: 7%;
+            }
+
+                .product_cate_intro .intro_left .intro_content .intro_header {
+                    position: relative;
+                    top: -2em;
+                }
+
+                    .product_cate_intro .intro_left .intro_content .intro_header label.name {
+                        text-transform: uppercase;
+                        font-size: 2em;
+                        position: relative;
+                        bottom: -1.2em;
+                        left: 10px;
+                    }
+
+                    .product_cate_intro .intro_left .intro_content .intro_header .intro_des {
+                        text-align: justify;
+                        margin-top: 1em;
+                    }
+
+        .product_cate_intro .intro_right {
+            background-color: #17629b;
+        }
+
+            .product_cate_intro .intro_right .intro_content {
+                width: 75%;
+                float: right;
+                position: relative;
+            }
+
+                .product_cate_intro .intro_right .intro_content h3 {
+                    text-transform: uppercase;
+                    color: #fff;
+                }
+
+                .product_cate_intro .intro_right .intro_content .group_btn a:first-child {
+                    margin-right: 10px;
+                }
+
+    .product_cate_promotions {
+        margin-bottom: 4em;
+    }
+
+        .product_cate_promotions .promotion_title {
+            text-align: center;
+            text-transform: uppercase;
+            font-weight: bold;
+            padding: 1.5em 0;
+            font-size: 30px;
+        }
+
+            .product_cate_promotions .promotion_title hr {
+                width: 10%;
+                margin-bottom: 0;
+                border-top-color: #000;
+                margin-top: 10px;
+            }
+
+        .product_cate_promotions .promotion_content .bx-wrapper {
+            box-shadow: none;
+            margin: auto;
+        }
+    .intro_content_right {
+        margin-top: 60px;
+    }
+</style>
+<script src="~/vendors/jquery.bxslider/jquery.bxslider.js"></script>
+<script type="text/javascript">
+    $('#idFreeTrial').attr('disabled', true);
+    $(document).ready(function () {
+        
+        $('.slider1').bxSlider({
+            ////  slideWidth: 370,
+            //minSlides: 1,
+            //maxSlides: 1,
+            //slideMargin: 10,
+            //auto: true,
+            //touchEnabled: false
+
+            //slideWidth: 0,
+            speed: 500,
+            minSlides: 1,
+            maxSlides: 1,
+            slideMargin: 10,
+            auto: true,
+            touchEnabled: false,
+            hideControlOnEnd: true,
+            infiniteLoop: true,
+        });
+        if ($('.bx-pager-item').length == 1)
+            $(".bx-pager").addClass("display_none");
+        else
+            $(".bx-pager").removeClass("display_none");
+    });
+    //$(function () {
+    //    $('.slider1').bxSlider({
+    //        ////  slideWidth: 370,
+    //        //minSlides: 1,
+    //        //maxSlides: 1,
+    //        //slideMargin: 10,
+    //        //auto: true,
+    //        //touchEnabled: false
+
+    //        //slideWidth: 0,
+    //        speed: 500,
+    //        minSlides: 1,
+    //        maxSlides: 1,
+    //        slideMargin: 10,
+    //        auto: true,
+    //        touchEnabled: false,
+    //        hideControlOnEnd: true,
+    //        infiniteLoop: true,
+    //    });
+
+    //    // To center the box
+    //    //$('.intro_right .intro_content').css({
+    //    //    left: ($('div.intro_right').width()) / 2.5 - ($('.intro_right .intro_content').width() / 2),
+    //    //    top: ($('div.intro_right').height()) / 2.5 - ($('.intro_right .intro_content').height() / 2)
+    //    //});
+    //});
+    
+</script>

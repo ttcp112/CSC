@@ -1,0 +1,49 @@
+﻿@model NSCSC.Shared.Models.Settings.Currency.CurrencyDTO
+@using NSCSC.Shared
+@{
+    Html.EnableUnobtrusiveJavaScript(true);
+    var _ID = Model.ID;
+}
+@if (!string.IsNullOrEmpty(_ID))
+{
+    @Html.Hidden("ID", Model.ID)
+}
+
+<div class="row form-horizontal form-label-left" style="margin-bottom:15px;">    
+    @* Name*@
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12">Name</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            @Html.TextBoxFor(model => model.Name, new { @class = "form-control", placeholder = "Name", autocomplete = "off" })
+            @Html.ValidationMessageFor(model => model.Name, null, new { @class = "label" })
+        </div>
+    </div>
+    @*Selected *@
+    <div class="form-group">
+        <label class="col-md-2 control-label">Active</label>
+        <div class="col-md-10">
+            @Html.CheckBoxFor(model => model.IsActive, new {@class ="js-switch-chk"})
+        </div>
+    </div>
+    @* Symbol*@
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12">Symbol</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            @Html.TextBoxFor(model => model.Symbol, new { @class = "form-control", placeholder = "Symbol", @id = "Symbol" })
+            @Html.ValidationMessageFor(model => model.Symbol, null, new { @class = "label" })
+        </div>
+    </div>   
+</div>
+
+<script src="@Url.Content("~/build/js/customInput.js")"></script>
+<script>
+
+    $(document).ready(function () {
+        $("#Symbol").keydown(function (e) {
+     if (e.keyCode == 32) {
+       //$(this).val($(this).val() + ""); // append '-' to input
+       return false; // return false to prevent space from being added
+     }
+});
+    });
+</script>

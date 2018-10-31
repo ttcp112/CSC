@@ -1,0 +1,137 @@
+﻿@model List<NSCSC.Shared.Models.OurProducts.Product.BuyingAdditionViewModels>
+
+@if (Model != null && Model.Any())
+{
+    foreach (var item in Model)
+    {
+        <div class="form-group itemAddition">
+            <div class="col-md-12 col-sm-12 col-xs-12 fontUppercase header" onclick="ToggleItem('@item.Name', this)" style="cursor:pointer;">
+                <i class="fa fa-angle-down"></i> &nbsp;&nbsp;<span class="fontBold">@item.Name</span>
+            </div>
+            <div class="col-md-12 col-sm-12 col-xs-12 content" id="divListItem-@item.Name">
+                <table class="table-addition-item">
+                    <thead>
+                        <tr>
+                            <td class="text-center">
+                                <div class="thOne"></div>
+                            </td>
+                            <td class="text-center" style="width:25%;">Quantity</td>
+                            <td class="text-center" style="width:25%;">In</td>
+                            <td class="text-center" style="width:25%;">Price</td>
+                            <td style="width:1%;"></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (item.ListItem != null && item.ListItem.Count > 0)
+                        {
+                            foreach (var itemChild in item.ListItem)
+                            {
+                                <tr>
+                                    <td class="text-center">
+                                        <span class="fontBold" id="lblAdditionName">@itemChild.Name</span><br />
+                                        <small>@Html.Raw(itemChild.Description)</small>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="input-group">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-secondary subtract buttonDisabled" type="button"
+                                                        onclick="AddOrSubtract('sub', '#txt_@item.Name@itemChild.Index', this)">
+                                                    -
+                                                </button>
+                                            </span>
+                                            <input type="text" class="form-control text-center inputChange" placeholder="0" value="1"
+                                                   id="txt_@item.Name@itemChild.Index">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-secondary add" type="button"
+                                                        onclick="AddOrSubtract('add', '#txt_@item.Name@itemChild.Index', this)">
+                                                    +
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="javascript:void(0);" class="btn btn-default" id="btn-period-time_@itemChild.ID" @*data-backdrop="static"*@
+                                           data-toggle="modal" data-target="#modalListPeriodAdditionPackage_@itemChild.ID" style="width:200px;">
+                                            <span id="lblPeriodTime_@itemChild.ID">@itemChild.PeriodTime</span> &nbsp;&nbsp; <i class="fa fa-angle-down"></i>
+                                        </a>
+                                        @Html.Partial("_ModalListPeriodAdditionPackage", itemChild)
+                                    </td>
+                                    <td class="text-center">@itemChild.CurrencySymbol<span id="lblPeriodTimePrice_@itemChild.ID">@itemChild.Price.ToString("N2")</span></td>
+                                    <td class="text-center">
+                                        @if (itemChild.ListProductApplicable != null && itemChild.ListProductApplicable.Count() > 1)
+                                        {
+                                            <div id="btnAddAddition_@itemChild.AdditionTypeName@itemChild.Index">
+                                                <a href="javascript:void(0);" class="btn plus" id="btn-period-time" data-backdrop="static"
+                                                   data-toggle="modal" data-target="#modalApplyAdditionPackage_@itemChild.ID">
+                                                    <i class="fa fa-plus"></i>
+                                                </a>
+                                                @Html.Partial("_ModalApplyAdditionPackage", itemChild)
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            string applyProductId = "";
+                                            string applyProductName = "";
+                                            if (itemChild.ListProductApplicable != null && itemChild.ListProductApplicable.Count() == 1)
+                                            {
+                                                var productApply = itemChild.ListProductApplicable.FirstOrDefault();
+                                                applyProductId = productApply.Value;
+                                                applyProductName = productApply.Text;
+                                            }
+                                            <button class="btn plus btnAddAddition" type="button" onclick="AddItemAdditionPackage(this, '@item.Name', '@itemChild.Index', '@applyProductId', '@applyProductName')">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        }
+
+                                        @*set value*@
+                                        <input type="hidden" id="hidAdditionType" value="@item.ID" />
+                                        <input type="hidden" id="hidAdditionName" value="@item.Name" />
+                                        <input type="hidden" id="hidItemName" value="@itemChild.Name" />
+                                        <input type="hidden" id="hidAdditionID" value="@itemChild.ID" />
+                                        <input type="hidden" id="hidAdditionPeriod" value="@itemChild.Period" class="hidAdditionPeriod_@itemChild.ID" />
+                                        <input type="hidden" id="hidAdditionPeriodType" value="@itemChild.PeriodType" class="hidAdditionPeriodType_@itemChild.ID" />
+                                        <input type="hidden" id="hidAdditionPrice" value="@itemChild.Price" class="hidAdditionPrice_@itemChild.ID" />
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}
+
+
+<script type="text/javascript">
+    $(document).ready(function (e) {
+        $(".inputChange").keydown(function (event) {
+            var _this = this;
+            // Allow only backspace and delete
+            if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9) {
+                // let it happen, don't do anything
+            }
+            else {
+                // Ensure that it is a number and stop the keypress
+                if ((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105)) {
+                    event.preventDefault();
+                } else {
+                }
+            }
+        });
+    });
+
+    function ToggleItem(_name, _this) {
+        $('#divListItem-' + _name).slideToggle(function () {
+            var finalState = $(this).is(':hidden') ? 'hidden' : 'visible';
+            if (finalState === 'hidden') {
+                $(_this).find('.fa').removeClass('fa-angle-down');
+                $(_this).find('.fa').addClass('fa-angle-up');
+            } else {
+                $(_this).find('.fa').removeClass('fa-angle-up');
+                $(_this).find('.fa').addClass('fa-angle-down');
+            }
+        });
+    }
+
+</script>

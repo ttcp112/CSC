@@ -1,0 +1,125 @@
+﻿@using NSCSC.Shared.Helpers
+@{
+    Html.EnableUnobtrusiveJavaScript(true);
+}
+@using NSCSC.Shared
+@model List<NSCSC.Shared.Models.ClientSite.OurProDucts.OurProDuctsModel>
+<style type="text/css">
+    .divImg, .itemProduct {
+        min-height: 200px;
+        /*margin-left:15px;
+        margin-top:15px;*/
+        /*line-height: 150px;
+        text-align: center;*/
+        /*border-style: ridge;
+        border-width: 0.3px;
+        border-color: #808080;*/
+        padding-top: 15px;
+        padding-left: 15px;
+        margin-bottom: 15px;
+        background-color: #f6f7f8;
+        border-radius: 10px;
+        float:left;
+        width:100%;
+    }
+
+    .divDescription h4 {
+        text-align: center;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    .divProduct {
+        min-height: 450px;
+        /*border:1px solid;*/
+        margin-bottom: 15px;
+    }
+
+    .morecontent span {
+        display: none;
+    }
+
+    .morelink {
+        display: block;
+    }
+</style>
+<div class="divProducts row" style="margin-top:15px;">
+    @* <div class="form-group">*@
+    @if (Model != null && Model.Any())
+    {
+        var index = 1;
+        foreach (var item in Model)
+        {
+            var color = "background-color: #f6f7f9";
+            if(index % 2 == 0)
+            {
+                color = "background-color: #ececed";
+            }
+            <div class="itemProduct" style="@color">
+                <div class="form-group infoProduct" style="margin-left:0; margin-right:0;position:relative;">
+                    <div class="col-md-12 col-sm-12 col-xs-12 content">
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            <div class="form-group imageProduct">
+                                <a href="@Url.ActionEncoded("ProductPackageDetail", "OurProducts", new { Id = item.ID, CateID = ViewBag.CategoryId })"><img id="upload-preview" class="" src="@item.ImageURL" height="110" width="150" /></a>
+                            </div>
+                            <label class="fontLighter">
+                                <span class="fontBold">From </span>
+                                <span class="fontBold" style="font-size:17px;">@item.CurrencySymbol@item.Price.ToString("N2")</span>
+                            </label>
+                        </div>
+                        <div class="col-md-5 col-sm-5 col-xs-12" style="word-wrap:break-word">
+                            <label class="fontBold title fontUppercase"><a href="@Url.ActionEncoded("ProductPackageDetail", "OurProducts", new { Id = item.ID, CateID = ViewBag.CategoryId })">@item.Name</a></label><br />
+                            @if (item.Description != null)
+            {
+                                <label class="fontLighter"><span class="fontBold">Description:</span></label>
+                            }
+        @Html.Raw(item.Description)
+                        </div>
+
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            @if (item.ListComposite.Count > 0)
+        {
+                                <label class="fontLighter"><i class="fa fa-circle" aria-hidden="true" style="font-size:8px; position:relative; bottom:2px;"></i><span class="fontBold"> You will get:</span></label>
+                            }
+                            <div style="padding-left:10px;">
+                                @foreach (var itemAddition in item.ListComposite)
+                                {
+                                    string str = itemAddition.Quantity == 1 ? itemAddition.ProductName : itemAddition.Quantity + " " + itemAddition.ProductName;
+    @Html.Raw(str)
+                                   <br />
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <i class="fa fa-info-circle text-primary" style="cursor:pointer;font-size:20px;position:absolute;right:10px;" data-toggle="modal" data-target="#modalfunctionInfo_@item.ID"></i>
+                    <a href="@Url.ActionEncoded("ProductPackageDetail", "OurProducts", new { Id = item.ID, CateID = ViewBag.CategoryId })" class="btn btn-primary fontUppercase" style="cursor:pointer;right:10px;top:140px;float:right;margin-bottom:15px;margin-right:15px;">Select</a>
+                </div>
+            </div>
+
+            @Html.Partial("_ModalFunctionInfo", item)
+            index++;
+        }
+    }
+</div>
+
+ <script type="text/javascript">
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+
+        var showChar = 50;  // How many characters are shown by default Description Acer product.
+        var ellipsestext = "...";
+        var moretext = "Show more >";
+        var lesstext = "Show less";
+
+        $('.more').each(function () {
+            var content = $(this).text();
+            if (content.length > showChar) {
+                var c = content.substr(0, showChar);
+                var h = content.substr(showChar, content.length - showChar);
+                var html = c + '<span class="moreellipses">' + ellipsestext + '&nbsp;</span><span class="morecontent"><span>' + h + '</span>&nbsp;&nbsp;</span>';
+                $(this).html(html);
+            }
+
+        });
+    })
+</script>

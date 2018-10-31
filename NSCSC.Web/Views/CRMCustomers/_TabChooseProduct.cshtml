@@ -1,0 +1,130 @@
+﻿@model NSCSC.Shared.Models.CRM.Customers.CustomerBaseModels
+@using NSCSC.Shared
+
+@if (Model != null && Model.CustomerDetail != null && Model.CustomerDetail.ListProduct != null && Model.CustomerDetail.ListProduct.Any())
+{
+    for (int i = 0; i < Model.CustomerDetail.ListProduct.Count; i++)
+    {
+        <tr class="ng-Product" id="tr_add_product_@Model.CustomerDetail.ListProduct[i].OffSet" data-value="@Model.CustomerDetail.ListProduct[i].OffSet"
+            style="@string.Format("display:{0}", Model.CustomerDetail.ListProduct[i].Status != (int)Commons.EStatus.Deleted ? "table-row" : "none");">
+            <td class="">
+                <span id="lblnameperiodtype_@Model.CustomerDetail.ListProduct[i].OffSet">@Model.CustomerDetail.ListProduct[i].Name</span>
+            </td>
+            <td class="text-center">
+
+                <button class="btn btn-default" type="button" onclick="ShowModalProductPrice(this, '@Model.CustomerDetail.ListProduct[i].ID')">List Price</button>
+                <a id="lblprice_@Model.CustomerDetail.ListProduct[i].OffSet"></a>                
+            </td>
+            <td class="text-center">
+                <!--set value for modal pass attribute [data] -->
+                <a href="javascript:void(0)" class="btn btn-danger btn-xs delete details" onclick="DeleteProduct('@Model.CustomerDetail.ListProduct[i].OffSet', '@Model.CustomerDetail.ListProduct[i].ID'); return false;">
+                    <i class="fa fa-trash-o"></i>
+                </a>
+
+                @Html.Hidden(string.Format("CustomerDetail.ListProduct[{0}].ID", Model.CustomerDetail.ListProduct[i].OffSet), Model.CustomerDetail.ListProduct[i].ID)
+                @Html.Hidden(string.Format("CustomerDetail.ListProduct[{0}].OffSet", Model.CustomerDetail.ListProduct[i].OffSet), Model.CustomerDetail.ListProduct[i].OffSet)
+                @Html.Hidden(string.Format("CustomerDetail.ListProduct[{0}].Name", Model.CustomerDetail.ListProduct[i].OffSet), Model.CustomerDetail.ListProduct[i].Name, new { @id = "hidPeriodType_" + Model.CustomerDetail.ListProduct[i].OffSet })
+                @Html.Hidden(string.Format("CustomerDetail.ListProduct[{0}].Status", Model.CustomerDetail.ListProduct[i].OffSet), Model.CustomerDetail.ListProduct[i].Status, new { @class = "ProductStatus" })
+                @Html.Hidden(string.Format("CustomerDetail.ListProduct[{0}].IsActive", Model.CustomerDetail.ListProduct[i].OffSet), Model.CustomerDetail.ListProduct[i].IsActive, new { @class = "PriceSelect", @id = "hidIsSelected_" + Model.CustomerDetail.ListProduct[i].OffSet })
+
+                @*Popup Price Items*@
+                <div class="modal fade" id="modalDish" tabindex="-1" role="dialog" aria-labelledby="modalDishLabel" data-backdrop="static" data-keyboard="false" style="clear: both">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" style="text-align: left">
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                                <h4 class="modal-title" id="mymodalTitle">Price Info</h4>
+                            </div>
+                            <div class="modal-body scroll popupTabConent-@Model.CustomerDetail.ListProduct[i].OffSet" style="text-align: left !important">
+                                <div class="row" style="">
+                                    <label for="message-period" class="col-md-3 col-sm-3 col-xs-12 lineHeight">Period</label>
+                                    <div class="col-md-3 col-sm-3 col-xs-12">
+                                        <input type="number" class="form-control text-center keyNumber" id="txtPeriod_@Model.CustomerDetail.ListProduct[i].OffSet" value="1" autocomplete="off" min="1" style="width: 90%" /><br />
+                                        <span class="label label-danger" id="ltrError"></span>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @Html.DropDownListFor(model => Model.CustomerDetail.PeriodType,
+                                            new SelectList(Model.CustomerDetail.ListPeriodType, "Value", "Text", Model.CustomerDetail.PeriodType), null,
+                                                new
+                                                {
+                                                    @class = "form-control select2_multiple ClsPeriodTypeDdl",
+                                                    @id = "PeriodTypeDdl_" + @Model.CustomerDetail.ListProduct[i].OffSet,
+                                                    @style = "width:100%;"
+                                                })<br />
+                                        <span class="label label-danger" id="ltrPeriodTypeError"></span>
+                                    </div>
+                                </div>
+                                <div class="row" style="">
+                                    <label for="buying-price" class="col-md-3 col-sm-3 col-xs-12 lineHeight">Buying Price</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12" style="">
+                                        <input type="text" class="form-control keyNumber" id="txtPrice_@Model.CustomerDetail.ListProduct[i].OffSet" value="0" autocomplete="off" data-type="float" style="width: 100%"/>
+                                    </div>
+                                </div>
+
+                                <div class="row" style="text-align: right; padding-right: 5px; padding-top: 10px;">
+                                    <a class="btn btn-default" onclick="AddItemPrices(this, '@Model.CustomerDetail.ListProduct[i].OffSet')">Save</a>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="form-group-sm">
+                                    <table id="table-list-choose-price_@Model.CustomerDetail.ListProduct[i].OffSet" class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action cls-table-list-choose-price" cellspacing="0" style="width:100%;">
+                                        <thead>
+                                            <tr style="background-color:#34495e; color:#fff;">
+                                                <th style="text-align: left">Period</th>
+                                                <th style="text-align: left">Price</th>
+                                                <th style="text-align: center"></th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody id="list-data-choose-price_@Model.CustomerDetail.ListProduct[i].OffSet">
+                                            @if (Model.CustomerDetail.ListProduct[i].ListPrice != null && Model.CustomerDetail.ListProduct[i].ListPrice.Count > 0)
+                                            {
+                                                for (int j = 0; j < Model.CustomerDetail.ListProduct[i].ListPrice.Count; j++)
+                                                {
+                                                    @Html.Partial("_ItemPrice", Model.CustomerDetail.ListProduct[i].ListPrice[j])
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="form-group" style="margin-top: 12px; ">
+                                    <span></span>
+                                    <button type="button" class="btn btn-success" data-dismiss="modal">Done</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>                
+            </td>
+        </tr>
+    }
+}
+<script type="text/javascript">
+    var _tablePriceItem = null;
+    var _settingsOptionTablePriceItem = {
+        "columnDefs": [
+                { "orderable": false, "targets": [1, 2] },
+                { "width": "20%", "targets": [1] },
+                { "width": "10%", "targets": [2] },
+        ],
+        "order": [[0, 'desc']],
+        "autoWidth": false, /*Feature control DataTables' smart column width handling.*/
+        //"displayLength": 25,
+        //"pagingType": "full_numbers",
+        "searching": false,         // txtSearch in filter
+        "lengthChange": false,      // Dropdownlist Page
+        "bInfo": false,             // text [showing...
+        //"oLanguage": { "sZeroRecords": "", "sEmptyTable": "" }
+        "paging": false,           //
+        "destroy": true,
+    };
+
+    $(document).ready(function () {
+        _tablePriceItem = $('.cls-table-list-choose-price').DataTable($.extend(true, {}, _settingsOptionTablePriceItem));
+        $(".ClsPeriodTypeDdl").select2({
+            placeholder: "Please choose Period"
+        });
+    });
+</script>

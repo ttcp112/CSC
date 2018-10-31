@@ -1,0 +1,274 @@
+﻿@using NSCSC.Shared
+@model NSCSC.Shared.Models.CRM.LicenseKeyManagement.LicenseKeyManagementViewModels
+<div class="table-responsive">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>License Key Management</h2>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action" cellspacing="0" style="width:100%;">
+                <thead style="background-color:#34495e; color:#fff;">
+                    <tr>
+                        <th style="text-align:center;">License Key</th>
+                        <th style="text-align:center;">Receipt</th>
+                        <th style="text-align:center;">Type</th>
+                        <th style="text-align:center;">Customer</th>
+                        <th style="text-align:center;">Email</th>
+                        @*<th style="text-align:center;">Number Of Devices</th>*@
+                        <th style="text-align:center;">Status</th>
+                        <th style="text-align:center;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.ListItem != null)
+                    {
+                        for (int i = 0; i < Model.ListItem.Count; i++)
+                        {
+                            string styleRow = "row-evenItem";
+                            if (i % 2 == 0)
+                            {
+                                styleRow = "row-oddItem";
+                            }
+                            var item = Model.ListItem[i];
+                            <tr class="@styleRow">
+                                <td style="color:#34495e; font-weight:bold;">&nbsp;&nbsp;@item.LicenseKey</td>
+                                <td style="text-align:center;">@item.ReceiptNo</td>
+                                <td style="text-align:center;">
+                                    @if (item.ProductType == (byte)Commons.EProductType.Product)
+                                    {
+                                        @Html.Raw(Commons.EProductType.Product.ToString())
+                                    }
+                                    else if (item.ProductType == (byte)Commons.EProductType.Addition)
+                                    {
+                                        @Html.Raw(((Commons.EAdditionType)Enum.ToObject(typeof(Commons.EAdditionType), item.AdditionType)).ToString())
+                                    }
+                                </td>
+                                <td style="text-align:center;">@item.CustomerName</td>
+                                <td style="text-align:center;">
+                                    @*@Html.Action("MarkEmailView", new { Email = item.CustomerEmail })*@
+                                    @Html.Raw(item.CustomerEmail)
+                                </td>
+                                @*<td style="text-align:center;">
+                                    @if (@item.NumberOfAccount == (int)Commons.ENumberofDevices.Unlimited)
+                                    {
+                                        @Html.Raw(System.Globalization.CultureInfo.CurrentUICulture.TextInfo.ToTitleCase(Commons.ENumberofDevices.Unlimited.ToString()))
+                                    }
+                                    else
+                                    {
+                                        @item.NumberOfAccount
+                                    }
+                                </td>*@
+
+                                @*License with Expried Time == null*@
+                                @if (!item.ExpiredTime.HasValue)
+                                {
+                                    // License is unblocked
+                                    if (item.IsActive)
+                                    {
+                                        <td style="text-align:center;">
+                                            <span class="label label-success">Active</span>
+                                        </td>
+                                        <td>
+                                            @*Btn View*@
+                                            <a href="javascript:void(0)"
+                                               onclick="ShowView('@Url.Action("View", "CRMLicenseKeyManagement", new { id = @item.ID })')"
+                                               class="btn btn-primary btn-xs view details"><i class="fa fa-eye"></i>&nbsp;View</a>&nbsp;&nbsp;
+                                            @*Btn Block*@
+                                            <a href="javascript:void(0)"
+                                                onclick="ChaneStatus('@item.ID')"
+                                                class="btn btn-danger btn-xs delete details action-class" style="width: 70px !important; "><i class="fa fa-edit"></i>&nbsp;Block</a>
+                                        </td>
+                                    // License is blocked
+                                    } else {
+                                        <td style="text-align:center;">
+                                            <span class="label label-danger">Blocked</span>
+                                        </td>
+                                        <td>
+                                            @*Btn View*@
+                                            <a href="javascript:void(0)"
+                                               onclick="ShowView('@Url.Action("View", "CRMLicenseKeyManagement", new { id = @item.ID })')"
+                                               class="btn btn-primary btn-xs view details"><i class="fa fa-eye"></i>&nbsp;View</a>&nbsp;&nbsp;
+                                            @*Btn Unblock*@
+                                            <a href="javascript:void(0)"
+                                                onclick="ChaneStatus('@item.ID')"
+                                                class="btn btn-success btn-xs delete details action-class" style="width: 70px !important; "><i class="fa fa-edit"></i>&nbsp;Unblock</a>
+                                        </td>
+                                    }
+                                // License has value
+                                }
+                                else
+                                {
+                                    // If Expired Time >= now
+                                    if (DateTime.Compare(item.ExpiredTime.Value.Date, DateTime.Now.Date) >= 0)
+                                    {
+                                        //License is unblocked
+                                        if (item.IsActive)
+                                        {
+                                            <td style="text-align:center;">
+                                                <span class="label label-success">Active</span>
+                                            </td>
+                                            <td>
+                                                @*Btn View*@
+                                                <a href="javascript:void(0)"
+                                                   onclick="ShowView('@Url.Action("View", "CRMLicenseKeyManagement", new { id = @item.ID })')"
+                                                   class="btn btn-primary btn-xs view details"><i class="fa fa-eye"></i>&nbsp;View</a>&nbsp;&nbsp;
+                                                @*Btn Edit*@
+                                                <a href="javascript:void(0)"
+                                                    onclick="ShowView('@Url.Action("Edit", "CRMLicenseKeyManagement", new { id = @item.ID })')"
+                                                    class="btn btn-info btn-xs edit details action-class"><i class="fa fa-edit"></i>&nbsp;Edit&nbsp;</a>
+                                                @*Btn Block*@
+                                                <a href="javascript:void(0)"
+                                                    onclick="ChaneStatus('@item.ID')"
+                                                    class="btn btn-danger btn-xs delete details action-class" style="width: 70px !important; "><i class="fa fa-edit"></i>&nbsp;Block</a>
+
+                                            </td>
+                                        //License is blocked
+                                        }
+                                        else
+                                        {
+                                            <td style="text-align:center;">
+                                                <span class="label label-danger">Blocked</span>
+                                            </td>
+                                            <td>
+                                                @*Btn View*@
+                                                <a href="javascript:void(0)"
+                                                   onclick="ShowView('@Url.Action("View", "CRMLicenseKeyManagement", new { id = @item.ID })')"
+                                                   class="btn btn-primary btn-xs view details"><i class="fa fa-eye"></i>&nbsp;View</a>&nbsp;&nbsp;
+                                                @*Btn Edit*@
+                                                <a href="javascript:void(0)"
+                                                    onclick="ShowView('@Url.Action("Edit", "CRMLicenseKeyManagement", new { id = @item.ID })')"
+                                                    class="btn btn-info btn-xs edit details action-class"><i class="fa fa-edit"></i>&nbsp;Edit&nbsp;</a>
+                                                @*Btn Unblock*@
+                                                <a href="javascript:void(0)"
+                                                    onclick="ChaneStatus('@item.ID')"
+                                                    class="btn btn-success btn-xs delete details action-class" style="width: 70px !important; "><i class="fa fa-edit"></i>&nbsp;Unblock</a>
+                                            </td>
+                                        }
+                                    // If Expired Time < now
+                                    }
+                                    else
+                                    {
+                                        <td style="text-align:center;">
+                                            <span class="label label-warning">Expired</span>
+                                        </td>
+                                        <td>
+                                            @*Btn View*@
+                                            <a href="javascript:void(0)"
+                                                onclick="ShowView('@Url.Action("View", "CRMLicenseKeyManagement", new { id = @item.ID })')"
+                                                class="btn btn-primary btn-xs view details"><i class="fa fa-eye"></i>&nbsp;View</a>
+                                        </td>
+                                    }
+                                }
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    function ShowView(url) {
+        ShowViewOrEdit(url);
+        return false;
+    }
+
+    $(document).ready(function () {
+        var handleDataTableButtons = function () {
+            if ($("#datatable-buttons").length) {
+                $("#datatable-buttons").DataTable({
+
+                    dom: "Bfrtip",
+                    responsive: true
+                });
+            }
+        };
+
+        TableManageButtons = function () {
+            "use strict";
+            return {
+                init: function () {
+                    handleDataTableButtons();
+                }
+            };
+        }();
+
+        $('#datatable').dataTable();
+        $('#datatable-keytable').DataTable({
+            keys: true
+        });
+
+        $('#datatable-responsive').DataTable({
+            "columnDefs": [
+                { "orderable": false, "targets": [0, 3, 6] },
+                { "width": "2%", "targets": 0 },
+                { "width": "2%", "targets": 1 },
+                { "width": "1%", "targets": 2 },
+                { "width": "8%", "targets": 3 },
+                { "width": "6%", "targets": 4 },
+                { "width": "2%", "targets": 5 },
+                { "width": "1%", "targets": 6 }
+            ],
+            "order": [[4, 'asc'], [1, 'asc'], [2, 'asc'], [5, 'asc']],
+            "displayLength": 25,
+            "drawCallback": function ( settings ) {
+                var api = this.api();
+                var rows = api.rows( {page:'current'} ).nodes();
+                var last=null;
+                //Column Group
+                api.column(4, {page:'current'} ).data().each( function (group, i) {
+                    if ( last !== group ) {
+                        $(rows).eq(i).before(
+                            '<tr class="group"><td colspan="7"><strong style="color:#d9534f;">'+(group === '' ? '|' :  group)+'</strong></td></tr>'
+                        );
+                        last = group;
+                    }
+                } );
+            }
+        });
+
+        var table = $('#datatable-fixed-header').DataTable({
+            fixedHeader: true
+        });
+
+        /* check permission */
+        @{
+            var userSession = Session["User"] as NSCSC.Shared.Models.UserSession;
+            if (userSession != null)
+            {
+                var tmpAction = userSession.ListPermission.Where(o => o.Code == (int)@NSCSC.Shared.Commons.EModuleCode.CRM_LiscenseKeyMana).Select(o => o.IsAction).FirstOrDefault();
+                if (tmpAction == false)
+                {
+                     <text>$('.action-class').hide();</text>
+                }
+            }
+        }
+
+        TableManageButtons.init();
+    });
+
+    function ChaneStatus(id) {
+        $('.se-pre-con').show();
+        $.ajax({
+            url: '@Url.Action("ChangeStatus", "CRMLicenseKeyManagement")',
+            type: 'POST',
+            dataType: 'html',
+            cache: false,
+            data: { ID: id },
+            success: function (data) {
+                $(".se-pre-con").hide();
+                Search();
+            }, beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            }
+        });
+    };
+
+</script>

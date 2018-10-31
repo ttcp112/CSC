@@ -1,0 +1,56 @@
+﻿@model NSCSC.Shared.Models.CRM.Customers.CustomerBaseModels
+@using NSCSC.Shared
+@{ 
+    var _ID = Model.CustomerDetail.ID;
+}
+@if (Model.ProductManagement.ListHardwareService != null && Model.ProductManagement.ListHardwareService.Count > 0)
+{
+    foreach (var item in Model.ProductManagement.ListHardwareService)
+    {
+        <tr>
+            <td>@item.ItemName</td>
+            <td>@item.sAdditionType</td>
+            <td>@item.BoughtTime.Value.ToString(Commons.FormatDateTime)</td>
+            <td>@item.SerialNo</td>
+            <td>@item.ReceiptNo</td>
+            <td>@item.Status</td>
+            <td>
+                @if (item.State == (byte)Commons.EServiceAssetStatus.New)
+                {
+                    //change the status from New to Done
+                    if (item.AdditionType == (byte)Commons.EAdditionType.Service)
+                    {
+                        <a href="javascript:void(0)" class="btn btn-xs btn-success"
+                           onclick="ChangeStatusHardwareService('active', '0', '@item.AssetID','@_ID')"><i class="fa fa-check"></i>&nbsp;Done</a>
+                    }
+                    else if (item.AdditionType == (byte)Commons.EAdditionType.Hardware) //popup
+                    {
+                        <a href="javascript:void(0)" class="btn btn-xs btn-success" data-toggle="modal" data-backdrop="static"
+                           @*data-target="#modal-device-serial-number"*@ onclick="AddSerialNumberHardwareService('@item.AssetID','@Convert.ToInt16(Commons.EServiceAssetStatus.Done)','@item.ItemID','@_ID')">
+                            <i class="fa fa-check"></i>&nbsp;Done
+                        </a>
+                    }
+                }
+                else if (item.State == (byte)Commons.EServiceAssetStatus.Done)
+                {
+                    if (item.AdditionType == (byte)Commons.EAdditionType.Service)
+                    {
+                        <a href="javascript:void(0)" class="btn btn-xs btn-success" onclick="Recalled('@item.AssetID','@_ID');">
+                            <i class="fa fa-pie-chart"></i>&nbsp;Recall
+                        </a>
+                    }
+                    else if (item.AdditionType == (byte)Commons.EAdditionType.Hardware)
+                    {
+                        <a href="javascript:void(0)" class="btn btn-xs btn-info" data-toggle="modal"
+                           data-backdrop="static" onclick="AddSerialNumberHardwareService('@item.AssetID','@Convert.ToInt16(Commons.EServiceAssetStatus.Done)','@item.ItemID','@_ID')">
+                            <i class="fa fa-edit"></i>&nbsp;Edit
+                        </a>
+                                            <a href="javascript:void(0)" class="btn btn-xs btn-success" onclick="Recalled('@item.AssetID','@_ID');">
+                                                <i class="fa fa-pie-chart"></i>&nbsp;Recall
+                                            </a>
+                    }
+                }
+            </td>
+        </tr>
+    }
+}

@@ -1,0 +1,35 @@
+﻿@{
+    Layout = null;
+}
+@model NSCSC.Shared.Models.ClientSite.MyProfile.DonePayCheckOut
+@using NSCSC.Shared
+<div>
+    @{ if (@Model.Period > 1)
+        {
+            if (Model.PeriodType == (byte)Commons.EPeriodType.OneTime)
+            {
+                <div class="row">You have just extend @Model.ProductAppliedName for more @Model.PeriodName</div>
+            }
+            else
+            {
+                <div class="row">You have just extend @Model.ProductAppliedName for more @Model.Period @Model.PeriodName@Html.Raw("s")</div>
+            }
+        }
+        else
+        {
+            <div class="row">You have just extend @Model.ProductAppliedName for more @Model.Period @Model.PeriodName</div>
+        }
+    }    
+    @{ if (Model.PeriodType == (byte)Commons.EPeriodType.OneTime)
+        {
+            <div class="row">@Model.ProductAppliedName will be expired never time.</div>
+        }
+        else
+        {
+            <div class="row">@Model.ProductAppliedName will be expired after @Model.ExpiryDate</div>
+        }
+    }
+</div>
+<script type="text/javascript">
+
+</script>

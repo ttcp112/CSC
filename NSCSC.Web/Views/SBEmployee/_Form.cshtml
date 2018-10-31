@@ -1,0 +1,293 @@
+﻿@using NSCSC.Shared
+@model NSCSC.Shared.Models.Sandbox.Employee.EmployeeDetailModels
+@{
+    Html.EnableUnobtrusiveJavaScript(true);
+    var _ID = Model.ID;
+}
+@Html.HiddenFor(model => model.ID)
+@Html.HiddenFor(model => model.CreateUser)
+@Html.HiddenFor(model => model.ImageURL)
+@if (!string.IsNullOrEmpty(_ID))
+{
+    @*Current User cannot edited: Status, role, hired date, expired date*@
+    if (_ID == Model.CreateUser)
+    {
+        @Html.HiddenFor(model => model.IsActive)
+        @Html.HiddenFor(model => model.RoleID)
+        @Html.Hidden("HiredDate", Model.HiredDate.ToString(Commons.FormatDate))
+        @Html.Hidden("ExpiredDate", Model.ExpiredDate.ToString(Commons.FormatDate))
+    }
+}
+
+<div class="row form-horizontal form-label-left" style="margin-bottom:15px;">
+    <div class="col-md-12 col-sm-12 col-xs-12 topDotBorder"></div>
+    <div class="col-md-3 col-sm-3 col-xs-12">
+        <!--Image Placeholder-->
+        <div class="form-group">
+            <div class="col-md-12" style="text-align:center;width:100%;">
+                @if (!string.IsNullOrEmpty(Model.ImageURL))
+                {
+                    <img id="upload-preview" src="@Model.ImageURL" height="200" width="200" style="max-width:100%"/>
+                }
+                else
+                {
+                    <img id="upload-preview" class="" src="@Commons.Image200_200" height="200" width="200" style="max-width:100%"/>
+                }
+            </div>
+        </div>
+        <!--IMAGE-->
+        <div class="form-group">
+            <div class="col-md-12 col-sm-12 col-xs-12" style="text-align:center;">
+                <div class="upload-btn-wrapper" style="cursor:pointer;">
+                    <button class="btn btn-default btnFile" type="button">Add/Edit</button>
+                    @Html.TextBoxFor(model => model.PictureUpload, new { @id = "PictureUpload", @type = "file", @onchange = "PreviewImage(this,\"upload-preview\")", @accept = "*.jpg", @class = "inputFile" })
+                </div>
+                @Html.ValidationMessageFor(model => model.PictureUpload, null, new { @class = "label label-danger" })
+            </div>
+        </div> 
+
+    </div>
+    <div class="col-md-9 col-sm-9 col-xs-12" style="padding:0;">
+        @*Message error*@
+        <div class="form-group">
+            <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12">
+                @Html.ValidationMessageFor(model => model.Error, null, new { @class = "label" })
+            </div>
+        </div>
+
+        @*Name*@
+        <div class="form-group">
+            <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Name*</label>
+            <div class="col-md-8 col-sm-8 col-xs-12">
+                @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @autocomplete = "off" })
+                @Html.ValidationMessageFor(model => model.Name, null, new { @class = "label" })
+            </div>
+        </div>
+            
+        <div class="form-group">
+            @*Phone*@
+            <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Phone*</label>
+            <div class="col-md-8 col-sm-8 col-xs-12">
+                @Html.TextBoxFor(model => model.Phone, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Phone, null, new { @class = "label" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @*Email*@
+            <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Email*</label>
+            <div class="col-md-8 col-sm-8 col-xs-12">
+                @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @id = "txtEmail" })
+                @Html.ValidationMessageFor(model => model.Email, null, new { @class = "label" })
+            </div>
+        </div>
+            
+        <div class="form-group">
+            @*Active*@
+            <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Active</label>
+            <div class="checkbox col-md-4" style="padding-top: 11px">
+                <label>
+                    @Html.CheckBoxFor(model => model.IsActive, new { @class = "js-switch-chk",@id= "IdIsActive" })
+                </label>
+            </div>
+           
+        </div>
+    </div>
+   
+    <div class="form-group" style="clear:both;">
+        @*Gender*@
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Gender</label>
+        <div class="col-md-4 col-sm-4 col-xs-12">
+            <label class="radio-inline" style="padding-top: 11px">
+                @Html.RadioButtonFor(model => model.Gender, "true", new { @checked = "checked", @class = "flat", @name = "radMale",@id="radMale" }) @Commons.GenderstatusMale.ToString()
+            </label>
+            <label class="radio-inline" style="padding-top: 11px">
+                @Html.RadioButtonFor(model => model.Gender, "false", new { @class = "flat", @name = "radFemale",@id="radFemale" }) @Commons.GenderstatusFemale.ToString()
+            </label>
+        </div>
+        @*Marital*@
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Marital Status</label>
+        <div class="col-md-4 col-sm-4 col-xs-12">
+            @Html.DropDownListFor(model => model.IsMarital,
+                new SelectList(Model.ListMarital, "Value", "Text", Model.IsMarital), null,
+                new
+                {
+                    @class = "form-control select2_multiple",
+                    @id = "MaritalStatusDdl",
+                    @style = "width:100%;"
+                })
+            @Html.ValidationMessageFor(model => model.IsMarital, null, new { @class = "label" })
+        </div>
+    </div>
+    
+    <div class="form-group">
+        @*NRIC/ID*@
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">NRIC/ID</label>
+        <div class="col-md-4 col-sm-4 col-xs-12">
+            @Html.TextBoxFor(model => model.IC, new { @class = "form-control", @id = "txtIC" })
+            @Html.ValidationMessageFor(model => model.IC, null, new { @class = "label" })
+        </div>
+        @*PinCode*@
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">PIN CODE*</label>
+        <div class="col-md-4 col-sm-4 col-xs-12" id="divPinCode">
+            @Html.TextBoxFor(model => model.PinCode, new { @class = "form-control", @id = "txtPincode" })
+            @Html.ValidationMessageFor(model => model.PinCode, null, new { @class = "label" })
+        </div>
+    </div>
+    
+    <div class="form-group">
+        @*Birthday*@
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Birthday</label>
+        <div class="col-md-4 col-sm-4 col-xs-12">
+            @*@Html.TextBox("Birthday", Model.Birthday.HasValue ? Model.Birthday.Value.ToString(Commons.FormatDate) : DateTime.Now.ToString(Commons.FormatDate),
+           new { @class = "form-control datepicker" })
+            @Html.ValidationMessageFor(model => model.Birthday, null, new { @class = "label" })*@
+
+            @Html.TextBoxFor(model=> model.Birthday, "{0:dd/MM/yyyy}",
+           new { @class = "form-control datepicker" })
+            @Html.ValidationMessageFor(model => model.Birthday, null, new { @class = "label" })
+
+        </div>
+
+        @*Hired  Date*@
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Hired Date</label>
+        <div class="col-md-4 col-sm-4 col-xs-12">
+            @*@Html.TextBox("HiredDate", Model.HiredDate, Commons.FormatDate, new { @class = "form-control datepicker" })*@
+            @Html.TextBoxFor(model => model.HiredDate, "{0:dd/MM/yyyy}",
+           new { @class = "form-control datepicker",@id= "IdHiredDate" })
+            @Html.ValidationMessageFor(model => model.HiredDate, null, new { @class = "label" })
+
+        </div>
+    </div>
+    
+    <div class="form-group">
+        @*Role*@
+        <label for="Role" class="col-sm-2 control-label lineHeight fontLighter">Role</label>
+        <div class="col-md-4 col-sm-4 col-xs-12">
+            <div class="role">
+                @Html.DropDownListFor(model => model.RoleID, new SelectList(Model.ListRole, "Value", "Text", Model.RoleID),
+                null , new
+                {
+                    @class = "form-control select2_multiple",
+                    @id = "ddlRole",
+                    @style = "width:100%;"
+                })
+                @for (int i = 0; i < Model.ListRole.Count; i++)
+                {
+                    @Html.Hidden("ListRole[" + i + "].Value", Model.ListRole[i].Value)
+                    @Html.Hidden("ListRole[" + i + "].Text", Model.ListRole[i].Text)
+                }
+            </div>
+            @Html.ValidationMessageFor(model => model.RoleID, null, new { @class = "label" })
+        </div>
+        @*Expried  Date*@
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Expried Date</label>
+        <div class="col-md-4 col-sm-4 col-xs-12">
+            @*@Html.TextBox("ExpiredDate", Model.ExpiredDate,Commons.FormatDate, new { @class = "form-control datepicker" })*@
+            @Html.TextBoxFor(model => model.ExpiredDate, "{0:dd/MM/yyyy}",
+           new { @class = "form-control datepicker",@id= "IdExpiredDate" })
+            @Html.ValidationMessageFor(model => model.ExpiredDate, null, new { @class = "label" })
+
+        </div>
+    </div>
+
+    @*Home Address*@
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12">Home Address</label>
+        <div class="col-md-10 col-sm-10 col-xs-12 topDotBorder"></div>
+    </div>
+    
+    <div class="form-group">
+        @*Street*@
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Street</label>
+        <div class="col-md-4 col-sm-4 col-xs-12">
+            @Html.TextBoxFor(model => model.Street, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Street, null, new { @class = "label" })
+        </div>
+        @*City*@
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">City</label>
+        <div class="col-md-4 col-sm-4 col-xs-12">
+            @Html.TextBoxFor(model => model.City, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.City, null, new { @class = "label" })
+        </div>
+    </div>
+    
+    <div class="form-group">
+        @*Country*@
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Country*</label>
+        <div class="col-md-4 col-sm-4 col-xs-12">
+            @Html.DropDownListFor(model => model.Country,
+                new SelectList(Model.ListCountry, "Name", "Name", Model.Country), "", 
+                 new
+                 {
+                     @class = "form-control select2_multiple",
+                     @id = "CountryDdl",
+                     @style = "width:100%;",
+                     @tabindex = "-1"
+
+                 })
+            @Html.ValidationMessageFor(model => model.Country, null, new { @class = "label" })
+        </div>
+        @*ZIP Code*@
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">ZIP Code*</label>
+        <div class="col-md-4 col-sm-4 col-xs-12">
+            @Html.TextBoxFor(model => model.ZipCode, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.ZipCode, null, new { @class = "label" })
+        </div>
+    </div>
+</div>
+<br />
+
+<script src="@Url.Content("~/build/js/customInput.js")"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        //$('.datepicker').daterangepicker({
+        //    singleDatePicker: true,
+        //    calender_style: "picker_2",
+        //    //maxDate: new Date(),
+        //    //==========
+        //    showDropdowns: true,
+        //    //showWeekNumbers: true,
+        //    locale: {
+        //        //daysOfWeek: _daysOfWeek,
+        //        //monthNames: _monthNames
+        //    }
+        //});
+        $('.datepicker').daterangepicker({
+            singleDatePicker: true,
+            calender_style: "picker_2",
+            showDropdowns: true,
+
+        });
+        $("#CountryDdl").select2({
+            placeholder: "Please choose the Country",
+            //allowClear: true
+        });
+       
+        $("#MaritalStatusDdl").select2({
+            placeholder: 'Please choose Marital Status',
+            //allowClear: true
+        });
+
+        $("#ddlRole").select2({
+            placeholder: 'Please choose Role',
+            //allowClear: true
+        });
+
+        //===========
+        // Disable some input of form which current user can not edit
+        checkDisableInputNoneEdit();
+    });
+
+    function checkDisableInputNoneEdit() {
+        if ($('input[name=ID]').val() != "") {
+            if ($('input[name=ID]').val() == $('input[name=CreateUser]').val()) {
+                $("input[name=IsActive]").prop("disabled", true);
+                $("input[name=HiredDate]").prop("disabled", true);
+                $("input[name=ExpiredDate]").prop("disabled", true);
+                $("#ddlRole").prop("disabled", true);
+            }
+        }
+    }
+</script>

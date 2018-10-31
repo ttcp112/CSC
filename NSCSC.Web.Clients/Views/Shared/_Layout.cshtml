@@ -1,0 +1,608 @@
+﻿@using NSCSC.Shared.Helpers
+@using NSCSC.Shared
+<!DOCTYPE html>
+@{ 
+    var CusId = "";
+    if(Session["UserClientSite"] != null)
+    {
+        var Client = Session["UserClientSite"] as NSCSC.Shared.Models.UserSession;
+        CusId = Client.UserId;
+    }
+    else
+    {
+        CusId = "";
+    }
+
+    var isChat = Commons.IsChat;
+}
+<html ng-app="app">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CSC | @ViewBag.Title</title>
+    <link rel="shortcut icon" href="@Url.Content("~/Images/favicon.ico")" type="image/x-icon" />
+
+    <!-- import font -->
+    <link rel="stylesheet" href='@Url.Content("~/Content/sanfrancisco-font.css")'>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href='@Url.Content("~/vendors/bootstrap/dist/css/bootstrap.min.css")'>
+    <!--Font Awesome-->
+    <link rel="stylesheet" href='@Url.Content("~/vendors/font-awesome/css/font-awesome.min.css")'>
+    <!--NProgress-->
+    <link rel="stylesheet" href='@Url.Content("~/vendors/nprogress/nprogress.css")'>
+    <!--iCheck-->
+    <link rel="stylesheet" href='@Url.Content("~/vendors/iCheck/skins/flat/green.css")'>
+    <link rel="stylesheet" href='@Url.Content("~/vendors/iCheck/skins/flat/blue.css")'>
+    <!--bootstrap progressbar-->
+    <link rel="stylesheet" href='@Url.Content("~/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css")'>
+    <!--JQVMap-->
+    <link rel="stylesheet" href='@Url.Content("~/vendors/jqvmap/dist/jqvmap.min.css")'>
+    <link rel="stylesheet" href='@Url.Content("~/vendors/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css")'>
+    <!-- Switchery -->
+    <link rel="stylesheet" href='@Url.Content("~/vendors/switchery/dist/switchery.min.css")'>
+
+    <!-- PNotify -->
+    <link href="@Url.Content("~/vendors/pnotify/dist/pnotify.css")" rel="stylesheet">
+    <link href="@Url.Content("~/vendors/pnotify/dist/pnotify.buttons.css")" rel="stylesheet">
+    <link href="@Url.Content("~/vendors/pnotify/dist/pnotify.nonblock.css")" rel="stylesheet">
+
+    <!-- Select2 -->
+    <link rel="stylesheet" href='@Url.Content("~/vendors/select2/dist/css/select2.min.css")'>
+    <!-- Datatables -->
+    <link rel="stylesheet" href='@Url.Content("~/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css")'>
+    <link rel="stylesheet" href='@Url.Content("~/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css")'>
+    <link rel="stylesheet" href='@Url.Content("~/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css")'>
+    <link rel="stylesheet" href='@Url.Content("~/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css")'>
+    <link rel="stylesheet" href='@Url.Content("~/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css")'>
+    <!-- Bootstrap Colorpicker -->
+    <link rel="stylesheet" href='@Url.Content("~/vendors/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css")'>
+    <!-- bootstrap-timepicker-->
+    <link href='@Url.Content("~/vendors/timepicker/bootstrap-timepicker.min.css")' rel="stylesheet" />
+    <!-- breadcrumb -->
+    <link href="~/Content/breadcrumb.css" rel="stylesheet" />
+    <!-- jQuery -->
+    @*@Scripts.Render("~/ng")
+    @Scripts.Render("~/app")*@
+    <script src="@Url.Content("~/vendors/jquery/dist/jquery.min.js")"></script>
+    <!-- Select2  trongntn-->
+    <script src="@Url.Content("~/vendors/select2/dist/js/select2.full.js")"></script>
+    <script src="@Url.Content("~/Scripts/angular.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/angular-route.js")"></script>
+    <script src="@Url.Content("~/Scripts/angular-cookies.js")"></script>
+    <script src="@Url.Content("~/Scripts/app/app.js")"></script>
+    <script src="@Url.Content("~/Scripts/app/cart.js")"></script>
+   
+
+    <link href="~/Content/common.css" rel="stylesheet" />
+
+    <link href='@Url.Content("~/vendors/jquery.bxslider/jquery.bxslider.css")' rel="stylesheet" />
+    <!--action links-->
+    <script>
+        //For InputInfomationCtrl
+         var _CreateStoreInfo = '@Url.Action("CreateStoreInfo","YourCart")';
+        var _InputMerchantInfoForCusOfReseller = '@Url.Action("InputMerchantInfoForCusOfReseller", "YourCart")';
+        var _InputStoreForCusOfReseller = '@Url.Action("InputStore", "YourCart")';
+        var _InputInformationForCusOfReseller = '@Url.Action("InputInformation", "YourCart")';
+        var _GetOrderDetailJson = '@Url.Action("GetOrderDetailJson", "YourCart")';
+        var _ResellerRegisCustomer = '@Url.Action("ResellerRegisCustomer", "YourCart")';
+        var _Cart = '@Url.Action("Cart", "YourCart")';
+        var _Submit = '@Url.Action("Submit", "YourCart")';
+        var _Feedback = '@Url.Action("FeedbackAngular", "YourCart")';
+        var _Comleted = '@Url.Action("Comleted", "YourCart")';
+        var _CreateOrEditStore = '@Url.Action("CreateOrEditStore", "YourCart")';
+
+        var _CustomerCheckOut = '@Url.Action("CustomerCheckOut", "YourCart")';
+        var _CustomerCreateStoreTemp = '@Url.Action("CustomerCreateStoreTemp", "YourCart")';
+        var _CustomerInputStoreInf = '@Url.Action("_CustomerInputStoreInf", "YourCart")';
+        var _CustomerMakePayment = '@Url.Action("CustomerMakePayment", "YourCart")';
+        var _CustomerDonePayment = '@Url.Action("CustomerDonePayment", "YourCart")';
+        var _MyProfile = '@Url.Action("Index","MyProfile")';
+    </script>
+</head>
+<body id="body">
+    <div class="se-pre-con" style="display: none;"></div>
+    <div class="navbar navbar-inverse header-menu-bg" style="min-height: 30px; position:fixed; top:0">
+
+        <div class="container">
+            <div class="header-menu wizard">
+                <div class="menu-top-menu-container">
+                    <ul id="menu-top-menu" class="links">
+                        <li id="menu-item-784" class="link-shop menu-item menu-item-type-post_type menu-item-object-page menu-item-784">
+                            <a href="tel:+650123456456">
+                                <span class="fa fa-phone" style="font-size:19px">
+                                    &nbsp;&nbsp;&nbsp;
+                                </span>
+                                <span>(+65)0123456456</span>
+                            </a>
+                        </li>
+                        <li id="menu-item-783" class="link-wishlist menu-item menu-item-type-post_type menu-item-object-page menu-item-783">
+                            <a href="mailto:info@newstead.com.sg">
+                                <span class="fa fa-envelope" style="font-size:19px">
+                                    &nbsp;&nbsp;&nbsp;
+                                </span>
+                                <span>info@newstead.com.sg</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="shopping-cart">
+                    <ul id="menu-top-menu" class="links">
+                        @if (Session["UserClientSite"] == null)
+                        {
+                            <li id="menu-item-784" class=""><a href="@Url.Action("Index", "SignUp")"><span class="fontUppercase">sign up</span></a></li>
+                            <li id="menu-item-783" class=""><a href="@Url.Action("Index", "Login")"><span class="fontUppercase">sign in</span>  </a></li>
+
+                        }
+                        else
+                        {
+                            var user = Session["UserClientSite"] as NSCSC.Shared.Models.UserSession;
+                            if (user != null)
+                            {
+                                <li class="dropdown dropdown-user">
+                                    <a href="@Url.Action("Index", "MyProfile")" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                        @if (user.ImageUrl == "")
+                                        {
+                                            <img src="@Url.Content("~/images/dummy/customer.jpg")" class="img-circle" alt="" style="width:35px;height:35px;margin-top:-9px" />
+                                        }
+                                        else
+                                        {
+                                            <img src="@user.ImageUrl" class="img-circle" alt="" style="width:35px;height:35px;margin-top:-9px" />
+                                        }
+                                        <span class="username username-hide-on-mobile">@Html.Raw(user.UserName) </span>
+                                        <i class="fa fa-angle-down"></i>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-default" style="margin-top:50px;margin-left:-182px;padding:15px">
+                                        <li>
+                                            <a href="@Url.Action("Index", "MyProfile")" style="width: 100%;color: #333333;">
+                                                <i class="fa fa-user" aria-hidden="true"></i> My Profile
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "MyStoreAndBusiness")" style="width: 100%;color: #333333;">
+                                                <i class="fa fa-home" aria-hidden="true"></i> My Store/Business
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" onclick="LogOut()" style="width: 100%;color: #333333;">
+                                                <i class="fa fa-sign-out" aria-hidden="true"></i> Sign Out
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="wizard_column row head-info">
+                <a href="tel:+650123456456" style="color: white; float:left" class="elemt-info">
+                    <span class="fa fa-phone" style="font-size: 14px">
+                    </span>
+                    <span>(+65)0123456456</span>
+                </a>
+                <a href="mailto:info@newstead.com.sg" style="color:white; float:left" class="elemt-info">
+                    <span class="fa fa-envelope" style="font-size:14px; margin-left:8px">
+                    </span>
+                    <span>info@newstead.com.sg</span>
+                </a>
+                @if (Session["UserClientSite"] == null)
+                {
+
+                    <a href="@Url.Action("Index", "SignUp")" style="float:right; color: white" >
+                        <i class="fa fa-user-plus" style="font-size:15px"></i>
+                    </a>
+                    <a @*href="@Url.Action("Index", "YourCart")"*@ style="float:right; color: white; display: inline-block;">
+                        <img src="@Url.Content("~/images/Cart.png")" width="20" style="margin-right:10px; margin-top:-4px" alt="shopping cart" />
+                        <div class="cart-icon-mobile countItemCart">
+                           0
+                        </div>
+                    </a>
+                }
+                else
+                {
+                    <div class="navbar-header nav-header">
+                        <a style="float:right; color: white" data-toggle="collapse" data-target=".navbar-collapse">
+                            <i class="fa fa-user" style="font-size:15px"></i>
+                        </a>
+                        <a href="@Url.Action("Cart", "YourCart")" style="float:right; color: white; display: inline-block;">
+                            <img src="@Url.Content("~/images/Cart.png")" width="20" style="margin-right:10px; margin-top:-4px" alt="shopping cart" />
+                            <div class="cart-icon-mobile countItemCart">
+                              0
+                            </div>
+                        </a>
+                    </div>
+                    <div class="navbar-collapse collapse btn-nav" style="border:none;">
+                        <div class="row">
+
+                            <div class="col-xs-12 site-menu">
+                                <nav id="site-navigation" class="main-navigation row" role="navigation">
+                                    <ul id="main-menu" class="menu nume-user">
+
+                                        <li id="menu-item-709" class="col-xs-12" >
+                                            <a href="@Url.Action("Index", "MyProfile")">
+                                                <i class="fa fa-user" aria-hidden="true"></i> My Profile
+                                            </a>
+                                        </li>
+
+                                        <li id="menu-item-711" class="col-xs-12" >
+                                            <a href="@Url.Action("Index", "MyStoreAndBusiness")">
+                                                <i class="fa fa-home" aria-hidden="true"></i> My Store/Business
+                                            </a>
+                                        </li>
+                                        <li id="menu-item-713" class="col-xs-12" >
+                                            <a href="javascript:void(0)" onclick="LogOut()">
+                                                <i class="fa fa-sign-out" aria-hidden="true"></i> Sign Out
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+    <div class="wizard" style="margin-top:60px; margin-bottom: 4px;box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);">
+        <div class="container">
+
+
+            <div class="col-md-2 col-sm-2 col-xs-12 site-branding">
+                <div class="site-logo" style="text-align: left; padding-top: 8px;">
+                    <a class="site-logo__link" href="@Url.Action("Index", "Home")" rel="home" title="Newstead">
+                        <img src="@Url.Content("~/images/logonewstead.png")" alt="CSC" class="site-link__img">
+                    </a>
+                </div>
+            </div>
+            <div class="menu-item menu-item-type-post_type menu-item-object-page menu-item-709" style=" margin-top:15px; float:right; display:inline-block">
+                <a href="@Url.Action("Cart", "YourCart")" style="border-right:none !important; display:inline-block">
+                    <span  class="cart-icon-desktop countItemCart" id="countItemCart">0</span>
+                    <img src="@Url.Content("~/images/shopping-cart.png")" alt="shopping cart" />
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="wizard_column" style="height:30px">
+
+    </div>
+    <div class="body-content">
+        <div id="Id_content" class="container">
+            @RenderBody()
+        </div>
+
+        <footer id="colophon" class="site-footer default" role="contentinfo">
+            @*<div class="footerInfo" style="background-color:darkgrey;height:70px">
+                    <section class="container" style="line-height:75px">
+                        <div class="row">
+                            <div class="col-md-5 col-sm-5 col-xs-12">
+                                <i class="fa fa-envelope" style="color:blue;font-size:25px;border-radius:100%;border:solid;padding:10px"></i>
+                                &nbsp;&nbsp;&nbsp;
+                                <span>Insert email to receive news letter</span>
+                            </div>
+                            <div class="col-md-7 col-sm-7 col-xs-12">
+                                <div class="row">
+                                    <div class="col-md-10 col-sm-10 col-xs-12">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="Your email" style="margin-top:20px" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-2 col-xs-12">
+                                        <div class="form-group">
+                                            <a href="javascript:void(0)" class="btn btn-info" style="background-color:darkblue">Send</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>*@
+
+            <div class="footer-sidebar-2 sidebar container footer-container">
+                @*<ul id="footer-sidebar-2">
+                    @if (Session["ListItemCategory"] != null)
+                    {
+                        List<NSCSC.Shared.Models.OurProducts.CategoryDetailModels> _item = (List<NSCSC.Shared.Models.OurProducts.CategoryDetailModels>)Session["ListItemCategory"];
+                        var row = 4;
+                        var Columns = _item.Count % row == 0 ? (_item.Count / row) : ((_item.Count / row) + 1);
+                        var EndItem = 0;
+                        if (_item.Count >= 4)
+                        {
+                            EndItem = row;
+                        }
+                        else
+                        {
+                            EndItem = _item.Count;
+                        }
+                        for (var k = 0; k < Columns; k++)
+                        {
+                            <li id="nav_menu-2" class="widget widget_nav_menu">
+                                <h2 class="widgettitle">
+                                    @if (k == 0)
+                                    {
+                                        @: OUR PRODUCTS
+                                    }
+                                    else
+                                    {
+                                        <br />
+                                    }
+                                </h2>
+                                <div class="menu-features-menu-container">
+                                    <ul id="menu-features-menu" class="menu">
+                                        @{
+                                            var StartItem = k * row;
+                                        }
+                                        @for (var m = StartItem; m < EndItem; m++)
+                                        {
+                                            var item = _item[m];
+                                            <li id="menu-item-805" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-805"><a href="@Url.ActionEncoded("Index", "OurProducts", new { ProductType = "Products", CategoryID =item.ID})">@item.Name</a></li>
+                                        }
+                                    </ul>
+                                </div>
+                            </li>
+                            EndItem = _item.Count - EndItem > row ? (EndItem + row) : _item.Count;
+                        }
+                    }
+
+                    <li class="widget" style="text-align:right;width:25%;margin-right:0px !important;float:right">
+                        <h2 class="widgettitle">
+                            <a class="site-logo__link" href="javascript:void(0)" rel="home" title="Newstead">
+                                <img src="@Url.Content("~/images/logonewstead.png")" alt="CSC" class="site-link__img">
+                            </a>
+                        </h2>
+                        <ul>
+                            <li>
+                                <a href="javascript:void(0)" title="facebook"><span class="fa fa-facebook" style="color:#0070bb;font-size:20px"></span></a>
+                                &nbsp;&nbsp;&nbsp;
+                                <a href="javascript:void(0)" title="twitter"><span class="fa fa-twitter" style="color:#29abe1;font-size:20px"></span></a>
+                                &nbsp;&nbsp;&nbsp;
+                                <a href="javascript:void(0)" title="google"><span class="fa fa-google-plus" style="color:#ff0d0d;font-size:20px"></span></a>
+                                &nbsp;&nbsp;&nbsp;
+                                <a href="javascript:void(0)" title="tumblr"><span class="fa fa-tumblr" style="color:#92278f;font-size:20px"></span></a>
+                            </li>
+                        </ul>
+                        <div class="textwidget">
+                            © 2015 - Newstead Technologies Pte. Ltd. <br />
+                            180 Kitchener Road, City Square Mall, <br />
+                            #09-01/05 Singapore 208539 <br />
+                            Email: software.sales@newstead.com.sg <br />
+                            Phone: +65 6634 6033
+                        </div>
+                    </li>
+                </ul>*@
+            </div>
+            <div style="clear:both"></div>
+            <div class="footer-container-later footer-container-bottom site-info" style="    margin-top: 5px;box-shadow: 0 -5px 5px -5px rgba(0, 0, 0, 0.3)">
+                <div  class="wizard container">
+                    <div class="site-info__flex">
+                        <div class="social-list social-list--footer social-list--icon">
+                            <div class="col-md-6 col-sm-6">
+
+                                <a style="color: #40765C">Home | </a>
+                                <a style="color: #40765C"> Terms & Privacy | </a>
+                                <a style="color: #40765C"> FAQ | </a>
+                                <a style="color: #40765C"> Support Centre | </a>
+                                <a style="color: #40765C"> Contact</a>
+
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-12 copyright">
+                                Copyright © Newstead Technologies. All right reserved
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div   class="site-info__flex wizard_column" style="text-align:center;">
+                    <div class="col-xs-12">
+
+                        <a style="color: #40765C">Home | </a>
+                        <a style="color: #40765C"> Terms & Privacy | </a>
+                        <a style="color: #40765C"> FAQ | </a>
+                        <a style="color: #40765C"> Support Centre | </a>
+                        <a style="color: #40765C"> Contact</a>
+
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12 copyright">
+                        Copyright © Newstead Technologies. All right reserved
+                    </div>
+                </div>
+                <div style="clear:both"></div>
+            </div>
+            </footer>
+        <div>
+            
+        </div>
+    </div>
+    <!--Bootstrap-->
+    <script src="@Url.Content("~/vendors/bootstrap/dist/js/bootstrap.min.js")"></script>
+    <!--FastClick-->
+    <script src="@Url.Content("~/vendors/fastclick/lib/fastclick.js")"></script>
+    <!--NProgress-->
+    <script src="@Url.Content("~/vendors/nprogress/nprogress.js")"></script>
+    <!--bootstrap progressbar-->
+    <script src="@Url.Content("~/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js")"></script>
+
+    <!-- Bootstrap Colorpicker -->
+    <script src="@Url.Content("~/vendors/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js")"></script>
+
+    <!--iCheck-->
+    <script src="@Url.Content("~/vendors/iCheck/icheck.min.js")"></script>
+    <!-- Switchery -->
+    <script src="@Url.Content("~/vendors/switchery/dist/switchery.min.js")"></script>
+    <!-- Validate -->
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+    <!-- Custom Scroll bar -->
+    <script src="@Url.Content("~/vendors/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js")"></script>
+
+    
+    <!-- Datatables -->
+    <script src="@Url.Content("~/vendors/datatables.net/js/jquery.dataTables.min.js")"></script>
+    <script src="@Url.Content("~/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js")"></script>
+    <script src="@Url.Content("~/vendors/datatables.net-responsive/js/dataTables.responsive.min.js")"></script>
+    <script src="@Url.Content("~/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js")"></script>
+    <script src="@Url.Content("~/vendors/datatables.net-scroller/js/datatables.scroller.min.js")"></script>
+    @*lib for sum of Datatables*@
+    <script src="@Url.Content("~/vendors/datatables.net-bs/js/datatables.sum.js")"></script>
+
+    <!-- bootstrap-timepicker-->
+    <script src="@Url.Content("~/vendors/timepicker/bootstrap-timepicker.min.js")"></script>
+
+    <!-- Js-jcommon-->
+    <script src="@Url.Content("~/build/js/jcommon.js")"></script>
+    <script src="@Url.Content("~/Scripts/js.cookie.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/JsDbLib.js")" type="text/javascript"></script>
+
+    <!-- PNotify -->
+    <script src="@Url.Content("~/vendors/pnotify/dist/pnotify.js")"></script>
+    <script src="@Url.Content("~/vendors/pnotify/dist/pnotify.buttons.js")"></script>
+    <script src="@Url.Content("~/vendors/pnotify/dist/pnotify.nonblock.js")"></script>
+
+    <script type="text/javascript">
+        ///actionlink
+       
+         //message notify
+        var _NoResultsFound = '@Html.Raw("No results found")';
+        var _UnableToConnectToTheInternet = '@Html.Raw("Unable to connect to the Internet")';
+        var _TitleError = '@Html.Raw("Error")';
+
+        @{
+            string controller = this.ViewContext.RouteData.Values["controller"].ToString();
+            string baseUrl = new Uri(Request.Url, Url.Content("~")).ToString();
+        }
+        ControllerName = "@controller";
+        BaseUrl = "@baseUrl";
+        //deleteOrderPay("");
+        var order = getOrder('@CusId');
+        $(document).ready(function () {
+            //if (order != undefined) {
+            $.ajax({
+                type: "POST",
+                url: CreateAbsoluteUrl("GetORDERID"),
+                traditional: true,
+                data: JSON.stringify({ _ORDERID: order != undefined ? order.OrderId : '' }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (data) {
+                },
+            });
+
+            if ('@ViewBag.InPage' !='') {
+                $('#OurProducts').addClass("text-color");
+                $('#fa-down').addClass("text-color");
+            } else {
+                $('#OurProducts').removeClass("text-color");
+                $('#fa-down').removeClass("text-color");
+            }
+            var height = $(window).height();
+            $('#Id_content').css({ 'min-height': height - 200 + 'px' })
+
+
+        });
+
+        function dropdown() {
+            $('#sub_products').toggleClass("sub_none");
+            //$('#OurProducts').toggleClass("text-color");
+            //$('#fa-down').toggleClass("text-color");
+        }
+        
+        function LogOut() {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("Logout", "Login")',
+                traditional: true,
+                data: {},
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (data) {               
+                    deleteOrder();
+                    location.reload();
+                    window.location.assign(BaseUrl);
+                },
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+            });
+        }
+        $('#body').mousedown(function (event) {
+            if (!$('#sub_products').hasClass('sub_none')) {
+                var x = event.target.className;
+                if (x != 'menu_product' && x != 'package' && x != 'fa fa-plus-circle' && x != 'fa fa-cube' && x != 'bx-next' && x != 'bx-prev' && x != 'sub_menu_product lefts bx-clone'
+                    && x != 'fontUppercase' && x != 'fontUppercase text-color' && x != 'fa fa-caret-down text-color' && x != 'sub_menu_product right' && x !='sub_menu_product lefts') {
+                    //$('#sub_products').toggleClass("sub_none");
+                    //$('#OurProducts').toggleClass("text-color");
+                    //$('#fa-down').toggleClass("text-color");
+                    $("#Our_Products").click();
+                }
+            }
+        });
+
+        function OrderMerge(OrderIdFrom, OrderIdTo) {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("OrderMerge", "YourCart")',
+                traditional: true,
+                data: {
+                    OrderIdFrom: OrderIdFrom,
+                    OrderIdTo: OrderIdTo
+                },
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (data) {
+                },
+            });
+        }
+
+        $(function () {
+
+            /*check Connection for Page*/
+            setInterval(function () {
+                if (!navigator.onLine) {
+                    init_PNotify();
+                }
+            }, 10000);
+            function init_PNotify() {
+                if (typeof (PNotify) === 'undefined') {
+                    return;
+                }
+                //alert('Unable to connect to the Internet');
+                new PNotify({
+                    title: _TitleError,
+                    text: _UnableToConnectToTheInternet + '!!!',
+                    type: 'error',
+                    styling: 'bootstrap3'
+                });
+            };
+        });
+    </script>
+
+    @RenderSection("Scripts", false)
+
+
+    @if (isChat)
+    {
+        <text>
+            <!--Start of Tawk.to Script-->
+            <script type="text/javascript">
+                var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+                (function () {
+                    var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+                    s1.async = true;
+                    s1.src = 'https://embed.tawk.to/5ab35f764b401e45400df29f/default';
+                    s1.charset = 'UTF-8';
+                    s1.setAttribute('crossorigin', '*');
+                    s0.parentNode.insertBefore(s1, s0);
+                })();
+            </script>
+            <!--End of Tawk.to Script-->
+        </text>
+    }
+
+</body>
+</html>

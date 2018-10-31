@@ -1,0 +1,130 @@
+﻿@model NSCSC.Shared.Models.CRM.Customers.CustomerBaseModels
+@{
+    ViewBag.Title = "Customers - Add New";
+}
+
+<style type="text/css">
+    .disabledTab {
+        pointer-events: none;
+    }
+</style>
+<div role="main" class="right_col">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left" style="padding: 10px 0px;">
+                @Html.Partial("~/Views/Shared/_breadcrumb.cshtml",
+                new Dictionary<string, string> { { "A", "CRM" }, { "B", "Customer" }, { "C", "Customer - Add New" } })
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12 x_panel">
+                    <div class="x_title">
+                        @Html.Partial("_TabMenu", "create")
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                                <li role="presentation" class="active">
+                                    <a href="#tab_content1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Customer Detail</a>
+                                </li>
+                                <li role="presentation" class="hidden" id="content2">
+                                    <a href="#tab_content2"  role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">Merchant & Stores</a>
+                                </li>
+                                <li role="presentation" class="hidden" id="content3">
+                                    <a href="#tab_content3" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">Products Management</a>
+                                </li>
+                            </ul>
+                            <div id="myTabContent" class="tab-content">
+                                @*Tab customer detail*@
+                                <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
+                                    <div class="row text-right">
+                                        <ul class="header-buttons pull-right list-inline">
+                                            <li><a href="@Url.Action("Index", "CRMCustomers")" class="btn btn-danger" id="btn-delete"><i class="fa fa-times"></i>&nbsp;Cancel</a></li>
+                                            <li><a href="javascript:void(0);" class="btn btn-success" id="btn-actives" onclick="SubmitForm('.create-form-customer-detail')"><i class="fa fa-save"></i>&nbsp;Save</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="box-body">
+                                        @using (@Html.BeginForm("CreateCustomerDetail", "CRMCustomers", FormMethod.Post, new
+                                        {
+                                            @class = "form-horizontal create-form-customer-detail",
+                                            @enctype = "multipart/form-data"
+                                        }))
+                                        {
+                                            @Html.Partial("_FormCustomerDetail", Model)
+                                        }
+                                    </div>
+                                </div>
+
+                                @*Tab Marchant & Stores*@
+                                <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
+                                    <div class="row text-right">
+                                        <ul class="header-buttons pull-right list-inline">
+                                            <li><a href="@Url.Action("Index", "CRMCustomers")" class="btn btn-danger" id="btn-delete"><i class="fa fa-times"></i>&nbsp;Cancel</a></li>
+                                            <li><a href="javascript:void(0);" class="btn btn-success" id="btn-actives" onclick="SubmitForm('.create-form-merchant-store')"><i class="fa fa-save"></i>&nbsp;Save</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="box-body">
+                                        @using (@Html.BeginForm("CreateMerchantStore", "CRMCustomers", FormMethod.Post, new
+                                        {
+                                            @class = "form-horizontal create-form-merchant-store",
+                                            @enctype = "multipart/form-data"
+                                        }))
+                                        {
+                                            @Html.Partial("_FormMerchant", Model)
+                                        }
+                                    </div>
+                                </div>
+
+                                @*Tab Products Management*@
+                                <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="profile-tab">
+                                    <div class="box-body">
+                                        @using (@Html.BeginForm("CreateProductsManagement", "CRMCustomers", FormMethod.Post, new
+                                        {
+                                            @class = "form-horizontal create-form-products-management",
+                                            @enctype = "multipart/form-data"
+                                        }))
+                                        {
+                                            @Html.Partial("_FormProductsManagement", Model)
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script type="text/javascript">
+        @if(Model.CustomerDetail.ID != null)
+    {
+        <text>
+        $("#content2").removeClass("disabled disabledTab");
+        $("#content2").removeClass('hidden');
+        $("#content3").removeClass("disabled disabledTab");
+        $("#content3").removeClass('hidden');
+        </text>
+        }
+        else
+        {
+           <text>
+        $("#content2").addClass("disabled disabledTab");
+        $("#content2").addClass('hidden');
+        $("#content3").addClass('hidden');
+        $("#content3").addClass("disabled disabledTab"); 
+    </text>
+        }
+function SubmitForm(form) {
+            $(form).submit();
+}
+
+        $(document).ready(function () {
+
+});
+    </script>
+}

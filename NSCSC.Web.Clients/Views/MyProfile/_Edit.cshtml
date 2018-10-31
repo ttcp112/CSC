@@ -1,0 +1,425 @@
+﻿@model NSCSC.Shared.Models.ClientSite.MyProfile.Customermodel
+@{
+    ViewBag.Title = "Edit Information";
+    Html.EnableUnobtrusiveJavaScript(true);
+}
+<div class="View_Edit">
+    @*Header*@
+    <div class="row" id="head-personal-information" style="padding-bottom:30px;">
+        <span class="text-uppercase font-weight" style="font-size:20px;">My Profile</span>
+    </div>
+
+    <div class="clearfix"></div>
+    <div class="row box-my-profile" style="padding-top:0px;">
+        <div class="row form-horizontal form-label-left" style="margin-top:20px; padding:5px">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <span style="font-style:italic; color:darkred;">(*) Required fields</span>
+            </div>
+        </div>
+        <div class="row form-horizontal form-label-left" style="padding:40px;">
+            @using (@Html.BeginForm("Edit", "MyProfile", FormMethod.Post, new { @class = "form-horizontal edit-form", @enctype = "multipart/form-data" }))
+            {
+                if (!string.IsNullOrEmpty(Model.ID))
+                {
+                    @Html.Hidden("ID", Model.ID)
+                    @Html.Hidden("ImageURL", Model.ImageURL)
+                }
+                <div class="row">
+                    <div class="col-md-3 col-sm-3 col-xs-12 reset-padding-left-right width-height-200 border-radius-img img-myprofile-edit" style="overflow: hidden;">
+                        <!--Image Placeholder-->
+                        <div class="col-md-12 col-sm-12 col-xs-12 reset-padding-left-right">
+                            <img id="upload-preview" src="@Model.ImageURL" class="width-height-200" />
+                        </div>
+                        <!--element choose change-->
+                        <div class="col-md-12 col-sm-12 col-xs-12 ele-choose-change">
+                            <div class="upload-i-wrapper ele-choose-change-input">
+                                @Html.TextBoxFor(model => model.PictureUpload, new
+                                   {
+                                       @id = "PictureUpload",
+                                       @type = "file",
+                                       @onchange = "PreviewImage(this,\"upload-preview\")",
+                                       @accept = "*.jpg"
+                                   })
+                                <a href="javascript:void(0);" class="text-white">Change</a>
+                            </div>
+                        </div>
+                        <!--msg image error-->
+                        <div class="col-md-12 col-sm-12 col-xs-12" style="margin:5px;">
+                            @Html.ValidationMessageFor(model => model.PictureUpload, null, new { @class = "label label-danger" })
+                        </div>
+                    </div>
+                    <div class="col-md-9 col-sm-9 col-xs-12 form-input">
+                        @*Name*@
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 height-30">
+                                Name *
+                            </div>
+                            <div class="col-md-5 col-sm-10 col-xs-12">
+                                @Html.TextBoxFor(model => model.Name, new { @id = "txtName", @class = "form-control", autocomplete = "off", @placeholder = "Your Name" })
+                                @Html.ValidationMessageFor(model => model.Name, null, new { @class = "label label-danger" })
+                            </div>
+                        </div>
+
+                        @*Phone*@
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 height-30">
+                                Phone *
+                            </div>
+                            <div class="col-md-5 col-sm-10 col-xs-12">
+                                @Html.TextBoxFor(model => model.Phone, new { @id = "txtPhone", @class = "form-control", @autocomplete = "off", @placeholder = "0123456789" })
+                                @Html.ValidationMessageFor(model => model.Phone, null, new { @class = "label label-danger" })
+                            </div>
+                        </div>
+
+                        @*Email*@
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 height-30">
+                                Email *
+                            </div>
+                            <div class="col-md-5 col-sm-10 col-xs-12">
+                                @Html.TextBoxFor(model => model.Email, new { @id = "txtEmail", @class = "form-control", @autocomplete = "off", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.Email, null, new { @class = "label" })
+                            </div>
+                        </div>
+
+                        @*Gender*@
+                        <div class="form-group input-gender">
+                            <div class="col-md-2 col-sm-2 col-xs-2 height-30">
+                                Gender
+                            </div>
+                            <div class="col-md-5 col-sm-10 col-xs-10">
+                                <label class="radio-inline">
+                                    @Html.RadioButtonFor(model => model.Gender, "true", new { @checked = "checked", @class = "flat" }) Male
+                                </label>
+                                <label class="radio-inline">
+                                    @Html.RadioButtonFor(model => model.Gender, "false", new { @class = "flat" }) Female
+                                </label>
+                            </div>
+                        </div>
+
+                        @*NRIC*@
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 height-30">
+                                NRIC
+                            </div>
+                            <div class="col-md-5 col-sm-10 col-xs-12">
+                                @Html.TextBoxFor(model => model.NRIC, new { @id = "txtNRIC", @class = "form-control", @autocomplete = "off", @placeholder = "0123456789" })
+                                @Html.ValidationMessageFor(model => model.NRIC, null, new { @class = "label label-danger" })
+                            </div>
+                        </div>
+
+                        @*Change password*@
+                        <div class="form-group btn-password">
+                            <div class="col-md-12 col-sm-12 col-xs-12 height-30">
+                                <a href="javascript:void(0)" onclick="ShowView('.modalChangePassword')" title="Change password">Change password</a>
+                            </div>
+                        </div>
+
+                        @*line*@
+                        <div class="form-group">
+                            <div class="col-md-1 col-sm-12 col-xs-12 height-30">
+                                <hr style="border: 1.5px solid #e0e0e2;" />
+                            </div>
+                        </div>
+
+                        @*City*@
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 height-30">
+                                City
+                            </div>
+                            <div class="col-md-5 col-sm-10 col-xs-12">
+                                @Html.TextBoxFor(model => model.OfficeCity, new { @id = "txtCity", @class = "form-control", @autocomplete = "off", @placeholder = "City" })
+                                @Html.ValidationMessageFor(model => model.OfficeCity, null, new { @class = "label" })
+                            </div>
+                        </div>
+
+                        @*Zip Code*@
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 height-30">
+                                Zip Code
+                            </div>
+                            <div class="col-md-5 col-sm-10 col-xs-12">
+                                @Html.TextBoxFor(model => model.OfficeZipCode, new { @id = "txtZipCode", @class = "form-control", @autocomplete = "off", @placeholder = "Zip code" })
+                                @Html.ValidationMessageFor(model => model.OfficeZipCode, null, new { @class = "label" })
+                            </div>
+                        </div>
+
+                        @*Country*@
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 height-30">
+                                Country
+                            </div>
+                            <div class="col-md-5 col-sm-10 col-xs-12">
+                                @Html.DropDownListFor(model => model.OfficeCountry,
+                                new SelectList(@ViewBag.ListCountry, "Name", "Name", Model.OfficeCountry), "",
+                                 new
+                                 {
+                                     @class = "form-control select2_multiple",
+                                     @id = "OfficeCountry",
+                                     @style = "width:100%;",
+                                     @tabindex = "-1",
+                                     placeholder = "Enter City name"
+
+                                 })
+                                @Html.ValidationMessageFor(model => model.OfficeCountry, null, new { @class = "label" })
+                            </div>
+                        </div>
+
+                        @*Address*@
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 height-30">
+                                Address
+                            </div>
+                            <div class="col-md-5 col-sm-10 col-xs-12">
+                                @Html.TextAreaFor(model => model.OfficeStreet,
+                                    new {
+                                        @class = "form-control",
+                                        @autocomplete = "off",
+                                        @placeholder = "Address",
+                                        @row ="3",
+                                        @style = "resize:none;"
+                                    })
+                                @Html.ValidationMessageFor(model => model.OfficeStreet, null, new { @class = "label" })
+                            </div>
+                        </div>
+
+                        @*Action*@
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 height-30">
+                            </div>
+                            <div class="col-md-5 col-sm-10 col-xs-12">
+                                <div class="btn-my-profile-update">
+                                <ul class="header-buttons list-inline">
+                                    <li>
+                                        <a href="javascript:void(0);" class="btn text-uppercase btn-cyan text-white" style="width: 150px;" id="btn-actives"
+                                           onclick="SubmitForm('.edit-form')">Update</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" class="btn btn-danger text-uppercase" id="btn-delete" onclick="_funCancel();">
+                                            &nbsp;Cancel
+                                        </a>
+                                    </li>
+                                </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="modal" class="modal fade modalChangePassword modal-center" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-white" style="padding:20px 15px; border-bottom:none;">
+                <h4 class="modal-title text-uppercase font-bold text-left" id="myModalLabel2">Change Password</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group"></div>
+                    <div class="form-group">
+                        <div class="col-md-1 col-sm-1 col-xs-12"></div>
+                        <label class="col-md-4 col-sm-4 col-xs-12">Old password</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="password" class="form-control" id="txtCurrentPassword" placeholder="Your old password">
+                        </div>
+                        <div class="col-md-1 col-sm-1 col-xs-12"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-1 col-sm-1 col-xs-12"></div>
+                        <label class="col-md-4 col-sm-4 col-xs-12">New password</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="password" class="form-control" id="txtNewPassword" style="resize:none" placeholder="Password with 6 - 20 characters">
+                        </div>
+                        <div class="col-md-1 col-sm-1 col-xs-12"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-1 col-sm-1 col-xs-12"></div>
+                        <label class="col-md-4 col-sm-4 col-xs-12">Confirm</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="password" class="form-control" id="txtComfirmNewPassword" style="resize:none" placeholder="Confirm new password">
+                        </div>
+                        <div class="col-md-1 col-sm-1 col-xs-12"></div>
+                    </div>
+                    <div class="form-group text-center">
+                        <span class="label label-danger" id="ltrErrorChangePassword"></span>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer bg-white" style="border-top:none;">
+                <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+                    <button type="button" class="btn btn-cyan" onclick="Popupsave()" id="btnSaveSubmit" style="width:150px">Save</button>
+                    <button type="button" class="btn text-cyan bg-white" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#OfficeCountry").select2({
+            placeholder: 'Please choose Country',
+        });
+        init_ICheck();
+    });
+
+    function init_ICheck() {
+        if ($("input.flat")[0]) {
+            $(document).ready(function () {
+                $('input.flat').iCheck({
+                    checkboxClass: 'icheckbox_flat-blue',
+                    radioClass: 'iradio_flat-blue'
+                });
+            });
+        }
+    };
+
+     function index(action) {
+        $.ajax({
+            url: action,
+            type: "GET",
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                $(".se-pre-con").show();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(errorThrown);
+                $(".se-pre-con").hide();
+            },
+            success: function (html) {
+                $(".Show-UserInformation").html(html);
+                $(".se-pre-con").hide();
+            }
+        });
+    }
+
+    //Update Personal
+    $(".edit-form").submit(function (e) {
+        var r = confirm("There has been a change in your information, do you still want to cancel editing?");
+        if (r === true) {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: "POST",
+                data: new FormData(this),
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    $(".se-pre-con").show();
+                },
+                success: function () {
+                    $.ajax({
+                        url: '@Url.Action("Index", "MyProfile")',
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+                            window.location.assign('@Url.Action("Index", "MyProfile")');
+                        },
+                    });
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $('.se-pre-con').hide();
+                    $(".Show-UserInformation").html(jqXHR.responseText);
+                }
+            });
+        }
+
+        e.preventDefault();
+    });
+
+    function ShowView(_modal) {
+        $(_modal).modal({
+            show: true,
+            backdrop: 'static'
+        });
+    }
+
+    function Popupsave() {
+        var CurrentPassword = $('#txtCurrentPassword').val();
+        var NewPassword = $('#txtNewPassword').val();
+        var ComfirmNewPassword = $('#txtComfirmNewPassword').val();
+        if (CurrentPassword === '') {
+            $('#ltrErrorChangePassword').html('Please enter your old password');
+            $('#txtCurrentPassword').focus();
+            return false;
+        }
+        else if (NewPassword === '') {
+            $('#ltrErrorChangePassword').html('Please enter new password');
+            $('#txtNewPassword').focus();
+            return false;
+        }
+        else if (ComfirmNewPassword === '') {
+            $('#ltrErrorChangePassword').html('Please enter confirm new password');
+            $('#txtComfirmNewPassword').focus();
+            return false;
+        }
+        else if (NewPassword !== ComfirmNewPassword) {
+            $('#ltrErrorChangePassword').html('Confirm new password is not matched with new password. Please try again.');
+            $('#txtComfirmNewPassword').focus();
+            return false;
+        }
+        $('.se-pre-con').show();
+        $.ajax({
+            url: '@Url.Action("ChangePassword", "MyProfile")',
+            type: 'GET',
+            data: {
+                CurrentPassword: CurrentPassword,
+                NewPassword: NewPassword,
+                ID: '@Model.ID'
+            },
+            dataType: 'html',
+            error: function (e) {
+                $('.se-pre-con').hide();
+                if (e.status === 404 || e.status === 400) {
+                    $('#ltrErrorChangePassword').html('Old password is invalid');
+                }
+            },
+            success: function (data) {
+                $('.se-pre-con').hide();
+                $(".modalChangePassword").modal('hide');
+                $("#txtPassword").val($('#txtComfirmNewPassword').val());
+            },
+        });
+    }
+
+    /*show modal change password*/
+    $(".modalChangePassword").on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var modal = $(this);
+        modal.find('#txtCurrentPassword').val('');
+        modal.find('#txtNewPassword').val('');
+        modal.find('#txtComfirmNewPassword').val('');
+        modal.find('#ltrErrorChangePassword').html('');
+    });
+
+    //Check condition for submit
+    var $CurrentPassword = $('#txtCurrentPassword');
+    var $NewPassword = $('#txtNewPassword');
+    var $ComfirmNewPassword = $('#txtComfirmNewPassword');
+    var $submit = $('#btnSaveSubmit');
+    //=========
+    var NewPasswordval = $('#txtNewPassword').val();
+    var ComfirmNewPasswordval = $('#txtComfirmNewPassword').val();
+    $submit.prop('disabled', true);
+    $CurrentPassword.on('keyup', checkStatus);
+    $NewPassword.on('keyup', checkStatus);
+    $ComfirmNewPassword.on('keyup', checkStatus);
+    function checkStatus() {
+        var status = ($.trim($CurrentPassword.val()) === '' || $.trim($NewPassword.val()) === '' || $.trim($ComfirmNewPassword.val()) === '');
+        $submit.prop('disabled', status);
+    }
+    //End Check condition for submit
+
+    function _funCancel() {
+        window.location.assign(CreateAbsoluteUrl('Index'));
+    }
+</script>
+
+

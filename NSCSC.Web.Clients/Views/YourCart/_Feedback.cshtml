@@ -1,0 +1,255 @@
+﻿
+<link href="~/Content/inputInformation.css" rel="stylesheet" />
+<div class="se-pre-con" style="display: none;"></div>
+@** breadcrum*@
+<div class="title_left">
+    <div class="container">
+        <h3>
+            <small class="breadcrum">
+                <a href="@Url.Action("Index", "YourCart")">Your Cart</a>
+                <i class='fa fa-caret-right'></i>
+                <span>Check Out </span>
+            </small>
+        </h3>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<div>
+        <div class="yourcard-content">
+            <div class="row" style="margin-bottom:50px" id="step-horizontal">
+                <div id="wizard" class="form_wizard wizard_horizontal">
+                    <ul class="wizard_steps anchor">
+                        <li>
+                            <a href="javascript:void(0)" class="selected" isdone="1" id="isDone1" rel="1">
+                                <span class="step_no" id="step_no1"></span>
+                                <span class="step_descr">Input Store </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)" class="disabled" isdone="1" id="isDone2" rel="2">
+                                <span class="step_no" id="step_no2"></span>
+                                <span class="step_descr">Check Out </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row" id="step-verticel">
+                <div class="col-sm-3">
+                    <div id="wizard_verticle" class="form_wizard wizard_verticle">
+                        <ul class="list-unstyled wizard_steps anchor">
+                            <li>
+                                <a href="#step-11" class="selected" isdone="1" rel="1" id="isDone1_wizard_verticle">
+                                    <span id="step_no1" class="step_no"></span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#step-22" class="disabled" isdone="0" rel="2" id="isDone2_wizard_verticle">
+                                    <span id="step_no2" class="step_no"></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-sm-9 step_text_mobile">
+
+                    <div class="text-left text-Mer-mobile">
+                        <span>Input Store </span>
+                    </div>
+
+                    <div class="text-left text-Store-mobile">
+                        <span>Check Out </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="checkout">
+            <div class="title-checkout">
+                <h3>CHECKOUT</h3>
+            </div>
+            <div class="row box-my-profile" id="customer-information-checkout">
+                <div class="col-md-12 col-sm-12 col-xs-12 reset-padding-left-right" style="margin-bottom:20px">
+                    <div class="x_title" style="font-weight:bolder">
+                        Customer Information
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 col-sm-3 col-xs-12">
+                        <img id="imagepreview" ng-src="{{data.CustomerDetail.ImageURL}}" class="border-radius-img  width-height-200" />
+                    </div>
+                    <div class="col-md-9 col-sm-9 col-xs-12">
+                        <div class="customer-infor">
+                            <p class="" style="font-weight:bold; font-size:18px;">
+                                Name:{{_dataStore.CustomerDetail.Name}}
+                            </p>
+                            <p>
+                                Email: {{_dataStore.CustomerDetail.Email}}
+                            </p>
+                            <p>Merchant: {{_dataStore.Merchant.Name}}</p>
+                            <p>Address:{{_dataStore.Merchant.Street}} </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row box-my-profile" id="checkout" style="margin-top:10px">
+                <div class="order-summary">
+                    <div class="col-md-12 col-sm-12 col-xs-12 reset-padding-left-right" style="margin-bottom:20px">
+                        <div class="x_title" style="font-weight:bolder">
+                            Order Summary
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 col-sm-3 col-xs-5">
+                            <label>Number of Items:</label>
+                        </div>
+                        <div class="col-md-9 col-sm-9 col-xs-7">
+                            <div class="">
+                                <ul>
+                                    <li ng-repeat="itemProduct in data.ListItems">{{itemProduct.Quantity}} x {{itemProduct.ProductName}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3 col-sm-3 col-xs-5">
+                            <label>Sub Total:</label>
+                        </div>
+                        <div class="col-md-9 col-sm-9 col-xs-7">
+                            <div class="">
+                                <label ng-bind="data.SubTotal |currency :data.CurrencySymbol: 0"> </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3 col-sm-3 col-xs-5">
+                            <label>Discount:</label>
+                        </div>
+                        <div class="col-md-9 col-sm-9 col-xs-7">
+                            <div class="">
+                                <label class="" ng-bind="data.DiscountOnTotalCart |currency :data.CurrencySymbol: 0"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3 col-sm-3 col-xs-5">
+                            <label>Promotion:</label>
+                        </div>
+                        <div class="col-md-9 col-sm-9 col-xs-7">
+                            <div class="">
+                                <label class="" ng-bind="data.TotalPromotion |currency :data.CurrencySymbol: 0"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3 col-sm-3 col-xs-5">
+                            <label>Tax <span ng-bind="data.sTaxName"></span></label>
+                        </div>
+                        <div class="col-md-9 col-sm-9 col-xs-7">
+                            <div class="">
+                                <label class="" ng-bind="data.Tax |currency :data.CurrencySymbol"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3 col-sm-3 col-xs-5">
+                            <label>Total Order: </label>
+                        </div>
+                        <div class="col-md-9 col-sm-9 col-xs-7">
+                            <div class="">
+                                <label class="" style="color:#337ab7;font-size:20px; font-weight:bold" ng-bind="data.Total |currency :data.CurrencySymbol: 0"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-4">
+                            <label class="checkout-line" style="border: 1px solid #ccc;"></label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="x_content" style="font-weight:bolder">
+                                <ul>
+                                    <li>
+                                        Your payment is complete. Please check your email as well will send confirmation to you. Thanks for your interest with our products and service!
+                                    </li>
+                                    <li id="check-content">
+                                        Your receipt is <span style="color:#337ab7" ng-bind="data.ReceiptNo"></span>.You can check this receipt at <span style="color:#5cb85c">History Receipts.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12 text-right">
+                            <ul class="list-inline">
+                                <li ng-if="data.IsReseller==true"><a class="btn btn-success btn-checkout" id="btn-finish" href="@Url.Action("Index","MyProfile")">FINISH</a></li>
+                                <li ng-if="data.IsReseller==false"><button class="btn btn-success btn-checkout" id="btn-finish" ng-click="event.finish()">FINISH</button></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row box-my-profile" id="customer-information-checkout" style="margin-top:10px">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12" style="margin-bottom:20px">
+                        <div class="x_title" style="font-weight:bolder">
+                            <ul>
+                                <li>Is there anything make your inconverience? Please give us yoe feedback here. They will be very valuable forus to make our service better.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <form name="formNote">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <label class="label-note-feelback">
+                                    <textarea required id="note-feelback" ng-model="orderdata.notefeelback" name="note" class="form-control" type="text" placeholder="Please not your feelback here"></textarea>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" ng-show="IsShowFeedBack">
+                        <div class="col-md-12 col-sm-12 col-xs-12" style="margin-bottom:20px">
+                            <div class="form-group">
+                                <label style="margin-left:36px;font-size:13px ; font-weight:bold !important" class="label label-success">Thanks for your feedback. It will help us a lot to improve our products and services.</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12 text-right">
+                            <div class="form-group">
+                                <ul class="list-inline">
+                                    <li id="btn-submit-checkout"><button class="btn btn-primary btn-checkout" id="btn-actives" ng-click="event.submit()" ng-disabled="formNote.note.$invalid">SUBMIT</button></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>   
+</div>
+<script>
+    $(".wizard_horizontal ul.wizard_steps li a#isDone1::before, #step_no1").addClass("fa fa-check");
+    $(".wizard_horizontal ul.wizard_steps li a#isDone1::before, #step_no1").css("background-color", "#28acf7");
+    $(".wizard_horizontal ul.wizard_steps li a#isDone2::before, #step_no2").addClass("fa fa-check");
+    $(".wizard_horizontal ul.wizard_steps li a#isDone2::before, #step_no2").css("background-color", "#28acf7");
+</script>
+<script src="~/Scripts/app/InputInformationCtrl.js"></script>
+
+
+

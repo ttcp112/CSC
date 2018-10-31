@@ -1,0 +1,69 @@
+﻿@{
+    Layout = null;
+    ViewBag.Title = "Customers - Add New Store";
+}
+@model List<NSCSC.Shared.Models.CRM.Customers.StoreModels>
+@using NSCSC.Shared
+<div role="main" class="right_col">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left" style="padding:10px 0">
+                @Html.Partial("~/Views/Shared/_breadcrumb.cshtml",
+                new Dictionary<string, string> { { "A", "CRM" }, { "B", "Customer" }, { "C", "Customer - Add New Store" } })
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12 x_panel">
+                    <div class="x_content">
+                        <div class="row">
+                            <label class="label label-danger">List of products still have remaining location(s)</label>
+                        </div>
+                    </div>
+                    <div class="box-body" style="display: block;">
+                        @if (Model != null && Model.Count > 0)
+                        {
+                            foreach(var item in Model)
+                            {
+                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                    <div class="form-group">
+                                        <div class="col-md-12 col-sm-12 col-xs-12" style="text-align:center;width:100%;">
+                                            @if (!string.IsNullOrEmpty(item.ImageURL))
+                                            {
+                                                <img id="upload-preview" src="@item.ImageURL" height="60" width="80" />
+                                            }
+                                            else
+                                            {
+                                                <img id="upload-preview" src="@Commons.Image100_100" height="60" width="80" />
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-9 col-sm-9 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="col-md-5 col-sm-5 col-xs-12 label label-danger">@item.Name</label>
+                                        <label class="col-md-5 col-sm-5 col-xs-12">&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp; </label>
+                                    </div>
+                                    <!--Expires-->
+                                    <div class="form-group">
+                                       
+                                    </div>
+                                    <!--This item-->
+                                    <div class="form-group"></div>
+                                </div>
+
+                                <div class="form-group" style="clear:both;">
+                                    <div class="col-md-2 col-sm-2 col-xs-12">
+                                        <a href="javascript:void(0)" class="btn btn-primary btn-sm" style="font-size:15px;">SELECT</a>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+

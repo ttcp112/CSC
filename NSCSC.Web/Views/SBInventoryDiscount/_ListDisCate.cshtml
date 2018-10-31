@@ -1,0 +1,25 @@
+﻿@model NSCSC.Shared.Models.SandBox.Inventory.Discount.DiscountDetailModels
+
+@if (Model != null && Model.ListDiscountCategory != null && Model.ListDiscountCategory.Count > 0)
+{
+    for (int i = 0; i < Model.ListDiscountCategory.Count; i++)
+    {
+        var item = Model.ListDiscountCategory[i];
+        <tr data-id="@item.CategoryID" class="mediate-cate cate_@item.OffSet" role="row">
+            <td class="dataCate">
+                @item.CategoryName
+                @Html.Hidden(string.Format("ListDiscountCategory[{0}].OffSet", item.OffSet), item.OffSet, new { @class = "OffSet" })
+                @Html.Hidden(string.Format("ListDiscountCategory[{0}].CategoryID", item.OffSet), item.CategoryID, new { @class = "CategoryID" })
+                @Html.Hidden(string.Format("ListDiscountCategory[{0}].CategoryName", item.OffSet), item.CategoryName, new { @class = "CategoryName" })
+                @Html.Hidden(string.Format("ListDiscountCategory[{0}].Type", item.OffSet), item.Type, new { @class = "Type" })
+                @Html.Hidden(string.Format("ListDiscountCategory[{0}].Status", item.OffSet), item.Status, new { @class = "CateStatus" })
+            </td>
+            <td>
+                @item.Type
+            </td>
+            <td class="text-center">
+                <a href="javascript:void(0)" class="btn btn-danger btn-xs delete details" onclick="DeleteCategory(this, '@item.Type'); return false;">@*<i class="fa fa-trash-o"></i>*@Delete</a>
+            </td>
+        </tr>
+    }
+}

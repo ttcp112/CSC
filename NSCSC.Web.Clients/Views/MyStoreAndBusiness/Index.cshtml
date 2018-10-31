@@ -1,0 +1,313 @@
+﻿@model NSCSC.Shared.Models.ClientSite.MyStoreAndBusiness.MyStoreAndBusinessViewModels
+@{
+    ViewBag.Title = "My Store and Business";
+}
+<div class="se-pre-con" style="display: none;"></div>
+<div class="">
+    <!--breadcrum-->
+    <div class="title_left">
+        <div class="container">
+            <h3>
+                <small class="breadcrum">
+                    @if (Model.IsReseller)
+                    {
+                        <a href="@Url.Action("ListMerchant", "MyStoreAndBusiness")">My Store & Business</a>
+                    }
+                    else
+                    {
+                        <a href="javascript:void(0);">My Store & Business</a>
+                    }
+                    <i class='fa fa-caret-right'></i>
+                    <span>@Model.MerchantInfo.Name</span>
+                </small>
+            </h3>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <!--header-->
+    <div class="row" id="head-merchant-detail" style="padding-bottom:30px;">
+        <span class="text-uppercase font-weight" style="font-size:20px;">@Model.MerchantInfo.Name</span>
+    </div>
+
+    <!--Tab Content-->
+    <!--code V2-->
+    <div class="row box-my-profile" id="content-merchant-detail" style="margin-top:10px; padding: 30px 0;">
+        <div class="col-md-12 col-sm-12 col-xs-12 x_panel reset-padding-left-right">
+            <div class="x_content">
+                <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                    <ul id="myTabUpdate" class="nav nav-tabs bar_tabs" role="tablist">
+                        <li role="presentation" class="active">
+                            <a href="#merchants_stores" id="merchant-store-tab" role="tab" data-toggle="tab" aria-expanded="true">Merchants & Stores</a>
+                        </li>
+                        <li role="presentation" class="">
+                            <a href="#products" role="tab" id="products-tab" data-toggle="tab" aria-expanded="false">Products</a>
+                        </li>
+                        <li role="presentation" class="">
+                            <a href="#accounts_functions" role="tab" id="accounts-functions-tab-update" data-toggle="tab" aria-expanded="false">Accounts & Functions</a>
+                        </li>
+                        <li role="presentation" class="">
+                            <a href="#hardwares_services" role="tab" id="hardwares-services-tab-update" data-toggle="tab" aria-expanded="false">Hardwares & Services</a>
+                        </li>
+                    </ul>
+                    <div id="myTabContent" class="tab-content">
+                        @*Merchants & Stores*@
+                        <div role="tabpanel" class="tab-pane fade active in" id="merchants_stores" aria-labelledby="merchant-store-tab">
+                            <div class="box-body">
+                                @using (@Html.BeginForm("UpdateMerchant", "MyStoreAndBusiness", FormMethod.Post, new
+                                {
+                                    @class = "form-horizontal",
+                                    @id = "form-merchant",
+                                    @enctype = "multipart/form-data"
+                                }))
+                                {
+                                    @Html.Partial("_MerchantDetail", Model)
+                                }
+                            </div>
+                        </div>
+                        @*Products*@
+                        <div role="tabpanel" class="tab-pane fade" id="products" aria-labelledby="products-tab">
+                            <div class="box-body">
+                                @*@Html.Partial("_ListProducts", Model)*@
+                                <div class="row" style="padding:40px;">
+                                    @using (@Html.BeginForm("EditProductPackage", "MyStoreAndBusiness", FormMethod.Post, new
+                                    {
+                                        @class = "form-horizontal edit-form-products-packages",
+                                        @enctype = "multipart/form-data"
+                                    }))
+                                    {
+                                        @Html.Partial("_FormProductPackage", Model)
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        @*Accoutnts & Functions*@
+                        <div role="tabpanel" class="tab-pane fade" id="accounts_functions" aria-labelledby="accounts-functions-tab-update">
+                            <div class="box-body">
+                                <div id="tabAccountFuction">
+                                </div>
+                            </div>
+                        </div>
+                        @*Hardwares & Services*@
+                        <div role="tabpanel" class="tab-pane fade" id="hardwares_services" aria-labelledby="hardwares-services-tab-update">
+                            <div class="box-body">
+                                @Html.Partial("_ListHardwaresServices", Model)
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end update code -->
+    <!--code V1-->
+    <div class="row box-my-profile" style="margin-top:30px; display:none;">
+        <div class="col-md-12 col-sm-12 col-xs-12 x_panel">
+            <div class="x_content">
+                <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                    <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                        <li role="presentation" @*class="active"*@ onclick="TabEvent(1); return false;">
+                            <a href="#tab_content1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Merchant</a>
+                        </li>
+                        <li role="presentation" class="" id="content2" onclick="TabEvent(2); return false;">
+                            <a href="#tab_content2" role="tab" id="stores-tab" data-toggle="tab" aria-expanded="false">Stores</a>
+                        </li>
+                        @*<li role="presentation" class="" id="content3" onclick="TabEvent(3); return false;">
+                                    <a href="#tab_content3" role="tab" id="hardwares-services-tab" data-toggle="tab" aria-expanded="false">Hardwares & Services</a>
+                                </li>
+                            <li role="presentation" class="" id="content4" onclick="TabEvent(4); return false;">
+                                <a href="#tab_content4" role="tab" id="products-packages-tab" data-toggle="tab" aria-expanded="false">Products & Packages</a>
+                            </li>
+                            <li role="presentation" class="" id="content5" onclick="TabEvent(5); return false;">
+                                    <a href="#tab_content5" role="tab" id="accounts-functions-tab" data-toggle="tab" aria-expanded="false">Accounts & Functions</a>
+                            </li>*@
+                    </ul>
+                    <div id="myTabContent" class="tab-content">
+                        @*Merchant active in*@
+                        <div role="tabpanel" class="tab-pane fade" id="tab_content1" aria-labelledby="home-tab">
+                            <div class="box-body">
+                                @*@using (@Html.BeginForm("UpdateMerchant", "MyStoreAndBusiness", FormMethod.Post, new
+                                    {
+                                        @class = "form-horizontal",
+                                        @id = "form-merchant",
+                                        @enctype = "multipart/form-data"
+                                    }))
+                                    {
+                                        <div id="tabMerchant">
+                                            @Html.Partial("_FormMerchant", Model)
+                                        </div>
+                                    }*@
+                            </div>
+                        </div>
+
+                        @*Stores*@
+                        <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="stores-tab">
+                            <div class="box-body">
+                                <div id="tabStore">
+                                </div>
+                            </div>
+                        </div>
+
+                        @*Hardwares & Services*@
+                        @*<div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="hardwares-services-tab">
+                                <div class="box-body">
+                                    @Html.Partial("_FormHardwareService", Model)
+                                </div>
+                            </div>*@
+
+                        @*Products & Packages*@
+                        <div role="tabpanel" class="tab-pane fade" id="tab_content4" aria-labelledby="products-packages-tab">
+                            <div class="box-body">
+                                @*@using (@Html.BeginForm("EditProductPackage", "MyStoreAndBusiness", FormMethod.Post, new
+                                    {
+                                        @class = "form-horizontal edit-form-products-packages",
+                                        @enctype = "multipart/form-data"
+                                    }))
+                                    {
+                                        @Html.Partial("_FormProductPackage", Model)
+                                    }*@
+                            </div>
+                        </div>
+
+                        @*Accoutnts & Functions*@
+                        @*<div role="tabpanel" class="tab-pane fade" id="tab_content5" aria-labelledby="accounts-functions-tab">
+                                <div class="box-body">
+                                    <div id="tabAccountFuction">
+                                        </div>
+                                </div>
+                            </div>*@
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function (e) {
+        GetListStore('#tabStore', '');
+        GetListAccountFunction('#tabAccountFuction');
+
+        // tab Merchant => hash 1
+        // tab Store => hash 2
+        // tab Hardwares & Services => 3
+        // tab Products & Packages => 4
+        // Tab Accounts & Functions => 5
+        var hash = location.hash.split('#')[1];
+        if (hash !== undefined) {
+
+            if (hash == 2) {
+                $('.nav-tabs a[href="#tab_content2"]').tab('show');
+            }
+            else if (hash == 3) {
+                $('.nav-tabs a[href="#tab_content3"]').tab('show');
+            }
+            else if (hash == 4) {
+                $('.nav-tabs a[href="#tab_content4"]').tab('show');
+            }
+            else if (hash == 5) {
+                $('.nav-tabs a[href="#tab_content5"]').tab('show');
+            }
+            else {
+                $('.nav-tabs a[href="#tab_content1"]').tab('show');
+            }
+        } else {
+            $('.nav-tabs a[href="#tab_content1"]').tab('show');
+        }
+    });
+
+    function TabEvent(index) {
+        location.hash = "#" + index
+
+    }
+    /*Function*/
+
+    //Tab Store
+    function GetListStore(ele, _type) {
+        if (_type == '' || (_type === undefined)) {
+            _type = 'ongoing';
+        }
+        $('.se-pre-con').show();
+        $.ajax({
+            type: "GET",
+            url: CreateAbsoluteUrl("GetListStore"),
+            traditional: true,
+            data: { type: _type },
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                var isLogin = BackToLoginWhenSessionEnd(data);
+                if (isLogin) {
+                    window.location = "/Login/Index";
+                }
+                else {
+                    $(ele).html(data);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $('.se-pre-con').hide();
+            },
+            //beforeSend: function () {
+            //    $('.se-pre-con').show();
+            //},
+            complete: function () {
+                $('.se-pre-con').hide();
+            },
+        });
+    }
+
+    function GetListProductApplyStore(ele) {
+        $.ajax({
+            type: "GET",
+            url: CreateAbsoluteUrl("GetListProductApplyStore"),
+            traditional: true,
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                var isLogin = BackToLoginWhenSessionEnd(data);
+                if (isLogin) {
+                    window.location = "/Login/Index";
+                }
+                else {
+                    $(ele).html(data);
+                }
+            },
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            },
+        });
+    }
+
+    //Tab Accounts & Functions
+    function GetListAccountFunction(ele) {
+        $.ajax({
+            type: "GET",
+            url: CreateAbsoluteUrl("GetListAccountFunction"),
+            traditional: true,
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                var isLogin = BackToLoginWhenSessionEnd(data);
+                if (isLogin) {
+                    window.location = "/Login/Index";
+                }
+                else {
+                    $(ele).html(data);
+                }
+            },
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            },
+        });
+    }
+</script>

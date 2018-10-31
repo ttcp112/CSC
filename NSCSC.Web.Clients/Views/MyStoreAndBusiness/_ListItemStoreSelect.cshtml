@@ -1,0 +1,79 @@
+﻿@model NSCSC.Shared.Models.ClientSite.MyStoreAndBusiness.MyStoreAndBusinessViewModels
+
+@if (Model.ListStore != null && Model.ListStore.Count > 0)
+{ 
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel2">Select Store</h4>
+    </div>
+    <div class="modal-body" style="padding:0px;">
+        <table id="select-store">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Store Name</th>
+                    <th>Address</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ListStore)
+                {
+                    <tr>
+                        <td>
+                            <input type="radio" class="flatSlectStore" name="SlectStore" checked value="@item.ID" />
+                        </td>
+                        <td>@item.Name</td>
+                        <td>@item.Address</td>
+                        <td>@item.sStatus</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>   
+    <div class="modal-footer" style="border:none;">
+        <button type="button" class="btn btn-primary fontUppercase" onclick="SelectStoreInfo('#bs-modal-select-store')">Select</button>
+    </div>
+}
+else
+{
+
+        <div class="modal-header">
+            <h4 class="modal-title fontUppercase" id="myModalLabel2">Notification</h4>
+        </div>
+        <div class="modal-body">           
+             <span>Currently you don't have any existing store to select. Please create new store.</span>         
+        </div>
+        <div class="modal-footer" style="border:none;">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+}
+
+
+<script>
+    $(document).ready(function (e) {
+        init_ICheckSelectStore();
+    });
+
+    function init_ICheckSelectStore() {
+        if ($("input.flatSlectStore")[0]) {
+            $(document).ready(function () {
+                $('input.flatSlectStore').iCheck({
+                    radioClass: 'iradio_flat-blue'
+                });
+            });
+        }
+    };
+
+    $('#select-store tr').click(function (event) {
+        var row = $(this);
+        var _radio = row.find('input[type="radio"]');
+        _radio.prop('checked', true);
+        //========
+        $('input.flatSlectStore').iCheck({
+            radioClass: 'iradio_flat-blue'
+        });
+    });
+</script>

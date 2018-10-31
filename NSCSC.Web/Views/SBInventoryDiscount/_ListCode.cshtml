@@ -1,0 +1,35 @@
+﻿@model NSCSC.Shared.Models.SandBox.Inventory.Discount.DiscountDetailModels
+@using NSCSC.Shared
+@if (Model != null && Model.ListDiscountCode != null && Model.ListDiscountCode.Count > 0)
+{
+    for (int i = 0; i < Model.ListDiscountCode.Count; i++)
+    {
+        var item = Model.ListDiscountCode[i];
+        <tr data-id="@item.ID" class="mediate-code code_@item.OffSet">
+            <td class="text-center chek" id="chek">
+                <input type="checkbox" class=@string.Format("chkDisCode_{0}",item.Type) onclick="ChkItemCode(this, '@item.ID', '.chkDisCode_@item.Type')" data-id="@item.ID" />
+            </td>
+            <td>
+                @*@item.Code - @item.Type*@
+                @item.Code
+                @Html.Hidden(string.Format("ListDiscountCode[{0}].OffSet", item.OffSet), item.OffSet, new { @class = "OffSet" })
+                @Html.Hidden(string.Format("ListDiscountCode[{0}].ID", item.ID), item.ID, new { @class = "ID" })
+                @Html.Hidden(string.Format("ListDiscountCode[{0}].Code", item.OffSet), item.Code, new { @class = "Code" })
+                @Html.Hidden(string.Format("ListDiscountCode[{0}].State", item.OffSet), item.State, new { @class = "State" })
+                @Html.Hidden(string.Format("ListDiscountCode[{0}].Type", item.OffSet), item.Type, new { @class = "Type" })
+            </td>
+            <td>
+                @if (Model.PeriodType.ToString() == Commons.EDiscountPeriodType.Never.ToString("d"))
+                {
+                    @Html.Raw(Commons.DiscountPeriodTypeNever)
+                }
+                else
+                {
+                    @Html.Raw(item.ExpiredDate.ToString(Commons.FormatDate))
+                }
+            </td>
+        </tr>
+    }
+}
+<script>
+</script>

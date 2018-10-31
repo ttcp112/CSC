@@ -1,0 +1,277 @@
+﻿@model NSCSC.Shared.Models.SandBox.Inventory.Product.ProductDetailModels
+@using NSCSC.Shared
+
+<div role="main" class="right_col">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left" style="padding: 10px 0px;">
+                @Html.Partial("~/Views/Shared/_breadcrumb.cshtml",
+                new Dictionary<string, string> { { "A", "Sand Box" }, { "B", "Inventory" }, { "C", "Addition - View Detail" } })
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12 x_panel">
+                    <div class="x_content">
+                        <div class="row text-right">
+                            <ul class="header-buttons pull-right list-inline">
+                                <li><a href="javascript:void(0)" onclick="CloseDetail(); return false;" class="btn btn-danger" id="btn-delete"><i class="fa fa-times"></i>&nbsp;Close</a></li>
+                            </ul>
+                        </div>
+                        <div class="row form-horizontal form-label-left">
+                            <div class="row form-horizontal form-label-left" style="margin-bottom:15px;">
+                                @*Item Name*@
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Addition Name </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @Model.Name
+                                    </div>
+                                </div>
+                                @*Type*@
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Type</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @Model.CategoryName
+                                    </div>
+                                </div>
+                                @*Image*@
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight ">Image</label>
+                                    <div class="col-md-1 col-sm-2 col-xs-12">
+                                        @if (!string.IsNullOrEmpty(Model.ImageURL))
+                                        {
+                                            <img id="upload-preview" src="@Model.ImageURL" height="50" width="100" class="" />
+                                        }
+                                        else
+                                        {
+                                            <img id="upload-preview" class="" src="@Commons.Image100_50" height="50" width="100" />
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @*Status*@
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12 ">Active</label>
+                                    <div class="col-md-1 col-sm-1 col-xs-12">
+                                        <label>@string.Format("{0}", Model.IsActive ? "Yes" : "No")</label>
+                                    </div>
+                                    @*Sequence*@
+                                    <label class="control-label col-md-1 col-sm-1 col-xs-12 ">Sequence</label>
+                                    <div class="col-md-1 col-sm-1 col-xs-12">
+                                        @Model.Sequence
+                                    </div>
+                                    @*Public*@
+                                    <label class="control-label col-md-1 col-sm-1 col-xs-12 ">Public</label>
+                                    <div class="col-md-1 col-sm-1 col-xs-12">
+                                        <label>@string.Format("{0}", Model.IsPublic ? "Yes" : "No")</label>
+                                    </div>
+                                </div>
+
+                                @*Sale Form - Sale To*@
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12 ">Sale From</label>
+                                    <div class="control-label col-md-2 col-sm-2 col-xs-12">
+                                        @Model.SaleFrom.ToString(Commons.FormatDate)
+                                    </div>
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12 ">To</label>
+                                    <div class="col-md-2 col-sm-2 col-xs-12">
+                                        @Model.SaleTo.ToString(Commons.FormatDate)
+                                    </div>
+                                </div>
+
+                                @*Addition Code*@
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Addition Code</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @Model.Code
+                                    </div>
+                                </div>
+
+                                @*Amount of units*@
+                                @*If Type of addition is hardware or service, Amount of Unit(s) will not show*@
+                                @if (Model.AdditionType != (byte)Commons.EAdditionType.Hardware && Model.AdditionType != (byte)Commons.EAdditionType.Service)
+                                {
+                                    <div class="form-group notFunction">
+                                        <label class="control-label col-md-2 col-sm-2 col-xs-12">Amount of units </label>
+                                        <div class="col-md-1 col-sm-6 col-xs-12">
+                                            @string.Format("{0}", Model.IsUnlimitedAmountOfUnit ? "Unlimited" : Model.AmountOfUnit.ToString())
+                                        </div>
+                                    </div>
+                                }
+
+                                @*Description*@
+                                <div class="form-group">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Description </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        @Html.Raw(Model.Description)
+                                    </div>
+                                </div>
+
+                                @*Applicable Categories*@
+                                <div class="form-group notFunction">
+                                    <label for="" class="col-md-offset-1 col-md-2 col-sm-12 col-xs-12">Applicable Categories</label>
+                                    <div class="col-md-5 col-sm-6 col-xs-12 topDotBorder">
+                                    </div>
+                                </div>
+                                @if (Model.ListCategory != null && Model.ListCategory.Count > 0)
+                                {
+                                    <div class="form-group notFunction">
+                                        <div class="col-md-offset-2 col-md-7 col-sm-12 col-xs-12">
+                                            <table class="table table-bordered table-striped" style="width:100%;">
+                                                <thead style="background-color:#34495e; color:#fff;">
+                                                    <tr>
+                                                        <th class="text-center">Category</th>
+                                                        <th class="text-center" style="width:15%;">Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in Model.ListCategory)
+                                                    {
+                                                        <tr class="">
+                                                            <td>@item.CategoryName</td>
+                                                            <td class="text-center">
+                                                                @*@string.Format("{0}", item.Status == 1 ? "Active" : "Inactive")*@
+                                                                @string.Format("{0}", item.IsActive ? "Active" : "Inactive")
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                }
+                                @*Prices*@
+                                <div class="form-group">
+                                    <label for="" class="col-md-offset-1 col-md-1 col-sm-12 col-xs-12">Prices</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12 topDotBorder">
+                                    </div>
+                                </div>
+                                @if (Model.ListPrice != null && Model.ListPrice.Count > 0)
+                                {
+                                    <div class="form-group">
+                                        <div class="col-md-offset-2 col-md-7 col-sm-12 col-xs-12">
+                                            <table class="table table-bordered table-striped" style="width:100%;">
+                                                <thead style="background-color:#34495e; color:#fff;">
+                                                    <tr>
+                                                        <th class="text-center" style="width:20%;">Period</th>
+                                                        <th class="text-center" style="width:10%;">Price</th>
+                                                        @*<th class="text-center" style="width:15%;">Active</th>*@
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in Model.ListPrice)
+                                                    {
+                                                        <tr class="">
+                                                            <td>@if (item.PeriodType != (int)Commons.EPeriodType.OneTime)
+                                                            { @Html.Raw(item.Period)} @item.NamePeriodType@if (item.Period > 1)
+                                                            { @Html.Raw('s')}</td>
+                                                            <td class="text-center">
+                                                                @Html.Raw(ViewBag.CurrencySymbol + item.Price.ToString("#,0.00"))
+                                                            </td>
+                                                            @*<td class="text-center">@string.Format("{0}", item.IsActive ? "Yes" : "No")</td>*@
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                }
+
+                                @*Functions*@
+                                <div class="form-group Function">
+                                    <label for="" class="col-md-offset-1 col-md-1 col-sm-12 col-xs-12">Functions</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12 topDotBorder">
+                                    </div>
+                                </div>
+
+                                @*Product Type*@
+                                <div class="form-group Function">
+                                    <label class="col-md-offset-1 col-md-1 col-sm-12 col-xs-12">Product Type</label>
+                                    <div class="col-md-2 col-sm-6 col-xs-12">
+                                        @if (Model.Type == (byte)Commons.EType.NuDisplay)
+                                        {
+                                            @Commons.FunctionProductTypeNuDisplay
+                                        }
+                                        else if (Model.Type == (byte)Commons.EType.NuKiosk)
+                                        {
+                                            @Commons.FunctionProductTypeNuKiosk
+                                        }
+                                        else if (Model.Type == (byte)Commons.EType.NuPOS)
+                                        {
+                                            @Commons.FunctionProductTypeNuPOS
+                                        }
+                                        else if (Model.Type == (byte)Commons.EType.POinS_Link_App)
+                                        {
+                                            @Commons.FunctionProductTypePOinSLinkApp
+                                        }
+                                        else if (Model.Type == (byte)Commons.EType.POZZ)
+                                        {
+                                            @Commons.FunctionProductTypePOZZ
+                                        }
+                                        else if (Model.Type == (byte)Commons.EType.POZZ_Display)
+                                        {
+                                            @Commons.FunctionProductTypePOZZDisplay
+                                        }
+                                        else if (Model.Type == (byte)Commons.EType.POZZ_Kiosk)
+                                        {
+                                            @Commons.FunctionProductTypePOZZKiosk
+                                        }
+                                    </div>
+                                </div>
+
+                                @*List Item Function*@
+                                <div class="form-group Function">
+                                    <div class="col-md-offset-2 col-md-7 col-sm-12 col-xs-12" id="list-function-item">
+                                        @if (Model.ListFunction != null && Model.ListFunction.Count > 0)
+                                        {
+                                            <div class="form-group">
+                                                <div class="col-md-7 col-sm-12 col-xs-12">
+                                                    <table class="table table-bordered table-striped" style="width:100%;">
+                                                        <thead style="background-color:#34495e; color:#fff;">
+                                                            <tr>
+                                                                <th class="text-center">Name</th>
+                                                                <th class="text-center" style="width:15%;">Status</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var item in Model.ListFunction)
+                                                            {
+                                                                <tr class="">
+                                                                    <td>@item.FunctionName</td>
+                                                                    <td class="text-center">@string.Format("{0}", item.IsSelected ? "Selected" : "Unselected")</td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function (e) {
+        checkAdditionType(@Model.AdditionType);
+    });
+
+    function checkAdditionType(value) {
+        $('.Function').hide();
+        $('.notFunction').hide();
+
+        if (value == '@Commons.EAdditionType.Function.ToString("d")')
+            $('.Function').show();
+        else if (value != '@Commons.EAdditionType.Function.ToString("d")')
+            $('.notFunction').show();
+    }
+
+</script>

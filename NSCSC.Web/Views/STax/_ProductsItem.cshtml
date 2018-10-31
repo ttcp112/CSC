@@ -1,0 +1,67 @@
+﻿@model NSCSC.Shared.Models.Settings.Tax.TaxModels
+@using NSCSC.Shared
+@if (@Model.ListProduct != null || @Model.ListProduct.Count > 0)
+{
+    for (int i = 0; i < Model.ListProduct.Count; i++)
+    {
+
+        var item = Model.ListProduct[i];
+        <tr data-id="@Model.ListProduct[i].ID" class="productName_@Model.offset trItemForStore" data-value="@Model.ListProduct[i].Name" styleRow>
+
+            <td>@Model.ListProduct[i].Code</td>
+
+            <td style="color:#34495e; font-weight:bold;">
+                @*&nbsp;&nbsp;+&nbsp;@Model.ListProduct[i].Name*@
+                &nbsp;&nbsp;@Model.ListProduct[i].Name
+                
+                @Html.Hidden(string.Format("ListProduct[{0}].OffSet",
+                      Model.ListProduct[i].OffSet), Model.ListProduct[i].OffSet)
+
+                @Html.Hidden(string.Format("ListProduct[{0}].Code",
+                      Model.ListProduct[i].OffSet), Model.ListProduct[i].Code)
+
+                @Html.Hidden(string.Format("ListProduct[{0}].Name",
+                       Model.ListProduct[i].OffSet), Model.ListProduct[i].Name)
+
+                @Html.Hidden(string.Format("ListProduct[{0}].ID",
+                       Model.ListProduct[i].OffSet), Model.ListProduct[i].ID)
+
+                @Html.Hidden(string.Format("ListProduct[{0}].ProductType",
+                        Model.ListProduct[i].OffSet), Model.ListProduct[i].ProductType)
+
+                @Html.Hidden(string.Format("ListProduct[{0}].Status",
+                        Model.ListProduct[i].OffSet), Model.ListProduct[i].Status,
+                       new { @class = "DishStatus" })
+
+            </td>
+            @*<td >
+                @if (@item.ProductType == 1)
+                    {
+                        @Html.Raw(Commons.EProductType.Product.ToString())
+                    }
+                    else if (@item.ProductType == 4)
+                    {
+                        @Html.Raw(Commons.EProductType.Package.ToString())
+                    }
+                    else
+                    {
+                        @Html.Raw(Commons.EProductType.Addition.ToString())
+                    }
+              
+            </td>*@
+
+            <td >
+                @*<a href="javascript:void(0)"
+                   onclick="ShowModalAddProduct(@Model.offset)"
+                   class="btn btn-info btn-xs edit details"><i class="fa fa-pencil"></i></a>*@
+                <!--Button Delete Item-->
+                <a href="javascript:void(0)" onclick="DeleteItems(this); return false;" class="btn btn-danger btn-xs delete details">
+                    <i class="fa fa-trash-o"></i>
+                </a>
+
+            </td>
+
+        </tr>
+    }
+}
+

@@ -1,0 +1,398 @@
+﻿@model NSCSC.Shared.Models.CRM.Support.SupportViewModels
+<div class="table-responsive">
+    <div class="x_panel">
+
+        @*Title*@
+        <div class="x_title">
+            <h2>
+                <i class="glyphicon glyphicon-comment" style="font-size:30px; color:#1DC251;"></i>&nbsp;&nbsp;SUPPORT SYSTEM
+                <small class="label label-danger" style="font-size:10px; border-radius:0; display:none;" id="ltrNetworkingFail">Not Connected. Connecting...</small>
+                <small class="label label-success" style="font-size:10px; border-radius:0;" id="ltrNetworkingSuccess">Connecting...</small>
+            </h2>
+            <div class="av navbar-right panel_toolbox">
+                <a href="javascript:void();" class="user-profile">
+                    <span style="color:#0475B9">@Model.User.UserName </span>&nbsp;&nbsp; <img src="@Model.User.ImageUrl" alt="">
+                </a>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+
+        @*ChatBox*@
+        <div class="x_content" id="chatbox">
+            <div class="row">
+                <div class="col-sm-3 mail_list_column">
+                    @if (Model.ListEmployee != null && Model.ListEmployee.Count > 0)
+                    {
+                        foreach (var item in Model.ListEmployee)
+                        {
+                            <a href="javascript:void(0)" onclick="InveChat('@item.ID','@item.Name', '@item.ImageURL')" class="user-profile">
+                                <div class="mail_list">
+                                    <div class="left">
+                                        <img src="@item.ImageURL" alt="" />
+                                    </div>
+                                    <div class="right">
+                                        <h3>
+                                            @item.Name
+
+                                            <small>
+                                                @if (item.Status == 0) // Block
+                                                {
+                                                    <i class="fa fa-question" style="color:#b4b6b5;"></i>
+                                                }
+                                                else if (item.Status == 1) //Online
+                                                {
+                                                    <i class="fa fa-circle" style="color:#1DC251;"></i>
+                                                }
+                                                else if (item.Status == 2) //Offline
+                                                {
+                                                    <i class="fa fa-circle" style="color:#b4b6b5;"></i>
+                                                }
+                                                &nbsp;
+                                                @*Received Messages*@
+                                                @if (item.ReceivedMessages != 0)
+                                                {
+                                                    <span class="badge">@item.ReceivedMessages</span>
+                                                }
+                                            </small>
+
+                                        </h3>
+                                    </div>
+                                </div>
+                            </a>
+                        }
+                    }
+                </div>
+
+                <div class="col-sm-9 mail_view">
+                    <div class="inbox-body">
+                        @*<div class="mail_heading row botPadding" style="background-color: #dff0d8; border-color: #d6e9c6; color: #3c763d;">
+                                <div class="col-md-8">
+                                    <a href="javascript:void(0);" class="user-profile">
+                                        <img src="http://apivn.nupos.com.sg/ns.csc/Images/64b1a4a6-307e-456e-80f9-b2a98898ef62.jpg" alt="">&nbsp;&nbsp;
+                                        <span style="color:#0475B9">
+                                            James Cobs
+                                        </span> <span style="font-style:italic;">(California, USA)</span>
+                                        &nbsp;&nbsp;<small><i class="fa fa-circle" style="color:#1DC251;"></i></small>
+                                    </a>
+                                </div>
+                                <div class="col-md-4 text-right">
+                                    <div class="btn-group listIconUserChat">
+                                        <button class="btn btn-sm btn-default" type="button" data-placement="top" data-toggle="tooltip" data-original-title="Forward">
+                                            <i class="fa fa-video-camera"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-default" type="button" data-placement="top" data-toggle="tooltip" data-original-title="Print">
+                                            <i class="fa fa-phone"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-default" type="button" data-placement="top" data-toggle="tooltip" data-original-title="Trash">
+                                            <i class="fa fa-plus-circle"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-default" type="button" data-placement="top" data-toggle="tooltip" data-original-title="Trash">
+                                            <i class="fa fa-user"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-default" type="button" data-placement="top" data-toggle="tooltip" data-original-title="Trash">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>*@
+
+                        @*<div class="sender-info botPadding">
+                                <div class="row">
+                                    <div class="col-md-1">
+                                        <a href="javascript:void(0);" class="user-profile">
+                                            <img src="https://www.menshairstylestoday.com/wp-content/uploads/2015/12/Undercut-Haircut14-Pompadour-Undercut.jpg" alt="">&nbsp;&nbsp;
+                                        </a>
+                                    </div>
+                                    <div class="col-md-11">
+                                        <strong>Dennis Mugo </strong>
+                                        <p>hi guy</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="sender-info botPadding">
+                                <div class="row">
+                                    <div class="col-md-1">
+                                        <a href="javascript:void(0);" class="user-profile">
+                                            <img src="https://colorlib.com/polygon/gentelella/images/img.jpg" alt="">&nbsp;&nbsp;
+                                        </a>
+                                    </div>
+                                    <div class="col-md-11">
+                                        <strong>James Cobs </strong>
+                                        <p>halo!!!</p>
+                                        <p>Lorem ipsum dolor sit amet</p>
+                                        <p>Duis aute irure dolor in reprehenderit</p>
+                                    </div>
+                                </div>
+                            </div>*@
+
+                        <div class="row">
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 hide">
+                                <div id="ListaOnline">
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div id="Elchat"></div>
+                            </div>
+                        </div>
+
+                        @*<div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="input-group input-group-lg">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-secondary" type="button"><i class="fa fa-smile-o"></i></button>
+                                        </span>
+                                        <input type="text" class="form-control" placeholder="Type a message...">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-secondary" type="button"><i class="fa fa-paperclip"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>*@
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*Offline Messages*@
+        <div class="form-group">
+            <label for="" class="col-md-2 col-sm-12 col-xs-12" style="color:#0475B9;">Offline Messages</label>
+            <div class="col-md-10 col-sm-12 col-xs-12 topDotBorder">
+            </div>
+        </div>
+
+        <div class="x_content">
+            <div class="row">
+                <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                    <table id="datatable-responsive"
+                           class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action"
+                           cellspacing="0" style="width:100%;">
+                        <thead style="background-color:#34495e; color:#fff;">
+                            <tr>
+                                <th class="text-center">Created time</th>
+                                <th class="text-center">Account</th>
+                                <th class="text-center">Email</th>
+                                <th class="text-center">Subject</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Location</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @if (Model.ListMessage != null)
+                            {
+                                for (int i = 0; i < Model.ListMessage.Count; i++)
+                                {
+                                    string styleRow = "row-evenItem";
+                                    if (i % 2 == 0)
+                                    {
+                                        styleRow = "row-oddItem";
+                                    }
+                                    var item = Model.ListMessage[i];
+                                    <tr class="@styleRow">
+                                        <td class="">@item.CreatedTime.ToString("dd/MM/yyyy HH:mm:ss tt \"GMT\" zz")</td>
+                                        <td class="">@item.Account</td>
+                                        <td class="">@item.Email</td>
+                                        <td class="">@item.Subject</td>
+                                        <td class="">@item.Status</td>
+                                        <td class="">@item.Location</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
+                    <fieldset class="scheduler-border">
+                        <legend class="scheduler-border">Message Content</legend>
+                        <div class="control-group">
+                            <label class="control-label input-label" for="subject">Subject :</label>
+                            <div class="controls" style="font-style:italic;">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label input-label" for="message">Message :</label>
+                            <div class="controls" style="font-style:italic;">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </div>
+                        </div>
+                        <div class="control-group pull-right">
+                            <div class="controls">
+                                <div class="btn-group listIconMessageContent">
+                                    <button class="btn btn-sm btn-default" type="button" data-placement="top" data-toggle="tooltip" data-original-title="Forward"><i class="glyphicon glyphicon-comment"></i></button>
+                                    <button class="btn btn-sm btn-default" type="button" data-placement="top" data-toggle="tooltip" data-original-title="Print"><i class="fa fa-envelope"></i></button>
+                                    <button class="btn btn-sm btn-default" type="button" data-placement="top" data-toggle="tooltip" data-original-title="Trash"><i class="fa fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    function ShowView(url) {
+        ShowViewOrEdit(url);
+        return false;
+    }
+
+    $(document).ready(function () {
+
+        //$('#Elchat').ChatSocket({ 'lblEntradaNombre': 'Enter a user name in the field below for the chat room' });
+
+        $('#datatable-responsive').DataTable({
+            "columnDefs": [
+                { "orderable": false, "targets": [] },
+                { "width": "5%", "targets": [1, 2, 3, 4, 5] },
+            ],
+            "order": [
+                [0, 'asc']
+            ],
+            "displayLength": 25,
+        });
+    });
+
+    function InveChat(_id, _name, _img) {
+
+        //_id = "";
+        //var _Room = '@Model.User.UserId' + '_' + _id;
+        var _Room = _id;
+
+        $('#Elchat').html('');
+        $('#Elchat').ChatSocket({
+            Room: "RoomCSC_" + _Room, // important  - room or user
+            pass: "1234", // important - pass of room or user
+
+            lblTitulChat: " Chat [Admin CSC] ", //Chat Name
+            lblCampoEntrada: "Type a message...",
+            lblEnviar: "Send",
+            textoAyuda: "Develoteca", // Help button
+            FullName: _name, // default Name.
+            //urlImg: "http://placehold.it/50/55C1E7/fff&text=U", // Avatar chat
+            urlImg: _img, // Avatar chat
+
+            btnEntrar: "btnEntrar",
+            btnEnviar: "btnEnviar",
+            lblBtnEnviar: "Send",
+            lblTxtEntrar: _name,//"txtEntrar",
+            lblTxtEnviar: "txtMensaje",
+            lblBtnEntrar: "Enter",  // Joined button
+            idDialogo: "DialogoEntrada",
+            classChat: "",  // add class chat
+            idOnline: "ListaOnline", // id control users joined
+            lblUsuariosOnline: "Users joined", // text users online
+            lblEntradaNombre: "Name:",
+            panelColor: "success",
+
+            userLoginUrlImg: '@Model.User.ImageUrl',    // Avatar chat
+            userName: '@Model.User.UserName',
+        });
+
+    }
+
+    function exi_Full_screen() {
+        // exitFullscreen us used to exit full screen manually
+        if ("exitFullscreen" in document) {
+            document.exitFullscreen();
+        }
+        else if ("webkitExitFullscreen" in document) {
+            document.webkitExitFullscreen();
+        }
+        else if ("mozCancelFullScreen" in document) {
+            document.mozCancelFullScreen();
+        }
+        else if ("msExitFullscreen" in document) {
+            document.msExitFullscreen();
+        }
+        $('.panel-body').height(250);
+    }
+
+    function screen_change() {
+        //fullscreenElement is assigned to html element if any element is in full screen mode.
+        if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
+            console.log("Current full screen element is : " + (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement))
+        }
+        else {
+            // exitFullscreen us used to exit full screen manually
+            if ("exitFullscreen" in document) {
+                document.exitFullscreen();
+            }
+            else if ("webkitExitFullscreen" in document) {
+                document.webkitExitFullscreen();
+            }
+            else if ("mozCancelFullScreen" in document) {
+                document.mozCancelFullScreen();
+            }
+            else if ("msExitFullscreen" in document) {
+                document.msExitFullscreen();
+            }
+            $('.panel-body').height(250);
+        }
+    }
+
+    //called when an event goes full screen and vice-versa.
+    document.addEventListener("fullscreenchange", screen_change);
+    document.addEventListener("webkitfullscreenchange", screen_change);
+    document.addEventListener("mozfullscreenchange", screen_change);
+    document.addEventListener("MSFullscreenChange", screen_change);
+
+    //called when requestFullscreen(); fails. it may fail if iframe don't have allowfullscreen attribute enabled or for something else.
+    document.addEventListener("fullscreenerror", function () { console.log("Full screen failed"); });
+    document.addEventListener("webkitfullscreenerror", function () { console.log("Full screen failed"); });
+    document.addEventListener("mozfullscreenerror", function () { console.log("Full screen failed"); });
+    document.addEventListener("MSFullscreenError", function () { console.log("Full screen failed"); });
+
+    function full_screen() {
+        // check if user allows full screen of elements. This can be enabled or disabled in browser config. By default its enabled.
+        //its also used to check if browser supports full screen api.
+        if ("fullscreenEnabled" in document || "webkitFullscreenEnabled" in document || "mozFullScreenEnabled" in document || "msFullscreenEnabled" in document) {
+            if (document.fullscreenEnabled || document.webkitFullscreenEnabled || document.mozFullScreenEnabled || document.msFullscreenEnabled) {
+                console.log("User allows fullscreen");
+
+                var element = document.getElementById("Elchat");
+                //requestFullscreen is used to display an element in full screen mode.
+                if ("requestFullscreen" in element) {
+                    element.requestFullscreen();
+                }
+                else if ("webkitRequestFullscreen" in element) {
+                    element.webkitRequestFullscreen();
+                }
+                else if ("mozRequestFullScreen" in element) {
+                    element.mozRequestFullScreen();
+                }
+                else if ("msRequestFullscreen" in element) {
+                    element.msRequestFullscreen();
+                }
+                var h = $(window).height();
+                $('.panel-body').height(h - 25);
+            }
+        }
+        else {
+            console.log("User doesn't allow full screen");
+        }
+    }
+
+    /*Function for Feature*/
+    function VideoCall() {
+        full_screen();
+    }
+    function AudioCall() {
+        exi_Full_screen();
+    }
+    function AddContact() {
+        alert('Add Contact');
+    }
+    function ViewProfile() {
+        alert('View Profile');
+    }
+    function MovetoTrash() {
+        alert('Move to Trash');
+    }
+    /*End Function for Feature*/
+</script>

@@ -1,0 +1,5 @@
+D:\NuWeb.NCSC\NSCSC.Payments.WeChatPay\bin\Debug\NSCSC.Payments.WeChatPay.dll
+D:\NuWeb.NCSC\NSCSC.Payments.WeChatPay\bin\Debug\NSCSC.Payments.WeChatPay.pdb
+D:\NuWeb.NCSC\NSCSC.Payments.WeChatPay\obj\Debug\NSCSC.Payments.WeChatPay.csproj.CoreCompileInputs.cache
+D:\NuWeb.NCSC\NSCSC.Payments.WeChatPay\obj\Debug\NSCSC.Payments.WeChatPay.dll
+D:\NuWeb.NCSC\NSCSC.Payments.WeChatPay\obj\Debug\NSCSC.Payments.WeChatPay.pdb

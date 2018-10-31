@@ -1,0 +1,353 @@
+﻿@model NSCSC.Shared.Models.ClientSite.MyStoreAndBusiness.MyStoreAndBusinessViewModels
+@using NSCSC.Shared
+@{
+    ViewBag.Title = "Products and Packages";
+    Html.EnableUnobtrusiveJavaScript(true);
+}
+
+<div class="row" style="padding:40px;">
+    <div class="row form-horizontal form-label-left" style="padding-bottom:20px;">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+            <span class="text-uppercase" style="color:darkred;"><a href="javascript:void(0);">On Going</a></span> |
+            <span class="text-uppercase" style="color:darkred;"><a href="javascript:void(0);">Expired</a></span>
+        </div>
+    </div>
+
+    <!-- list-item-product-->
+    <div class="row form-horizontal form-label-left list-item-product">
+        <!--item-->
+        <div class="row item-product">
+            <!--Product Image-->
+            <div class="col-md-3 col-sm-3 col-xs-12 text-center">
+                <div class="col-md-12 col-sm-12 col-xs-12 reset-padding-left-right width-height-200">
+                    <div class="col-md-12 col-sm-12 col-xs-12 reset-padding-left-right">
+                        <img id="upload-preview-store" src="http://www.nupos.com.sg/images/nukiosk_03.png" class="width-height-200  border-radius-img" />
+                    </div>
+                </div>
+            </div>
+            <!--Product Info-->
+            <div class="col-md-9 col-sm-9 col-xs-12  reset-padding-left-right">
+                <!--Product Name-->
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12  reset-padding-left-right product-name">
+                        NuPOS - 6 Months
+                    </div>
+                </div>
+                <!--Product Date-->
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12  reset-padding-left-right product-date">
+                        20/06/2018 - 10:00
+                    </div>
+                </div>
+                <!-- Product Description-->
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12  reset-padding-left-right product-description">
+                        <p class="p-margin">Product key can be applied on 3 user device(s)</p>
+                        <p>License key of the product can be used to activate 3 user account(s)</p>
+                    </div>
+                </div>
+                <!--Functions-->
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12  reset-padding-left-right product-function">
+                        <strong>Functions: </strong>
+                        <span>Cash Management, POS, Customer,....</span>
+                    </div>
+                </div>
+                <!--Additions-->
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12  reset-padding-left-right product-addition">
+                        <strong>Addition: </strong>
+                        <p class="p-margin">1 x Delivery</p>
+                        <p class="p-margin">1 x Reports</p>
+                    </div>
+                </div>
+                <!--Action-->
+                <div class="form-group">
+                    <ul class="header-buttons list-inline">
+                        <li>
+                            <a href="javascript:void(0);" class="btn text-uppercase btn-view-detail text-white" style="width: 150px;" id="btn-view-detail">View Detail</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" class="btn text-uppercase btn-cyan text-white" style="width: 150px;" id="btn-buy-additions"
+                               data-toggle="modal" data-target="#modal-buy-addition">Buy Additions</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" class="btn text-uppercase btn-cyan text-white" style="width: 150px;" id="btn-extend" data-toggle="modal" data-target="#modal-extend">Extend</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--item-->
+        <div class="row item-product">
+            <!--Product Image-->
+            <div class="col-md-3 col-sm-3 col-xs-12 text-center">
+                <div class="col-md-12 col-sm-12 col-xs-12 reset-padding-left-right width-height-200">
+                    <div class="col-md-12 col-sm-12 col-xs-12 reset-padding-left-right">
+                        <img id="upload-preview-store" src="http://www.nupos.com.sg/images/nupos_05.png" class="width-height-200  border-radius-img" />
+                    </div>
+                </div>
+            </div>
+            <!--Product Info-->
+            <div class="col-md-9 col-sm-9 col-xs-12  reset-padding-left-right">
+                <!--Product Name-->
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12  reset-padding-left-right product-name">
+                        NuPOS - ONETIME
+                    </div>
+                </div>
+                <!--Product Date-->
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12  reset-padding-left-right product-date">
+                        Not yet activated
+                    </div>
+                </div>
+                <!-- Product Description-->
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12  reset-padding-left-right product-description">
+                        <p class="p-margin">Product key can be applied on 2 user device(s)</p>
+                        <p>License key of the product can be used to activate 1 user account(s)</p>
+                    </div>
+                </div>
+                <!--Functions-->
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12  reset-padding-left-right product-function">
+                        <strong>Functions: </strong>
+                        <span>Display, Settings.</span>
+                    </div>
+                </div>
+                <!--Action-->
+                <div class="form-group">
+                    <ul class="header-buttons list-inline">
+                        <li>
+                            <a href="javascript:void(0);" class="btn text-uppercase btn-view-detail text-white" style="width: 150px;" id="btn-view-detail">View Detail</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" class="btn text-uppercase btn-cyan text-white" style="width: 150px;" id="btn-buy-additions"
+                               data-toggle="modal" data-target="#modal-buy-addition">Buy Additions</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Buy Additions-->
+<div id="modal-buy-addition" class="modal fade modal-buy-addition" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row form-label-left" style="padding:0 30px;">
+
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <h3 class="text-uppercase font-bold">
+                                Buy Addition
+                            </h3>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <p>Please select the desired items in below list</p>
+                            <p>
+                                Filter by Type of Additions
+                                <span>
+                                    <select id="select-addition-type" class="form-control">
+                                        <option value="0" selected>All</option>
+                                        <option value="1" selected>Service</option>
+                                    </select>
+                                </span>
+                            </p>
+                        </div>
+                        <!--list item-->
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <table class="table table-custom-buy-addition">
+                                <thead>
+                                    <tr>
+                                        <td style="width:1%;"></td>
+                                        <td style="width:69%;"></td>
+                                        <td style="width:15%;" class="text-center">Period</td>
+                                        <td style="width:15%;" class="text-center">Price</td>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <!---Locations-->
+                                    <tr>
+                                        <td colspan="4" class="font-bold">Locations</td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" /></td>
+                                        <td>2 Locations</td>
+                                        <td class="text-center">
+                                            <select id="" class="form-control select2_multiple">
+                                                <option value="0" selected>One time</option>
+                                                <option value="1" selected>2 Months</option>
+                                            </select>
+                                        </td>
+                                        <td class="text-right">SDG99.00</td>
+                                    </tr>
+                                    <!--Softwares-->
+                                    <tr>
+                                        <td colspan="4" class="font-bold">Softwares</td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" /></td>
+                                        <td>Delivery</td>
+                                        <td class="text-center">
+                                            <select id="" class="form-control select2_multiple">
+                                                <option value="0" selected>One time</option>
+                                                <option value="1" selected>2 Months</option>
+                                            </select>
+                                        </td>
+                                        <td class="text-right">SDG99.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" checked /></td>
+                                        <td>Reports</td>
+                                        <td class="text-center">
+                                            <select id="" class="form-control select2_multiple">
+                                                <option value="0" selected>One time</option>
+                                                <option value="1" selected>2 Months</option>
+                                            </select>
+                                        </td>
+                                        <td class="text-right">SDG99.00</td>
+                                    </tr>
+                                    <!--Services-->
+                                    <tr>
+                                        <td colspan="4" class="font-bold">Services</td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" checked/></td>
+                                        <td>Delivery</td>
+                                        <td class="text-center">
+                                            <select id="" class="form-control select2_multiple">
+                                                <option value="0" selected>One time</option>
+                                                <option value="1" selected>2 Months</option>
+                                            </select>
+                                        </td>
+                                        <td class="text-right">SDG99.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" checked/></td>
+                                        <td>Reports</td>
+                                        <td class="text-center">
+                                            <select id="" class="form-control select2_multiple">
+                                                <option value="0" selected>One time</option>
+                                                <option value="1" selected>2 Months</option>
+                                            </select>
+                                        </td>
+                                        <td class="text-right">SDG99.00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--end list item-->
+                        <!-- Action -->
+                        <div class=" col-md-offset-6 col-md-6 col-sm-6 col-xs-12">
+                            <div class="form-group">
+                                <ul class="header-buttons list-inline">
+                                    <li>
+                                        <a href="javascript:void(0);" class="btn btn-cyan text-uppercase" style="width: 150px;" id="btn-actives">Add to Cart</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" class="btn text-cyan bg-white" data-dismiss="modal">
+                                            Cancel
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!---Extend -->
+<div id="modal-extend" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row form-label-left" style="padding:0 30px;">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <h3 class="text-uppercase font-bold">
+                                Extend Price List
+                            </h3>
+                        </div>
+                        <!--list item-->
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <table class="table table-custom-buy-addition">
+                                <thead>
+                                    <tr>
+                                        <td style="width:1%;"></td>
+                                        <td style="width:10%;"></td>
+                                        <td style="width:12%;"></td>
+                                        <td style="width:12%;"></td>
+                                        <td style="width:15%;"></td>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td><input type="checkbox" checked /></td>
+                                        <td>Extend</td>
+                                        <td class="text-center">6 months</td>
+                                        <td class="text-center">with </td>
+                                        <td class="text-left">SDG300.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" /></td>
+                                        <td>Extend</td>
+                                        <td class="text-center">9 months</td>
+                                        <td class="text-center">with </td>
+                                        <td class="text-left">SDG400.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" /></td>
+                                        <td>Extend</td>
+                                        <td class="text-center">One Time</td>
+                                        <td class="text-center">with </td>
+                                        <td class="text-left">SDG2000.00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--end list item-->
+                        <!-- Action -->
+                        <div class=" col-md-offset-6 col-md-6 col-sm-6 col-xs-12">
+                            <div class="form-group">
+                                <ul class="header-buttons list-inline">
+                                    <li>
+                                        <a href="javascript:void(0);" class="btn btn-cyan text-uppercase" style="width: 150px;" id="btn-actives">Add to Cart</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" class="btn text-cyan bg-white" data-dismiss="modal">
+                                            Cancel
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#select-addition-type").select2({
+            placeholder: 'Please choose Type of Additions',
+            dropdownParent: $("#modal-buy-addition") //enable search in select2
+        });
+
+        $(".select2_multiple").select2({
+            placeholder: 'Please choose Period',
+            dropdownParent: $("#modal-buy-addition") //enable search in select2
+        });
+    });
+</script>

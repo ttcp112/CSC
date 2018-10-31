@@ -1,0 +1,167 @@
+﻿@model NSCSC.Shared.Models.SandBox.Inventory.Discount.DiscountDetailModels
+@using NuWebNCloud.Shared.Utilities;
+@using NSCSC.Shared;
+@{
+    ViewBag.Title = "Discount Info";
+}
+
+<div role="main" class="right_col">
+    <div class="se-pre-con" style="display: none;"></div>
+    <div class="">
+        <div class="page-title">
+            <div class="title_left" style="padding: 10px 0px;">
+                @Html.Partial("~/Views/Shared/_breadcrumb.cshtml",
+                new Dictionary<string, string> { { "A", "Sand Box" }, { "B", "Inventory" }, { "C", "Discount Info" } })
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12 x_panel">
+                    <div class="x_title">
+                        @Html.Partial("_TabMenu", "create")
+                        <div class="clearfix"></div>
+                    </div>
+
+                    <div class="x_content">
+                        <div class="row text-right">
+                            <ul class="header-buttons pull-right list-inline">
+                                <li><a href="@Url.Action("Index", "SBInventoryDiscount")" class="btn btn-danger" id="btn-delete"><i class="fa fa-times"></i>&nbsp;Cancel</a></li>
+                                <li><a href="javascript:void(0);" class="btn btn-success" id="btn-actives" onclick="SubmitForm('.create-form')"><i class="fa fa-save"></i>&nbsp;Save</a></li>
+                            </ul>
+                        </div>
+                        <div class="box-body" style="display: block;">
+                            @using (@Html.BeginForm("Create", "SBInventoryDiscount", FormMethod.Post, new { @class = "form-horizontal create-form", @enctype = "multipart/form-data" }))
+                            {
+                                @Html.Partial("_Form", Model)
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        //function SubmitForm(form) {
+        //    $(form).submit();
+        //}
+        
+        $('.create-form').submit(function (e) {
+            var isSubmit = true;
+            $('#lblValue').html('');
+            $('#lblPeriodTime').html('');
+            $('#lblIsTotalOrder').html('');
+            
+
+            var Name = $('#Name').val();
+            if (Name == "") {
+                isSubmit = false;
+            }
+
+            var IsActive = $("input[name='IsActive']").prop('checked');
+            var ValueType = $('#valueTypeDdl').val();
+            var Value = $('#Value').val();
+            if (ValueType == '0') {
+                var numTmp = parseInt(Value, 10);
+                if (numTmp < 0 || numTmp > 100) {
+                    $('#lblValue').html('Value must between 0 and 100');
+                    isSubmit = false;
+                }
+            }
+
+            if (!$.isNumeric(Value)) {
+                $('#lblValue').html('Value is invalid.');
+                isSubmit = false;
+            }
+            var PeriodType = $('#DiscountPeriodTypeDdl').val();
+            var PeriodTime = $('#txtPeriodTime').val();
+            if (PeriodType == '1') {
+                var numTmp = parseInt(PeriodTime,10);
+                if (numTmp < 0) {
+                    $('#lblPeriodTime').html('Period of time (months) is larger 0');
+                    isSubmit = false;
+                }
+            }
+            var PeriodDate = $('#txtPeriodDate').val();
+            var IsTotalOrder = $('input[name=IsTotalOrder]:Checked').val();
+            var IsAllPackage = $('#chkAllPackage').prop('checked');
+            var IsAllAddition = $('#chkAllAddition').prop('checked');
+            var ListDiscountCategory = [];
+            $('#datatable-responsive-list-item').DataTable().rows({ search: 'applied' }).every(function () {
+                var rowNode = this.node();
+                var tdNode = $(rowNode).find('td.dataCate');
+                var OffSet = $(tdNode).find('input.OffSet').val();
+                var CategoryID = $(tdNode).find('input.CategoryID').val();
+                var CategoryName = $(tdNode).find('input.CategoryName').val();
+                var Type = $(tdNode).find('input.Type').val();
+                var Status = $(tdNode).find('input.CateStatus').val();
+                var DiscountCategoryModels = {
+                    OffSet: OffSet,
+                    CategoryID: CategoryID,
+                    CategoryName: CategoryName,
+                    Type: Type,
+                    Status: Status
+                }
+                if (Status != 9) {
+                    ListDiscountCategory.push(DiscountCategoryModels);
+                }
+               
+            });
+            if (ListDiscountCategory.length == 0 && IsTotalOrder == 'false') {
+                $('#lblIsTotalOrder').html('Please choose items to apply this discount');
+                isSubmit = false;
+            }
+            var DiscountDetailModels = {
+                Name: Name,
+                IsActive: IsActive,
+                ValueType: ValueType,
+                Value: Value,
+                PeriodType: PeriodType,
+                PeriodTime: PeriodTime,
+                PeriodDate: PeriodDate,
+                IsTotalOrder: IsTotalOrder,
+                IsAllPackage: IsAllPackage,
+                IsAllAddition: IsAllAddition,
+                ListDiscountCategory: ListDiscountCategory
+            };
+            //debugger;
+            if (isSubmit) {
+               $.ajax({
+                    url: $(this).attr('action'),
+                    type: "POST",
+                    data: JSON.stringify(DiscountDetailModels),
+                    processData: false,
+                    contentType: false,
+                    contentType: "application/json; charset=utf-8",
+                    //dataType: "html",
+                    success: function (data) {
+                        window.location.assign('@Url.Action("Index", "SBInventoryDiscount")');
+                    },
+                   error: function (jqXHR, textStatus, errorThrown) {
+                        $('#DiscountNameValidation').html(jQuery.parseJSON(jqXHR.responseText).errorString);
+                    },
+                    beforeSend: function () {
+                        $('.se-pre-con').show();
+                    },
+                    complete: function () {
+                        $('.se-pre-con').hide();
+                    },
+                });
+            }
+            e.preventDefault();
+        });
+
+
+        $(document).ready(function () {
+            $('#txtPeriodDate').daterangepicker({
+                singleDatePicker: true,
+                calender_style: "picker_2",
+                minDate: new Date()
+            });
+        });
+
+
+    </script>
+}

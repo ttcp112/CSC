@@ -1,0 +1,235 @@
+﻿@model NSCSC.Shared.Models.Sandbox.Inventory.Category.CategoriesModels
+@using NSCSC.Shared
+@{
+    Html.EnableUnobtrusiveJavaScript(true);
+    var _ID = Model.Id;
+}
+@Html.Hidden("Id", Model.Id)
+@Html.Hidden("ImageURL", Model.ImageURL)
+@Html.Hidden("IsConfirm", Model.IsConfirm,new { @id="IsConfirm"})
+@if (!string.IsNullOrEmpty(_ID))
+{
+    @Html.HiddenFor(model => model.Type)
+}
+
+
+<div class="row form-horizontal form-label-left" style="margin-bottom:15px;">
+    
+    <div class="col-md-2 col-sm-2 col-xs-12">
+        <!--Image Placeholder-->
+        <div>
+            <label class="col-md-3 col-sm-3 col-xs-12"></label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+                <div class="form-group">
+                    @if (!string.IsNullOrEmpty(Model.ImageURL))
+                    {
+                        <img id="upload-preview" src="@Model.ImageURL" height="100" width="100" class="img-container" />
+                    }
+                    else
+                    {
+                        <img id="upload-preview" class="img-container" src="@Commons.Image100_100" height="100" width="100" />
+                    }                   
+                </div>
+                <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                    <label class="btnFile" style="display:inline-block; border:1px solid #808080; cursor:pointer; padding: 6px 9px; border-radius:5%">
+                        Add/Edit
+                        @Html.TextBoxFor(model => model.PictureUpload, new { @id = "PictureUpload", @type = "file", @onchange = "PreviewImage(this,\"upload-preview\")", @accept = "*.jpg", @style = "display:none" })
+                    </label>
+                    @Html.ValidationMessageFor(model => model.PictureUpload, null, new { @class = "label label-danger" })
+                </div>            
+            </div>  
+        </div>
+        <!--IMAGE-->
+
+
+    </div>
+    <div class="col-md-6 col-sm-6 col-xs-12">
+        @*Message error from service*@
+        <div class="form-group">
+            <div class="col-md-9 col-md-offset-3 col-sm-9 col-sm-offset-3 col-xs-12">
+                @Html.ValidationMessage("Error", null, new { @class = "label" })
+            </div>
+        </div>
+
+        @* Name*@
+        <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Name</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+                @Html.TextBoxFor(model => model.Name, new { @id = "txtName", @class = "form-control", placeholder = "Name", autocomplete = "off" })
+                @Html.ValidationMessageFor(model => model.Name, null, new { @class = "label" })
+            </div>
+        </div>
+        
+        <div class="form-group">
+            @*Status *@
+            <label class="col-md-3 col-sm-3 col-xs-12 control-label">Active</label>
+            <div class="col-md-4 col-sm-4 col-xs-12">
+                @Html.CheckBoxFor(model => model.IsActive, new { @id = "IsActive",@class= "js-switch-chk" }) 
+            </div>
+            @* Sequence*@
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Sequence</label>
+            <div class="col-md-2 col-sm-2 col-xs-12">
+                @Html.TextBoxFor(model => model.Sequence, new { @id = "sequence", @class = "form-control keyNumber", placeholder = "0", type = "number", min = 0 })
+                @Html.ValidationMessageFor(model => model.Sequence, null, new { @class = "label" })
+            </div>
+        </div>
+        @* Category Code*@
+        <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Category Code</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+                @Html.TextBoxFor(model => model.Code, new { @id = "code", @class = "form-control", autocomplete = "off" })
+                @Html.ValidationMessageFor(model => model.Code, null, new { @class = "label" })
+            </div>
+        </div>
+         
+        <div class="form-group">
+            @*Type *@
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Type</label>
+            <div class="col-md-5 col-sm-5 col-xs-12">
+                <div>
+                    @Html.DropDownListFor(model => model.Type,
+            new SelectList(Model.ListType, "Value", "Text", Model.Type), null,
+            new
+            {
+                @class = "form-control select2_multiple ",
+                @id = "ddlType",
+                @style = "width:100%;"
+            })
+                </div>
+                @Html.ValidationMessageFor(model => model.Type, null, new { @class = "label" })
+            </div>
+            @*Free Trial *@
+            <div class="col-md-4 col-sm-4 col-xs-12">
+                @Html.CheckBoxFor(model => model.IsFreeTrial, new { @id = "IsFreeTrial",@class= "flat" })
+                <label class="control-label">Allow Free Trial</label>
+            </div>                     
+        </div> 
+    </div>
+    <div class="clear"></div>
+     
+    @* Short Description*@
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12">Short Description</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            @Html.TextAreaFor(model => model.ShortDescription, new {@id="shortdescription", @class = "form-control", @rows="5" })
+            @Html.ValidationMessageFor(model => model.ShortDescription, null, new { @class = "label" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12">Description</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">  
+            @Html.TextAreaFor(model => model.Description, new { @id = "description", @class = "form-control ckeditor" })
+            @Html.ValidationMessageFor(model => model.Description, null, new { @class = "label" })
+        </div>
+    </div>
+</div>
+<!-- Modal Confirn-->
+<div class="modal fade" id="myConfirn" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                @*<h4 class="modal-title">Modal Header</h4>*@
+            </div>
+            <div class="modal-body">
+                <p>There is already one category with the same product type that allows trial version. Do you want to change it?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" id="btn-actives" onclick="ConfirmSaveTrial(); return false;"><i class="fa fa-save"></i>&nbsp;Save</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="@Url.Content("~/build/js/customInput.js")"></script>
+<script  type="text/javascript">
+    @if (!string.IsNullOrEmpty(_ID))
+    {
+        <text>
+    $('#ddlType').attr('disabled', 'disabled');
+    </text>
+
+    }
+    else {
+                <text>
+    $('#ddlType').removeAttr('disabled');
+    </text>
+    }
+    $(document).ready(function (e) {
+        $("#ddlType").select2({
+            placeholder: "Type"
+        });
+
+        if ('@Model.IsConfirm'.toLowerCase() === "true")
+        {
+            $("[id=myConfirn]").modal('show');
+            $('[id=IsConfirm]').val('@Model.IsConfirm')
+        }
+
+        $('#myConfirn').on('hidden.bs.modal', function () {
+            $('[id=IsConfirm]').val(false);
+        })
+    }); 
+    function ConfirmSaveTrial() {
+        $('[id=myConfirn]').modal('toggle');
+        setTimeout(function () {
+            SubmitForm('#create-form');
+        },100);
+    }
+    @*function save(e) {
+
+        var Description = $("#editor-one").html();
+        //var PictureUpload = $("#PictureUpload").val();
+        var Name = $("#txtName").val();
+        var image = $("#Image").val();
+        var IsActive = $("#IsActive").val();
+        var Sequence = $("#sequence").val();
+        var Code = $("#code").val();
+        var IsFreeTrial = $("#IsFreeTrial").val();
+        var Type = $("#ddlType").val();
+        var ShortDescription = $("#shortdescription").val();
+
+            var obj =  {
+                Id: '@Model.Id',
+                PictureUpload: PictureUpload,
+                ImageURL: image,
+                Name: Name,
+                IsActive: IsActive,
+                Sequence: Sequence,
+                Code: Code,
+                IsFreeTrial: IsFreeTrial,
+                Type: Type,
+                ShortDescription: ShortDescription,
+                Description: Description,
+            }
+            $(".se-pre-con").show();
+            $.ajax({
+                url: '@Url.Action("Create", "Categories")',
+                type: 'POST',
+                dataType: "json",
+                cache: false,
+                async: true,
+                data: JSON.stringify(obj),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $(".se-pre-con").hide();
+                    CloseDetail();
+                    Search();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+                 error: function (jqXHR, textStatus, errorThrown) {
+                    $(".detail-view").html(jqXHR.responseText);
+                }
+
+            });
+            e.preventDefault();
+        };*@
+
+    /****** key number ***/
+    KeyNumberCheck();
+</script>

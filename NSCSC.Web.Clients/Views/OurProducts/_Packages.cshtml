@@ -1,0 +1,301 @@
+﻿@model NSCSC.Shared.Models.OurProducts.Package.PackageViewModels
+
+@{
+    ViewBag.Title = "OUR PRODUCTS";
+}
+
+<div class="title_left">
+    @*@Html.Partial("~/Views/Shared/_breadcrumb.cshtml",
+                        new Dictionary<string, string> { { "A", "PACKAGES" }, { "B", "HOME" }, { "C", "OUR PRODUCTS" } })*@
+    <div class="container">
+        @*<div class="col-sm-12 col-xs-12 col-md-12" style="margin-top:-25px;float:right">*@
+            <h3>
+               @*PACKAGES LIST*@
+                <small class="breadcrum">
+                    <a href="@Url.Action("Index", "Home")">home</a> 
+                    <i class='fa fa-caret-right'></i>
+                    <a href="@Url.Action("Index", "OurProducts", new { ProductType ="Packages" })">packages</a>
+                    <i class='fa fa-caret-right'></i>
+                    <span>packages list</span>
+                </small>
+            </h3>
+        @*</div>*@
+        <div class="clearfix"></div>
+    </div>
+</div>
+<div class="se-pre-con" style="display: none;"></div>
+<div class="form-horizontal form-label-left listItemYourCart">
+    <div class="form-group itemProduct pading-top-bottom">
+        <div class="row infoProduct" style="padding-bottom:10px;">
+            <div class="col-md-12 col-sm-12 col-xs-12" style="font-size:15px; padding: 3px 15px 20px 15px;">
+                <div class="form-group">
+                    <div class="col-md-10 col-sm-10 col-xs-12">
+                        Select the products that are included in the desired packages
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-xs-12">
+                        <input class="flat" type="checkbox" @*onclick="CheckAllItem(this, '.item-checkchild')"*@ id="idcheckall" />&nbsp; Check all
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                @foreach (var item in Model.ListCategories)
+                {
+                    <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+                        <div class="form-group text-center imageProduct">
+                            <img id="upload-preview" src="@item.ImageURL" height="200" width="200" />
+                        </div>
+                        <div class="form-group item-checkchild">
+                            <input class="flat itemCate idcheckchild" type="checkbox" value="@item.ID" checked />&nbsp;&nbsp;@item.Name.ToUpper()
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="col-md-12 col-sm-12 col-xs-12 text-right">
+                <button type="button" class="btn btn-primary fontUppercase" onclick="LoadPackageByProductCategories()">Load packages</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-horizontal form-label-left listItemCheckOut">
+    <div class="form-group" style="padding: 0 15px;">
+        @*price*@
+        @*<button type="button" class="btn btn-success fontUppercase pull-right"
+                data-backdrop="static" data-toggle="modal" data-target="#bs-modal-pricing-list">
+            price list
+        </button>*@
+    </div>
+    <!--List Product-->
+    <div id="divListProduct"></div>
+</div>
+
+<!--modal Pricing List-->
+<div class="modal fade" id="bs-modal-pricing-list" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#f2f2f2;">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title fontUppercase text-left">nupos | <span style="color:darkred;">Price List</span></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row" style="background-color:#ddd; border-radius:5px;  margin: 15px;">
+                    <div class="row  fontUppercase text-center" style="line-height: 50px; font-size: 30px;">Products</div>
+                    <div class="row" style="padding:15px 0;">
+                        <div class="row">
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-2 bgPrice">
+                                <span class="fontUppercase fontBold col-md-12 text-center">standard</span>
+                                <span class="col-md-12 text-center">(2 Devices)</span>
+                                <small class="col-md-12 fontItalic text-center">1 iPad Pro + 1 iPad Mini</small>
+                            </div>
+                            <div class="col-md-2 bgPrice">
+                                <span class="fontUppercase fontBold col-md-12 text-center">plus</span>
+                                <span class="col-md-12 text-center">(5 Devices)</span>
+                                <small class="col-md-12 fontItalic text-center">3 iPad Pro + 2 iPad Mini</small>
+                            </div>
+                            <div class="col-md-2 bgPrice">
+                                <span class="fontUppercase fontBold col-md-12 text-center">pro</span>
+                                <span class="col-md-12 text-center">(10 Devices)</span>
+                                <small class="col-md-12 fontItalic text-center">7 iPad Pro + 3 iPad Mini</small>
+                            </div>
+                            <div class="col-md-2 bgPrice">
+                                <span class="fontUppercase fontBold col-md-12 text-center">enterprise</span>
+                                <span class="col-md-12 text-center">(30 Devices)</span>
+                                <small class="col-md-12 fontItalic text-center">20 iPad Pro + 10 iPad Mini</small>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3 fontUppercase text-right">
+                                month <br />
+                                subcription
+                            </div>
+                            <div class="col-md-2 bgPrice line-heigh-price">
+                                <span class="fontBold col-md-12 text-center">$28.80</span>
+                            </div>
+                            <div class="col-md-2 bgPrice line-heigh-price">
+                                <span class="fontBold col-md-12 text-center">$58.80</span>
+                            </div>
+                            <div class="col-md-2 bgPrice line-heigh-price">
+                                <span class="fontBold col-md-12 text-center">$88.80</span>
+                            </div>
+                            <div class="col-md-2 bgPrice line-heigh-price">
+                                <span class="fontBold col-md-12 text-center">$198.80</span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3 fontUppercase text-right">
+                                pre-paid 1-year <br />subcription
+                            </div>
+                            <div class="col-md-2 bgPrice line-heigh-price">
+                                <span class="fontBold col-md-12 text-center">$28.80</span>
+                            </div>
+                            <div class="col-md-2 bgPrice line-heigh-price">
+                                <span class="fontBold col-md-12 text-center">$58.80</span>
+                            </div>
+                            <div class="col-md-2 bgPrice line-heigh-price">
+                                <span class="fontBold col-md-12 text-center">$88.80</span>
+                            </div>
+                            <div class="col-md-2 bgPrice line-heigh-price">
+                                <span class="fontBold col-md-12 text-center">$198.80</span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3 fontUppercase text-right">
+                                pre-paid 2-years <br />subcription
+                            </div>
+                            <div class="col-md-2 bgPrice line-heigh-price">
+                                <span class="fontBold col-md-12 text-center">$28.80</span>
+                            </div>
+                            <div class="col-md-2 bgPrice line-heigh-price">
+                                <span class="fontBold col-md-12 text-center">$58.80</span>
+                            </div>
+                            <div class="col-md-2 bgPrice line-heigh-price">
+                                <span class="fontBold col-md-12 text-center">$88.80</span>
+                            </div>
+                            <div class="col-md-2 bgPrice line-heigh-price">
+                                <span class="fontBold col-md-12 text-center">$198.80</span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3 fontUppercase text-right">
+                                pre-paid 3-years <br />subcription
+                            </div>
+                            <div class="col-md-2 bgPrice line-heigh-price">
+                                <span class="fontBold col-md-12 text-center">$28.80</span>
+                            </div>
+                            <div class="col-md-2 bgPrice line-heigh-price">
+                                <span class="fontBold col-md-12 text-center">$58.80</span>
+                            </div>
+                            <div class="col-md-2 bgPrice line-heigh-price">
+                                <span class="fontBold col-md-12 text-center">$88.80</span>
+                            </div>
+                            <div class="col-md-2 bgPrice line-heigh-price">
+                                <span class="fontBold col-md-12 text-center">$198.80</span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3 fontUppercase text-right">
+                                one-time <br />subcription
+                            </div>
+                            <div class="col-md-2 bgPrice line-heigh-price">
+                                <span class="fontBold col-md-12 text-center" style="color:#337ab7;">$28.80</span>
+                            </div>
+                            <div class="col-md-2 bgPrice line-heigh-price">
+                                <span class="fontBold col-md-12 text-center">$58.80</span>
+                            </div>
+                            <div class="col-md-2 bgPrice line-heigh-price">
+                                <span class="fontBold col-md-12 text-center">$88.80</span>
+                            </div>
+                            <div class="col-md-2 bgPrice line-heigh-price">
+                                <span class="fontBold col-md-12 text-center">$198.80</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--end modal Pricing List -->
+
+<style>
+    .bgPrice {
+        background-color: #fff;
+        margin: 1px;
+    }
+
+    .line-heigh-price {
+        line-height: 35px;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function (e) {
+        $('#idcheckall').prop('checked', true);    
+        init_ICheck();
+        LoadPackageByProductCategories();
+    });
+
+    /*Function*/
+    /* ICHECK */
+    function init_ICheck() {
+        if ($("input.flat")[0]) {
+            $(document).ready(function () {
+                $('input.flat').iCheck({
+                    checkboxClass: 'icheckbox_flat-blue',
+                    radioClass: 'iradio_flat-blue'
+                });
+            });
+        }
+    };
+    /* END ICHECK */
+
+    function LoadPackageByProductCategories() {
+        var elemnetFillData = "#divListProduct";
+        var ListCate = [];
+        $.each($('.itemCate:checked'), function (index, value) {
+            ListCate.push($(this).val());
+        });
+
+        $.ajax({
+            type: "POST",
+            url: CreateAbsoluteUrl("LoadPackageByProductCategories"),
+            traditional: true,
+            data: {
+                ListCate: ListCate
+            },
+            //contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            beforeSend: function () {
+                $('.se-pre-con').show();
+                $(elemnetFillData).html('');
+            },
+            error: function (e) {
+
+            },
+            success: function (data) {
+                $(elemnetFillData).html(data);
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            }
+        });
+    }
+
+    $('#idcheckall').on('ifToggled', function (event) {
+        if (event.target.checked) {
+            $('.item-checkchild').find("input[type='checkbox']").prop('checked', true).iCheck('update');
+        }
+        else {
+            $('.item-checkchild').find("input[type='checkbox']").prop('checked', false).iCheck('update');
+        }
+    })
+
+    $('.idcheckchild').on('ifChanged', function (event) {
+        var ischeck = event.target.checked;
+        if (ischeck == true) {
+            var count = $('.item-checkchild').length;
+            var countCheck = $('.idcheckchild:checked').length;
+            if (countCheck == count) {
+                $('#idcheckall').prop('checked', true).iCheck('update');
+            }
+            else {
+                $('#idcheckall').prop('checked', false).iCheck('update');
+            }
+        }
+        else {
+            $('#idcheckall').prop('checked', false).iCheck('update');
+        }
+    })   
+
+</script>
+
+

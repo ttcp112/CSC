@@ -1,0 +1,277 @@
+﻿@model NSCSC.Shared.Models.ClientSite.MyStoreAndBusiness.MyStoreAndBusinessViewModels
+@{
+    ViewBag.Title = "Hardwares and Services";
+    Html.EnableUnobtrusiveJavaScript(true);
+}
+
+@*Hardwares*@
+<div class="table-Hardwares-desktop">
+<div class="table-responsive" style="overflow-x:hidden; padding:10px 30px;">
+    <div class="x_panel">
+        <div class="x_title">
+            <h3 class="text-uppercase font-size-15 font-bold">Hardwares</h3>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content box-datatable-js" style="padding:10px 0;">
+            <table id="datatable-responsive-list-hardware-update" class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action" role="grid" aria-describedby="example_info" cellspacing="0" style="width:100%;">
+                <thead style="background-color:#D9E0E8; color:#000;">
+                    <tr>
+                        <th class="text-center">Item</th>
+                        <th class="text-center">Bought</th>
+                        <th class="text-center">Series No.</th>
+                        <th class="text-center">Receipt No.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.ListHardware != null)
+                    {
+                        for (int i = 0; i < Model.ListHardware.Count; i++)
+                        {
+                            var item = Model.ListHardware[i];
+                            string styleRow = "row-evenItem";
+                            if (i % 2 == 0)
+                            {
+                                styleRow = "row-oddItem";
+                            }
+                            <tr class="@styleRow">
+                                <td class="text-center">@item.ItemName</td>
+                                <td class="text-center">@item.sBoughtTime</td>
+                                <td class="text-center">@item.SerialNo</td>
+                                <td class="text-center">@item.ReceiptNo</td>
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="table-Hardwares-mobile">
+    <div class="table-responsive" style="overflow-x:hidden; padding:10px 30px;">
+        <div class="x_panel">
+            <div class="x_title">
+                <h3 class="text-uppercase font-size-15 font-bold">Hardwares</h3>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content box-datatable-js" style="padding:10px 0;">
+                <table id="datatable-responsive-list-hardware-update-mobile" class="table" role="grid" aria-describedby="example_info" cellspacing="0" style="width:100%;">
+                    <thead style="background-color:#D9E0E8; color:#000;">
+                        <tr class="hidden">
+                            <th class="text-center">Item</th>
+                            <th class="text-center">Bought</th>
+                            <th class="text-center">Series No.</th>
+                            <th class="text-center">Receipt No.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.ListHardware != null)
+                        {
+                            for (int i = 0; i < Model.ListHardware.Count; i++)
+                            {
+                                var item = Model.ListHardware[i];
+                                string styleRow = "row-evenItem";
+                                if (i % 2 == 0)
+                                {
+                                    styleRow = "row-oddItem";
+                                }
+                                <tr class="@styleRow">
+                                    <td><span style="text-align:left;font-weight:bold">Item: </span>@item.ItemName</td><td></td><td></td><td></td>
+                                </tr>
+                                <tr class="@styleRow"><td><span style="text-align:left;font-weight:bold">Bought: </span>@item.sBoughtTime</td><td></td><td></td><td></td></tr>
+                                <tr class="@styleRow"><td><span style="text-align:left;font-weight:bold">Series No.: </span>@item.SerialNo</td><td></td><td></td><td></td></tr>
+                                <tr class="@styleRow" style="border-bottom: 1px solid #ddd">
+                                    <td><span style="text-align:left;font-weight:bold">Receipt No.: </span>@item.ReceiptNo</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+@*Services*@
+<div class="table-service-desktop">
+<div class="table-responsive" style="overflow-x:hidden; padding:10px 30px;">
+    <div class="x_panel">
+        <div class="x_title">
+            <h3 class="text-uppercase font-size-15 font-bold">Services</h3>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content box-datatable-js" style="padding:10px 0;">
+            <table id="datatable-responsive-list-service-update" class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action" role="grid" aria-describedby="example_info" cellspacing="0" style="width:100%;">
+                <thead style="background-color:#D9E0E8; color:#000;">
+                    <tr>
+                        <th class="text-center">Item</th>
+                        <th class="text-center">Bought</th>
+                        <th class="text-center">Receipt No.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.ListService != null)
+                    {
+                        for (int i = 0; i < Model.ListService.Count; i++)
+                        {
+                            var item = Model.ListService[i];
+                            string styleRow = "row-evenItem";
+                            if (i % 2 == 0)
+                            {
+                                styleRow = "row-oddItem";
+                            }
+                            <tr class="@styleRow">
+                                <td class="text-center">@item.ItemName</td>
+                                <td class="text-center">@item.sBoughtTime</td>
+                                <td class="text-center">@item.ReceiptNo</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="table-service-mobile">
+    <div class="table-responsive" style="overflow-x:hidden; padding:10px 30px;">
+        <div class="x_panel">
+            <div class="x_title">
+                <h3 class="text-uppercase font-size-15 font-bold">Services</h3>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content box-datatable-js" style="padding:10px 0;">
+                <table id="datatable-responsive-list-service-update-mobile" class="table" role="grid" aria-describedby="example_info" cellspacing="0" style="width:100%;">   
+                    <thead>
+                        <tr class="hidden">
+                            <th class="text-center">Item</th>
+                            <th class="text-center">Bought</th>
+                            <th class="text-center">Receipt No.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.ListService != null)
+                        {
+                            for (int i = 0; i < Model.ListService.Count; i++)
+                            {
+                                var item = Model.ListService[i];
+                                string styleRow = "row-evenItem";
+                                if (i % 2 == 0)
+                                {
+                                    styleRow = "row-oddItem";
+                                }
+                                <tr class="@styleRow">
+                                    <td class="text-left">  <span style="text-align:left;font-weight:bold">Item: </span>@item.ItemName</td><td></td><td></td>
+                                </tr>
+                                <tr class="@styleRow"><td class="text-left">  <span style="text-align:left;font-weight:bold">Bought: </span>@item.sBoughtTime</td><td></td><td></td></tr>
+                                <tr class="@styleRow" style="border-bottom: 1px solid #ddd">
+                                    <td class="text-left">  <span style="text-align:left;font-weight:bold">Receipt No.: </span>@item.ReceiptNo</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    //============================
+    $(document).ready(function () {
+        //hardwares
+        $('#datatable-responsive-list-hardware-update').DataTable({
+            "columnDefs": [
+                //{ "orderable": false, "targets": [1, 2, 3] },
+                //{ "width": "10%", "targets": [1, 3] },
+            ],
+            "order": [
+                [0, "desc"],
+            ],
+            "searching": true,
+            //"info": false,
+            "lengthChange": true,
+            "paging": true,
+            "displayLength": 25,
+            "sPaginationType": "numbers",//hide Pre|Next on row footer
+            "ordering": true, //hide Order on row header
+        });
+        //hardwares for mobile
+        $('#datatable-responsive-list-hardware-update-mobile').DataTable({
+            "columnDefs": [
+                {
+                    "targets": [1],
+                    "visible": false,
+                    "searchable": false
+                },
+                {
+                    "targets": [2],
+                    "visible": false
+                },
+                {
+                    "targets": [3],
+                    "visible": false,
+                    "searchable": false
+                },
+                
+            ],
+            "searching": true,
+            "bInfo": false,
+            "ordering": false,
+            "paging": false,
+            "lengthChange": false,
+        });
+
+        //services
+        $('#datatable-responsive-list-service-update').DataTable({
+            "columnDefs": [
+                //{ "orderable": false, "targets": [1, 2] },
+                //{ "width": "10%", "targets": [1, 2] },
+            ],
+            "order": [
+                [0, "desc"],
+            ],
+            "searching": true,
+            //"info": false,
+            "lengthChange": true,
+            "paging": true,
+            "displayLength": 25,
+            "sPaginationType": "numbers",//hide Pre|Next on row footer
+            "ordering": true, //hide Order on row header
+        });
+
+        //services for mobile
+        $('#datatable-responsive-list-service-update-mobile').DataTable({ 
+            "columnDefs": [
+                {
+                    "targets": [1],
+                    "visible": false,
+                    "searchable": false
+                },
+                {
+                    "targets": [2],
+                    "visible": false
+                }
+            ],
+            "searching": true,
+            "bInfo": false,
+            "ordering": false,
+            "paging": false,
+            "lengthChange": false,
+        });
+    });
+
+</script>
+

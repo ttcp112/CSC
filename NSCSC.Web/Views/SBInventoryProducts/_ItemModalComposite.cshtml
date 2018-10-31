@@ -1,0 +1,34 @@
+﻿@{
+    Layout = null;
+}
+@model NSCSC.Shared.Models.SandBox.Inventory.Product.ProductDetailModels
+@using NSCSC.Shared
+@if (Model != null && Model.ListComposite != null && Model.ListComposite.Count > 0)
+{
+    for (int i = 0; i < Model.ListComposite.Count; i++)
+    {
+        <tr data-id="@Model.ListComposite[i].ProductID" id="trProduct_@Model.ListComposite[i].ProductID" class="trComposite">
+            <td>
+                @Model.ListComposite[i].ProductName
+                @Html.Hidden(string.Format("ListComposite[{0}].ProductID", i), Model.ListComposite[i].ProductID, new { @id = "hidHardwareProductID" })
+                @Html.Hidden(string.Format("ListComposite[{0}].ProductName", i), Model.ListComposite[i].ProductName, new { @id = "hidHardwareProductName" })
+                @Html.Hidden(string.Format("ListComposite[{0}].Quantity", i), Model.ListComposite[i].Quantity, new { @id = "hidHardwareQuantity" })
+                @Html.Hidden(string.Format("ListComposite[{0}].Sequence", i), Model.ListComposite[i].Sequence, new { @id = "hidHardwareSequence" })
+                @Html.Hidden(string.Format("ListComposite[{0}].ProductType", i), Model.ListComposite[i].ProductType, new { @id = "hidHardwareProductType" })
+                @Html.Hidden(string.Format("ListComposite[{0}].AdditionType", i), Model.ListComposite[i].AdditionType, new { @id = "hidHardwareAdditionsType" })
+                @Html.Hidden(string.Format("ListComposite[{0}].CategoryName", i), Model.ListComposite[i].CategoryName, new { @id = "hidHardwareCategoryName" })
+            </td>
+            <td>@Html.Raw(((Commons.EAdditionType)Enum.ToObject(typeof(Commons.EAdditionType), Model.ListComposite[i].AdditionType)).ToString())</td>
+            <td>@Model.ListComposite[i].Quantity</td>
+            <td>@Model.ListComposite[i].Sequence</td>
+            <td>
+                <a href="javascript:void(0)"
+                   onclick="showModalComposite('#modalComposite',false)"
+                   class="btn btn-info btn-xs edit details"><i class="fa fa-edit"></i></a>
+                <a href="javascript:void(0)"
+                   onclick="DeleteComposite('@Model.ListComposite[i].ProductID')"
+                   class="btn btn-danger btn-xs delete details"><i class="fa fa-trash-o"></i></a>
+            </td>
+        </tr>
+    }
+}

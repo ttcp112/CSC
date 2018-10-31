@@ -1,0 +1,96 @@
+﻿@model NSCSC.Shared.Models.ClientSite.VerificationModels
+@{
+    ViewBag.Title = "Verification";
+}
+@Html.Hidden("ReSendEmail", Model.ReSendEmail)
+
+<div class="se-pre-con" style="display: none;"></div>
+<div style="margin-top: 25px; text-align: center;">
+    @*<div class="row" style="padding-bottom: 10px; padding-top: 15px;">
+        <h4 style="float: right; background-color: red; color: black; padding: 5px 10px 5px 200px; margin-right: 15px;">REGISTER</h4>
+    </div>*@
+
+    <div class="form-group row">
+        <p style="padding-bottom: 7px; ">A verification code is send to your registered email. Please help to check and confirm registration.</p>
+        <p><b>Verification code:</b></p>
+        <input type="text" id="txtCusCode" style="text-align:center; padding: 5px 15px 5px 15px; "/>
+        <p id="Errorcode" style="display: none ; color: red; ">Verification code is incorrect! Please try again... </p>
+        @*<div class="form-group row">
+            <label id="Errorcode" style="width: 150px !important; display: none; " class="control-label col-md-2 col-sm-1 col-xs-3 lineHeight fontLighter">Verfication code incorrect! </label>
+            <div class="col-md-3 col-sm-3 col-xs-12">
+                @Html.TextBoxFor(model => model.VerificationCode, new { @id = "txtCusCode", @class = "form-control", @autocomplete = "off" })
+                @Html.ValidationMessageFor(model => model.VerificationCode, null, new { @class = "label" })
+            </div>
+        </div>*@            
+    </div>
+    <div>
+        <p>Not received email?! &nbsp;<span><a href="javascript:void(0)" style="color: #00BFFF;  text-decoration: underline;" onclick="ReSendEmail()">Re-send verification code</a></span></p>
+    </div>
+    <div>
+        <a style="padding: 5px 25px 5px 25px;" href="javascript:void(0)" class="btn btn-success" onclick="Verify()">VERIFY</a>
+    </div>
+</div>
+
+<script>
+    var Email = '@Model.ReSendEmail';
+    $(document).ready(function () {
+    });
+
+    function validateEmail(email) {
+        var re = /^(([^<>()\[\]\\.,;:\s"]+(\.[^<>()\[\]\\.,;:\s"]+)*)|(".+"))((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
+    }
+
+    function ReSendEmail() {
+        var ResendEmailModels = {
+            Email: Email
+        };
+        $.ajax({
+            url: '@Url.Action("ResendMail", "SignUp")',
+                type: 'POST',
+                dataType: 'html',
+                cache: false,
+                data: { model: ResendEmailModels },
+                success: function (data) {
+                }, beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                }
+            });
+    };
+
+    function Verify() {
+        var Code = $('#txtCusCode').val();
+        var VerificationModels = {
+            VerificationCode: Code,
+            ReSendEmail: Email
+        };
+        $.ajax({
+            url: '@Url.Action("Verify", "SignUp")',
+            type: 'POST',
+            dataType: 'html',
+            cache: false,
+            data: { model: VerificationModels },
+            error: function (e) {
+                if (e.status == 400) {
+                    $('#Errorcode').show();
+                }
+                else {
+                    $('#Errorcode').hide();
+                }
+            },
+            success: function (e) {
+                $('.se-pre-con').hide();
+                window.location = "/Home/Index";
+            }, beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+                //window.location = "/Home/Index";
+            }
+        });
+    };
+</script>

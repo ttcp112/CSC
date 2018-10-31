@@ -1,0 +1,144 @@
+﻿@using NSCSC.Shared
+@model NSCSC.Shared.Models.Settings.PaymentMethods.PaymentMethodModels
+
+@{
+    Html.EnableUnobtrusiveJavaScript(true);
+    var _ID = Model.ID;
+}
+@Html.Hidden("ImageURL", Model.ImageURL)
+@Html.Hidden("Code",Model.Code)
+
+<div class="row form-horizontal form-label-left" style="margin-bottom:15px;">
+    <div class="form-group">
+        @*Image*@
+        <label class="control-label col-md-3 col-sm-3 col-xs-12 lineHeight">Image</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            @*Image Placeholder*@
+            @if (!string.IsNullOrEmpty(Model.ImageURL))
+            {
+                <img id="upload-preview" src="@Model.ImageURL" height="50" width="100" />
+            }
+            else
+            {
+                <img id="upload-preview" src="@Commons.Image100_50" height="50" width="100" />
+            }
+            @*load image*@
+            <label class="btnFile" style="display:inline-block; border:1px solid #808080; cursor:pointer; padding: 6px 9px; border-radius:5%">
+                Add/Edit
+                @Html.TextBoxFor(model => model.PictureUpload, new { @id = "PictureUpload", @type = "file", @onchange = "PreviewImage(this,\"upload-preview\")", @accept = "*.jpg", @style = "display:none" })
+            </label>
+            @Html.ValidationMessageFor(model => model.PictureUpload, null, new { @class = "label label-danger" })
+        </div>
+    </div>
+
+    @*Payment Method Name*@
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12 lineHeight">Name</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @placeholder = "Payment Method Name", @autocomplete = "off" })
+            @Html.ValidationMessageFor(model => model.Name, null, new { @class = "label" })
+        </div>
+    </div>
+
+    @* Status*@
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <label>@Html.CheckBoxFor(model => model.IsActive, new { @class = "js-switch-chk" })</label>
+        </div>
+    </div>
+
+    @*Integration code*@
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12">Integration Code</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            @Html.TextBoxFor(model => model.IntegrationCode, new { @class = "form-control", autocomplete = "off", @placeholder = "Integration Code" })
+            @Html.ValidationMessageFor(model => model.IntegrationCode, null, new { @class = "label" })
+        </div>
+    </div>
+
+    @*error card name*@
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12"></label>
+        <div class="col-md-4 col-sm-4 col-xs-12">
+            @Html.ValidationMessage("errorCardName", new { @class = "label" })
+        </div>
+    </div>
+    @*Promotion Code*@
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12">Card for Payment Method</label>
+        <label class="col-sm-6 col-xs-12" style="text-align:left;margin-left:0.7%;width:49%;padding-top: 10px; padding-bottom: 10px;color: white; font-size: 14px; background: #34495e; ">Payment Name</label>
+        
+    </div>
+
+    <!--sub child-->
+    <div class="">
+        <div class="col-md-3 col-sm-3 col-xs-12"></div>
+        <div id="div-listchild" class="col-md-9 col-sm-9 col-xs-12">
+            @if (Model.ListChild != null && Model.ListChild.Any())
+            {
+                for (var i = 0; i < Model.ListChild.Count; i++)
+                {
+                    @Html.Partial("_ItemCardForPaymentMethod", Model.ListChild[i])
+                }
+            }
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3 col-sm-3 col-xs-12"></div>
+        <div class="col-md-9 col-sm-9 col-xs-12">
+            @Html.ValidationMessageFor(model => model.ErrorSubPayment, null, new { @class = "label label-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3"></div>
+        <div class="col-md-1 col-sm-12 col-xs-12" style="margin-top:1%">
+            <a id="btn-add-more-tab" href="javascript:void(0)" onclick="AddMoreChild()" class="btn btn-primary btn-sm" style="font-size:15px;">
+                <i class="fa fa-plus-square" style="font-size:14px;"></i>
+                <span>Add More</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script src="@Url.Content("~/build/js/customInput.js")"></script>
+<script type="text/javascript">
+    var btnGlobal;
+    var listItem;
+    var listItemEarn;
+    $(document).ready(function (e) {
+         @if (string.IsNullOrEmpty(_ID))
+        {
+            <text>
+        var currentOffset = $("#div-listchild .div-child").length;
+        if (currentOffset == 0) {
+            AddMoreChild();
+        }
+        </text>
+        }
+    });
+    function AddMoreChild()
+    {
+        $('.se-pre-con').show();
+        var currentOffset = $("#div-listchild .div-child").length;
+        $.ajax({
+            url: '@Url.Action("AddChild", "SPaymentMethods")',
+            type: 'get',
+            data: {
+                currentOffset: currentOffset,
+            },
+            dataType: 'html',
+            success: function (data) {
+                $('.se-pre-con').hide();
+                $("#div-listchild").append(data);
+            }
+        });
+    }
+
+    function DeleteTabPanel(btn) {
+        var count = $(".div-child:visible").length;
+        var div = $(btn).parents('.div-child:first');
+        $(div).find('input.GroupStatus').val(9);
+        $(div).css('display', 'none');
+    }
+</script>

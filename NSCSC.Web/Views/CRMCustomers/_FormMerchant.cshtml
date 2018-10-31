@@ -1,0 +1,335 @@
+﻿@model NSCSC.Shared.Models.CRM.Customers.CustomerBaseModels
+@using NSCSC.Shared
+@{
+    Html.EnableUnobtrusiveJavaScript(true);
+    var _ID = Model.MerchantStore.ID;
+    var _CustomerID = Model.MerchantStore.CustomerID;
+}
+@Html.HiddenFor(model => model.MerchantStore.ID)
+@Html.HiddenFor(model => model.MerchantStore.CustomerID, new { id = "hidCustomerId"})
+
+@if (!string.IsNullOrEmpty(_ID))
+{
+    @Html.HiddenFor(model => model.MerchantStore.ImageURL)
+}
+
+<div class="row form-horizontal form-label-left merchant" style="margin-bottom:15px;">
+
+    <div class="col-md-3 col-sm-3 col-xs-12">
+        <!--Image Placeholder-->
+        <div class="form-group">
+            <div class="col-md-12" style="text-align:center;width:100%;">
+                @if (!string.IsNullOrEmpty(Model.MerchantStore.ImageURL))
+                {
+                    <img id="upload-preview-merchant" src="@Model.MerchantStore.ImageURL" height="200" width="200" style="max-width:100%" />
+                }
+                else
+                {
+                    <img id="upload-preview-merchant" class="" src="@Commons.Image200_200" height="200" width="200" style="max-width:100%" />
+                }
+            </div>
+        </div>
+        <!--IMAGE-->
+        <div class="form-group">
+            <div class="col-md-12 col-sm-12 col-xs-12" style="text-align:center;">
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <button class="btn btn-default btnFile" type="button" onclick="showPictureUpload();" id="addeditimage">Add/Edit</button>
+                @Html.TextBoxFor(model => model.MerchantStore.PictureUpload, new { @type = "file", @onchange = "PreviewImage(this,\"upload-preview-merchant\")", @accept = "*.jpg", @class = "hidden inputFile", @id = "urlImage" })
+
+                @Html.ValidationMessageFor(model => model.MerchantStore.PictureUpload, null, new { @class = "label" })
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-9 col-sm-9 col-xs-12" style="padding:0;">
+        @*Name*@
+        <div class="form-group">
+            <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Merchant Name</label>
+            <div class="col-md-8 col-sm-8 col-xs-12">
+                @Html.TextBoxFor(model => model.MerchantStore.Name, new { @class = "form-control", @autocomplete = "off", @placeholder = "Merchant Name",@id= "MerchantStore_Name" })
+                @Html.ValidationMessageFor(model => model.MerchantStore.Name, null, new { @class = "label" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @*Email*@
+            <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Email</label>
+            <div class="col-md-8 col-sm-8 col-xs-12">
+                @Html.TextBoxFor(model => model.MerchantStore.Email, new { @class = "form-control", @placeholder = "Email",@id= "MerchantStore_Email" })
+                @Html.ValidationMessageFor(model => model.MerchantStore.Email, null, new { @class = "label" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @*Phone*@
+            <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Phone</label>
+            <div class="col-md-8 col-sm-8 col-xs-12">
+                @Html.TextBoxFor(model => model.MerchantStore.Phone, new { @class = "form-control", @id = "txtPhone", @placeholder = "Phone" })
+                @Html.ValidationMessageFor(model => model.MerchantStore.Phone, null, new { @class = "label" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">GST Reg No</label>
+            <div class="col-md-8 col-sm-8 col-xs-12">
+                @Html.TextBoxFor(model => model.MerchantStore.GSTRegNo, new { @class="form-control", @id="txtGSTRegNo", @placeholder = "GST Reg No" })
+                @Html.ValidationMessageFor(model=>model.MerchantStore.GSTRegNo, null, new {@class="label label-danger" })
+            </div>
+        </div> 
+
+        <div class="form-group">
+            <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Created date</label>
+            <div class="col-md-8 col-sm-8 col-xs-12">
+                @Html.TextBox("CreatedDate", string.Format("{0:dd/MM/yyyy}", Model.MerchantStore.CreatedDate),
+               new { @id = "CreatedDate", @class = "form-control datepicker1  has-feedback-left", @placeholder = "dd/MM/yyyy",@readonly="readonly" })
+                <span class="fa fa-calendar form-control-feedback left " aria-hidden="true"></span>
+                
+                @Html.ValidationMessageFor(model => model.MerchantStore.CreatedDate, null, new { @class = "label label-danger" })
+            </div>
+        </div>
+    </div>
+
+    <!--Address-->
+    <div class="form-group" style="clear:both;">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12">Home Address</label>
+        <div class="col-md-10 col-sm-10 col-xs-12 topDotBorder"></div>
+    </div>
+    <!--Country-->
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Country</label>
+        <div class="col-md-4 col-md-4 col-xs-12">
+             @Html.DropDownListFor(model => model.MerchantStore.Country,new SelectList(ViewBag.ListCountry, "Name", "Name", Model.MerchantStore.Country),
+               new
+               {
+                   @class = "form-control",
+                   @id = "txtHomeCountry",
+                   @style = "width:100%;",
+               })
+            @Html.ValidationMessageFor(model => model.MerchantStore.Country, null, new { @class="label label-danger"})
+        </div>
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">ZIP Code</label>
+        <div class="col-md-4 col-md-4 col-xs-12">
+            @Html.TextBoxFor(model => model.MerchantStore.ZipCode, new { @class="form-control", @placeholder = "Home ZIP Code",@id="txtZipCode" })
+            @Html.ValidationMessageFor(model => model.MerchantStore.ZipCode, null, new { @class="label label-danger"})
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">City</label>
+        <div class="col-md-4 col-md-4 col-xs-12">
+            @Html.TextBoxFor(model => model.MerchantStore.City, new { @class = "form-control", @placeholder = "Home City",@id="txtCity" })
+            @Html.ValidationMessageFor(model => model.MerchantStore.City, null, new { @class = "label label-danger" })
+        </div>
+        <label class="control-label col-md-2 col-sm-2 col-xs-12 lineHeight fontLighter">Street</label>
+        <div class="col-md-4 col-md-4 col-xs-12">
+            @Html.TextBoxFor(model => model.MerchantStore.Street, new { @class = "form-control" , @placeholder = "Home Street",@id="txtStreet" })
+            @Html.ValidationMessageFor(model => model.MerchantStore.Street, null, new { @class = "label label-danger" })
+        </div>
+    </div>
+
+    <!--Stores Info-->
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12">Stores Info</label>
+        <div class="col-md-10 col-sm-10 col-xs-12 topDotBorder"></div>
+    </div>
+    <div class="form-group">
+        <div for="" class="col-md-offset-2 col-md-1 col-sm-12 col-xs-12">
+            <button type="button" id="btn-add-more-tab" href="javascript:void(0)" onclick="ShowView('@Url.Action("SelectStore", "CRMCustomers", new { CustomerID  = Model.MerchantStore.CustomerID, MerchantID = Model.MerchantStore.ID})')"  class="btn btn-primary btn-sm" style="font-size:15px;">
+                <i class="fa fa-plus-square" style="font-size:14px;"></i>
+                <span>Add New</span>
+            </button>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10 col-sm-12 col-xs-12">
+            <table id="datatable-responsive-list-item" class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action"
+                   cellspacing="0" style="width:100%;">
+                <thead style="background-color:#34495e; color:#fff;">
+                    <tr>
+                        <th class="text-center">Store Name</th>
+                        <th class="text-center">Expiry Time</th>
+                        <th class="text-center">Link App Store</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="list-item-cate">
+                   @if(Model != null && Model.MerchantStore != null && Model.MerchantStore.ListStore.Any())
+                               {
+                                   var i = 0;
+                                   foreach(var item in Model.MerchantStore.ListStore)
+                                   {
+                           <tr>
+                               <td>
+                               @Html.Hidden(string.Format("MerchantStore.ListStore[{0}].ID", i),item.ID)
+                                   @Html.Hidden(string.Format("MerchantStore.ListStore[{0}].Name", i), item.Name)
+                                   @Html.Hidden(string.Format("MerchantStore.ListStore[{0}].IsActive", i),item.IsActive)
+                                   @Html.Hidden(string.Format("MerchantStore.ListStore[{0}].CreatedDate", i),item.CreatedDate)
+                                   @Html.Hidden(string.Format("MerchantStore.ListStore[{0}].ImageURL", i),item.ImageURL)
+                                   @Html.Hidden(string.Format("MerchantStore.ListStore[{0}].ExpiredDate", i),item.ExpiredDate)
+                                   @Html.Hidden(string.Format("MerchantStore.ListStore[{0}].StoreStatus", i),item.StoreStatus)
+                                   @Html.Hidden(string.Format("MerchantStore.ListStore[{0}].StoreStatusName", i),item.StoreStatusName)
+                                   @Html.Hidden(string.Format("MerchantStore.ListStore[{0}].Address", i),item.Address)
+                                 @*  @Html.Hidden(string.Format("MerchantStore.ListStore[{0}].ListApplyProduct", i),item.ListApplyProduct)*@
+                                           @item.Name
+
+                               </td>
+                               <td class="text-center">@string.Format("{0}", item.ExpiredDate.HasValue ? item.ExpiredDate.Value.ToString(Commons.FormatDateTime) : "")</td>
+                               <td class="text-center">No</td>
+                               <td class="text-center">
+                                   @if (item.IsActive)
+                           {
+                                       <span class="label label-success">Active</span>
+                       }
+                                   else
+                                   {
+                                       <span class="label label-danger">InActive</span>
+                   }
+                               </td>
+                               <td>
+                                   <a href="javascript:void(0)"
+                                      onclick="ShowView('@Url.Action("ViewStore", "CRMCustomers", new { StoreId = item.ID, CustomerID = Model.MerchantStore.CustomerID })')" class="btn btn-primary btn-xs view details">
+                                       <i class="fa fa-eye"></i>&nbsp;View
+                                   </a>
+                                   @*<a href="javascript:void(0)"
+                                      onclick="ShowView('@Url.Action("EditStore", "CRMCustomers", new { StoreId = item.ID, CustomerID = Model.MerchantStore.CustomerID })')" class="btn btn-info btn-xs edit details edit-info-store">
+                                       <i class="fa fa-edit"></i>&nbsp;Edit
+                                   </a>*@
+
+                                   <button type="button"
+                                      onclick="ShowView('@Url.Action("EditStore", "CRMCustomers", new { StoreId = item.ID, CustomerID = Model.MerchantStore.CustomerID })')" class="btn btn-info btn-xs edit details edit-info-store">
+                                       <i class="fa fa-edit"></i>&nbsp;Edit
+                                   </button>
+                               </td>
+                           </tr>
+                           i++;
+                       }
+                   }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="@Url.Content("~/build/js/customInput.js")"></script>
+<script type="text/javascript">
+    @*@if(Model.MerchantStore.ID != null)
+    {
+        <text>
+    $('.merchant input').attr("disabled", "disabled");
+    $('.merchant #addeditimage').attr("disabled", "disabled");
+
+    </text>
+    }else{
+        <text>
+    $('.merchant input').removeAttr('disabled')
+    $('.merchant #addeditimage').removeAttr('disabled');
+    </text>
+    }*@
+
+    $(document).ready(function () {
+        $('.merchant input').attr("disabled", "disabled");
+        $('.merchant #addeditimage').attr("disabled", "disabled");
+        $('.merchant #btn-add-more-tab').attr("disabled", "disabled");
+        $('.merchant .edit-info-store').attr("disabled", "disabled");
+        $("#txtHomeCountry").attr("disabled", "disabled");
+    });
+    var tableStoreInfo = null;
+    var settingsStoreInfo = {
+        "columnDefs": [
+            { "orderable": false, "targets": [4] },
+            { "width": "20%", "targets": [0] },
+            { "width": "15%", "targets": [1] },
+            { "width": "15%", "targets": [2] },
+            { "width": "10%", "targets": [3] },
+            { "width": "10%", "targets": [4] },
+        ],
+        "order": [
+            [1, 'asc'],
+            [0, 'asc'],
+        ],
+        "displayLength": 25,
+        "paging": true,
+        "ordering": true,
+        "info": false,
+        "searching": true,
+        "bLengthChange": true,
+        "autoWidth": false
+    };
+    $(document).ready(function () {
+        $('.datepicker1').daterangepicker({
+            singleDatePicker: true,
+            calender_style: "picker_2",
+            showDropdowns: true,
+            showWeekNumbers: true,
+            locale: {
+                daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+                monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+
+            },
+        }, function (start, end, label) {
+        });
+
+        /*********** Init datatable ****************/
+        var handleDataTableButtons = function () {
+            if ($("#datatable-buttons").length) {
+                $("#datatable-buttons").DataTable({
+
+                    dom: "Bfrtip",
+                    responsive: true
+                });
+            }
+        };
+
+        TableManageButtons = function () {
+            "use strict";
+            return {
+                init: function () {
+                    handleDataTableButtons();
+                }
+            };
+        }();
+
+        $('#datatable').dataTable();
+        $('#datatable-keytable').DataTable({
+            keys: true
+        });
+
+
+        tableStoreInfo = $('#datatable-responsive-list-item').DataTable($.extend(true, {}, settingsStoreInfo));
+        var table = $('#datatable-fixed-header').DataTable({
+            fixedHeader: true,
+        });
+        TableManageButtons.init();
+    })
+
+    function showPictureUpload() {
+        $('[id=urlImage]').click();
+    }
+
+    function CloseStoreDetail(Id)
+    {
+        if (Id === "")
+            Id = '@_CustomerID';
+
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("CloseStoreDetail", "CRMCustomers")",
+                traditional: true,
+                data: { id: Id, maction: "edit"},
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (data) {
+                    $(".detail-view").html(data);
+                    $(".detail-view").show();
+                    $(".gridview").css("display", "none");
+                   // $('#myTab a[href="#tab_content2"]').tab('show');
+                },
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                },
+            });
+    }
+</script>

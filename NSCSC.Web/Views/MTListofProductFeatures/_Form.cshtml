@@ -1,0 +1,118 @@
+﻿
+@model NSCSC.Shared.Models.ManagementTool.ListofProductFeatures.ProductFeatureDetailModels
+@using NSCSC.Shared
+@{
+    Html.EnableUnobtrusiveJavaScript(true);
+    var _ID = Model.ID;
+}
+@if (!string.IsNullOrEmpty(_ID))
+{
+    @Html.Hidden("ID", Model.ID)
+
+}
+
+<div class="row form-horizontal form-label-left" style="margin-bottom:15px;">
+    @* Feature title*@
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12">Feature title</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            @Html.TextBoxFor(model => model.Name, new { @id = "txtName", @class = "form-control", autocomplete = "off" })
+            @Html.ValidationMessageFor(model => model.Name, null, new { @class = "label" })
+        </div>
+    </div>
+    @*Category *@
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12">Category</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="listcategory">
+                @Html.DropDownListFor(model => model.CategoryID,
+                new SelectList(@ViewBag.ListCategory, "Value", "Text", Model.CategoryID), null,
+                new
+                {
+                    @class = "form-control select2_multiple ",
+                    @id = "ddlCategory",
+                    @style = "width:100%;"
+                })
+            </div>
+            @Html.ValidationMessageFor(model => model.CategoryID, null, new { @class = "label" })
+        </div>
+    </div>
+    <!--Background Image-->
+    <div class="form-group">
+        <label class="col-md-2 control-label"> </label>
+        <div class="col-md-6">
+            @if (!string.IsNullOrEmpty(Model.ImageURL))
+            {
+                <img id="ImageURL" src="@Model.ImageURL" height="100" width="100" class="img-circle" />
+            }
+            else
+            {
+                <img id="ImageURL" class="img-circle" src="@Commons.Image100_100" height="100" width="100" />
+            }
+        </div>
+    </div>
+    <!--IMAGE-->
+    <div class="form-group">
+        <label class="col-md-2 control-label">Background Image </label>
+        <div class="col-md-6">
+            @Html.TextBoxFor(model => model.ImageURLUpload, new { @id = "ImageURLUpload", @type = "file", @onchange = "PreviewImage(this,\"ImageURL\")", @accept = "*.jpg" })
+            @Html.ValidationMessageFor(model => model.ImageURLUpload, null, new { @class = "label label-danger" })
+        </div>
+    </div>
+    <!--Icon Image-->
+    <div class="form-group">
+        <label class="col-md-2 control-label"> </label>
+        <div class="col-md-6">
+            @if (!string.IsNullOrEmpty(Model.ImageURL))
+            {
+                <img id="IconURL" src="@Model.IconURL" height="100" width="100" class="img-circle" />
+            }
+            else
+            {
+                <img id="IconURL" class="img-circle" src="@Commons.Image100_100" height="100" width="100" />
+            }
+        </div>
+    </div>
+    <!--IMAGE-->
+    <div class="form-group">
+        <label class="col-md-2 control-label">Icon Image </label>
+        <div class="col-md-6">
+            @Html.TextBoxFor(model => model.IconURLUpload, new { @id = "IconURLUpload", @type = "file", @onchange = "PreviewImage(this,\"IconURL\")", @accept = "*.jpg" })
+            @Html.ValidationMessageFor(model => model.IconURLUpload, null, new { @class = "label label-danger" })
+        </div>
+    </div>
+    @*Status *@
+    <div class="form-group">
+        <label class="col-md-2 control-label">Status</label>
+        <div class="col-md-10">
+            @Html.CheckBoxFor(model => model.IsActive, new { @id = "IsActive" })
+        </div>
+    </div>
+    @* Sequence*@
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12">Sequence</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+
+            @Html.TextBoxFor(model => model.Sequence, new { @id = "sequence", @class = "form-control", placeholder = "0", type = "number", min = 0 })
+            @Html.ValidationMessageFor(model => model.Sequence, null, new { @class = "label" })
+        </div>
+    </div>
+    @* Detail Feature*@
+    <div class="form-group">
+        <label class="control-label col-md-2 col-sm-2 col-xs-12">Detail Feature</label>       
+        <div class="col-md-6 col-sm-7 col-xs-12">
+            @Html.TextAreaFor(model => model.Description, new {@id= "Description", @class = "form-control ckeditor", placeholder = "Description" })
+            @Html.ValidationMessageFor(model => model.Description, null, new { @class = "label" })
+        </div>
+    </div>
+</div>
+<script src="@Url.Content("~/build/js/customInput.js")"></script>
+<script> 
+        $(document).ready(function () {     
+        $("#ddlCategory").select2({
+            placeholder: "Please choose Type",
+            //allowClear: true
+        });
+
+    });
+</script>

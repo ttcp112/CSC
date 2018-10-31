@@ -1,0 +1,232 @@
+﻿@model NSCSC.Shared.Models.CRM.Customers.CustomerViewModels
+
+<div class="table-responsive">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>Customers</h2>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action" cellspacing="0" style="width:100%;">
+                <thead style="background-color:#34495e; color:#fff;">
+                    <tr>
+                        <th style="text-align:center;">Customer Name</th>
+                        <th style="text-align:center;">Merchant Name</th>
+                        @*<th style="text-align:center;display:none;">Customer Type</th>*@
+                        <th style="text-align:center;" data-sortable="false">Phone</th>
+                        <th style="text-align:center;">Email</th>
+                        <th style="text-align:center;">Gender</th>
+                        <th style="text-align:center;">Active</th>
+                        <th style="text-align:center;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @if (Model.ListItem != null && Model.ListItem.Count > 0)
+                    {
+                        foreach (var itemType in Model.ListItem)
+                        {
+                    <tr>
+                        <td><strong style="color:#d9534f;">@itemType.Type @itemType.Name </strong> @itemType.CountItem</td>
+                        <td style="text-align:center">@itemType.MerchantName</td>
+                        <td style="text-align:center">@itemType.Phone</td>
+                        <td style="text-align:center">@itemType.Email</td>
+                        <td style="text-align:center">@string.Format("{0}", itemType.Gender ? "Male" : "Female")</td>
+                        <td style="text-align:center;">
+                            @if (itemType.IsActive)
+                            {
+                                <span class="label label-success">Active</span>
+                            }
+                            else
+                            {
+                                <span class="label label-danger">InActive</span>
+                            }
+                        </td>
+                        <td style="text-align:center;">
+                            <a href="javascript:void(0)"
+                               onclick="ShowView('@Url.Action("View", "CRMCustomers", new { id = itemType.ID })')" class="btn btn-primary btn-xs view details">
+                                <i class="fa fa-eye"></i>&nbsp;View
+                            </a>
+
+                            <a href="javascript:void(0)"
+                               onclick="ShowView('@Url.Action("Edit", "CRMCustomers", new { id = itemType.ID })')" class="btn btn-info btn-xs edit details action-class">
+                                <i class="fa fa-edit"></i>&nbsp;Edit
+                            </a>
+                            <a href="javascript:void(0)"
+                               @*onclick="ShowView('@Url.Action("Delete", "CRMCustomers", new { id = item.ID })')"*@
+                               onclick="ShowModalDelete('.modal-delete', '@itemType.ID')"
+                               class="btn btn-danger btn-xs delete details action-class">
+                                <i class="fa fa-trash-o"></i>&nbsp;Delete
+                            </a>
+                        </td>
+                    </tr>
+                            if (itemType.ListCus != null && itemType.ListCus.Count > 0)
+                            {
+                                for (int i = 0; i < itemType.ListCus.Count; i++)
+                                {
+                                    var item = itemType.ListCus[i];
+                                    string styleRow = "row-evenItem";
+                                    if (i % 2 == 0)
+                                    {
+                                        styleRow = "row-oddItem";
+                                    }
+                                    <tr class="@styleRow">
+                                        <td style="color:#34495e; font-weight:bold; padding-left:20px;">@item.Name</td>
+                                        <td style="text-align:center;color:#34495e; font-weight:bold;">@item.MerchantName</td>
+                                        @*<td class="count-item" style="text-align:center;color:#34495e; font-weight:bold; display:none;">@item.CustomerType</td>*@
+                                        <td style="text-align:center;">@item.Phone</td>
+                                        <td style="text-align:center">@item.Email</td>
+                                        <td style="text-align:center">@string.Format("{0}", item.Gender ? "Male" : "Female")</td>
+                                        <td style="text-align:center;">
+                                            @if (item.IsActive)
+                                            {
+                                                <span class="label label-success">Active</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="label label-danger">InActive</span>
+                                            }
+                                        </td>
+
+                                        <td style="text-align:center;">
+                                            <a href="javascript:void(0)"
+                                               onclick="ShowView('@Url.Action("View", "CRMCustomers", new { id = item.ID })')" class="btn btn-primary btn-xs view details">
+                                                <i class="fa fa-eye"></i>&nbsp;View
+                                            </a>
+
+                                            <a href="javascript:void(0)"
+                                               onclick="ShowView('@Url.Action("Edit", "CRMCustomers", new { id = item.ID })')" class="btn btn-info btn-xs edit details action-class">
+                                                <i class="fa fa-edit"></i>&nbsp;Edit
+                                            </a>
+                                            <a href="javascript:void(0)"
+                                               @*onclick="ShowView('@Url.Action("Delete", "CRMCustomers", new { id = item.ID })')"*@
+                                               onclick="ShowModalDelete('.modal-delete', '@item.ID')"
+                                               class="btn btn-danger btn-xs delete details action-class">
+                                                <i class="fa fa-trash-o"></i>&nbsp;Delete
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+@*<div class="table-responsive">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Customers</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action" cellspacing="0" style="width:100%;">
+                    <thead style="background-color:#34495e; color:#fff;">
+                        <tr>
+                            <th style="text-align:center;">Customer Name</th>
+                            <th style="text-align:center;">Merchant Name</th>
+                            <th style="text-align:center;display:none;">Customer Type</th>
+                            <th style="text-align:center;" data-sortable="false">Phone</th>
+                            <th style="text-align:center;">Email</th>
+                            <th style="text-align:center;">Gender</th>
+                            <th style="text-align:center;">Active</th>
+                            <th style="text-align:center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.ListItem != null)
+                        {
+                            for (int i = 0; i < Model.ListItem.Count; i++)
+                            {
+                                var item = Model.ListItem[i];
+                                string styleRow = "row-evenItem";
+                                if (i % 2 == 0)
+                                {
+                                    styleRow = "row-oddItem";
+                                }
+                                <tr class="@styleRow">
+                                    <td style="color:#34495e; font-weight:bold; padding-left:20px;">@item.Name</td>
+                                    <td style="text-align:center;color:#34495e; font-weight:bold;">@item.MerchantName</td>
+                                    <td class="count-item" style="text-align:center;color:#34495e; font-weight:bold; display:none;">@item.Type @item.CountItem </td>
+                                    <td style="text-align:center;">@item.Phone</td>
+                                    <td style="text-align:center">@item.Email</td>
+                                    <td style="text-align:center">@string.Format("{0}", item.Gender ? "Male" : "Female")</td>
+                                    <td style="text-align:center;">
+                                        @if (item.IsActive)
+                                        {
+                                            <span class="label label-success">Active</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="label label-danger">InActive</span>
+                                        }
+                                    </td>
+
+                                    <td style="text-align:center;">
+                                        <a href="javascript:void(0)"
+                                           onclick="ShowView('@Url.Action("View", "CRMCustomers", new { id = item.ID })')" class="btn btn-primary btn-xs view details">
+                                            <i class="fa fa-eye"></i>&nbsp;View
+                                        </a>
+
+                                        <a href="javascript:void(0)"
+                                           onclick="ShowView('@Url.Action("Edit", "CRMCustomers", new { id = item.ID })')" class="btn btn-info btn-xs edit details action-class">
+                                            <i class="fa fa-edit"></i>&nbsp;Edit
+                                        </a>
+                                        <a href="javascript:void(0)"
+                                           @*onclick="ShowView('@Url.Action("Delete", "CRMCustomers", new { id = item.ID })')"
+                                           onclick="ShowModalDelete('.modal-delete', '@item.ID')"
+                                           class="btn btn-danger btn-xs delete details action-class">
+                                            <i class="fa fa-trash-o"></i>&nbsp;Delete
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>*@
+
+@Html.Partial("~/Views/Shared/_popupDelete.cshtml",
+                        new Dictionary<string, string> { { "A", "Customer" }, { "B", "This customer already has transaction. Cannot delete this one." } })
+
+<script type="text/javascript">
+    function ShowView(url) {
+        ShowViewOrEdit(url);
+        return false;
+    }
+
+    $(document).ready(function () {
+        var table = $('#datatable-responsive').DataTable({
+            "columnDefs": [
+                { "orderable": true, "targets": [0] },
+                { "width": "15%", "targets": [3] },
+                { "width": "5%", "targets": [2, 4, 5, 6] }
+            ],
+            "ordering": false,
+            "displayLength": 100,            
+        });
+
+		/* check permission */
+        @{
+            var userSession = Session["User"] as NSCSC.Shared.Models.UserSession;
+            if (userSession != null)
+            {
+                var tmpAction = userSession.ListPermission.Where(o => o.Code == (int)@NSCSC.Shared.Commons.EModuleCode.CRM_Customers).Select(o => o.IsAction).FirstOrDefault();
+                if (tmpAction == false)
+                {
+                     <text>$('.action-class').hide();</text>
+                }
+            }
+        }
+       
+        $('table thead tr').find('th').removeClass('.sorting');
+        $('table thead tr').find('th').removeClass('.sorting_disabled');
+
+    });
+</script>

@@ -1,0 +1,106 @@
+﻿@model NSCSC.Shared.Models.ClientSite.MyStoreAndBusiness.MyStoreAndBusinessViewModels
+@using NSCSC.Shared
+@{
+    Html.EnableUnobtrusiveJavaScript(true);
+    //var _ID = Model.StoreInfo.ID;
+}
+<div class="row text-right">
+    @if (Model.isShow)
+    {
+        <span class="fontBold pull-left" style="font-size:13px;">
+            List of products still have remaining location(s)
+        </span>
+    }
+
+    <ul class="header-buttons pull-right list-inline">
+        <li>
+            <a href="javascript:void(0);" class="btn btn-success fontUppercase" id="btn-back-list-of-product" onclick="GetListStore('#tabStore')">
+                <i class="fa fa-mail-reply"></i>&nbsp;Back
+            </a>
+        </li>
+    </ul>
+</div>
+
+<div class="row form-horizontal form-label-left listProductStore">
+
+    @if (Model.ListProductApply != null && Model.ListProductApply.Count > 0)
+    {
+        foreach (var item in Model.ListProductApply)
+        {
+            <div class="form-group itemProduct">
+                <div class="col-md-2 col-sm-2 col-xs-12">
+                    <div class="form-group text-center imageProductStore">
+                        <img id="upload-preview" src="@item.ProductImageURL" class="" height="110" width="150" />
+                    </div>
+                </div>
+                <div class="col-md-10 col-sm-10 col-xs-12">
+                    <div class="form-group infoProduct">
+                        <fieldset class="scheduler-border">
+                            <div class="col-md-11 col-sm-11 col-xs-12 content">
+                                <div class="row fontUppercase productName">
+                                    <label class="col-md-12 col-sm-12 col-xs-12 fontLighter"><span class="fontBold">@item.ProductName</span>  - @item.sPeriod</label>
+                                </div>
+                                <div class="row">
+                                    <label class="col-md-12 col-sm-12 col-xs-12 fontLighter">
+                                        <span class="fontBold">Expired on</span>
+                                        <span class="dateTime">@item.sExpiredTime</span>
+                                    </label>
+                                </div>
+                                <div class="row">
+                                    <label class="col-md-12 col-sm-12 col-xs-12 fontLighter">@item.sRemainingLocation</label>
+                                </div>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-xs-12 select">
+                                <a href="javascript:void(0);" class="btn fontUppercase" onclick="ProductSelect('#tabStore', '@item.AssetID')">select</a>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="row text-right">
+            <span class="fontBold pull-left" style="font-size:13px;margin-left:3%">
+                There isn't any product/ package/ addition that has remaining location
+            </span>
+        </div>
+    }
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function (e) {
+
+    });
+
+    /*Function*/
+    function ProductSelect(ele, _AssetID) {
+        $.ajax({
+            type: "GET",
+            url: CreateAbsoluteUrl("ProductSelect"),
+            traditional: true,
+            data: {
+                AssetID: _AssetID,
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                var isLogin = BackToLoginWhenSessionEnd(data);
+                if (isLogin === true) {
+                    window.location = "/Login/Index";
+                }
+                else {
+                    $(ele).html(data);
+                }    
+            },
+            beforeSend: function () {
+                $('.se-pre-con').show();
+            },
+            complete: function () {
+                $('.se-pre-con').hide();
+            },
+        });
+    }
+</script>
+

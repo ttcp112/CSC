@@ -1,0 +1,49 @@
+﻿@{
+    Layout = null;
+}
+@model NSCSC.Shared.Utilities.ENetsInfo
+<!DOCTYPE html>
+
+<html>
+<head>
+    <link rel="stylesheet" href='@Url.Content("~/vendors/bootstrap/dist/css/bootstrap.min.css")'>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    <div class="container">
+        @*@if(!string.IsNullOrEmpty(ViewBag.State))
+        {
+            <div class="row">
+                <label class="col-md-2 col-sm-2 col-xs-12">Status </label>
+                <label class="col-md-4 col-sm-4 col-xs-12">@ViewBag.State</label>
+            </div>
+        }*@
+        <div id="ajaxResponse">
+
+        </div>
+    </div>
+</body>
+</html>
+<script src="@Url.Content("~/vendors/jquery/dist/jquery.min.js")"></script>
+<script src="https://uat2.enets.sg/GW2/pluginpages/env.jsp"></script>
+<script src="~/Scripts/eNETs.js"></script>
+<script src="@Url.Content("~/vendors/bootstrap/dist/js/bootstrap.min.js")"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        @if(!string.IsNullOrEmpty(Model.txnReq) && !string.IsNullOrEmpty(Model.hMac) && !string.IsNullOrEmpty(Model.currency) && !string.IsNullOrEmpty(Model.amount.ToString()))
+        {
+            <text>
+        var keyId = '154eb31c-0f72-45bb-9249-84a1036fd1ca'; // once api key is available,
+        sendPayLoad('@Html.Raw(Model.txnReq)', '@Model.hMac', keyId);
+            </text>
+        }
+
+        @if (!string.IsNullOrEmpty(ViewBag.State))
+        {
+            <text>
+        window.webkit.messageHandlers["scriptHandler"].postMessage("@ViewBag.State");
+            </text>
+        }
+        })
+</script>

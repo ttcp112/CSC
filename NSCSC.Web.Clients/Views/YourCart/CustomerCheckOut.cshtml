@@ -1,0 +1,493 @@
+﻿
+
+<link href="~/Content/inputInformation.css" rel="stylesheet" />
+<style>
+    #modal-store-info-list-product .col-sm-12 {
+        left: 0px;
+    }
+
+    #modal-store-info-list-product-create-store .col-sm-12 {
+        left: 0px;
+    }
+
+    #modal-store-info-list-product-create-store .x_content {
+        margin-left: 0px;
+    }
+</style>
+<div class="se-pre-con" style="display: none;"></div>
+<div ng-controller="customerCheckoutCtrl">
+    <div class="view" bind-html-compile="view">
+        @** breadcrum*@
+        <div class="title_left">
+            <div class="container">
+                <h3>
+                    <small class="breadcrum">
+                        <a href="@Url.Action("Index", "Home")">home</a>
+                        <i class='fa fa-caret-right'></i>
+                        <a href="@Url.Action("Index", "YourCart")">Your Cart</a>
+                        <i class='fa fa-caret-right'></i>
+                        <span>Check Out</span>
+                    </small>
+                </h3>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div class="yourcard-content">
+            <div class="row" style="margin-bottom:50px" id="step-horizontal">
+                <div id="wizard" class="form_wizard wizard_horizontal">
+                    <ul class="wizard_steps anchor">
+                        <li>
+                            <a href="javascript:void(0)" class="selected" isdone="1" id="isDone1" rel="1">
+                                <span class="step_no" id="step_no1"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)" class="disabled" isdone="1" id="isDone2" rel="2">
+                                <span class="step_no" id="step_no2"></span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <div class="col col-xs-2 col-sm-2"></div>
+                    <div class="col col-xs-6 col-sm-6 text-left">
+                        <span style="margin-left:12px">Input Store </span>
+                    </div>
+                    <div class="col col-xs-2 col-sm-2 text-center">
+                        <span>Check Out</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="step-verticel">
+                <div class="col-sm-3">
+                    <div id="wizard_verticle" class="form_wizard wizard_verticle">
+                        <ul class="list-unstyled wizard_steps anchor">
+                            <li>
+                                <a href="#step-11" class="selected" isdone="1" rel="1" id="isDone1_wizard_verticle">
+                                    <span id="step_no1" class="step_no"></span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#step-22" class="disabled" isdone="0" rel="2" id="isDone2_wizard_verticle">
+                                    <span id="step_no2" class="step_no"></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-sm-9 step_text_mobile">
+
+                    <div class="text-left text-Mer-mobile">
+                        <span>Input Store </span>
+                    </div>
+
+                    <div class="text-left text-Store-mobile">
+                        <span>Check Out </span>
+                    </div>
+                </div>
+            </div>
+            @* App *@
+            <div>
+                <div>
+                    <div id="mainForStore" bind-html-compile="partiview"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" ng-model="data.CustomerID" value="{{data.CustomerID}}" />
+    <input type="hidden" ng-model="data.MerChantID" value="{{data.MerchantDetail.ID}}" />
+    <!--MODAL-STORE-INFO-LIST-PRODUCT-->
+    <div id="modal-store-info-list-product" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg-950">
+            <div class="modal-content">
+                <div class="modal-header bg-white" style="padding:20px; border-bottom:none;">
+                    <h4 class="modal-title text-uppercase font-bold text-left">Store Information</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row form-label-left" style="padding:40px;" id="div-content-store-applied-products">
+                        <form class="form-horizontal edit-form" enctype="multipart/form-data" id="form-store-info" name="formstoreinfo">
+                            <div class="row">
+                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                    <div class="col-md-12 col-sm-12 col-xs-12 reset-padding-left-right width-height-200 border-radius-img" style="overflow: hidden;">
+                                        <!--Image Placeholder-->
+                                        <div class="col-md-12 col-sm-12 col-xs-12 reset-padding-left-right">
+                                            <img id="upload-preview-store-information" src="@Url.Content("~/images/dummy/store.jpg")" class="width-height-200" />
+                                            @* <img id="upload-preview-store-information" src="@Model.ImageURL" class="width-height-200" />*@
+                                        </div>
+                                        <!--element choose change-->
+                                        <div class="col-md-12 col-sm-12 col-xs-12 ele-choose-change">
+                                            <div class="upload-i-wrapper ele-choose-change-input">
+                                                <input type="file" id="PictureUploadStore" onchange="PreviewImage(this,'upload-preview-store-information')" accept="*.jpg" />
+                                                <a href="" class="text-white">Change</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--Active Store-->
+                                    <div class="col-md-12 col-sm-12 col-xs-12 text-center" style="margin-top:10px;">
+                                        <input type="checkbox" id="chkActive" class="js-switch-store" />Active
+                                    </div>
+                                </div>
+
+                                <div class="col-md-9 col-sm-9 col-xs-12">
+                                    @*Applied on*@
+                                    <div class="form-group">
+                                        <div class="col-md-2 col-sm-2 col-xs-12 height-30 reset-padding-left-right">
+                                            Applied on
+                                        </div>
+                                        <div class="col-md-5 col-sm-10 col-xs-12">
+                                            <button type="button" class="btn btn-view-detail" id="btnStoreAppliedProducts" ng-click="ShowModalAppliedProducts();">
+                                                {{ApplyProductCount}}
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- show row when action is [Add New] -->
+                                    @*  @if (Model._action.Equals("add_new"))*@
+                                    @* {*@
+                                    @*Type Store*@
+                                    <div class="form-group">
+                                        <div class="col-md-2 col-sm-2 col-xs-12 height-30 reset-padding-left-right">
+                                        </div>
+                                        <div class="col-md-10 col-sm-10 col-xs-12 reset-padding-left-right ">
+                                            <label class="radio-inline">
+                                                <input type="radio" checked="checked" class="flat-store-info" name="" /> Create New Store
+                                                @*@Html.RadioButtonFor(model => model.IsNew, "true", new { @checked = "checked", @class = "flat-store-info", @name = "" })
+                                                    Create New Store*@
+                                            </label>
+                                            <label class="radio-inline">
+                                                <input type="radio" class="flat-store-info" name="" />Choose from Existing Store
+                                                @*@Html.RadioButtonFor(model => model.IsNew, "false", new { @class = "flat-store-info", @name = "" })
+                                                    Choose from Existing Store*@
+                                            </label>
+                                        </div>
+                                    </div>
+                                    @* }*@
+                                    <input type="hidden" />
+                                    @*Store Name*@
+                                    <div class="form-group">
+                                        <div class="col-md-2 col-sm-2 col-xs-12 height-30 reset-padding-left-right">
+                                            Store Name *
+                                        </div>
+                                        <div class="col-md-5 col-sm-10 col-xs-12">
+                                            <input required type="text" name="Name" ng-model="dataStore.Name" class="form-control" autocomplete="off" placeholder="Store's Name" />
+                                            <label>
+                                                <em class="note note-error" ng-show="(formstoreinfo.Name.$error.required)">(The name is required)</em>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    @*Phone*@
+                                    <div class="form-group">
+                                        <div class="col-md-2 col-sm-2 col-xs-12 height-30 reset-padding-left-right">
+                                            Phone *
+                                        </div>
+                                        <div class="col-md-5 col-sm-10 col-xs-12">
+                                            <input required type="text" id="txtPhone" name="phone" ng-model="dataStore.Phone" pattern="[0-9]+.{6,20}" maxlength="20" class="form-control" autocomplete="off" placeholder="0123456789" />
+                                            <label>
+                                                <em class="note note-error" ng-show="(formstoreinfo.phone.$error.required)">(The phone is required)</em>
+                                                <em class="note note-error" ng-show="(formstoreinfo.phone.$error.pattern)">(Invalid phone)</em>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    @*Email*@
+                                    <div class="form-group">
+                                        <div class="col-md-2 col-sm-2 col-xs-12 height-30 reset-padding-left-right">
+                                            Email *
+                                        </div>
+                                        <div class="col-md-5 col-sm-10 col-xs-12">
+                                            <input required type="email" id="txtName" name="email" ng-model="dataStore.Email" class="form-control" autocomplete="off" placeholder="store@gmail.com" />
+                                            <label>
+                                                <em class="note note-error" ng-show="(formstoreinfo.email.$error.required)">(The email is required)</em>
+                                                <em class="note note-error" ng-show="(formstoreinfo.email.$error.email)">(Invalid email address)</em>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    @*Industry*@
+                                    <div class="form-group">
+                                        <div class="col-md-2 col-sm-2 col-xs-12 height-30 reset-padding-left-right">
+                                            Industry *
+                                        </div>
+                                        <div class="col-md-5 col-sm-10 col-xs-12">
+                                            <select style="width:100%" id="ddlIndustryStore" ng-model="dataStore.Industry" @*ng-init="dataStore.ListIndustry.Value = dataStore.Industry"*@
+                                                    @*ng-model="dataStore._industry" ng-init="dataStore._industry = {Industry: dataStore.Industry}*@
+                                                    ng-options="industry.Value as industry.Text for industry in dataStore.ListIndustry track by industry.Value"></select>
+                                        </div>
+                                    </div>
+
+
+                                    @*GST Reg No.*@
+                                    <div class="form-group">
+                                        <div class="col-md-2 col-sm-2 col-xs-12 height-30 reset-padding-left-right">
+                                            GST Reg No.
+                                        </div>
+                                        <div class="col-md-5 col-sm-10 col-xs-12">
+                                            <input type="text" id="txtTaxNo" ng-model="dataStore.GSTRegNo" class="form-control" autocomplete="off" placeholder="Tax No." />
+                                        </div>
+                                    </div>
+
+                                    @*Time Zone*@
+                                    <div class="form-group">
+                                        <div class="col-md-2 col-sm-2 col-xs-12 height-30 reset-padding-left-right">
+                                            Time Zone
+                                        </div>
+                                        <div class="col-md-5 col-sm-10 col-xs-12">
+                                            <select style="width:100%" id="StoreTimeZone" ng-model="dataStore.TimeZone"
+                                                    ng-options="timezone for timezone in dataStore.ListTimeZone track by index">
+                                                <option value="">Please choose Country</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    @*line*@
+                                    <div class="form-group">
+                                        <div class="col-md-1 col-sm-12 col-xs-12 height-30 reset-padding-left-right">
+                                            <hr style="width:50px; border: 1.5px solid #e0e0e2;" />
+                                        </div>
+                                    </div>
+
+                                    @*City*@
+                                    <div class="form-group">
+                                        <div class="col-md-2 col-sm-2 col-xs-12 height-30 reset-padding-left-right">
+                                            City
+                                        </div>
+                                        <div class="col-md-5 col-sm-10 col-xs-12">
+                                            <input type="text" class="form-control" ng-model="dataStore.City" id="txtCity" autocomplete="off" placeholder="City" />
+                                        </div>
+                                    </div>
+
+                                    @*Zip Code*@
+                                    <div class="form-group">
+                                        <div class="col-md-2 col-sm-2 col-xs-12 height-30 reset-padding-left-right">
+                                            Zip Code
+                                        </div>
+                                        <div class="col-md-5 col-sm-10 col-xs-12">
+                                            <input type="text" class="form-control" ng-model="dataStore.ZipCode" autocomplete="off" placeholder="Zip code" />
+                                        </div>
+                                    </div>
+
+                                    @*Country*@
+                                    <div class="form-group">
+                                        <div class="col-md-2 col-sm-2 col-xs-12 height-30 reset-padding-left-right">
+                                            Country
+                                        </div>
+                                        <div class="col-md-5 col-sm-10 col-xs-12">
+                                            <select style="width:100%" id="ddlCountryStore" ng-model="dataStore.Country" 
+                                                    ng-options="country.Name for country in dataStore.Countries track by country.Name" ng-change="changeTimeZone()">
+                                                <option value="">Please choose Country</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    @*Address*@
+                                    <div class="form-group">
+                                        <div class="col-md-2 col-sm-2 col-xs-12 height-30 reset-padding-left-right">
+                                            Address
+                                        </div>
+                                        <div class="col-md-5 col-sm-10 col-xs-12">
+                                            <textarea class="form-control" ng-model="dataStore.Street" placeholder="Address" rows="3" style="resize:none"></textarea>
+                                        </div>
+                                    </div>
+
+                                    @*Action*@
+                                    <div class="form-group">
+                                        <div class="col-md-2 col-sm-2 col-xs-12 height-30 reset-padding-left-right">
+                                        </div>
+                                        <div class="col-md-5 col-sm-10 col-xs-12">
+                                            <ul class="header-buttons list-inline">
+                                                <li>
+                                                    <a href="" class="btn btn-cyan" style="width: 150px;" id="btn-actives" ng-click="formstoreinfo.$valid && SaveCreateOrEditStore();">Save</a>
+                                                </li>
+                                                <li>
+                                                    <a href="" class="btn text-cyan bg-white" data-dismiss="modal">
+                                                        Cancel
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--MODAL-STORE-INFO-LIST-PRODUCT FOR CREATE STORE-->
+    <div id="modal-store-info-list-product-create-store" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg-950">
+            <div class="modal-content">
+                <div class="modal-header bg-white" style="padding:20px; border-bottom:none;">
+                    <h4 class="modal-title text-uppercase font-bold text-left">Store Information</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row form-label-left" style="padding:40px;">
+                        <div class="row">
+                            <div class="col-md-3 col-sm-3 col-xs-12">
+                                <div class="col-md-12 col-sm-12 col-xs-12 reset-padding-left-right width-height-200 border-radius-img" style="overflow: hidden;">
+                                    <!--Image Placeholder-->
+                                    <div class="col-md-12 col-sm-12 col-xs-12 reset-padding-left-right">
+                                        <img id="upload-preview-store-applied-products" src="@Url.Content("~/images/dummy/store.jpg")" class="width-height-200" />
+                                    </div>
+                                </div>
+                                <!--Active Store-->
+                                <div class="col-md-12 col-sm-12 col-xs-12 text-center" style="margin-top:10px;">
+                                    <input type="checkbox" id="chkActiveAppliedProducts" class="js-switch-store-applied-products" disabled="disabled" />Active
+                                    @*    @Html.CheckBoxFor(model => model.IsActive, new { @id = "chkActiveAppliedProducts", @class = "js-switch-store-applied-products", @disabled = "disabled" }) Active*@
+                                </div>
+                            </div>
+
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                                @*Applied on*@
+                                <div class="form-group">
+                                    <div class="col-md-2 col-sm-2 col-xs-12 height-30 reset-padding-left-right">
+                                        Applied on
+                                    </div>
+                                    <div class="col-md-5 col-sm-10 col-xs-12" style="margin-bottom:10px;">
+                                        <button type="button" class="btn btn-view-detail" id="btnPopupStoreAppliedProducts" ng-bind="ApplyProductCount"> </button>
+                                    </div>
+                                </div>
+
+                                @*list Product*@
+                                <div class="form-group">
+                                    <div class="col-md-12 col-sm-12 col-xs-12 reset-padding-left-right" style="border:1px solid #f2f2f2;">
+                                        <div class="table-responsive" style="overflow-x:hidden;">
+                                            <div class="x_panel">
+                                                <div class="x_title text-left" style="padding-left:20px;">
+                                                    <h2></h2>
+                                                    <div class="clearfix"></div>
+                                                </div>
+                                                <div class="x_content">
+                                                    <table id="datatable-responsive-list-product-create-store"
+                                                           class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action text-left"
+                                                           role="grid" aria-describedby="example_info" cellspacing="0" style="width:100%;">
+                                                        <thead style="background-color:#D9E0E8; color:#000;">
+                                                            <tr>
+                                                                <th class="text-center"></th>
+                                                                <th class="text-center">Product</th>
+                                                                <th class="text-center">Activated Date</th>
+                                                                <th class="text-center">Expired Date</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr ng-repeat="item in dataStore.ListProductApply">
+                                                                <td>
+                                                                    <input icheck type="checkbox" ng-model="item.IsApply" ng-change="UpdatedNumberProductApplied();" />
+                                                                </td>
+                                                                <td style="font-size:12px;" ng-bind="item.ProductName"></td>
+                                                                <td class="text-center" ng-bind="item.sActiveTime"></td>
+                                                                <td class="text-center" ng-bind="item.ExpiredTimeDisplay"></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*Action*@
+                                <div class="form-group">
+                                    <div class="col-md-2 col-sm-2 col-xs-12 height-30 reset-padding-left-right">
+                                    </div>
+                                    <div class="col-md-5 col-sm-10 col-xs-12" style="width:50% !important;margin-top:10px;">
+                                        <ul class="header-buttons list-inline">
+                                            <li>
+                                                <a href="" class="btn btn-cyan" style="width: 150px;"
+                                                   data-dismiss="modal" aria-hidden="true">Done</a>
+                                            </li>
+                                            <li>
+                                                <a href="" class="btn text-cyan bg-white" data-dismiss="modal" aria-hidden="true">
+                                                    Cancel
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+
+        $("#StoreTimeZone").select2({
+            placeholder: 'Please choose Time Zone',
+            dropdownParent: $("#modal-store-info-list-product")
+        });
+
+        $("#ddlCountryStore").select2({
+            placeholder: 'Please choose Country',
+            dropdownParent: $("#modal-store-info-list-product")
+        });
+        $("#ddlIndustryStore").select2({
+            placeholder: 'Please choose Country',
+            dropdownParent: $("#modal-store-info-list-product")
+        });
+        init_ICheckProduct();
+        init_SwitcheryAppliedProducts();
+
+        init_ICheck();
+        init_Switchery();
+    })
+
+    // iCheck
+    function init_ICheck() {
+        if ($("input.flat-store-info")[0]) {
+            $(document).ready(function () {
+                $('input.flat-store-info').iCheck({
+                    checkboxClass: 'icheckbox_flat-blue',
+                    radioClass: 'iradio_flat-blue'
+                });
+            });
+        }
+    };
+
+    // Switchery
+    function init_Switchery() {
+        if ($(".js-switch-store")[0]) {
+            var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch-store'));
+            elems.forEach(function (html) {
+                var switchery = new Switchery(html, {
+                    color: '#26B99A'
+                });
+            });
+        }
+    };
+
+    // iCheck
+    function init_ICheckProduct() {
+        if ($("input.flat-product")[0]) {
+            $(document).ready(function () {
+                $('input.flat-product').iCheck({
+                    checkboxClass: 'icheckbox_flat-green',
+                    radioClass: 'iradio_flat-green'
+                });
+            });
+        }
+    };
+
+    // Switchery
+    function init_SwitcheryAppliedProducts() {
+        if ($(".js-switch-store-applied-products")[0]) {
+            var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch-store-applied-products'));
+            elems.forEach(function (html) {
+                var switchery = new Switchery(html, {
+                    color: '#26B99A'
+                });
+            });
+        }
+    };
+
+</script>
+<script src="~/Scripts/angular-sanitize.js"></script>
+<script src="~/Scripts/angular-bind-html-compile.js"></script>
+<script src="~/Scripts/app/InputInformationCtrl.js"></script>
+<script src="~/Scripts/app/customerCheckoutCtrl.js"></script>

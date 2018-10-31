@@ -1,0 +1,156 @@
+﻿@model NSCSC.Shared.Models.ClientSite.MyStoreAndBusiness.ProductPackageUserModels
+@using NSCSC.Shared
+@{
+    Html.EnableUnobtrusiveJavaScript(true);
+    ViewBag.Title = "My Store and Business|Extend";
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <h3 class="text-uppercase font-bold">
+            Extend Price List
+        </h3>
+    </div>
+    <!--list item-->
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <table class="table table-custom-buy-addition">
+            <thead>
+                <tr>
+                    <td style="width:1%;"></td>
+                    <td style="width:10%;"></td>
+                    <td style="width:12%;"></td>
+                    <td style="width:12%;"></td>
+                    <td style="width:15%;"></td>
+                </tr>
+            </thead>
+            <tbody>
+
+                @if (Model.ListPrices != null && Model.ListPrices.Any())
+                {
+                    foreach (var itemPrice in Model.ListPrices)
+                    {
+                        var _PeriodName = itemPrice.PeriodName;
+                        if (itemPrice.PeriodType != (byte)Commons.EPeriodType.OneTime)
+                        {
+                            _PeriodName = itemPrice.Period + " " + _PeriodName;
+                            if (itemPrice.Period > 1)
+                            {
+                                _PeriodName += "s";
+                            }
+                        }
+                        <tr>
+                            <td>
+
+                                <input type="hidden" class="classAssetID" value="@Model.AssetID" />
+                                <input type="hidden" class="classPeriod" value="@itemPrice.Period" />
+                                <input type="hidden" class="classPeriodType" value="@itemPrice.PeriodType" />
+                                <input type="hidden" class="classPrice" value="@itemPrice.Price" />
+                                <input type="radio" name="rdextend" class="flat-extend clsCheckedExtendPrice" checked="@itemPrice.IsSelected" onchange="GetDataExtendPrice('@Model.AssetID', '@itemPrice.Period', '@itemPrice.PeriodType', '@itemPrice.Price')" />
+                            </td>
+                            <td>Extend</td>
+                            <td class="text-center">@itemPrice.sPeriodName</td>
+                            <td class="text-center">with </td>
+                            <td class="text-left">@itemPrice.CurrencySymbol@itemPrice.Price.ToString("#,0.00")</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <!--end list item-->
+    <!-- Action -->
+    <div class=" col-md-offset-6 col-md-6 col-sm-6 col-xs-12">
+        <div class="form-group">
+            <ul class="header-buttons list-inline">
+                <li>
+                    <a href="javascript:void(0);" class="btn btn-cyan text-uppercase" style="width: 150px;" id="btn-actives" onclick="ExtendProductStoreBusiness();">Add to Cart</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" class="btn text-cyan bg-white" data-dismiss="modal">
+                        Cancel
+                        <input type="hidden" id="hidProductAppliOnExtend" value="@Model.ProductAppliOnExtendID" />
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!--Msg Error-->
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="form-group text-center">
+            <span class="label label-danger" id="ltrErrorAddToCart"></span>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('input.flat-extend').iCheck({
+            checkboxClass: 'icheckbox_flat-green',
+            radioClass: 'iradio_flat-green'
+        });
+
+        $('.clsCheckedExtendPrice').on('ifClicked', function (event) {
+            $(event.target).trigger('change');
+        });
+    });
+
+    var _assetidExtend = $('.classAssetID').first().val();
+    var _periodExtend = $('.classPeriod').first().val();
+    var _periodTypeExtend = $('.classPeriodType').first().val();
+    var _priceExtend = $('.classPrice').first().val();
+    var _productAppliOnExtend = "";
+
+    function GetDataExtendPrice(AssetId, Period, PeriodType, Price) {
+        _assetidExtend = AssetId;
+        _periodExtend = Period;
+        _periodTypeExtend = PeriodType;
+        _priceExtend = Price;
+        console.log('_assetidExtend: ' + _assetidExtend + '| _periodExtend: ' + _periodExtend + '| _periodTypeExtend: ' + _periodTypeExtend + '| _priceExtend: ' + _priceExtend);
+    }
+
+    function ExtendProductStoreBusiness() {
+        _productAppliOnExtend = $('#hidProductAppliOnExtend').val();
+        if (_productAppliOnExtend !== null && _productAppliOnExtend !== "") {
+            var ProductExtendModel = {
+                AssetID: _productAppliOnExtend,
+                Period: _periodExtend,
+                PeriodType: _periodTypeExtend,
+                Price: _priceExtend
+            };
+             $.ajax({
+                url: '@Url.Action("ExtendProductStoreBusiness", "OurProducts")',
+                type: "POST",
+                traditional: true,
+                data: JSON.stringify(ProductExtendModel),
+                dataType: "html",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    data = JSON.parse(data);
+                    //=========
+                    console.log(data);
+                    var countItemCart = data.TotalQuantity;
+                    createOrUpdateOrder(data.CusId, data.ID, countItemCart);
+                    getOrder(data.CusId);
+                    //=========
+                    // Redirect to page YourCart
+                    window.location.assign('@Url.Action("Index", "YourCart")');
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    //alert(jqXHR.statusText);
+                    $('#ltrErrorAddToCart').html(jqXHR.statusText);
+                    if (jqXHR.status === 400) {
+                        deleteOrder();
+                    }
+                },
+                beforeSend: function () {
+                    $('.se-pre-con').show();
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                }
+            });
+        }
+    }
+
+</script>

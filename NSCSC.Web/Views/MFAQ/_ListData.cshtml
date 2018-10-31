@@ -1,0 +1,423 @@
+﻿@model NSCSC.Shared.Models.ManagementTool.FAQ.FAQViewModels
+
+@*Topics*@
+<div class="table-responsive">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>Topics</h2>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <table id="datatable-responsive-Topics" class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action" cellspacing="0" style="width:100%;">
+                <thead style="background-color:#34495e; color:#fff;">
+                    <tr>
+                        <td style="background: #fff">
+                            <a href="javascript:void(0)" class="btn btn-info btn-xs edit details" onclick="GetEditTopic('', '')"
+                               data-toggle="modal" data-backdrop="static" data-target=".bs-example-modal-lg-topic">
+                                <i class="fa fa-plus"></i>&nbsp;Add New
+                            </a>&nbsp;&nbsp;   
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="text-align:center;">Topic</th>
+                        <th style="text-align:center;">Description</th>
+                        <th style="text-align:center;">Status</th>
+                        <th style="text-align:center;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.ListTopicItem != null)
+                    {
+                        for (int i = 0; i < Model.ListTopicItem.Count; i++)
+                        {
+                            string styleRow = "row-evenItem";
+                            if (i % 2 == 0)
+                            {
+                                styleRow = "row-oddItem";
+                            }
+                            var item = Model.ListTopicItem[i];
+                            <tr class="@styleRow">
+                                <td style="color:#34495e; font-weight:bold;" id="_txtTopicName_@i">&nbsp;&nbsp;@item.Name</td>
+                                <td style="text-align:center;" id="_txtDescrip_@i">@item.Description</td>
+                                <td style="text-align:center;" id="_chkIsActive_@i">
+                                    @{if (item.IsActive)
+                                        {
+                                            <span class="label label-success">@Html.Raw("Active")</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="label label-danger">@Html.Raw("InActive")</span>
+                                        }
+                                    }
+                                </td>                                
+                                <td style="text-align:center;">
+                                    <a href="javascript:void(0)"
+                                       onclick="ShowView('@Url.Action("ViewTopic", "MFAQ", new { id = @item.ID })')"
+                                       class="btn btn-primary btn-xs view details"><i class="fa fa-eye"></i>&nbsp;View</a>&nbsp;&nbsp; 
+                                    <a href="#" class="btn btn-info btn-xs edit details" onclick="GetEditTopic(@i, '@item.ID')"
+                                       data-toggle="modal" data-backdrop="static" data-target=".bs-example-modal-lg-topic"><i 
+                                       class="fa fa-pencil"></i>&nbsp;Edit</a>&nbsp;&nbsp;                       
+                                    <a href="javascript:void(0)"
+                                       onclick="ShowView('@Url.Action("DeleteTopic", "MFAQ", new { id = @item.ID })')"
+                                       class="btn btn-danger btn-xs delete details"><i class="fa fa-trash-o"></i>&nbsp;Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@*FAQ*@
+<div class="table-responsive">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>FAQ</h2>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <table id="datatable-responsive-FAQ" class="table table-striped table-bordered dt-responsive nowrap table table-striped jambo_table bulk_action" cellspacing="0" style="width:100%;">
+                <thead style="background-color:#34495e; color:#fff;">
+                    <tr>
+                        <td style="background: #fff">
+                            <a href="javascript:void(0)" class="btn btn-info btn-xs edit details" onclick="GetEditFAQ('', '', '')"
+                               data-toggle="modal" data-backdrop="static" data-target=".bs-example-modal-lg-FAQ">
+                                <i class="fa fa-plus"></i>&nbsp;Add New
+                            </a>&nbsp;&nbsp;
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="text-align:center;">Topic</th>
+                        <th style="text-align:center;">Question</th>
+                        <th style="text-align:center;">Answer</th>
+                        <th style="text-align:center;">Status</th>
+                        <th style="text-align:center;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.ListIFAQtem != null)
+                    {
+                        for (int i = 0; i < Model.ListIFAQtem.Count; i++)
+                        {
+                            string styleRow = "row-evenItem";
+                            if (i % 2 == 0)
+                            {
+                                styleRow = "row-oddItem";
+                            }
+                            var item = Model.ListIFAQtem[i];
+                            <tr class="@styleRow">
+                                <td style="color:#34495e; font-weight:bold;" id="_txtFAQName_@i">&nbsp;&nbsp;@item.TopicName</td>
+                                <td style="text-align:center;" id="_txtFAQQuestion_@i">@item.Question</td>
+                                <td style="text-align:center;" id="_txtFAQAnswer_@i">@item.Answer</td>
+                                <td style="text-align:center;" id="_chkFAQIsActive_@i">
+                                    @{if (item.IsActive)
+                                        {
+                                            <span class="label label-success">@Html.Raw("Active")</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="label label-danger">@Html.Raw("InActive")</span>
+                                        }
+                                    }
+                                </td>
+                                <td style="text-align:center;">
+                                    <a href="javascript:void(0)"
+                                       onclick="ShowView('@Url.Action("ViewFAQ", "MFAQ", new { id = @item.ID })')"
+                                       class="btn btn-primary btn-xs view details"><i class="fa fa-eye"></i>&nbsp;View</a>&nbsp;&nbsp;
+                                    <a href="#" class="btn btn-info btn-xs edit details" onclick="GetEditEAQ(@i, '@item.ID', '@item.TopicID')"
+                                       data-toggle="modal" data-backdrop="static" data-target=".bs-example-modal-lg-FAQ">
+                                        <i class="fa fa-pencil"></i>&nbsp;Edit
+                                    </a>&nbsp;&nbsp;       
+                                    <a href="javascript:void(0)"
+                                       onclick="ShowView('@Url.Action("DeleteFAQ", "MFAQ", new { id = @item.ID })')"
+                                       class="btn btn-danger btn-xs delete details"><i class="fa fa-trash-o"></i>&nbsp;Delete</a>
+                                </td>
+                            </tr>
+                                            }
+                                        }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bs-example-modal-lg-topic" id="modelTopicDetail" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Topic Info</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group">
+                        <label for="topic-name" class="col-md-2 col-sm-2 col-xs-12 lineHeight">Topic name</label>
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <input type="text" class="form-control" id="txt-topic-name">
+                        </div>                    
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="status" class="col-md-2 col-sm-2 col-xs-12 lineHeight">Status</label>
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <input type="checkbox" class="col-md-1" id="chk-status">Active
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="desciption" class="col-md-2 col-sm-2 col-xs-12 lineHeight">Description</label>
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <textarea class="form-control" id="txt-desciption"> </textarea>
+                        </div>
+                    </div>
+                </div>               
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:void(0)" class="btn btn-primary"  onclick="SaveDataTopic()">Save</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*FAQ*@
+<div class="modal fade bs-example-modal-lg-FAQ" id="modelFAQDetail" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">FAQ Info</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group">
+                        <label for="faq-name" class="col-md-2 col-sm-2 col-xs-12 lineHeight">Topic</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            @Html.DropDownListFor(model => model.IDTopic,
+                            new SelectList(Model.ListTopic, "Value", "Text", Model.IDTopic), null,
+                             new
+                             {
+                                 @class = "form-control select2_multiple TopicDdlItem",
+                                 @id = "TopicDdl",
+                                 @style = "width:100%;"
+                             })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="faq-status" class="col-md-2 col-sm-2 col-xs-12 lineHeight">Status</label>
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <input type="checkbox" class="col-md-1" id="chk-faq-status">Active
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="faq-question" class="col-md-2 col-sm-2 col-xs-12 lineHeight">Question</label>
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <textarea class="form-control" id="txt-faq-question"> </textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 15px;">
+                    <div class="form-group">
+                        <label for="faq-answer" class="col-md-2 col-sm-2 col-xs-12 lineHeight">Answer</label>
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <textarea class="form-control" id="txt-faq-answer"> </textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:void(0)" class="btn btn-primary" onclick="SaveDataFAQ()">Save</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var _id = "";
+
+    function ShowView(url) {
+        ShowViewOrEdit(url);
+        return false;
+    }
+
+    $(document).ready(function () {
+
+        $("#TopicDdl").select2({
+            placeholder: "Please choose topic"
+        });
+
+        var handleDataTableButtons = function () {
+            if ($("#datatable-buttons").length) {
+                $("#datatable-buttons").DataTable({
+
+                    dom: "Bfrtip",
+                    responsive: true
+                });
+            }
+        };
+
+        TableManageButtons = function () {
+            "use strict";
+            return {
+                init: function () {
+                    handleDataTableButtons();
+                }
+            };
+        }();
+
+        $('#datatable').dataTable();
+        $('#datatable-keytable').DataTable({
+            keys: true
+        });
+
+        $('#datatable-responsive-Topics').DataTable({
+            "columnDefs": [
+                { "orderable": false, "targets": 3 },
+                { "width": "5%", "targets": 0 },
+                { "width": "15%", "targets": 1 },
+                { "width": "2%", "targets": 2 },
+                { "width": "1%", "targets": 3 }
+            ],
+            "order": [[0, 'asc']],
+            "displayLength": 25,
+            //"drawCallback": function ( settings ) {
+            //    var api = this.api();
+            //    var rows = api.rows( {page:'current'} ).nodes();
+            //    var last=null;
+            //    //Column Group
+            //    api.column(2, {page:'current'} ).data().each( function (group, i) {
+            //        if ( last !== group ) {
+            //            $(rows).eq(i).before(
+            //                '<tr class="group"><td colspan="5"><strong style="color:#d9534f;">'+(group === '' ? '|' :  group)+'</strong></td></tr>'
+            //            );
+            //            last = group;
+            //        }
+            //    } );
+            //}
+        });
+
+        $('#datatable-responsive-FAQ').DataTable({
+            "columnDefs": [
+                { "orderable": false, "targets": 4 },
+                { "width": "3%", "targets": 0 },
+                { "width": "10%", "targets": 1 },
+                { "width": "10%", "targets": 2 },
+                { "width": "2%", "targets": 3 },
+                { "width": "1%", "targets": 4 }
+            ],
+            "order": [[0, 'asc']],
+            "displayLength": 25,
+            //"drawCallback": function ( settings ) {
+            //    var api = this.api();
+            //    var rows = api.rows( {page:'current'} ).nodes();
+            //    var last=null;
+            //    //Column Group
+            //    api.column(2, {page:'current'} ).data().each( function (group, i) {
+            //        if ( last !== group ) {
+            //            $(rows).eq(i).before(
+            //                '<tr class="group"><td colspan="5"><strong style="color:#d9534f;">'+(group === '' ? '|' :  group)+'</strong></td></tr>'
+            //            );
+            //            last = group;
+            //        }
+            //    } );
+            //}
+        });
+
+
+        var table = $('#datatable-fixed-header').DataTable({
+            fixedHeader: true
+        });
+
+        TableManageButtons.init();
+    });
+
+    function GetEditTopic(index, ID) {
+        _id = ID;
+        var txtTopicName = $('#_txtTopicName_' + index).text().trim();
+        var txtDescrip = $('#_txtDescrip_' + index).text().trim();
+        var chkIsActive = $('#_chkIsActive_' + index).text().trim().toString() == 'Active' ? true : false;
+        $('#txt-topic-name').val(txtTopicName);
+        $('#chk-status').prop('checked', chkIsActive);
+        $('#txt-desciption').val(txtDescrip);
+    };
+
+    function GetEditEAQ(index, ID, TopicID) {
+        _id = ID;
+        var txtFAQName = $('#_txtFAQName_' + index).text().trim();
+        var chkFAQIsActive = $('#_chkFAQIsActive_' + index).text().trim().toString() == 'Active' ? true : false;
+        var txtFAQQuestion = $('#_txtFAQQuestion_' + index).text().trim();
+        var txtFAQAnswer = $('#_txtFAQAnswer_' + index).text().trim();
+
+        $(".TopicDdlItem").val(TopicID).trigger("change");
+        $('#chk-faq-status').prop('checked', chkFAQIsActive);
+        $('#txt-faq-question').val(txtFAQQuestion);
+        $('#txt-faq-answer').val(txtFAQAnswer);
+    };
+
+    function SaveDataTopic() {
+        var TopicDTO = {
+            ID: _id,
+            Name: $('#txt-topic-name').val(),
+            IsActive: $('#chk-status').is(':checked'),
+            Description: $('#txt-desciption').val()
+        };
+        $.ajax({
+            url: '@Url.Action("SaveTopic", "MFAQ")',
+                type: 'POST',
+                dataType: 'html',
+                cache: false,
+                data: { model: TopicDTO },
+                success: function (data) {
+                    $(".se-pre-con").hide();
+                    Search();
+                }, beforeSend: function () {
+                    $('.se-pre-con').show();
+                    $("#modelTopicDetail").modal('hide');
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                }
+            });
+    };
+
+    function SaveDataFAQ() {
+        var FAQDTO = {
+            ID: _id,
+            TopicID: $('#TopicDdl').val(),
+            TopicName: "",
+            IsActive: $('#chk-faq-status').is(':checked'),
+            Question: $('#txt-faq-question').val(),
+            Answer: $('#txt-faq-answer').val()
+        };
+        $.ajax({
+            url: '@Url.Action("SaveFAQ", "MFAQ")',
+                type: 'POST',
+                dataType: 'html',
+                cache: false,
+                data: { model: FAQDTO },
+                success: function (data) {
+                    $(".se-pre-con").hide();
+                    Search();
+                }, beforeSend: function () {
+                    $('.se-pre-con').show();
+                    $("#modelFAQDetail").modal('hide');
+                },
+                complete: function () {
+                    $('.se-pre-con').hide();
+                }
+            });
+    };
+</script>

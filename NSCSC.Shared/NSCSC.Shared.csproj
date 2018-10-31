@@ -1,0 +1,400 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{28543391-6A77-44DA-B1E0-D68318A8B860}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NSCSC.Shared</RootNamespace>
+    <AssemblyName>NSCSC.Shared</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ClosedXML, Version=0.91.0.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
+      <HintPath>..\packages\ClosedXML.0.91.0\lib\net452\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.8.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.8.1\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetZip, Version=1.10.1.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.1.10.1\lib\net20\DotNetZip.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelNumberFormat, Version=1.0.3.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelNumberFormat.1.0.3\lib\net20\ExcelNumberFormat.dll</HintPath>
+    </Reference>
+    <Reference Include="FastMember.Signed, Version=0.0.0.0, Culture=neutral, PublicKeyToken=9e8f22703bef9a29, processorArchitecture=MSIL">
+      <HintPath>..\packages\FastMember.Signed.1.2.0\lib\net45\FastMember.Signed.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Exchange.WebServices, Version=15.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Exchange.WebServices.2.2\lib\40\Microsoft.Exchange.WebServices.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Exchange.WebServices.Auth, Version=15.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Exchange.WebServices.2.2\lib\40\Microsoft.Exchange.WebServices.Auth.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Win32.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.4.13\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="NSLog">
+      <HintPath>..\ExtandLibs\NSLog.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp, Version=106.2.1.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.106.2.1\lib\net452\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.5.0.2\lib\net45\ServiceStack.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Client, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Client.5.0.2\lib\net45\ServiceStack.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Common, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Common.5.0.2\lib\net45\ServiceStack.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Interfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Interfaces.5.0.2\lib\net45\ServiceStack.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Text, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Text.5.0.2\lib\net45\ServiceStack.Text.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.AppContext, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.AppContext.4.3.0\lib\net46\System.AppContext.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Console, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Console.4.3.0\lib\net46\System.Console.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.3.0\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Globalization.Calendars, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Globalization.Calendars.4.3.0\lib\net46\System.Globalization.Calendars.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Compression.4.3.0\lib\net46\System.IO.Compression.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.IO.Compression.ZipFile, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Compression.ZipFile.4.3.0\lib\net46\System.IO.Compression.ZipFile.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.FileSystem, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.4.3.0\lib\net46\System.IO.FileSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Packaging, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Packaging.4.4.0\lib\net46\System.IO.Packaging.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.4.3.0\lib\net46\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Sockets, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Sockets.4.3.0\lib\net46\System.Net.Sockets.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.4\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.4\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.ReaderWriter, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Xml.ReaderWriter.4.3.0\lib\net46\System.Xml.ReaderWriter.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Commons.cs" />
+    <Compile Include="Factory\BaseFactory.cs" />
+    <Compile Include="Factory\ClientSite\CheckIpAddressFactory.cs" />
+    <Compile Include="Factory\ClientSite\MyProfileFactory.cs" />
+    <Compile Include="Factory\ClientSite\MyStoreAndBusinessFactory.cs" />
+    <Compile Include="Factory\ClientSite\OurProducts\OurProductFactory.cs" />
+    <Compile Include="Factory\ClientSite\Register\RegisterFactory.cs" />
+    <Compile Include="Factory\ClientSite\YourCartFactory.cs" />
+    <Compile Include="Factory\CRM\CustomerFactory.cs" />
+    <Compile Include="Factory\CRM\LicenseKeyManagementFactory.cs" />
+    <Compile Include="Factory\CRM\OrderReceiptManagementFactory.cs" />
+    <Compile Include="Factory\CRM\RatingAndCommentFactory.cs" />
+    <Compile Include="Factory\CRM\SupportFactory.cs" />
+    <Compile Include="Factory\ManagementTool\ClientModuleFactory.cs" />
+    <Compile Include="Factory\ManagementTool\FAQFactory.cs" />
+    <Compile Include="Factory\ManagementTool\FeedbacksFactory.cs" />
+    <Compile Include="Factory\ManagementTool\ListofProductFeaturesFactory.cs" />
+    <Compile Include="Factory\Sandbox\EmployeeFactory.cs" />
+    <Compile Include="Factory\Sandbox\Inventory\CategoriesFactory.cs" />
+    <Compile Include="Factory\Sandbox\Inventory\DiscountFactory.cs" />
+    <Compile Include="Factory\Sandbox\Inventory\ProductFactory.cs" />
+    <Compile Include="Factory\Sandbox\Inventory\PromotionsFactory.cs" />
+    <Compile Include="Factory\Settings\Currency\CurrencyFactory.cs" />
+    <Compile Include="Factory\Settings\PaymentMethods\PaymentMethodFactory.cs" />
+    <Compile Include="Factory\Settings\Permissions\PermissionsFactory.cs" />
+    <Compile Include="Factory\Settings\PrefixSettingsFactory.cs" />
+    <Compile Include="Factory\Settings\TaxFactory.cs" />
+    <Compile Include="Factory\UserFactory.cs" />
+    <Compile Include="Filters\EncryptedActionParameterAttribute.cs" />
+    <Compile Include="Helpers\CSCExtensions.cs" />
+    <Compile Include="Models\AccessControl\UserRoleModels.cs" />
+    <Compile Include="Models\Base\BaseModels.cs" />
+    <Compile Include="Models\ClientSite\Account\ResendMail\RequestResendMail.cs" />
+    <Compile Include="Models\ClientSite\Account\Verify\RequestVerify.cs" />
+    <Compile Include="Models\ClientSite\MyProfile\AccountChangePasswordRequest.cs" />
+    <Compile Include="Models\ClientSite\MyProfile\AccountEditInfoRequest.cs" />
+    <Compile Include="Models\ClientSite\MyProfile\CustomerDetailModels.cs" />
+    <Compile Include="Models\ClientSite\MyProfile\GetInfoRequestModels.cs" />
+    <Compile Include="Models\ClientSite\MyProfile\GetOrderDetailRequest.cs" />
+    <Compile Include="Models\ClientSite\MyProfile\OrderDetailModels.cs" />
+    <Compile Include="Models\ClientSite\MyStoreAndBusiness\AccountManagementModels.cs" />
+    <Compile Include="Models\ClientSite\MyStoreAndBusiness\AdditionFunctionModels.cs" />
+    <Compile Include="Models\ClientSite\MyStoreAndBusiness\AdditionUserModels.cs" />
+    <Compile Include="Models\ClientSite\MyStoreAndBusiness\ApplyProductOnStoreModels.cs" />
+    <Compile Include="Models\ClientSite\MyStoreAndBusiness\DeviceUserModels.cs" />
+    <Compile Include="Models\ClientSite\MyStoreAndBusiness\FunctionUserModels.cs" />
+    <Compile Include="Models\ClientSite\MyStoreAndBusiness\HardwareModels.cs" />
+    <Compile Include="Models\ClientSite\MyStoreAndBusiness\MerchantModels.cs" />
+    <Compile Include="Models\ClientSite\MyStoreAndBusiness\MyStoreAndBusinessRequest.cs" />
+    <Compile Include="Models\ClientSite\MyStoreAndBusiness\MyStoreAndBusinessViewModels.cs" />
+    <Compile Include="Models\ClientSite\MyStoreAndBusiness\ProductApplyStoreModels.cs" />
+    <Compile Include="Models\ClientSite\MyStoreAndBusiness\ProductPackageUserModels.cs" />
+    <Compile Include="Models\ClientSite\MyStoreAndBusiness\ProductPriceModels.cs" />
+    <Compile Include="Models\ClientSite\MyStoreAndBusiness\ProductUserModels.cs" />
+    <Compile Include="Models\ClientSite\MyStoreAndBusiness\ServiceModels.cs" />
+    <Compile Include="Models\ClientSite\MyStoreAndBusiness\StoreAssignProductRequest.cs" />
+    <Compile Include="Models\ClientSite\MyStoreAndBusiness\StoreDetailModels.cs" />
+    <Compile Include="Models\ClientSite\MyStoreAndBusiness\StoreModels.cs" />
+    <Compile Include="Models\ClientSite\MyStoreAndBusiness\UserGetListProductManagementModels.cs" />
+    <Compile Include="Models\ClientSite\OverView\OverViewModels.cs" />
+    <Compile Include="Models\ClientSite\RegisterModels.cs" />
+    <Compile Include="Models\ClientSite\RegisterRequest.cs" />
+    <Compile Include="Models\ClientSite\YourCart\AddItemToOrderModels.cs" />
+    <Compile Include="Models\ClientSite\YourCart\CheckOutViewModels.cs" />
+    <Compile Include="Models\ClientSite\YourCart\DiscountModels.cs" />
+    <Compile Include="Models\ClientSite\YourCart\MergeOrderRequest.cs" />
+    <Compile Include="Models\ClientSite\YourCart\PayRequestModel.cs" />
+    <Compile Include="Models\ClientSite\YourCart\YourCartRequest.cs" />
+    <Compile Include="Models\CRM\Customers\ApplyProductOnStoreModels.cs" />
+    <Compile Include="Models\CRM\Customers\CustomerBaseModels.cs" />
+    <Compile Include="Models\CRM\Customers\CustomerDetailModels.cs" />
+    <Compile Include="Models\CRM\Customers\CustomerModels.cs" />
+    <Compile Include="Models\CRM\Customers\CustomerRequest.cs" />
+    <Compile Include="Models\CRM\Customers\ItemRefundModels.cs" />
+    <Compile Include="Models\CRM\Customers\MerchantModels.cs" />
+    <Compile Include="Models\CRM\Customers\ProductAdminModels.cs" />
+    <Compile Include="Models\CRM\Customers\ProductApplyStoreModels.cs" />
+    <Compile Include="Models\CRM\Customers\ProductManagement\AccountManagementModels.cs" />
+    <Compile Include="Models\CRM\Customers\ProductManagement\AdditionFunctionModels.cs" />
+    <Compile Include="Models\CRM\Customers\ProductManagement\HardwareServiceModels.cs" />
+    <Compile Include="Models\CRM\Customers\ProductManagement\ProductManagementModels.cs" />
+    <Compile Include="Models\CRM\Customers\ProductManagement\ProductPackageModels.cs" />
+    <Compile Include="Models\CRM\Customers\StoreAssignProductRequest.cs" />
+    <Compile Include="Models\CRM\Customers\StoreDetailModels.cs" />
+    <Compile Include="Models\CRM\Customers\StoreModels.cs" />
+    <Compile Include="Models\CRM\LicenseKeyManagement\LicenseKeyManagementModels.cs" />
+    <Compile Include="Models\CRM\LicenseKeyManagement\LicenseKeyManagementRequest.cs" />
+    <Compile Include="Models\CRM\LicenseKeyManagement\LicenseKeyManagementResponse.cs" />
+    <Compile Include="Models\CRM\OrderReceiptManagement\OrderReceiptManagementModels.cs" />
+    <Compile Include="Models\CRM\OrderReceiptManagement\OrderReceiptManagementRequest.cs" />
+    <Compile Include="Models\CRM\OrderReceiptManagement\OrderReceiptManagementResponse.cs" />
+    <Compile Include="Models\CRM\RatingAndComment\RatingAndCommentModels.cs" />
+    <Compile Include="Models\CRM\RatingAndComment\RatingAndCommentRequestModels.cs" />
+    <Compile Include="Models\CRM\Support\MessageModels.cs" />
+    <Compile Include="Models\CRM\Support\SupportRequest.cs" />
+    <Compile Include="Models\CRM\Support\SupportViewModels.cs" />
+    <Compile Include="Models\InforImportModels.cs" />
+    <Compile Include="Models\LoginModel.cs" />
+    <Compile Include="Models\ManagementTool\ClientModule\ClientModuleModel.cs" />
+    <Compile Include="Models\ManagementTool\ClientModule\ResponseGetClientModuleModel.cs" />
+    <Compile Include="Models\ManagementTool\FAQ\FAQModels.cs" />
+    <Compile Include="Models\ManagementTool\FAQ\FAQRequest.cs" />
+    <Compile Include="Models\ManagementTool\FAQ\FAQResponse.cs" />
+    <Compile Include="Models\ManagementTool\Feedbacks\FeedbacksModels.cs" />
+    <Compile Include="Models\ManagementTool\Feedbacks\FeedbacksRequest.cs" />
+    <Compile Include="Models\ManagementTool\Feedbacks\FeedbacksResponse.cs" />
+    <Compile Include="Models\ManagementTool\ListofProductFeatures\ProductFeatureDetailModels.cs" />
+    <Compile Include="Models\ManagementTool\ListofProductFeatures\ProductFeatureModels.cs" />
+    <Compile Include="Models\ManagementTool\ListofProductFeatures\ProductFeatureRequestModels.cs" />
+    <Compile Include="Models\ManagementTool\Topics\TopicModels.cs" />
+    <Compile Include="Models\ManagementTool\Topics\TopicRequest.cs" />
+    <Compile Include="Models\ManagementTool\Topics\TopicResponse.cs" />
+    <Compile Include="Models\OurProducts\Addition\AdditionDetailViewModels.cs" />
+    <Compile Include="Models\OurProducts\Addition\AdditionViewModels.cs" />
+    <Compile Include="Models\OurProducts\Addition\ProductApplyAdditionModels.cs" />
+    <Compile Include="Models\OurProducts\BuyingAdditionModels.cs" />
+    <Compile Include="Models\OurProducts\CategoryDetailModels.cs" />
+    <Compile Include="Models\OurProducts\OurProductListViewModels.cs" />
+    <Compile Include="Models\OurProducts\OurProductRequest.cs" />
+    <Compile Include="Models\OurProducts\OurProductsCategoryModels.cs" />
+    <Compile Include="Models\OurProducts\OurProDuctsModel.cs" />
+    <Compile Include="Models\OurProducts\Package\PackageDetailViewModels.cs" />
+    <Compile Include="Models\OurProducts\Package\PackageViewModels.cs" />
+    <Compile Include="Models\OurProducts\Price\AdditionPeriodModels.cs" />
+    <Compile Include="Models\OurProducts\Price\PeriodModels.cs" />
+    <Compile Include="Models\OurProducts\Price\PriceListProductModels.cs" />
+    <Compile Include="Models\OurProducts\Price\ProductPeriodModels.cs" />
+    <Compile Include="Models\OurProducts\Product\BuyingAdditionViewModels.cs" />
+    <Compile Include="Models\OurProducts\Product\ProductDetailViewModels.cs" />
+    <Compile Include="Models\OurProducts\PromotionDetailModels.cs" />
+    <Compile Include="Models\Sandbox\Employee\EmployeeDetailModels.cs" />
+    <Compile Include="Models\Sandbox\Employee\EmployeeModels.cs" />
+    <Compile Include="Models\Sandbox\Employee\EmployeeRequest.cs" />
+    <Compile Include="Models\Sandbox\Inventory\Category\CategoriesModels.cs" />
+    <Compile Include="Models\Sandbox\Inventory\Category\CategoriesViewModels.cs" />
+    <Compile Include="Models\Sandbox\Inventory\Category\RequestCategoriesModels.cs" />
+    <Compile Include="Models\Sandbox\Inventory\Discount\DiscountCategoryModels.cs" />
+    <Compile Include="Models\Sandbox\Inventory\Discount\DiscountCodeModels.cs" />
+    <Compile Include="Models\Sandbox\Inventory\Discount\DiscountDetailModels.cs" />
+    <Compile Include="Models\Sandbox\Inventory\Discount\DiscountModels.cs" />
+    <Compile Include="Models\Sandbox\Inventory\Discount\DiscountRequest.cs" />
+    <Compile Include="Models\Sandbox\Inventory\Product\FunctionModels.cs" />
+    <Compile Include="Models\Sandbox\Inventory\Product\ProductCategoryModels.cs" />
+    <Compile Include="Models\Sandbox\Inventory\Product\ProductCompositeModels.cs" />
+    <Compile Include="Models\Sandbox\Inventory\Product\ProductDetailModels.cs" />
+    <Compile Include="Models\Sandbox\Inventory\Product\ProductFunctionModels.cs" />
+    <Compile Include="Models\Sandbox\Inventory\Product\ProductModels.cs" />
+    <Compile Include="Models\Sandbox\Inventory\Product\ProductPriceModels.cs" />
+    <Compile Include="Models\Sandbox\Inventory\Product\ProductRequest.cs" />
+    <Compile Include="Models\Sandbox\Inventory\Promotion\CreateOrEditPromotionRequest.cs" />
+    <Compile Include="Models\Sandbox\Inventory\Promotion\PromotionModels.cs" />
+    <Compile Include="Models\Sandbox\Inventory\Promotion\ResponseExportPromotion.cs" />
+    <Compile Include="Models\Sandbox\Inventory\Promotion\ResponseGetDetailPromotion.cs" />
+    <Compile Include="Models\Sandbox\Inventory\Promotion\ResponseGetListPromotion .cs" />
+    <Compile Include="Models\ServiceRequestBaseModels\RequestBaseModels.cs" />
+    <Compile Include="Models\ServiceResponseBaseModels\BaseModel.cs" />
+    <Compile Include="Models\ServiceResponseBaseModels\NSApiErrorResponse.cs" />
+    <Compile Include="Models\ServiceResponseBaseModels\NSApiResponse.cs" />
+    <Compile Include="Models\ServiceResponseBaseModels\NSApiResponseBase.cs" />
+    <Compile Include="Models\ServiceResponseBaseModels\ResponseModelBase.cs" />
+    <Compile Include="Models\Settings\Currency\CurrencyModels.cs" />
+    <Compile Include="Models\Settings\Currency\CurrencyRequest.cs" />
+    <Compile Include="Models\Settings\Currency\CurrencyResponse.cs" />
+    <Compile Include="Models\Settings\PaymentMethods\CreateOrEditPaymentMethodRequest.cs" />
+    <Compile Include="Models\Settings\PaymentMethods\PaymentMethodModels.cs" />
+    <Compile Include="Models\Settings\Permissions\PermissionsDetailModels.cs" />
+    <Compile Include="Models\Settings\Permissions\PermissionsModels.cs" />
+    <Compile Include="Models\Settings\Permissions\PermissionsRequest.cs" />
+    <Compile Include="Models\Settings\PrefixSettings\GetSettingRequest.cs" />
+    <Compile Include="Models\Settings\PrefixSettings\PrefixSettingsModels.cs" />
+    <Compile Include="Models\Settings\Tax\TaxModels.cs" />
+    <Compile Include="Models\Settings\Tax\TaxRequestModels.cs" />
+    <Compile Include="Models\UserSession.cs" />
+    <Compile Include="Models\Validation\FileTypesAttribute.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\ApiResponse.cs" />
+    <Compile Include="Utilities\CommonHelper.cs" />
+    <Compile Include="Utilities\DateTimeModelHelper.cs" />
+    <Compile Include="Utilities\EmailHelper.cs" />
+    <Compile Include="Utilities\FTP.cs" />
+    <Compile Include="Utilities\ImageHelper.cs" />
+    <Compile Include="Utilities\Security.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NSCSC.Data\NSCSC.Data.csproj">
+      <Project>{0604db2f-c83a-41eb-8e41-bd2b35cc0cd7}</Project>
+      <Name>NSCSC.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
